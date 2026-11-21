@@ -122,6 +122,17 @@ above gets individually crafted pixel art; commons and uncommons are built faste
 polished later. Before mass production I show you 10 finished Basis-Set cards, a booster and a slab.
 - ✅ Default: as described.
 - Alternative: smaller sets (~60) so every card gets full polish sooner.
+- Please skim the four lists for cards you miss. Choices worth a look:
+  - **Pokémon (90):** 18 real cards are left out (e.g. Magmar, Rossana, Rattfratz/Rattikarl, Jurob/Jugong,
+    Tangela); the six Alternative cards are Pikachu "Rote Wangen" plus new alt arts of Vulnona, Arkani,
+    Garados, Simsala and Dragonir.
+  - **Yu-Gi-Oh! (86):** Grail Blauäugiger w. Drache; all five Exodia pieces are in; alt arts of
+    Blauäugiger, Dunkler Magier, Rotäugiger, Exodia, Wiedergeburt and Topf der Gier.
+  - **One Piece (89):** Grail manga-art Shanks; the eight Leaders sit in the Rare tier, the big names
+    return as Alternative/Ultra parallels.
+  - **Riftbound (89):** Grail is the Signature **Ahri** (currently the most valuable card of the set);
+    Signature Kai'Sa, Miss Fortune, Jinx and Lee Sin are Ultra. Say so if you would rather have Jinx or
+    Kai'Sa as the Grail.
 →
 
 **Q-17 — Releasing sets.** Which set is "in print", "out of print" or reprinted is always your decision.

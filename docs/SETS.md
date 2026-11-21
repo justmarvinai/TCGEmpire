@@ -5,12 +5,17 @@
 
 ## 1. Launch sets
 
-| Game | Set | Year | Curated list |
-|------|-----|------|--------------|
-| Pokémon | Basis-Set (Base Set) | 1999 | [`sets/pokemon-base-set.md`](./sets/pokemon-base-set.md) |
-| Yu-Gi-Oh! | Legend of Blue Eyes White Dragon (LOB) | 2002 | [`sets/yugioh-lob.md`](./sets/yugioh-lob.md) |
-| One Piece Card Game | OP-01 Romance Dawn | 2022 | [`sets/onepiece-op01.md`](./sets/onepiece-op01.md) |
-| Riftbound (League of Legends TCG) | Origins | 2025 | [`sets/riftbound-origins.md`](./sets/riftbound-origins.md) |
+| Game | Set | Year | Cards | Grail | Ultra | Curated list |
+|------|-----|------|-------|-------|-------|--------------|
+| Pokémon | Basis-Set (Base Set) | 1999 | 90 | Glurak | Bisaflor, Turtok, Mewtu | [`sets/pokemon-base-set.md`](./sets/pokemon-base-set.md) |
+| Yu-Gi-Oh! | Legend of Blue Eyes White Dragon (LOB) | 2002 | 86 | Blauäugiger w. Drache | Dunkler Magier, Exodia, die Verbotene, Rotäugiger schwarzer Drache | [`sets/yugioh-lob.md`](./sets/yugioh-lob.md) |
+| One Piece Card Game | OP-01 Romance Dawn | 2022 | 89 | Shanks (manga art) | Luffy Leader parallel, Zoro parallel, Shanks parallel, Yamato parallel | [`sets/onepiece-op01.md`](./sets/onepiece-op01.md) |
+| Riftbound (League of Legends TCG) | Origins | 2025 | 89 | Ahri, Nine-Tailed Fox (Signature) | Signature Kai'Sa, Miss Fortune, Jinx, Lee Sin | [`sets/riftbound-origins.md`](./sets/riftbound-origins.md) |
+
+The lists were researched from public card databases and price trackers in November 2026. Entries the
+research could not confirm are marked "(?)" in the set files and collected under each file's "Open
+points"; they are re-checked when the set's content is built (some German Yu-Gi-Oh! names and some
+Riftbound card numbers are the main ones).
 
 Each set file contains: real-world fact box, tier summary, the full card table (our number, names, real
 reference, tier, type, desirability 1–10, art brief), sealed products, hobby lore for humour and events,
