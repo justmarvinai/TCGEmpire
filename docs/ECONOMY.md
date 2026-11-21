@@ -1,76 +1,98 @@
 # TCGEmpire — Economy and Balancing
 
-> Status: **PLAN.** All numbers are *starting values*. They live in config tables, not in code, and are
-> tuned with the simulation harness (§12) before each alpha release. Formulas are implemented **once**,
-> in SQL; the client never recalculates them.
+> Status: **approved plan** (owner answers of 21 Nov 2026 included). All numbers are *starting values*.
+> They live in config, not in code, and are tuned with the simulation (§13). Formulas are implemented
+> **once**, in SQL; the client never recalculates them.
 
 ## 1. Principles
 
-1. **Real-feeling prices.** A booster costs 4,99 €, a Döner costs what a Döner costs. No secular
-   inflation mechanic: "numbers go up" comes from income growth, scarcity and prestige, not from
-   devaluing the euro.
+1. **Our own price scale, between real life and idle-game inflation.** Prices start about 20× above real
+   life (a booster costs 100 €), incomes grow about ×2.000 during a run, and a slow server-wide
+   **Preisniveau** (§4) lets all numbers creep up with the group's progress. Late game is millions and
+   billions, never trillions of trillions.
 2. **Open economy with a full audit trail.** Money is created by sources and destroyed by sinks. Every
-   single change goes through one function and is logged with a reason code, so the admin dashboard shows
-   exactly where money comes from and goes.
+   change goes through one function and is logged with a reason code.
 3. **Scarcity is real.** Out-of-print product is finite. Every opened pack is gone forever.
 4. **NPC money is finite.** NPC traders have budgets; you cannot dump unlimited cards on them.
-5. **Idle is capped, active is rewarded.** Idle income needs check-ins; skilled trading beats waiting.
-6. **Losses are capped and explained.** No mechanic can take more than a stated share per day.
-7. **Balance by measurement.** Pace and income targets below are asserted by automated simulations.
+5. **Idle is capped, active is rewarded.**
+6. **Losses are capped and explained.**
+7. **Balance by measurement**, in base euros (§4), so inflation never distorts a comparison.
 
 ## 2. Units
 
 | Thing | Storage | Notes |
 |-------|---------|-------|
-| Money | `bigint` cents | Hard cap 9 × 10¹⁵ cents so values stay exact as JSON numbers in the browser. Exponential formulas compute in `numeric` and clamp. |
-| Rates, fees, odds | basis points (`_bps`) or parts per million (`_ppm`) | No floats in stored values. |
-| Multipliers | `numeric(12,4)` in stats | Combined as additive % within a group, multiplicative across groups. |
-| Time | `timestamptz`, server clock only | Daily reset 04:00 Europe/Berlin (Q-22). |
+| Money | `bigint` cents, sent to the browser as a JSON number | Hard cap 9 × 10¹⁵ cents (exact in JavaScript). Exponential formulas compute in `numeric` and clamp. |
+| Config money values | **Basis-€** (`*_base_cents`) | Turned into real cents only by `private.eur()`, which multiplies by the Preisniveau. |
+| Rates, fees, odds | basis points (`_bps`) or parts per million | No floats stored. |
+| Time | `timestamptz`, server clock only | Daily reset **00:00 Europe/Berlin**; weekly reset Monday 00:00. |
 
 ## 3. Progression targets
 
-### 3.1 Level curve
+Owner target: **level 100 in about 2–3 weeks** for an active player.
 
 ```
-ep_to_next(n) = round( 60 × n^1.1 × 1.035^n )        for n = 1 … 99
-ep_scale(n)   = 1.035^n                              (all EP rewards are multiplied by this)
+minutes_for_level(n) = 0.5 + 0.17 × n^1.3            (standard active play)
+ep_to_next(n)        = round( (25 + 8.5 × n^1.3) × 1.035^n )
+ep_scale(n)          = 1.035^n                       (all EP rewards are multiplied by this)
 ```
 
-EP numbers grow with level (so rewards feel bigger), while the *time* per level follows `1.2 × n^1.1`
-minutes of standard active play:
+| Level | Minutes for this level | Active hours so far | Reached on (2.5 h/day, before idle EP) |
+|-------|------------------------|---------------------|-----------------------------------------|
+| 10 | 4 | 0.3 | first 20 minutes |
+| 20 | 9 | 1.3 | day 1 |
+| 30 | 15 | 3.2 | day 2 |
+| 50 | 28 | 10 | day 4–5 |
+| 75 | 47 | 26 | day 10–11 |
+| 90 | 60 | 39 | day 15–16 |
+| 100 | — | 49 | day 18–20 (idle EP brings it nearer to 2.5 weeks) |
 
-| Level | Active minutes for this level | Cumulative active hours | Target calendar time (2–3 h/day + idle) |
-|-------|-------------------------------|-------------------------|------------------------------------------|
-| 1 | 1 | 0 | first minutes |
-| 10 | 15 | 1.1 | day 1 |
-| 20 | 32 | 4.9 | day 3–4 |
-| 30 | 51 | 12 | day 6–7 |
-| 50 | 89 | 35 | ~2.5 weeks |
-| 75 | 139 | 81 | ~4.5 weeks |
-| 99 | 188 | 146 (level 100 after ~150) | ~6–7 weeks |
+**Reference income** — what an active player at level *n* should earn per hour from all non-trading
+sources, in Basis-€. It is the unit for rewards ("a daily quest pays 20 minutes of reference income").
 
-### 3.2 Reference income
-
-`ref_income(n) = 45 × 1.08^n` € per hour — the income an active player at level *n* should roughly have
-from all non-trading sources. It is the unit for scaling rewards ("a daily quest pays 20 minutes of
-reference income").
+```
+ref_income(n) = 900 × 1.08^n   Basis-€ per hour
+```
 
 | Level | Reference income / h | Typical mix |
 |-------|----------------------|-------------|
-| 1 | ~50 € | Pfandflaschen |
-| 10 | ~100 € | Minijobs, bunker, selling pulls |
-| 20 | ~210 € | Shifts, bunker, trading, first company orders |
-| 35 | ~670 € | Company, wholesale, streaming |
-| 50 | ~2.100 € | Company stage 3–4 |
-| 75 | ~14.500 € | Company stage 5–6 |
-| 100 | ~99.000 € | Company stage 7, everything upgraded |
+| 1 | ~1.000 € | Pfandflaschen |
+| 10 | ~1.900 € | Minijobs, bunker, selling pulls |
+| 20 | ~4.200 € | Shifts, bunker, trading |
+| 30 | ~9.100 € | First company orders |
+| 50 | ~42.000 € | Company, wholesale, streaming |
+| 75 | ~290.000 € | Large company |
+| 100 | ~2 Mio. € | Everything maxed |
 
-Skilled trading, lucky pulls and risky plays can earn a multiple of this. Each prestige adds permanent
-multipliers on top.
+**Catch-up:** a player more than 10 levels below the server median gets +25 % EP (shown as
+"Aufholbonus"), so friends who start later or play less stay in reach.
 
-## 4. Card and sealed prices
+## 4. Preisniveau (the game's own inflation)
 
-### 4.1 Base values (in print, neutral market)
+One server-wide number, **P**. Everything the game itself prices or pays is defined in Basis-€ and
+multiplied by P: store prices, card values, NPC budgets, wages, bunker yield, quest rewards, fees, upgrade
+and housing prices, fines.
+
+```
+C_med = median "career level" (level + 100 × prestige) of players active in the last 72 hours
+P     = min( 250, 1.018 ^ max(0, C_med − 20) )
+```
+
+- Updated once a day at 00:00; never falls; rises at most 10 % per day.
+- P stays at 1.0 until the group is past level 20, so the first day has stable prices.
+- Guide values: end of the first run ×4.2 (booster 420 €), end of the second ×25, cap ×250.
+- **Not** multiplied: money you already hold, prices players set themselves, private loans. So cash and
+  old debts slowly lose value — holding cards and sealed is the hedge. That is the whole real effect;
+  in Basis-€ nothing changes, which keeps balancing simple.
+- The feed reports it daily ("Inflation heute: +2,3 %. Döner jetzt 387 €."); the Döner price is the
+  visible gauge. The "i" explains it in two sentences.
+- One config value sets the rate; 1.0 switches inflation off.
+
+All euro amounts in the rest of this document are **Basis-€**.
+
+## 5. Card and sealed prices
+
+### 5.1 Base values (in print, neutral market, ungraded)
 
 Each card has a **tier** and a **desirability** `d` from 1 to 10 (from the set files).
 
@@ -80,26 +102,26 @@ base_value = lo × (hi / lo)^((d − 1) / 9)
 
 | Tier | lo | hi |
 |------|----|----|
-| Common | 0,01 € | 0,12 € |
-| Uncommon | 0,04 € | 0,35 € |
-| Rare | 0,15 € | 1,20 € |
-| Holo | 1,20 € | 8 € |
-| Alternative | 6 € | 30 € |
-| Ultra | 25 € | 80 € |
-| Grail | 300 € | 500 € |
+| Common | 0,20 € | 2,40 € |
+| Uncommon | 0,80 € | 7 € |
+| Rare | 3 € | 24 € |
+| Holo | 24 € | 160 € |
+| Alternative | 120 € | 600 € |
+| Ultra | 500 € | 1.600 € |
+| Grail | 6.000 € | 10.000 € |
 
-These are *in-print, ungraded* values. The same Glurak is worth a multiple as a PSA 10 (§4.3) and again a
-multiple once the set is out of print (§4.2) — that is where the big numbers come from.
+The same Glurak is worth a multiple as a PSA 10 (§5.3) and again a multiple once the set is out of print
+(§5.2) — that is where the big numbers come from.
 
 A calibration script scales each set's values so that the **expected value of a booster = 72 % ± 3 % of
-its UVP** with that set's odds (with the ranges above the scaling factor is expected to stay between 0.8
-and 1.25). A test fails the build if a set leaves the band. A typical Holo is therefore worth less than
-the booster it came from; opening packs is a gamble, not an income source.
+its price** with that set's odds (expected scaling factor 0.8–1.25). A test fails the build if a set
+leaves the band. A typical Holo is worth less than the booster it came from; opening packs is a gamble,
+not an income source.
 
-### 4.2 Market value formula
+### 5.2 Market value formula
 
 ```
-marktwert(card) = base_value
+marktwert(card) = base_value × P
                 × set_factor(set)          -- supply phase and scarcity
                 × hype_index(game)         -- market cycle, shared per game
                 × card_hype(card)          -- mean-reverting noise + event shocks
@@ -108,17 +130,17 @@ marktwert(card) = base_value
 
 | Factor | Behaviour |
 |--------|-----------|
-| **set_factor, in print** | Starts at 1.25 at release (launch hype), decays towards 0.60 as packs are opened and supply builds up. |
-| **set_factor, out of print** | `1 + a × (1 − sealed_left / sealed_at_oop)^b + c × weeks_since_oop`, starting values a = 4, b = 1.5, c = 0.04, capped at 12. Sealed product uses a steeper curve than singles. |
-| **hype_index** | One value per game, range 0.55–2.2, mean 1.0. Moves by a slow random walk plus event shocks (Hype-Welle, Blase platzt). This is the boom/bust risk for investors. |
+| **set_factor, in print** | Starts at 1.25 at release, decays towards 0.60 as packs are opened and supply builds up. |
+| **set_factor, out of print** | `1 + a × (1 − sealed_left / sealed_at_oop)^b + c × weeks_since_oop`, starting values a = 4, b = 1.5, c = 0.04, capped at 12. Sealed uses a steeper curve than singles. |
+| **hype_index** | One value per game, range 0.55–2.2, mean 1.0. Slow random walk plus event shocks (Hype-Welle, Blase platzt). The boom/bust risk for investors. |
 | **card_hype** | Range 0.7–1.6, reverts to 1.0 within days. Rumours and events push single cards. |
-| **pressure** | Each trade moves it a little (bounded per player and day); decays with a half-life of a few hours. Prevents free arbitrage and makes dumping lower the price. |
+| **pressure** | Each trade moves it a little (bounded per player and day); half-life of a few hours. Makes dumping lower the price and blocks free arbitrage. |
 
-Daily movement of any Marktwert is bounded (starting values +18 % / −22 %), except during named crash or
-hype events. Prices are recalculated every 5 minutes; history is stored in thinned form (5-minute points
-for 2 days, hourly for 14 days, daily forever).
+Daily movement of a Marktwert is bounded (+18 % / −22 %, on top of P), except during named crash or hype
+events. Prices are recalculated every 5 minutes; history is thinned (5-minute points for 2 days, hourly
+for 14 days, daily forever).
 
-### 4.3 Slab value
+### 5.3 Slab value
 
 ```
 slab_value = marktwert(card) × grade_factor(grade) × pop_factor × brand_factor(grader)
@@ -133,70 +155,76 @@ slab_value = marktwert(card) × grade_factor(grade) × pop_factor × brand_facto
 | ≤ 6 | 0.8 → 0.4 | 7 % |
 | BGS Black Label 10 | 20 | ~1 % (all four quality values = 10) |
 
-- `pop_factor` for grade 10: `1 + 1.5 × pop_ref / (pop_ref + pop10)` — the fewer 10s exist, the more each is
-  worth (up to ×2.5).
+- `pop_factor` for grade 10: `1 + 1.5 × pop_ref / (pop_ref + pop10)` — the fewer 10s exist, the more each
+  is worth (up to ×2.5).
 - `brand_factor`: PSA 1.00, BGS 0.95, CGC 0.85, player companies 0.40–1.10 from their Ruf.
-- Grade from the four hidden quality values: the lowest value dominates (PSA style); BGS shows all four.
+- The lowest of the four hidden quality values dominates the grade; BGS shows all four.
 
-### 4.4 Sealed
+### 5.4 Sealed
 
-- UVP: booster see `SETS.md`; display = packs × UVP × 0.89; case = 6 displays × 0.95 (wholesale EK lower).
-- Sealed Marktwert in print = UVP × launch premium (1.0–1.6, decaying), never below 92 % of UVP.
-- Out of print: follows `set_factor` for sealed; a display also carries its guaranteed-hit premium.
+| Set | Booster | Display | Case (wholesale) |
+|-----|---------|---------|------------------|
+| Pokémon Basis-Set (36 per display) | 100 € | 3.200 € | 18.200 € |
+| Yu-Gi-Oh! LOB (24) | 80 € | 1.700 € | 9.700 € |
+| One Piece OP-01 (24) | 100 € | 2.100 € | 12.000 € |
+| Riftbound Origins (24) | 100 € | 2.100 € | 12.000 € |
 
-## 5. Sources of money
+Sealed Marktwert in print = price × launch premium (1.0–1.6, decaying), never below 92 % of price. Out of
+print it follows `set_factor` for sealed; a display also carries its guaranteed-hit premium.
 
-| Source | Size (in minutes of reference income unless stated) | Cap / gate |
-|--------|-----------------------------------------------------|------------|
+## 6. Sources of money
+
+| Source | Size (minutes of reference income unless stated) | Cap / gate |
+|--------|---------------------------------------------------|------------|
+| Start capital | 400 € from Mutti | Once |
 | Minijob round (45 s) | 0.6–2.0 by performance | Energy |
-| Shift | 55 % of reference income per hour, × rank bonus | One shift at a time, max 8 h |
-| Geldbunker | Base 6 €/h; Ertrag level k: `6 × 1.12^k` €/h; cost `25 × 1.17^k` € | Capacity 4–24 h |
+| Shift | 55 % of reference income per hour × rank bonus | One at a time, max 8 h |
+| Geldbunker | Base 120 €/h; Ertrag level k: `120 × 1.12^k` €/h; cost `500 × 1.17^k` € | Capacity 4–24 h |
 | Mini-quest | 1 + 1 Pfandbon | Endless, deliberately tiny |
 | Tagesquest | 20 each, +60 for all five | 5 per day |
 | Wochenquest | 180 each + weekly chest | 5 per week |
 | Level reward | 60 + item | Per level |
 | Stempelkarte | 10 → 120 over 7 days | Daily |
 | Selling to NPCs | Marktwert × 60 % (Ankauf) up to ~100 % (NPC collectors) | NPC budgets, pressure |
-| Company | See §8 | Capacity, demand, Ruf |
+| Company | §9 | Capacity, demand, Ruf |
 | Streaming | Viewers × pull excitement | While opening packs |
 | Achievements, events, league | Fixed tables | One-time or scheduled |
 
 P2P trades, gifts and loans move money between players and are not sources.
 
-## 6. Sinks
+## 7. Sinks
 
 | Sink | Size |
 |------|------|
-| Retail purchases | UVP (the largest early sink) |
+| Store purchases | Booster 80–100 € (the largest early sink) |
 | Market fees | Cardmarket 5 %, eBay 10 %, auction listing fee |
-| Grading fees | PSA 18 € Economy / 35 € Standard / 80 € Express, plus 3 % upcharge above 500 € card value; BGS and CGC cheaper |
-| Upgrades | Geometric ladders, factor 1.15–1.6 per level |
-| Skill respec | 500 € × level |
-| Housing | 5.000 € → 250 Mio. € over 11 tiers; decor 20 € → 25 Mio. € per item |
-| Company | Stage costs 25.000 € → 500 Mio. €; wages, rent, equipment, research, marketing |
+| Grading fees | PSA 360 € Economy / 700 € Standard / 1.600 € Express, plus 3 % upcharge above 10.000 € card value; BGS and CGC cheaper |
+| Upgrades (incl. Abwehr) | Geometric ladders, factor 1.15–1.6 per level |
+| Skill respec | 10.000 € × level |
+| Housing | 100.000 € → 5 Mrd. € over 11 tiers; furnishing 400 € → 500 Mio. € per item |
+| Company | Stage costs 500.000 € → 10 Mrd. €; wages, rent, equipment, research, marketing |
 | Taxes | Kapitalertragsteuer 25 % on company payouts; Schenkungssteuer 20 % above the daily gift allowance; late fees |
 | Insurance, Nebenkosten | Recurring, scaled to what is insured |
-| Consumables | Döner 7,50 €, Club-Mate 2,50 €, Kaffee 1,80 € (the Döner price creeps up as a running gag) |
-| Cosmetics and luxury | 50 € → 5 Mrd. € |
-| Megaprojekte | 1 Mrd. € → 100 Mrd. € shared server goals |
+| Consumables | Döner 150 €, Club-Mate 50 €, Kaffee 35 € |
+| Cosmetics and luxury | 1.000 € → 100 Mrd. € |
+| Megaprojekte | 20 Mrd. € → 2 Bio. € shared server goals (tracked in Basis-€) |
 | Museum auctions | Open-ended |
-| Hostile actions, fines, rerolls, Rubbellose | Various |
+| Attacks, fines, rerolls, Rubbellose | Various |
 
-Target sink share (money destroyed ÷ money created per day): 55–70 % early game, 80–95 % late game, so
-cash piles grow but stay meaningful. The admin dashboard shows this ratio.
+Target sink share (money destroyed ÷ money created per day): 55–70 % early, 80–95 % late.
 
-## 7. Idle caps
+## 8. Idle caps
 
 | System | Cap |
 |--------|-----|
 | Geldbunker | Capacity in hours (4 → 24) |
-| Shift | Chosen length, max 8 h; staff shifts from level 20 |
-| Company pipeline | Full speed for 12 h without owner login, then 50 % ("Dienst nach Vorschrift") |
+| Shift | Chosen length, max 8 h; staff shifts once the company exists |
+| Company pipeline | Full speed for 12 h without owner login, then 50 % |
 | Grading orders | Parallel slots (3 → 20) |
 | Listings | Slots (10 → 200); NPC buying limited by budgets |
 | Energy | 100 (→ 200), +1 per 3 min |
 
-## 8. Company model (grading)
+## 9. Company model (grading)
 
 Settled in 10-minute cycles by the server tick; missed cycles are caught up oldest-first with a cap.
 
@@ -214,66 +242,106 @@ accuracy   = weighted staff Genauigkeit × equipment → share of correct grades
 - Player orders use the same pipeline but get their real grade from the card's hidden quality values —
   unless the owner bumps it (shady).
 - Scandal check per bumped slab: small chance per day while it exists, certain on re-grade elsewhere.
-- Company value (for net worth and prestige) = 30 × average daily profit of the last 7 days + assets.
-- Wages are never paid from negative cash: a broke company cuts output, it does not go into free fall.
-- Target: a well-run company provides 50–70 % of reference income from level 25 on; a neglected one about
+- Company value (net worth, prestige) = 30 × average daily profit of the last 7 days + assets.
+- Wages are never paid from negative cash: a broke company cuts output, it does not spiral.
+- Target: a well-run company provides 50–70 % of reference income from level 35 on; a neglected one about
   breaks even; a badly mis-priced one loses money visibly, with the reason shown.
 
-## 9. Risk and loss parameters
+## 10. Attacks, defence and other risks
+
+### 10.1 Attack and block (owner decision: medium intensity, blockable)
+
+Every hostile action is one roll:
+
+```
+success % = clamp( base % + attacker's Angriff bonus − defender's Abwehr bonus , 5 % , 85 % )
+```
+
+- **Angriff** comes mainly from **skills** (Schlitzohr branch): higher success, bigger loot share, lower
+  cost, shorter cooldown.
+- **Abwehr** comes mainly from **account upgrades** (bought with money, one ladder per attack type) plus a
+  few defensive skills. A maxed defence against an unskilled attacker blocks 95 % of attempts.
+- A **blocked** attack costs the attacker the price plus a fine, and the defender gets a notification, a
+  small "Schadenfreude" payout and the feed headline.
+
+| Attack | Base success | Loot / effect | Matching Abwehr upgrade |
+|--------|--------------|---------------|-------------------------|
+| Bunker knacken | 45 % | Up to 25 % of the *uncollected* bunker content | Tresortür, Wachhund Rex |
+| Beim Finanzamt anschwärzen | 50 % (only if there is something to find) | Target pays back tax + penalty | Steuerberater |
+| 1-Stern-Bewertung | 55 % | −Ruf for a rival company | Rechtsschutz |
+| Gerücht streuen | 50 % | One card's price ±15 % for hours | Faktencheck (protects your listings and holdings from panic effects) |
+| Abwerben | 40 % | Take one employee | Betriebsklima |
+| Einbruch | 20 % | One slab from the Vitrine | Alarmanlage (and insurance pays 80 %) |
+| Resealed / gewogene Booster | — (sale) | Buyer gets worse packs | Prüfgerät (reveals it before buying) |
+
+Limits: max 2 successful attacks of one kind on the same victim per day; each attacker–victim pair has a
+cooldown; **daily loss cap from other players = 10 % of net worth excluding the collection**. Victims get
+a discounted Rache for 24 hours.
+
+### 10.2 Other risks
 
 | Risk | Starting value | Protection |
 |------|----------------|------------|
-| Market crash | Hype index −30 … −45 % within a day, recovery over 5–10 days, about once per 2–3 weeks | Diversify across games; Insider skill |
+| Market crash | Hype index −30 … −45 % in a day, recovery over 5–10 days, about once per 2–3 weeks | Diversify across games; Insider skill |
 | Bad grade | 20 % of hits grade ≤ 7 | Vorprüfung |
-| Fake on Kleinanzeigen | 4 % of ads (12 % during Fälschungswelle) | "Echt oder Fake?" job perk, skills |
+| Fake on Kleinanzeigen | 4 % of ads (12 % during Fälschungswelle) | Prüfgerät, job perk, skills |
 | Lost / damaged parcel | 1.5 % uninsured | Versandversicherung |
 | Chargeback (Kevin) | 15 % of Kevin sales | Decline Kevin; PayPal upgrade |
-| Bunker heist | Max 25 % of uncollected content per heist; max 2 successful heists on one victim per day | Sicherheit, collecting |
-| Burglary | 1 slab, needs level 25, long cooldown | Alarm, insurance pays 80 % |
-| Steuerprüfung | Back tax + 50 % penalty on undeclared amounts | Be honest, tax advisor |
+| Steuerprüfung | Back tax + 50 % penalty on undeclared amounts | Be honest, Steuerberater |
 | Scandal | −150 … −400 Ruf, slab brand factor −30 % for 3 days | Do not bump grades |
 | Negative personal events | Each ≤ 3 % of cash, max one per day | Insurance |
-| **Daily loss cap** from other players | 10 % of net worth excluding collection (Q-7 scales this) | — |
+| Inflation | Cash loses value as P rises | Spend or invest |
 
-Safety net: balance cannot go below zero through events; Pfandflaschen always work; "Too Big To Fail"
-keystone; and after a ruinous day Mutti sends 20 €.
+Safety net: events cannot push a balance below zero; Pfandflaschen always work; and after a ruinous day
+Mutti sends pocket money.
 
-## 10. Anti-exploit rules
+## 11. Prestige: not a shortcut back to riches
+
+- Cash resets to the start capital; level, upgrades, skills, company and home reset.
+- The kept collection goes to Omas Dachboden. Bringing items back is limited by storage (which reset with
+  the home) **and** by a daily retrieval limit that grows with level, and selling them still hits NPC
+  budgets and price pressure. A prestiged player is asset-rich but cash-poor for the first days.
+- Empire-Perks give modest permanent multipliers (first prestige about +15 % income, +5 % Pack-Glück),
+  with rising Sterne cost. Each run is faster, not trivial.
+- Simulation target: after a prestige, reaching the previous run's peak net worth takes at least 50 % of
+  the previous run's time.
+
+## 12. Anti-exploit rules
 
 - Price influence only from trades within ±25 % of Marktwert; one counted trade per player pair and card
   per 24 h; self-trading impossible.
 - Gift allowance per day by level; above it Schenkungssteuer. Loans count as debt for the borrower and as
-  an asset for the lender, so friends cannot inflate net worth.
-- Wochenwertung ignores gifts, loans and trades between players far from Marktwert.
-- New accounts: trade lock for the first hour of play.
-- Pack battles and heists have cooldowns and hourly limits.
-- Mini-game payouts are capped per round by the theoretical maximum score; implausible scores pay zero.
+  an asset for the lender.
+- Wochenwertung ignores gifts, loans and off-market trades between players.
+- New and freshly reset accounts: trade and gift lock for the first hour of play; account reset has a
+  cooldown, and items of a reset or deleted account are destroyed, not handed to anyone.
+- Pack battles and attacks have cooldowns and hourly limits.
+- Mini-game payouts are capped by the theoretical maximum score; implausible scores pay zero.
 - Every write is idempotent (request id) and rate-limited per player.
-- Retail limits are enforced per player and per restock on the server.
+- Store limits are enforced per player and per restock on the server.
 
-## 11. Formulas in one place
+## 13. Balancing method (kept lean)
+
+- **Bot players** (a few simple policies: casual, active, trader, idler) play against the real server
+  logic in an in-memory database with an accelerated clock. One command, one table as output.
+- Reported per bot: time to level, income per source, spending per sink, pack value, net worth.
+- A handful of assertions in CI with wide bands: the level table (§3) ± 25 %, pack value band, sink share
+  band, "no bot is broke for more than a day", "trader bot cannot earn risk-free".
+- In production the admin console shows the same numbers from the ledger.
+
+## 14. Formulas in one place
 
 | Formula | Definition |
 |---------|------------|
-| EP to next level | `round(60 × n^1.1 × 1.035^n)` |
-| Reference income | `45 × 1.08^n` €/h |
-| Upgrade cost | `base × growth^level` (computed in `numeric`, clamped to the money cap) |
-| Bunker yield | `6 × 1.12^k` €/h × multipliers |
+| EP to next level | `round((25 + 8.5 × n^1.3) × 1.035^n)` |
+| Reference income | `900 × 1.08^n` Basis-€/h |
+| Preisniveau | `min(250, 1.018^max(0, C_med − 20))`, daily, +10 % max per day |
+| Any game-set amount | `Basis-€ × P` |
+| Upgrade cost | `base × growth^level` |
+| Bunker yield | `120 × 1.12^k` €/h × multipliers |
 | Card base value | `lo × (hi/lo)^((d−1)/9)` × set calibration |
 | Ankauf price | `marktwert × (0.60 + skills, max 0.80)` × pressure |
 | Haggle acceptance | Logistic in (offer ÷ ask), seller stubbornness, your Händler skill |
-| Heist success | `base 45 % + thief skills − target security`, clamped 5–85 % |
+| Attack success | `clamp(base + Angriff − Abwehr, 5 %, 85 %)` |
 | Ruf → stars | `stars = ruf / 200` |
-| Net worth | cash + bunker + cards + slabs + sealed + company value + 50 % housing and decor + loans given − loans taken |
-
-## 12. Balancing method (simulation harness)
-
-- **Bot players** (scripts with simple policies: casual, active, trader, idler, whale) play against the
-  real server logic in an in-memory database with an accelerated clock.
-- Reported per bot and level: time to level, income per source, spending per sink, pack EV, net worth,
-  company profit, share of idle vs. active income.
-- **Assertions** in CI (wide bands at first): time-to-level table (§3.1) ± 25 %, pack EV band, sink share
-  band, "no bot is broke for more than a day", "trader bot cannot earn risk-free".
-- Every balance change states which number it is expected to move, and the harness confirms it.
-- In production the admin dashboard shows the same KPIs from the ledger, so reality is compared with the
-  simulation after each alpha.
+| Net worth | cash + bunker + cards + slabs + sealed + company value + 50 % housing and furnishing + loans given − loans taken |

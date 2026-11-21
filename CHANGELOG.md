@@ -15,4 +15,10 @@ the first full release will be `0.0.1`.
 - Guides for coding agents (`AGENTS.md`, `CLAUDE.md`) and the list of open questions for the owner
   (`USER_QUESTIONS.md`).
 
-No game code exists yet. Coding starts after the owner's approval.
+- Owner decisions of 21 Nov 2026 worked into the plan: level 100 in 2–3 weeks, own price scale (booster
+  100 €) with a slow server-wide Preisniveau, blockable attacks (Abwehr upgrades vs. Angriff skills),
+  one shared invite code, first account is admin, daily reset at 00:00, daily and highlight events,
+  darker tone, Gefahrenzone (account reset and deletion), multi-pack opening with instant reveal from
+  level 1, pixel art concentrated on cards and products.
+
+No game code exists yet. Coding starts with the owner's go for alpha_01.

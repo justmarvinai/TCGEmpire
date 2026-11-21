@@ -1,17 +1,19 @@
 # TCGEmpire — Architecture
 
-> Status: **PLAN.** Items marked **SPIKE** are verified in the first days of alpha_01 before anything is
-> built on them; each has a stated fallback.
+> Status: **approved plan** (owner decisions of 21 Nov 2026 included). Items marked **SPIKE** are verified
+> in the first days of alpha_01 before anything is built on them; each has a stated fallback.
+> Guiding rule from the owner: **build lean** — the simplest thing that meets the design, no speculative
+> abstractions, low token use.
 
 ## 1. Constraints that shape everything
 
 | Constraint | Consequence |
 |------------|-------------|
 | Must run on **Vercel Hobby** + **Supabase Free (Nano compute)** | No per-request server code on Vercel; all game logic inside Postgres; light, lazy simulation; strict data retention. |
-| Private game for one friend group (assume 4–15 players, Q-3) | One world, no sharding, no matchmaking; invite-only signup. |
+| Private game for one friend group (**2–10 players**, Q-3) | One world, no sharding, no matchmaking; one shared invite code. Everything must work with two players, so NPCs carry the market. |
 | Multiplayer economy with betrayal and toplists | Server-authoritative: the browser sends intentions, never results. |
 | Developed mostly by AI agents in short sessions | One language per layer, one source of truth per rule, fast offline test loop, strict conventions. |
-| Lots of code-generated pixel art | Art is code, rendered at build time into atlases, reviewed through generated contact sheets. |
+| Code-generated pixel art, concentrated on cards and products | Art is code, rendered at build time into atlases, reviewed through generated contact sheets. Little pixel art elsewhere. |
 
 ## 2. System overview
 
@@ -86,6 +88,8 @@ rules duplicated in TypeScript and SQL (drift between the two is a known source 
    in one modifier format; a single function resolves a player's effective stats.
 8. **Time is injectable.** SQL never calls `now()` directly but `private.now()`, which tests and the
    simulation harness can move.
+9. **Game-set money is Basis-€ × Preisniveau.** Config holds base amounts; `private.eur()` is the only
+   way to turn them into real cents (`ECONOMY.md` §4).
 
 ## 5. Anatomy of a write action
 
@@ -122,6 +126,7 @@ instead, so values can be added in the same migration). No `UPDATE`/`DELETE` wit
 | Auctions, pack battle timeouts | Tick | 1 min | Plus resolution on access. |
 | Companies | Tick | 10-minute cycles | One sub-transaction per company; catch-up capped, oldest first. |
 | Toplists, rivals | Tick | 10 min snapshot | Lists are read from the snapshot, never computed per request. |
+| Daily reset: quests, Tagesereignis, Preisniveau, NPC budgets | Tick | 00:00 Europe/Berlin | One system, idempotent per day. |
 | Cleanup and retention | Tick | hourly | See §9. |
 
 The tick takes an advisory lock; if a run is still active the next one skips. Every run writes a row to
@@ -143,12 +148,16 @@ The tick takes an advisory lock; if a run is still active the next one skips. Ev
 
 ## 8. Security
 
-- **Signup:** username + password (internally a synthetic e-mail, e-mail confirmation off) plus a
-  single-use **invite code** (Q-4). An auth user without a redeemed code has no player row and can call
-  nothing. Optional: Discord login later.
+- **Signup:** username + password (internally a synthetic e-mail, e-mail confirmation off) plus the
+  **shared invite code** (Q-4): one code for everybody, set once, stored hashed, changeable by the admin.
+  An auth user who has not entered it has no player row and can call nothing; attempts are rate-limited.
 - **Exposure:** PostgREST exposes only schema `api`. Tables live in unexposed schemas, additionally with
   RLS enabled and no policies (deny all) as a second wall. No service-role key anywhere in the client.
-- **Admin:** `is_admin` flag on the player; admin RPCs check it and write to an audit log.
+- **Admin:** the first account created gets the admin flag (Q-5); it plays normally and additionally sees
+  the admin console. Admin RPCs check the flag and write to an audit log. If that account is deleted, the
+  oldest remaining account becomes admin.
+- **Account reset and deletion** (Gefahrenzone) are RPCs that cancel open business, destroy the account's
+  items and anonymise old feed and chat entries in one transaction.
 - **Realtime:** private channels authorised by policies on `realtime.messages`.
 - **Privacy:** no real personal data is stored beyond the chosen username; the site sends `noindex` and
   is not linked anywhere.
@@ -178,9 +187,9 @@ A size report (table sizes, row counts) is part of the admin console, with warni
 | SQL logic | Vitest + PGlite, real migrations, injectable clock, fixed random seed | Every RPC: happy path, each error code, idempotency, locks, limits. |
 | Contracts | Same run: every RPC answer is parsed with the client's Zod schema | SQL and client agree; a schema without a test fails the build. |
 | Invariants | After every test: no negative balances, ledger sums match balances, capacities respected | No money or item leaks. |
-| Economy | Simulation harness with bot players (see `ECONOMY.md` §12) | Pace and balance targets. |
-| Art | Atlas build + rules (palette size, stray pixels, silhouette size) + contact sheets for review | Art quality gates. |
-| UI | Playwright against **local mode**, screenshots at 1440 px and 390 px | Flows work; visual review. |
+| Economy | Simulation harness with bot players (see `ECONOMY.md` §13), kept small | Pace and balance targets. |
+| Art | Atlas build + rules (palette size, stray pixels, silhouette size) + contact sheets for review | Art quality gates for cards and products. |
+| UI | Playwright smoke tests against **local mode**; screenshots at 1440 px per feature, 390 px once per milestone | Flows work; visual review without burning tokens. |
 
 **Local mode (SPIKE):** with no Supabase keys configured, the app runs the *same SQL* in PGlite inside
 the browser (migrations + seed + a small shim for auth, cron and realtime). `pnpm dev` is then a complete

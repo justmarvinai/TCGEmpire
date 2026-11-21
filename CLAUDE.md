@@ -4,7 +4,7 @@
 
 ## Session start checklist
 
-1. Read the gate in `AGENTS.md` §0. **If the phase is PLANNING, write no code.**
+1. Read the gate in `AGENTS.md` §0. **If no milestone is approved there, write no code.**
 2. Read `ROADMAP.md` to find the current milestone and its open tasks.
 3. Check `USER_QUESTIONS.md` for answers the owner has given since the last session; move decided
    answers into `docs/DECISIONS.md` and the affected design docs.
@@ -27,6 +27,8 @@
 - **Use subagents for independent, well-scoped work** (card research, large art batches, test writing),
   each with a precise brief and the relevant doc paths. Review their output before committing it.
 - **Keep the docs true.** A design change is made in the docs first, then in code.
+- **Spend tokens where the game gets better.** Do not re-read whole documents; search for the section
+  you need. Batch art and content work. Keep status reports to a few lines.
 
 ## Version and changelog
 

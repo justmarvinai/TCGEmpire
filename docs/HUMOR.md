@@ -1,20 +1,25 @@
 # TCGEmpire — Humor-Bibel
 
-> Status: **PLAN.** The tone guide for every German text in the game. Sample lines are written in German
-> because that is how they ship. Insider jokes of the friend group are collected via Q-8.
+> Status: **approved plan** (owner decision Q-8 included). The tone guide for every German text in the
+> game. Sample lines are in German because that is how they ship. No insider jokes of the group are used.
 
 ## 1. Tone
 
-- **Trocken, frech, liebevoll.** Dry German deadpan, a wink at the hobby and at ourselves.
-- **Schadenfreude about game events, never about people.** We laugh at the 312 packs without a Holo, not
-  at the person.
+- **Trocken, derb, schwarzhumorig.** Dry German deadpan with teeth. The group insults and rage-baits
+  each other all day, and the game joins in: it roasts players for what they do **in the game**
+  ("312 Booster, kein Holo. Du bist nicht arm dran, du bist einfach schlecht.").
+- **Hard swearing is fine** (Scheiße, Arschloch, Wichser, Hurensohn-level trash talk between friends).
+  Dark humour is fine (death, bankruptcy, the tax office, the futility of existence).
+- **Rage bait is a feature:** taunt emotes in battles ("ez", "Heul leise", "Skill issue"), smug feed
+  headlines about losers, a "Pechvogel" list, passive-aggressive Mutti.
 - **Bureaucracy is funny.** Forms, stamps, opening hours, waiting numbers, fees for everything.
 - **The hobby is funny.** Scalpers, "PSA 10 safe", pack-fresh cards with whitening, Kleinanzeigen chats.
 - **Short.** One-liners. A joke in a button label beats a paragraph.
 - **Never in the way.** Explanations ("i") are clear first, funny second. Errors say what to do.
 
-Language: informal "du". Mild swearing at most (Q-8). No jokes about real personal traits, origin,
-religion, gender, illness. No party politics by default (Q-8).
+Language: informal "du". The line we keep: insults target what someone did in the game, not who they
+are — no slurs or jokes about origin, skin colour, religion, gender, sexuality or disability, and no
+party politics. Everything else is fair game.
 
 ## 2. Real names: house rules
 
@@ -23,9 +28,9 @@ The game deliberately uses real companies, products and public figures as **priv
 | Rule | Detail |
 |------|--------|
 | Private | Invite-only, not indexed, not shared publicly. Screenshots stay in the group. |
-| Good-natured | Public figures appear in the role they are publicly known for (the collector, the TV dealer, the streamer). No invented scandals, crimes or private-life claims about real people. |
+| Real people stay in their public role | Public figures appear as what they are publicly known for (the collector, the TV dealer, the streamer). The roasting is for players and NPCs; no invented scandals, crimes or private-life claims about real people. |
 | Brands as scenery | Real companies appear as what they are (store, grader, parcel service) with affectionate clichés. |
-| Friends | Players and their in-jokes may appear as content only if that friend is fine with it. |
+| No insider content | The game ships without in-jokes about the group (owner decision); players provide those themselves in chat. |
 | Easy to change | All names live in content files; any name can be swapped in one place. |
 
 ## 3. Recurring cast
@@ -45,7 +50,7 @@ The game deliberately uses real companies, products and public figures as **priv
 | **Wachhund Rex** | Bunker security | Has reviews of his own. |
 | **Der 80-€-Händler** | Bares für Rares panel | Bids 80 €. On everything. Always. |
 
-Public-figure cameos proposed (Q-8 confirms the list): collector and auction celebrities as whale buyers
+Public-figure cameos (approved in Q-8): collector and auction celebrities as whale buyers
 and auction hosts; German streamers known for pack openings as pack battle rivals and stream neighbours;
 the hosts and dealers of *Bares für Rares*; the investors of *Die Höhle der Löwen*; an esports legend as
 Riftbound cameo. Each appears only in that public role.
@@ -82,7 +87,8 @@ Riftbound cameo. Each appears only in that public role.
 | Amt / Finanzamt | Formal German, absurd precision | "Ihr Antrag ist eingegangen. Bearbeitungszeit: 3–5 Werktage. Heute ist kein Werktag." |
 | "i" help | Clear sentence, then optional wink | "Der Geldbunker sammelt Geld, auch wenn du offline bist. Ist er voll, kommt nichts mehr dazu. Also: abholen." |
 | Achievements | Pun titles | "Karton-Investor" · "Pechvogel" · "Ehrenmann" · "Judas" · "Auf Fake reingefallen" · "Exodia! Es ist vollbracht." |
-| Loss messages | State the fact, add one dry line | "−12.400 €. Die Blase ist geplatzt. Deine auch." |
+| Loss messages | State the fact, add one mean line | "−12.400 €. Die Blase ist geplatzt. Deine auch." · "Geblockt. Rex lacht dich aus. Rex ist ein Hund." |
+| Battle taunts | Short, quotable, selectable emotes | "ez" · "Heul leise" · "Skill issue" · "Danke für die Karten, du Lappen" |
 
 ## 6. Hobby lore to draw from
 
@@ -95,8 +101,8 @@ use it.
 
 | Do | Don't |
 |----|-------|
-| Joke about situations, systems, clichés | Joke about a player's real life |
+| Joke about situations, systems, clichés, in-game stupidity | Joke about a player's real life |
 | Keep the joke out of the way of the information | Hide a rule inside a joke |
 | Vary lines (at least 5 variants for anything shown often) | Repeat the same punchline every time |
-| Let players opt out of hostile mechanics' pain through defence | Humiliate with effects when someone loses |
+| Roast in-game failure hard and often | Go after real-life traits or protected groups |
 | Keep every name swappable in content files | Hard-code names in components or SQL |

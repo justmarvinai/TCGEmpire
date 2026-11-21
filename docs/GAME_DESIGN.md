@@ -1,8 +1,8 @@
 # TCGEmpire — Game Design Document
 
-> Status: **PLAN, not yet approved.** Nothing here is implemented. Numbers are starting values that the
-> balance simulation (see `ECONOMY.md` §12) will tune. Open choices are collected in `/USER_QUESTIONS.md`;
-> wherever this document says **(Q-n)**, the stated behaviour is the recommended default for that question.
+> Status: **approved plan** (owner decisions of 21 Nov 2026 included, see `/USER_QUESTIONS.md`). Nothing
+> here is implemented yet. Numbers are starting values that the balance simulation (`ECONOMY.md` §13)
+> will tune. **(Q-n)** refers to the owner decision with that number.
 
 Documents are written in English. Everything the player reads in the game is **German**; German in-game
 terms are used here as proper names (Geldbunker, Ruf, Firma …).
@@ -13,7 +13,7 @@ terms are used here as proper names (Geldbunker, Ruf, Firma …).
 
 **Vom Pfandflaschen-Sammler zum Karten-Mogul.**
 
-You start broke in your Kinderzimmer at Mutti's place with 20 € Taschengeld, a booster from Opa and a
+You start broke in your Kinderzimmer at Mutti's place with 400 € Taschengeld, a booster from Opa and a
 dream. You rip packs, flip cards, scalp restocks, send cards to PSA, open your own grading company, move
 out (finally, says Mutti), and build a trading-card empire — together with and against your friends.
 
@@ -47,14 +47,15 @@ an **incremental business sim** with idle elements, a living card market and a l
 
 | Phase | Levels | You are… | Main activities | New systems |
 |-------|--------|----------|-----------------|-------------|
-| **Schulhof** | 1–7 | a kid with Pfandflaschen | Minijobs, first packs, sell to the Kartenladen, quests | Packs, Sammlung, Minijobs, Geldbunker, Kleinanzeigen, Upgrades |
-| **Flohmarkt** | 8–19 | a hobby trader | Cardmarket trading, restock runs, grading, pack battles, first flat | Cardmarket, Schichten, Grading, Pack Battles, Sealed, Wohnen, Auktionen |
-| **Gewerbe** | 20–49 | a business owner | Run the grading company, wholesale, streaming, dirty tricks | Firma, Großhandel, Schattenwirtschaft, Streaming, Bares für Rares |
-| **Mogul** | 50–99 | a tycoon | Company expansion, luxury, megaprojects, museum auctions | Megaprojekte, Museum, Luxus, Franchise |
+| **Schulhof** | 1–9 | a kid with Pfandflaschen | Minijobs, first packs, sell to the Kartenladen, quests | Packs, Sammlung, Minijobs, Geldbunker, Kleinanzeigen, Upgrades |
+| **Flohmarkt** | 10–29 | a hobby trader | Cardmarket trading, restock runs, grading, pack battles, first flat | Cardmarket, Schichten, Grading, Pack Battles, Sealed, Wohnen, Auktionen |
+| **Gewerbe** | 30–64 | a business owner | Run the grading company, wholesale, streaming, dirty tricks | Firma, Großhandel, Schattenwirtschaft, Streaming, Bares für Rares |
+| **Mogul** | 65–99 | a tycoon | Company expansion, luxury, megaprojects, museum auctions | Megaprojekte, Museum, Luxus, Franchise |
 | **Exit** | 100 → Prestige | a legend | Sell the empire, restart stronger, chase master sets | Prestige, Empire-Perks |
 
-Target pace (Q-6): an active player (2–3 h per day plus idle) reaches level 10 on day 1, level 20 in
-about 4 days, level 50 in about 2.5 weeks and level 100 in about 6–7 weeks. Each prestige run is faster.
+Target pace (Q-6): an active player (2–3 h per day plus idle) reaches level 20 on day 1, level 30 on
+day 2, level 50 after 4–5 days and **level 100 after about 2–3 weeks**. Each prestige run is a bit faster.
+The first hours are a firehose of unlocks; from level 30 on, each level is a session goal.
 
 ### Session structure
 
@@ -63,8 +64,8 @@ about 4 days, level 50 in about 2.5 weeks and level 100 in about 6–7 weeks. Ea
 | Seconds | Open a pack, play a minijob round, snipe a listing, collect the bunker. |
 | Minutes | Mini-quests (endless), haggle on Kleinanzeigen, a pack battle, a shift check-in, a restock run. |
 | Session | "Willkommen zurück" recap → collect idle earnings → daily quests → spend → set up the next idle block. |
-| Day | 5 daily quests, Stempelkarte, store restocks at fixed times, company daily report, feed drama. |
-| Week | Weekly quests, Wochenwertung (league), Sunday Flohmarkt, market cycle, admin-triggered happenings. |
+| Day | Reset at 00:00: 5 daily quests, Stempelkarte, the **Tagesereignis**, new Preisniveau, store restocks at fixed times, company daily report, feed drama. |
+| Week | Weekly quests, Wochenwertung (league), 2–3 announced **Highlight-Events**, Sunday Flohmarkt, market cycle. |
 | Weeks | Sets going out of print, company stages, housing ladder, prestige. |
 
 **"Willkommen zurück"**: on return after ≥ 10 minutes the game shows one recap sheet: what the bunker,
@@ -80,7 +81,7 @@ button. This is the idle game's main reward moment and gets full juice.
 
 | Name | Type | Earned by | Spent on / effect |
 |------|------|-----------|-------------------|
-| **Geld (€)** | Main currency | Everything | Everything. Stored in cents. |
+| **Geld (€)** | Main currency | Everything | Everything. Our own price scale: a booster costs 100 €, late game is millions and billions. A slow server-wide **Preisniveau** raises all game prices and payouts with the group's progress (`ECONOMY.md` §4). |
 | **EP / Level** | Progress, 1–100 | Almost every action | Unlocks features, +1 Skillpunkt per level, level rewards. |
 | **Skillpunkte** | Build currency | Level-ups, some weekly quests and achievements | Skill tree (§12). Respec costs money. |
 | **Ruf** | Reputation, 0–1000, shown as ★ 0.0–5.0 with review count | Honest business, fast service, kept deals | Customer flow, slab brand premium, NPC offers. Shady actions and scandals reduce it. |
@@ -98,12 +99,12 @@ Net worth (**Vermögen**) = cash + bunker content + market value of cards, slabs
 
 ### 4.1 Games and sets in 0.0.1
 
-| Game | First set | In-game set size | Packs per display | Booster UVP |
+| Game | First set | In-game set size | Packs per display | Booster price (Basis-€) |
 |------|-----------|------------------|-------------------|-------------|
-| Pokémon | Basis-Set (Base Set, 1999) | 90 | 36 | 4,99 € |
-| Yu-Gi-Oh! | Legend of Blue Eyes White Dragon (2002) | 86 | 24 | 3,99 € |
-| One Piece Card Game | OP-01 Romance Dawn (2022) | 89 | 24 | 4,99 € |
-| Riftbound (League of Legends TCG) | Origins (2025) | 89 | 24 | 4,99 € |
+| Pokémon | Basis-Set (Base Set, 1999) | 90 | 36 | 100 € |
+| Yu-Gi-Oh! | Legend of Blue Eyes White Dragon (2002) | 86 | 24 | 80 € |
+| One Piece Card Game | OP-01 Romance Dawn (2022) | 89 | 24 | 100 € |
+| Riftbound (League of Legends TCG) | Origins (2025) | 89 | 24 | 100 € |
 
 Full curated card lists with tier mapping, German names, art briefs and real-world lore: `docs/sets/*.md`
 (overview and pack odds: `SETS.md`). No beloved card is cut; set sizes stay within 30–100.
@@ -144,7 +145,7 @@ A Grail pull is a server event: full-screen celebration, broadcast to everyone o
 |---------|---------|-------|
 | **Booster** | 9–14 cards depending on the game | 2–3 pack artworks per set; the artwork is cosmetic. |
 | **Display** | 24 or 36 boosters | Guaranteed minimum hits per display, so a sealed display is worth more than its loose packs. |
-| **Case** | 6 displays | Wholesale only (from level 28). |
+| **Case** | 6 displays | Wholesale only (from level 40). |
 | **Special products** | e.g. Themendecks, Starter Decks | Later alphas / later sets, listed per set file. |
 
 Sealed can be **opened**, **held** as an investment, **sold** or **traded**. Opening a display gives you its
@@ -183,7 +184,8 @@ slot. Exact structure per set: `SETS.md`.
 The server decides the pack's content the moment you confirm; the client only replays. Closing the tab
 loses nothing. Skip is always available.
 
-1. **Pick.** Pack floats in 3D tilt with foil sheen. Counter 1 / 5 / 10 (bulk sizes are upgrades).
+1. **Pick.** Pack floats in 3D tilt with foil sheen. **Buy and open 1, 5 or 10 at once — available from
+   level 1.**
 2. **Tear.** Drag across the top to rip the foil (or press Space / click). Crinkle sound, light burst.
 3. **Reveal.** Cards come as a stack. Click / Space / drag to flip through. Bulk goes fast.
 4. **Suspense on the Hit-Slot.** The last card waits face down. Its glow leaks the tier colour, the pack
@@ -198,8 +200,13 @@ Extras that make it a game:
   "Glurak wann?"). When streaming is unlocked this chat becomes income (§17).
 - **Fettfinger:** eating a Döner refills energy but gives a 10-minute Fettfinger debuff — hits opened during
   it roll worse Oberfläche. Upgrade "Baumwollhandschuhe" removes it.
-- **Bulk opening** (×10, later ×36 display mode): summary leads with profit/loss, top hits as a highlight
-  reel, value-sorted grid.
+- **Multi-rip (×5 / ×10, from the start; ×36 display mode as an upgrade):** packs open one after another
+  with a shortened reveal, or all at once.
+- **Sofort aufdecken (skip-rip):** one button or key at any moment reveals everything instantly and jumps
+  to the summary — for one pack or the whole batch. A setting makes instant reveal the default; Ultra and
+  Grail hits still get their (short, skippable) celebration.
+- **Batch summary** leads with profit/loss, top hits as a highlight reel, then a value-sorted grid with
+  "Bulk verkaufen".
 - **Auto rules** (upgrades): auto-sell Commons you own ≥ 4 times, auto-sleeve hits.
 - Every reveal has keyboard control; all effects respect "Animationen reduzieren".
 
@@ -232,11 +239,11 @@ Four venues with different rules. Each is a real, named platform parody with its
 |-------|--------|-------------|-----|-----------|
 | **Kartenladen-Ankauf** | 1 | NPC shop | — (pays ~60 % of value) | Instant, safe, bad price. "Ich muss ja auch von was leben." |
 | **Kleinanzeigen** | 4 | NPC private sellers and buyers | 0 % | Bargains, haggling, lowballers, fakes, no protection. "Was letzte Preis?" |
-| **Cardmarket** | 8 | Players and NPC traders | 5 % seller fee | Listings and buy orders, buyer protection, price charts. The main market. |
-| **eBay-Auktionen** | 18 | Players and NPC bidders | 10 % | Timed auctions for high-end items, sniping, bidding wars. |
-| **Direkthandel** | 8 | A specific player | Gift tax above an allowance | Trade window; both confirm. Basis for helping and for deals between friends. |
-| **Bares für Rares** | 22 | NPC dealer panel | — | Once per day: expert appraisal, then dealers bid. One of them always bids 80 €. |
-| **Sonntags-Flohmarkt** | 14 | NPC stalls | 0 % | Every Sunday: random bargains and junk boxes, haggling. |
+| **Cardmarket** | 10 | Players and NPC traders | 5 % seller fee | Listings and buy orders, buyer protection, price charts. The main market. |
+| **eBay-Auktionen** | 25 | Players and NPC bidders | 10 % | Timed auctions for high-end items, sniping, bidding wars. |
+| **Direkthandel** | 10 | A specific player | Gift tax above an allowance | Trade window; both confirm. Basis for helping and for deals between friends. |
+| **Bares für Rares** | 28 | NPC dealer panel | — | Once per day: expert appraisal, then dealers bid. One of them always bids 80 €. |
+| **Sonntags-Flohmarkt** | 18 | NPC stalls | 0 % | Every Sunday: random bargains and junk boxes, haggling. |
 
 ### 7.1 Market value (Marktwert)
 
@@ -270,12 +277,12 @@ Actual player-to-player prices are free.
 
 - Listing an auction costs a small fee; duration 1 h / 6 h / 24 h; anti-snipe extension of 30 s.
 - NPC whales take part based on the item's value and current hype. Auctions are announced in the feed.
-- **Museum auctions** (from level 50): the admin can put unique **1-of-1 trophy cards** up for auction
+- **Museum auctions** (from level 65): the admin can put unique **1-of-1 trophy cards** up for auction
   (e.g. *Pikachu Illustrator*). They are the game's most tempting money sink (§15).
 
 ### 7.5 Retail: the restock run
 
-In-print sealed product is bought at UVP in **stores** — and stock is limited:
+In-print sealed product is bought at list price in **stores** — and stock is limited:
 
 | Store | Flavour | Mechanic |
 |-------|---------|----------|
@@ -285,7 +292,7 @@ In-print sealed product is bought at UVP in **stores** — and stock is limited:
 | **Kaufland** | Random pallets | Unannounced restocks (event), cheap. |
 | **Pokémon Center Online** | "Sie befinden sich im Warteraum" | Queue mini-interaction; exclusive pack artworks. |
 | **Local Game Store "Würfelbude"** | Fair, knows you by name | Personal allocation that grows with Ruf; preorders for new sets. |
-| **Großhandel** (level 28) | Distributor account for businesses | Weekly allocation of displays and cases at EK price, based on company stage. |
+| **Großhandel** (level 40) | Distributor account for businesses | Weekly allocation of displays and cases at EK price, based on company stage. |
 
 Shared stock means friends and the NPC scalper **Scalper-Sven** race each other. Restock times are known
 (or announced by the upgrade "Restock-Alarm"), so restocks become appointments. On Sundays stores are
@@ -295,7 +302,7 @@ closed — Sunday is Flohmarkt day.
 
 ## 8. Grading
 
-Unlock: level 10. Grading turns a raw card into a slab and is the main value multiplier — and a gamble.
+Unlock: level 13. Grading turns a raw card into a slab and is the main value multiplier — and a gamble.
 
 1. **Vorprüfung (pre-grading).** With the Lupe you inspect a copy and see ranges for its four quality
    values (e.g. "Zentrierung 8–10"). Better tools and Sammler skills narrow the ranges. Picking the right
@@ -322,7 +329,7 @@ lengthen all queues ("PSA: Bearbeitungszeit aktuell 6–8 Monate" — in game ti
 
 ## 9. The company (Firma)
 
-Unlock: level 20, after the bureaucracy quest chain **"Gewerbeanmeldung"** (Passierschein A38 included).
+Unlock: level 30, after the bureaucracy quest chain **"Gewerbeanmeldung"** (Passierschein A38 included).
 In 0.0.1 the company is a **grading company**; the system is built so further business units (Kartenladen,
 Auktionshaus, Automaten) can be added later.
 
@@ -418,20 +425,20 @@ Cost energy, pay immediately by performance, give Pfandbons for great rounds.
 
 | Minijob | Unlock | Game | Perk while it is your main minijob |
 |---------|--------|------|-------------------------------------|
-| **Pfandflaschen sammeln** | 1 | Catch/click bottles; Einweg 0,25 €, Mehrweg 0,15 €, Bierflasche 0,08 € | — |
+| **Pfandflaschen sammeln** | 1 | Catch/click bottles; Einweg 5 €, Mehrweg 3 €, Bierflasche 1,60 € | — |
 | **Regale einräumen (Müller)** | 3 | Sort products to the right shelf under time pressure | You hear about Müller restocks 5 min early |
 | **Karten sortieren (Würfelbude)** | 6 | Sort cards by tier/set fast | Better Ankauf prices |
-| **Pakete ausliefern (DHL)** | 9 | Timing/route game; don't leave it "beim Nachbarn" | Faster shipping for your sales |
-| **Kasse (Smyths Toys)** | 12 | Change and barcode memory | Staff discount on sealed |
-| **Echt oder Fake?** (Cardmarket-Prüfer) | 16 | Spot the fake card | Fake warning on Kleinanzeigen |
-| **Grading-Praktikum (PSA)** | 19 | Judge card quality | Narrower Vorprüfung ranges; prepares for the Firma |
+| **Pakete ausliefern (DHL)** | 10 | Timing/route game; don't leave it "beim Nachbarn" | Faster shipping for your sales |
+| **Kasse (Smyths Toys)** | 14 | Change and barcode memory | Staff discount on sealed |
+| **Echt oder Fake?** (Cardmarket-Prüfer) | 18 | Spot the fake card | Fake warning on Kleinanzeigen |
+| **Grading-Praktikum (PSA)** | 24 | Judge card quality | Narrower Vorprüfung ranges; prepares for the Firma |
 
 ### 10.2 Schichten (idle shifts)
 
 Pick a job and a shift length (15 min / 1 h / 4 h / 8 h), come back and collect wage and EP. One shift at
 a time. Each job has ranks (Aushilfe → Festangestellt → Schichtleitung → Filialleitung) earned through
 hours worked; higher ranks pay more and unlock perks. Optional check-ins during a shift give an
-"Überstunden" bonus. From level 20 you can send **staff** instead of yourself.
+"Überstunden" bonus. Once you own a company you can send **staff** instead of yourself.
 
 Job income matters early and fades into pocket money later — by design; the "i" says so.
 
@@ -458,7 +465,9 @@ Unlock: level 3 (it starts as a Sparschwein).
 
 Groups: **Öffnen** (opening speed, bulk sizes, Pack-Glück, auto rules), **Sammlung** (binder comfort,
 Vorprüfung tools), **Markt** (listing slots, fees, shipping, Restock-Alarm, allocation "Vitamin B"),
-**Jobs** (wage, energy, shift length), **Bunker** (see above), **Sicherheit** (insurance, alarm, dog).
+**Jobs** (wage, energy, shift length), **Bunker** (see above), **Abwehr** (one defence ladder per attack
+type: Tresortür, Wachhund Rex, Alarmanlage, Steuerberater, Rechtsschutz, Faktencheck, Betriebsklima,
+Prüfgerät — see §16.2).
 Prices grow exponentially per level; the UI always shows "jetzt → danach" and the payback time.
 
 ### 12.2 Skill tree (Skillpunkte → build identity)
@@ -471,7 +480,7 @@ respec costs money. Four branches, each ending in a keystone:
 | **Sammler** | Luck and eye | Pack-Glück, Vorprüfung precision, set bonus strength, quality of pulled hits | **God-Pack-Chance ×3** |
 | **Händler** | Deals | Fees, haggling, more and better offers, price trend preview, auction anti-snipe | **Insider:** see tomorrow's market event one hour early |
 | **Unternehmer** | Scale | Company efficiency, staff, bunker, wages, tax advisor | **Too Big To Fail:** once per run the state bails you out |
-| **Schlitzohr** | Dirty tricks and defence | Heist success, scam chance, detection resistance — or security, insurance, lie detection | **Der Pate:** sabotage cooldowns halved, bribes always work once per day |
+| **Schlitzohr** | More efficient attacks | Attack success, bigger loot share, lower cost, shorter cooldowns, detection resistance; a small defensive side line | **Der Pate:** attack cooldowns halved, one guaranteed bribe per day |
 
 ---
 
@@ -481,8 +490,8 @@ respec costs money. Four branches, each ending in a keystone:
 |------|-------|-------|-------------|-------|
 | **Kapitel (story/tutorial)** | Chain | — | Unlocks, packs, money | Mutti and Opa guide you through every new system. |
 | **Mini-Quests** | 3 always active, endless | Replaced instantly | Tiny: a little money, EP, 1 Pfandbon | "Öffne 3 Booster", "Sammle den Bunker ein". Every 10th gives a small bonus chest. |
-| **Tagesquests** | 5 | Daily 04:00 | Medium | One free reroll per day; never impossible for your level or wallet. |
-| **Wochenquests** | 5 | Monday 04:00 | Large + weekly chest (pack/display of choice) | One of them is social (trade, battle, help). |
+| **Tagesquests** | 5 | Daily 00:00 | Medium | One free reroll per day; never impossible for your level or wallet. |
+| **Wochenquests** | 5 | Monday 00:00 | Large + weekly chest (pack/display of choice) | One of them is social (trade, battle, help). |
 | **Erfolge (achievements)** | ~200 in tiers | — | Titles, cosmetics, Skillpunkte at milestones | Includes joke achievements for failures ("Pechvogel", "Auf Fake reingefallen"). |
 | **Sammelziele** | Per set | — | Permanent bonuses | §6. |
 | **Event-Quests** | During events | — | Event rewards | §19. |
@@ -495,7 +504,7 @@ are offered, and deep-link to the page where they are solved.
 
 ## 14. Housing (Wohnen)
 
-Unlock: level 15 ("Mutti: Wann ziehst du endlich aus?"). Housing is a status ladder, a money sink and has
+Unlock: level 20 ("Mutti: Wann ziehst du endlich aus?"). Housing is a status ladder, a money sink and has
 real function: **storage capacity, Vitrine slots, energy regeneration, security and a small living bonus**.
 
 | # | Home | Flavour |
@@ -513,10 +522,12 @@ real function: **storage capacity, Vitrine slots, energy regeneration, security 
 | 10 | Finca auf Mallorca | |
 | 11 | Privatinsel | |
 
-- **Einrichtung:** each home is a pixel-art room scene with decor slots (Vitrine, Schreibtisch, Sofa,
-  Wand, Teppich, Gaming-Setup, Haustier, Deko …). Every slot has many items from cheap to absurd
-  (goldene Kloschüssel). Items give small bonuses and a **Wohnwert** score.
-- **Besuch:** friends can visit, see room and Vitrine, sign the Gästebuch, and once a day leave
+- **Einrichtung:** each home has furnishing slots (Vitrine, Schreibtisch, Sofa, Wand, Teppich,
+  Gaming-Setup, Haustier, Deko …). Every slot has a ladder of items from cheap to absurd (goldene
+  Kloschüssel). Items give small bonuses and a **Wohnwert** score. Presented as a clean list with one
+  icon per slot and a funny text per item — deliberately no drawn room scene (pixel art is reserved for
+  cards and products).
+- **Besuch:** friends can visit, see home, furnishing and Vitrine, sign the Gästebuch, and once a day leave
   "Kaffee und Kuchen" (small buff for both).
 - Running costs (Nebenkosten) are a small recurring sink; the yearly **Nebenkostenabrechnung** is an event.
 
@@ -530,9 +541,9 @@ Tempting by design: each sink is **visible to friends** and gives a **small real
 |------|----------|---------------|
 | **Upgrades, skills respec** | §12 | Power. |
 | **Housing and decor** | §14 | Capacity, comfort, flex on visits. |
-| **Cosmetics** | Avatar outfits, card sleeves, binder skins, playmats, pack-opening effects, profile frames, slab label styles, titles, pets | Seen in chat, battles, toplists, and on every slab you grade. |
-| **Luxus** (level 40) | Cars (Golf GTI → AMG → Lambo), watches, yacht, private jet | Shown on the profile; each gives a tiny permanent bonus; a "Luxus" toplist. |
-| **Megaprojekte** (level 50) | **BER fertigbauen**, Stuttgart 21, Schalke 04 retten, Elbphilharmonie II | Whole-server donation goals that take weeks; server-wide permanent bonus on completion; donor ranking and plaque. |
+| **Cosmetics** | Titles, name colours, profile frames, card sleeves (generated patterns), binder skins, pack-opening effect themes, slab label styles. Your profile picture is the artwork of any card you own. | Seen in chat, battles, toplists, and on every slab you grade. |
+| **Luxus** (level 55) | Cars (Golf GTI → AMG → Lambo), watches, yacht, private jet | Shown on the profile; each gives a tiny permanent bonus; a "Luxus" toplist. |
+| **Megaprojekte** (level 65) | **BER fertigbauen**, Stuttgart 21, Schalke 04 retten, Elbphilharmonie II | Whole-server donation goals that take weeks; server-wide permanent bonus on completion; donor ranking and plaque. |
 | **Museum auctions** | 1-of-1 trophy cards (Pikachu Illustrator, …) | Unique, named in a Hall of Fame; the ultimate flex. |
 | **Rubbellose & Lotto** | At the Kiosk | Small gambling sink with rare big wins. |
 | **Running costs** | Wages, rent, insurance, fees, taxes, fines | Keep money moving. |
@@ -541,8 +552,9 @@ Tempting by design: each sink is **visible to friends** and gives a **small real
 
 ## 16. Friends: help and betrayal
 
-Everyone on the server is in one world. Social features unlock early; the dark ones at level 25 (Q-7
-sets how hard they hit; default **medium**: fun, capped, never ruinous).
+Everyone on the server is in one world (2–10 friends). Social features unlock early; the dark ones at
+level 35. Intensity (Q-7): **medium** — it hurts a bit, never ruins anyone — and **every attack can be
+blocked**.
 
 ### 16.1 Helping
 
@@ -557,11 +569,19 @@ sets how hard they hit; default **medium**: fun, capped, never ruinous).
 
 ### 16.2 Betraying
 
-Every hostile action costs money, has a cooldown, can fail, and can be defended against. Losses are capped
-per day. The victim always learns *what* happened, gets a discounted **Rache** option for 24 h, and the
-story lands in the feed.
+Every hostile action costs money, has a cooldown and is decided by one roll:
+**success = base chance + attacker's Angriff − defender's Abwehr** (5–85 %).
 
-| Action | Effect | Counter |
+- **Abwehr** is bought as **account upgrades** — one ladder per attack type. A well-defended player blocks
+  most attempts.
+- **Angriff** comes from **skills** in the Schlitzohr branch: higher success, more loot, lower cost,
+  shorter cooldowns.
+- A **blocked** attack costs the attacker the price plus a fine; the defender gets a notification, a
+  small Schadenfreude payout and the headline ("ABGEBLITZT: {name} scheitert an Wachhund Rex").
+- Losses are capped per day (10 % of net worth without the collection). The victim always learns what
+  happened and gets a discounted **Rache** for 24 h. Everything lands in the feed.
+
+| Action | Effect | Blocked by (Abwehr upgrade) and other counters |
 |--------|--------|---------|
 | **Bunker knacken** | Steal a share of the target's *uncollected* bunker money | Collect regularly; Sicherheit upgrades; Wachhund Rex; on failure the thief pays a fine and loses Ruf |
 | **Beim Finanzamt anschwärzen** | Triggers a Steuerprüfung at the target | If the target is clean, *you* pay for "falsche Verdächtigung" |
@@ -577,7 +597,7 @@ story lands in the feed.
 
 ### 16.3 Pack Battles
 
-Unlock: level 12. Lobby for 2–4 players (NPC opponents can fill seats, Q-13), 1–10 packs each from any
+Unlock: level 16. Lobby for 2–4 players (NPC opponents can fill seats, Q-13), 1–10 packs each from any
 released set; everyone pays the same stake. The server opens all packs at once; clients replay in sync,
 round by round, with running totals, emotes and spectators.
 
@@ -600,7 +620,7 @@ round by round, with running totals, emotes and spectators.
 
 ---
 
-## 17. Streaming (level 30)
+## 17. Streaming (level 45)
 
 Go live while opening packs. Viewers come from Followers and from what you open; hits cause donation
 bursts and new Followers; a boring stream loses viewers. The fake Twitch chat is now your audience.
@@ -638,8 +658,15 @@ market stays alive at any time of day without being an infinite money source.
 
 ## 19. Events
 
-An event has a scope (global / personal), a duration, modifiers and often its own quests. The scheduler
-rolls random events with cooldowns; the admin can trigger any event manually.
+An event has a scope (global / personal), a duration, modifiers and often its own quests. The admin can
+trigger any event manually. Cadence (Q-18):
+
+- **Tagesereignis:** every day at 00:00 one random server-wide event for the whole day (a discount, a
+  hyped game, slower shipping, double Pfandbons …), shown on the home page.
+- **Zufallsereignisse:** small personal and market events at random times during the day.
+- **Highlight-Events:** two or three per week at announced times with a countdown — the exciting ones:
+  Kartenmesse, Mega-Restock, Hype-Welle, crash, Pack-Battle-Abend, museum auction, double-EP evening.
+  The Sunday Flohmarkt is fixed.
 
 | Kind | Examples |
 |------|----------|
@@ -673,6 +700,9 @@ At level 100 you can sell your empire.
 - Prestige ranks are endless and named: Kleinunternehmer → Mittelständler → Hidden Champion →
   DAX-Vorstand → Oligarch → …
 - Each run should feel different: new skill build, faster early game, new perks to aim for.
+- **No shortcut back to riches (Q-12):** you restart cash-poor. Items come back from the attic only as
+  fast as your storage and a daily retrieval limit allow, and selling them still meets NPC budgets and
+  price pressure. Perk bonuses are modest per prestige (`ECONOMY.md` §11).
 
 ---
 
@@ -707,37 +737,59 @@ At level 100 you can sell your empire.
 
 | Lv | Unlock | Lv | Unlock |
 |----|--------|----|--------|
-| 1 | Kinderzimmer, Pfandflaschen, Kiosk, Pack-Opening, Sammlung, Mini-Quests, Stammtisch, Toplisten | 18 | eBay-Auktionen |
-| 2 | Tagesquests, Stempelkarte | 20 | **Firma** |
-| 3 | Geldbunker | 22 | 4. TCG-Lizenz, Bares für Rares |
-| 4 | Kleinanzeigen | 25 | Schattenwirtschaft (heists, sabotage, shady deals), insurance |
-| 5 | Upgrades, Skillbaum | 28 | Großhandel (displays and cases at EK) |
-| 6 | Schichten (idle jobs) | 30 | Streaming |
-| 8 | Cardmarket, Direkthandel, 2. TCG-Lizenz | 35 | Firma: research, second site |
-| 10 | Grading, Wochenquests | 40 | Luxus |
-| 12 | Pack Battles | 45 | Höhle der Löwen (investors) |
-| 14 | Lager, displays, Sonntags-Flohmarkt | 50 | Megaprojekte, Museum auctions |
-| 15 | Wohnen (move out), 3. TCG-Lizenz | 60 / 75 / 90 | Company stages 5–7, top homes and luxury tiers |
-| 16 | Box Breaks, Privatkredit | 100 | **Prestige (Exit)** |
+| 1 | Kinderzimmer, Pfandflaschen, Kiosk, Pack-Opening (×1/×5/×10, Sofort aufdecken), Sammlung, Mini-Quests, Stammtisch, Toplisten, Profil | 25 | eBay-Auktionen |
+| 2 | Tagesquests, Stempelkarte | 28 | 4. TCG-Lizenz, Bares für Rares |
+| 3 | Geldbunker | 30 | **Firma** |
+| 4 | Kleinanzeigen | 35 | Schattenwirtschaft (attacks, shady deals), Abwehr upgrades, insurance |
+| 5 | Upgrades, Skillbaum | 40 | Großhandel (displays and cases at wholesale price) |
+| 7 | Schichten (idle jobs) | 45 | Streaming |
+| 10 | Cardmarket, Direkthandel, 2. TCG-Lizenz | 50 | Firma: research, second site |
+| 13 | Grading, Wochenquests | 55 | Luxus |
+| 16 | Pack Battles | 60 | Höhle der Löwen (investors) |
+| 18 | Lager, displays, Sonntags-Flohmarkt | 65 | Megaprojekte, Museum auctions |
+| 20 | Wohnen (move out), 3. TCG-Lizenz | 70 / 80 / 90 | Company stages 5–7, top homes and luxury tiers |
+| 22 | Box Breaks, Privatkredit | 100 | **Prestige (Exit)** |
+
+With the 2–3 week pace this means: everything up to Pack Battles within the first hour, Wohnen on day 1,
+the Firma on day 2, the dark side on day 2–3, the mogul features in week 2.
 
 Every level in between gives at least one smaller unlock (a new job or rank, store, home, decor line,
 upgrade tier) plus a level reward.
 
 **TCG licences (Q-10):** at the start you pick your favourite of the four games and get a starter bundle
-for it. The other three unlock as "Händlerlizenzen" at levels 8, 15 and 22 (small fee), in the order you
+for it. The other three unlock as "Händlerlizenzen" at levels 10, 20 and 28 (small fee), in the order you
 choose.
+
+### Profil and Gefahrenzone
+
+The profile shows level, titles, Vitrine, statistics, home and company. At its bottom sits the
+**Gefahrenzone** with two actions, each behind a typed confirmation (your username) and a hold-to-confirm
+button:
+
+- **Account zurücksetzen:** back to a fresh level-1 account with the start capital. Money, cards, sealed,
+  slabs, company, home, upgrades, skills, quests and prestige are gone; username, friends' chat history
+  and cosmetics earned through achievements are kept only if stated in the dialog (default: only the
+  username is kept).
+- **Account löschen:** removes the account and frees the username.
+
+In both cases open listings, trades, auctions and battles are cancelled first, loans are written off,
+the items are destroyed (they leave the Pop Report and the supply), and old feed and chat entries show
+"Gelöschter Spieler". A reset has a 24-hour cooldown and the new account starts with the usual one-hour
+trade lock, so neither can be used to pass wealth around. If the admin account is deleted, the oldest
+remaining account becomes admin.
 
 ---
 
 ## 23. Admin console
 
-For the owner only (role flag on the player):
+For the admin only. The **first account created** is the admin (Q-5); it plays normally and additionally
+sees this console:
 
 - Set lifecycle transitions, restock overrides, print-run settings.
 - Start/stop events, schedule museum auctions, set megaproject goals.
 - Economy dashboard: money created/destroyed per source and sink, per day; pack EV; price index.
 - Live-tune balance values (stored in config tables, no deploy needed).
-- Invite codes, player overview, compensation gifts, server announcements in the feed.
+- The shared invite code (set once, changeable), player overview, compensation gifts, announcements.
 - Job run log and error list of the server tick.
 
 ---
@@ -746,16 +798,17 @@ For the owner only (role flag on the player):
 
 **Must (the release is not 0.0.1 without it):** §3–§16 core (packs, collection, all four games, Kartenladen-
 Ankauf, Kleinanzeigen, Cardmarket, retail, grading with NPC graders and player companies, company stages
-1–4, minijobs and shifts, bunker, upgrades, skill tree, all quest types, housing with decor slots,
-cosmetics basics, trades/gifts, pack battles, bunker heists and Finanzamt, chat, feed), §18 NPC traders
-and rivals, §19 event engine with at least 25 events, §20 prestige, §21 toplists, §22 onboarding and "i"
-help, §23 admin console.
+1–4, minijobs and shifts, bunker, upgrades, skill tree, all quest types, housing with furnishing slots,
+cosmetics basics, trades/gifts, pack battles, attacks with Abwehr (at least bunker heist and Finanzamt),
+Preisniveau, chat, feed), §18 NPC traders
+and rivals, §19 event engine with at least 25 events (daily event + highlight events), §20 prestige,
+§21 toplists, §22 onboarding, "i" help, profile with Gefahrenzone, §23 admin console.
 
 **Should (planned for 0.0.1, first to slip to 0.0.2 if needed):** eBay auctions, Bares für Rares,
 Flohmarkt, streaming, box breaks, loans, luxury, megaprojects, museum auctions, company stages 5–7,
 calendar events.
 
-**Later (0.0.2+):** further business units (Kartenladen, Automaten, Auktionshaus), free-placement room
-editor, more sets, tournaments, guilds/Vereine, music.
+**Later (0.0.2+):** further business units (Kartenladen, Automaten, Auktionshaus), drawn room scenes and
+avatars, more sets, tournaments, guilds/Vereine, music.
 
 The build order is in `/ROADMAP.md`.

@@ -6,13 +6,13 @@ A private, German multiplayer browser game (desktop-first, pixel-art charm): an 
 about the trading-card hobby. Open packs, flip cards, scalp restocks, grade, run your own grading company,
 help and betray your friends.
 
-> **Status: planning.** No game code exists yet. See `ROADMAP.md`.
+> **Status: plan approved, coding not started.** No game code exists yet. See `ROADMAP.md`.
 
 ## Documents
 
 | Document | Content |
 |----------|---------|
-| [`USER_QUESTIONS.md`](./USER_QUESTIONS.md) | Open questions for the owner, each with a recommended default |
+| [`USER_QUESTIONS.md`](./USER_QUESTIONS.md) | Owner decisions and open questions |
 | [`ROADMAP.md`](./ROADMAP.md) | Milestones `0.0.1-alpha_01` … `0.0.1` |
 | [`CHANGELOG.md`](./CHANGELOG.md) | What changed |
 | [`docs/GAME_DESIGN.md`](./docs/GAME_DESIGN.md) | The game: systems, loops, unlocks, scope |

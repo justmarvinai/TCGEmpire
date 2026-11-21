@@ -1,7 +1,8 @@
 # TCGEmpire — Sets, Tiers and Pack Odds
 
-> Status: **PLAN.** Odds and values are starting points; the calibration script fixes each set's numbers
-> so that an average booster is worth 72 % ± 3 % of its price (`ECONOMY.md` §4.1).
+> Status: **approved plan.** Odds and values are starting points; the calibration script fixes each set's
+> numbers so that an average booster is worth 72 % ± 3 % of its price (`ECONOMY.md` §5.1). Prices are
+> Basis-€ and rise with the Preisniveau (`ECONOMY.md` §4).
 
 ## 1. Launch sets
 
@@ -89,12 +90,15 @@ display keep their content. The skill "Display-Mapping" (Sammler branch) hints w
 
 ## 5. Prices at launch
 
-| Set | Booster UVP | Display UVP | Case (wholesale) |
-|-----|-------------|-------------|------------------|
-| Pokémon Basis-Set | 4,99 € | 159 € | 860 € |
-| Yu-Gi-Oh! LOB | 3,99 € | 85 € | 460 € |
-| One Piece OP-01 | 4,99 € | 106 € | 575 € |
-| Riftbound Origins | 4,99 € | 106 € | 575 € |
+| Set | Booster | Display | Case (wholesale) |
+|-----|---------|---------|------------------|
+| Pokémon Basis-Set | 100 € | 3.200 € | 18.200 € |
+| Yu-Gi-Oh! LOB | 80 € | 1.700 € | 9.700 € |
+| One Piece OP-01 | 100 € | 2.100 € | 12.000 € |
+| Riftbound Origins | 100 € | 2.100 € | 12.000 € |
+
+Boosters can be bought and opened 1, 5 or 10 at a time from level 1; a display can be opened in one go
+with the display-mode upgrade.
 
 ## 6. Lifecycle
 

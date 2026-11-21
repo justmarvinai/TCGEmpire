@@ -1,7 +1,19 @@
 # TCGEmpire — Art Direction, Pixel Art Pipeline and UI
 
-> Status: **PLAN.** Sizes, fonts and colours are confirmed in alpha_01 on a living showcase page
-> (`/dev/ui`) and with contact sheets, before any volume production starts.
+> Status: **approved plan** (owner decisions of 21 Nov 2026 included). Sizes, fonts and colours are
+> confirmed in alpha_01 on a showcase page (`/dev/ui`) and with contact sheets, before volume production.
+
+## 0. Pixel-art budget (owner rule)
+
+**Card and product artwork gets the full effort. Everywhere else: little pixel art — but what exists is
+excellent.** Pixel art costs a lot of production effort, so it is spent where players look longest.
+
+| Full effort | Small, fixed set | Not drawn (clean UI instead) |
+|-------------|------------------|-------------------------------|
+| Card artworks, card frames and backs, boosters, displays, cases, slabs | Game logo, ~40 UI and navigation icons, currency and tier icons, 7 Geldbunker stages, one emblem set for companies and NPCs (generated symmetric 8×8 emblems) | Avatars (the profile picture is the artwork of a card you own), room scenes and furniture, store and job illustrations, NPC portraits, mini-game scenery (icons and simple shapes) |
+
+New pixel art outside the first column needs a reason; the default answer is typography, colour and
+layout.
 
 ## 1. Look and feel
 
@@ -9,8 +21,8 @@
 
 - **UI: modern, calm, clean.** Dark theme, generous spacing, clear hierarchy, readable type. Data
   (numbers, prices, tables) is always in a clean typeface with tabular figures.
-- **Pixel art: the personality.** Cards, packs, displays, slabs, avatars, rooms, icons, NPC portraits,
-  mini-games. Always integer-scaled, never blurred, never mixed pixel sizes inside one element.
+- **Pixel art: the personality — concentrated on cards and products** (§0), plus a small icon set.
+  Always integer-scaled, never blurred, never mixed pixel sizes inside one element.
 - **Chunky game feel on controls:** 2 px borders, hard "pressed" shadows, stepped pixel corners on panels,
   buttons that sink when pressed.
 - **Juice with restraint:** big effects are reserved for big moments (hit reveal, level-up, Grail,
@@ -45,7 +57,7 @@ open-licence, self-hosted. Final pick on the showcase page.
 
 ```
 ┌────────────┬──────────────────────────────────────────────────────────────┬───────────────┐
-│  Sidebar   │ Top bar: avatar + level ring + EP bar · Geld · Pfandbons ·   │  Right rail   │
+│  Sidebar   │ Top bar: picture + level ring + EP bar · Geld · Pfandbons ·  │  Right rail   │
 │  grouped   │ Ruf ★ · Energie · Bunker fill · notifications                │  (≥1440 px)   │
 │  nav with  ├──────────────────────────────────────────────────────────────┤  KARTEN-BILD  │
 │  pixel     │                                                              │  feed,        │
@@ -77,11 +89,9 @@ open-licence, self-hosted. Final pick on the showcase page.
 | **Display** | 144×104 | ×2–×3 | Open-top box with pack fronts visible. |
 | **Case** | 128×112 | ×2 | Brown carton, tape, shipping label. |
 | **Slab** | 96×152 | ×2–×4 | Acrylic case with highlights, label area 80×22, card inset 80×112. |
-| Avatar | 32×48 | ×3–×4 | Layered: body, skin, hair, outfit, hat, accessory. |
-| NPC portrait | 32×32 | ×3 | |
-| Room scene | 240×136 | ×3–×4 | Background per home + decor layers at fixed anchor points. |
-| Bunker / company / store scene | 160×96 | ×3 | Evolves with level. |
-| Mini-game sprites | 16–32 | ×3 | Shared with icons where possible. |
+| Geldbunker stage | 48×48 | ×3 | Seven stages, Sparschwein to Geldspeicher. |
+| Emblem (company, NPC) | 8×8 generated | ×4–×6 | Symmetric, seeded from the name, two colours. |
+| Profile picture | crop of a card artwork | — | Any card the player owns. |
 
 House style rules:
 
@@ -118,8 +128,8 @@ logos pixel for pixel:
   set file — recognisable, on-model in colours and silhouette, in a new pose and scene.
 
 **Slabs** imitate the real cases: PSA-style red-white label, BGS-style gold/silver/black label with four
-sub-grades, CGC-style blue label, and player-company labels built from the owner's colours and pixel
-logo. Label text (grade, card name, cert number) is rendered at runtime.
+sub-grades, CGC-style blue label, and player-company labels built from the owner's colours and an
+emblem. Label text (grade, card name, cert number) is rendered at runtime.
 
 ## 6. The pipeline: art as code
 
@@ -159,12 +169,15 @@ never bundled into the main app.
 
 | Priority | What | When |
 |----------|------|------|
-| P0 | Toolkit, card frames for all four games, card backs, pack and display art for the first set, slab frames | alpha_01–02 |
+| P0 | Toolkit, card frames for all four games, card backs, pack and display art for the first set, slab frames, the small icon set | alpha_01–02 |
 | P1 | **Hero art** for every Holo, Alternative, Ultra and Grail card plus fan-favourite commons (Pikachu, Kuriboh-class) — about 25–30 per set, each individually crafted and reviewed | With each set's alpha |
 | P2 | Template-based art for Rares, Uncommons, Commons — every card individually recognisable, less polish | With each set's alpha |
 | P3 | Polish passes: upgrade P2 art, add alternative pack artworks, animated Grails | alpha_12 and after |
 
-Estimated effort is dominated by P1/P2 card art; the roadmap reserves explicit art blocks for it.
+Effort is dominated by P1/P2 card art. To keep it affordable: templates and material presets are built
+once and reused; P2 cards are produced in batches per template with one contact-sheet review per batch;
+only P1 hero cards get individual refinement rounds; art batches are well suited to parallel subagents
+with a precise brief.
 Quality bar before volume: the first ten cards of the Basis-Set (incl. Glurak, Pikachu, a trainer and an
 energy) are taken to final quality and shown to the owner before the rest is produced.
 
@@ -177,7 +190,7 @@ energy) are taken to final quality and shown to the owner before the rest is pro
 | Level-up | Full overlay: level number bounces in, unlock list staggers, confetti, fanfare, then the mini-tour. |
 | Hit reveal | Tiered charge, flash, shake, particles, value count-up (see `GAME_DESIGN.md` §5). |
 | Grail | Blackout, heartbeat, white flash, rainbow beams, server-wide toast. |
-| Bunker collect | Vault door, coin fountain, big number. |
+| Bunker collect | Coin fountain, big number. |
 | Quest done | Stamp animation, reward pop. |
 | Error / loss | Short shake, low thud; losses are shown clearly but without humiliation effects. |
 
@@ -199,5 +212,6 @@ deliberate reveals (which can always be skipped).
 
 - `/dev/ui` shows every component and state, all tokens, all sound presets, and a gallery of card frames,
   packs and slabs. New components land there first.
-- Visual changes are verified with Playwright screenshots at 1440 px and 390 px.
-- A pull request that adds art includes the contact sheet image in its description.
+- Visual changes are checked with one Playwright screenshot at 1440 px per feature; 390 px once per
+  milestone.
+- Card and product art is always reviewed on its contact sheet before it is committed.

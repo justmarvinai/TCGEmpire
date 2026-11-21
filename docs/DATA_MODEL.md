@@ -1,6 +1,6 @@
 # TCGEmpire — Data Model and RPC Catalog
 
-> Status: **PLAN.** This is the intended shape, not a final schema. It becomes the living reference once
+> Status: **approved plan.** This is the intended shape, not a final schema. It becomes the living reference once
 > coding starts: every migration updates this file.
 
 ## 1. Schemas
@@ -25,7 +25,7 @@ RLS enabled on every table with no policies.
 | `game.players` | id (= auth user), username, cash_cents, level, ep, skill_points, ruf, pfandbons, energy, energy_at, prestige, stars, is_admin, created_at, last_seen_at | The player row; the only place cash lives. |
 | `game.player_stats` | player_id, stats jsonb, computed_at | Resolved modifiers (cache). |
 | `game.modifiers` | player_id, source_kind, source_key, stat, op, value, expires_at | One row per active effect from upgrades, skills, perks, decor, set goals, buffs. |
-| `game.invites` | code, created_by, used_by, used_at | Invite codes. |
+| `game.server` | single row: invite_code_hash, price_level, price_level_day, daily_event, version | Server-wide settings and the Preisniveau. |
 | `game.unlocks` | player_id, feature, unlocked_at, tour_seen | Feature gates and seen tours. |
 | `game.settings` | player_id, data jsonb | Sound, animations, etc. |
 
@@ -48,7 +48,7 @@ RLS enabled on every table with no policies.
 | `content.jobs`, `content.minigames` | Jobs, ranks, wages, perks. |
 | `content.upgrades`, `content.skills`, `content.perks` | Ladders, costs, modifiers. |
 | `content.quests`, `content.achievements` | Templates: event, filter, target, reward. |
-| `content.homes`, `content.decor`, `content.cosmetics`, `content.luxury` | Housing and vanity. |
+| `content.homes`, `content.furnishing`, `content.cosmetics`, `content.luxury` | Housing and vanity. |
 | `content.events` | Event definitions and weights. |
 | `content.npc_archetypes`, `content.npcs` | NPC behaviour parameters and cast. |
 | `content.company_*` | Stages, staff archetypes, equipment, research. |
@@ -114,8 +114,8 @@ RLS enabled on every table with no policies.
 
 | Table | Purpose |
 |-------|---------|
-| `game.homes`, `game.decor_owned`, `game.vitrine` | Housing tier, decor per slot, displayed copies. |
-| `game.avatars`, `game.cosmetics_owned`, `game.titles_owned` | Appearance. |
+| `game.homes`, `game.furnishing`, `game.vitrine` | Housing tier, furnishing item per slot, displayed copies. |
+| `game.cosmetics_owned`, `game.titles_owned` | Cosmetics, titles; the profile picture is a card id on the player row. |
 | `game.guestbook`, `game.visits` | Visits. |
 | `game.chat_messages` | Stammtisch (capped). |
 | `game.feed` | KARTEN-BILD entries: template key + params (text is rendered on the client). |
@@ -123,7 +123,7 @@ RLS enabled on every table with no policies.
 | `game.battles`, `game.battle_seats`, `game.battle_timeline` | Pack battles. |
 | `game.breaks`, `game.break_spots` | Box breaks. |
 | `game.loans`, `game.gifts`, `game.honor` | Loans, gift allowance, kept/broken deals. |
-| `game.hostile_actions` | Heists, reports, rumours, with cooldowns and outcomes. |
+| `game.attacks` | Every attack: kind, attacker, target, roll, outcome (success / blocked), loot, cooldown. |
 | `game.insurance` | Active policies. |
 | `game.streams`, `game.sponsor_deals` | Streaming. |
 
@@ -147,8 +147,8 @@ Naming: `api.<area>_<verb>`. Reads are `stable` and return one jsonb document fo
 
 | Area | Reads | Writes |
 |------|-------|--------|
-| Session | `sync`, `me_get`, `recap_get` | `invite_redeem`, `recap_collect`, `settings_set`, `tour_seen` |
-| Packs | `shop_get`, `opening_get` | `store_buy`, `pack_open`, `opening_finish`, `display_unbox` |
+| Session | `sync`, `me_get`, `recap_get` | `join` (invite code + username), `recap_collect`, `settings_set`, `tour_seen`, `account_reset`, `account_delete` |
+| Packs | `shop_get`, `opening_get` | `store_buy` (qty), `pack_open` (qty 1/5/10/36, returns every pack's content at once), `opening_finish`, `display_unbox` |
 | Collection | `binder_get`, `card_get`, `inventory_get` | `bulk_sell`, `vitrine_set`, `attic_move`, `bulk_recycle` |
 | Market | `market_overview`, `market_card`, `my_listings`, `ads_get`, `auctions_get`, `trade_get` | `listing_create/cancel/buy`, `order_create/cancel`, `ad_offer`, `ad_post`, `ad_answer`, `auction_create`, `auction_bid`, `trade_propose/update/confirm/cancel`, `ankauf_sell` |
 | Grading | `grading_get`, `pop_report_get` | `pregrade`, `grading_submit`, `grading_reveal`, `slab_crack` |
@@ -159,16 +159,17 @@ Naming: `api.<area>_<verb>`. Reads are `stable` and return one jsonb document fo
 | Life | `home_get`, `wardrobe_get`, `profile_get`, `luxury_get` | `home_buy`, `decor_buy/place`, `cosmetic_buy/equip`, `title_set`, `guestbook_sign`, `visit_gift`, `luxury_buy` |
 | Social | `chat_get`, `feed_get`, `players_get`, `toplist_get` | `chat_send`, `gift_send`, `loan_offer/accept/repay`, `help_friend`, `feed_react` |
 | Battles | `battles_get`, `battle_get`, `break_get` | `battle_create/join/leave/start`, `break_create/buy_spot/start`, `emote_send` |
-| Dark side | `hostile_get` | `heist_start`, `report_taxes`, `rumour_start`, `review_bomb`, `poach_offer`, `reseal_packs`, `weigh_packs`, `revenge` |
+| Dark side | `attacks_get` (incl. own Abwehr and success preview) | `attack_start` (kind, target), `reseal_packs`, `weigh_packs`, `revenge` |
 | Events / world | `events_get`, `megaprojects_get` | `event_claim`, `megaproject_donate`, `insurance_buy/cancel`, `lotto_buy` |
 | Prestige | `prestige_get` | `prestige_do`, `perk_buy` |
-| Admin | `admin_dashboard`, `admin_players`, `admin_jobs` | `admin_set_phase`, `admin_restock`, `admin_event_start/stop`, `admin_config_set`, `admin_invite_create`, `admin_grant`, `admin_announce`, `admin_auction_create` |
+| Admin | `admin_dashboard`, `admin_players`, `admin_jobs` | `admin_set_phase`, `admin_restock`, `admin_event_start/stop`, `admin_config_set`, `admin_invite_set`, `admin_grant`, `admin_announce`, `admin_auction_create` |
 
 ## 4. Engines (internal)
 
 | Function family | Job |
 |-----------------|-----|
 | `private.money_add`, `private.item_*` | The only ways to change cash and inventory; write ledger and versions. |
+| `private.eur(base_cents)` | Basis-€ → real cents at the current Preisniveau. The only way a config amount becomes money. |
 | `private.emit` | Event bus → quests, achievements, counters, feed. |
 | `private.stat(player, key)` | Effective stat from modifiers, buffs and events. |
 | `private.roll_*` | Seeded randomness (pack contents, quality values, events). |
