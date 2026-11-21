@@ -100,9 +100,9 @@ Net worth (**Vermögen**) = cash + bunker content + market value of cards, slabs
 
 | Game | First set | In-game set size | Packs per display | Booster UVP |
 |------|-----------|------------------|-------------------|-------------|
-| Pokémon | Basis-Set (Base Set, 1999) | ~88 | 36 | 4,99 € |
-| Yu-Gi-Oh! | Legend of Blue Eyes White Dragon (2002) | ~88 | 24 | 3,99 € |
-| One Piece Card Game | OP-01 Romance Dawn (2022) | ~86 | 24 | 4,99 € |
+| Pokémon | Basis-Set (Base Set, 1999) | 90 | 36 | 4,99 € |
+| Yu-Gi-Oh! | Legend of Blue Eyes White Dragon (2002) | 86 | 24 | 3,99 € |
+| One Piece Card Game | OP-01 Romance Dawn (2022) | 89 | 24 | 4,99 € |
 | Riftbound (League of Legends TCG) | Origins (2025) | ~86 | 24 | 4,99 € |
 
 Full curated card lists with tier mapping, German names, art briefs and real-world lore: `docs/sets/*.md`

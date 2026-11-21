@@ -205,7 +205,7 @@ Items marked (?) contain a detail that could not be confirmed in this session.
 - **A Common Flame Swordsman.** The 23 held-back cards, including Flammen-Schwertkämpfer and Hitotsu-Me-Riese, later appeared in European Magic Ruler as Commons; only Topf der Gier kept its Rare status.
 - **Translation quirks.** "Final Flame" became "Ewige Flamme" (eternal, not final), "Swords of Revealing Light" became "Verräterische Schwerter", and "Goblin's Secret Remedy" became "Kobolds letzte Rettung".
 - **Half-translated names.** "Feueryarou" and "Turtle-Tiger" translate only part of the English name, and "Gaia The Fierce Knight" is "Gaia, zorniger Ritter" (the angry knight).
-- **"Blauäugiger w. Drache."** The official German name abbreviates "weißer" to "w." so it fits the name bar; it is printed that way on LOB-G001 and on the 2010 reprint.
+- **"Blauäugiger w. Drache."** The official German name abbreviates "weißer" to "w." so it fits the name bar; it is listed that way for LOB-G001 and for the 2010 reprint (LC01-DE004).
 - **Wiedergeburt vs. Monster-Reanimation.** The German card is "Wiedergeburt", but the German anime dub of the original series and GX called it "Monster-Reanimation".
 - **The ankh.** Monster Reborn's original Japanese artwork shows an ankh; international prints got redrawn art, the basis for our Alternative version.
 - **Short Prints.** Some LOB commons, mostly Equip Spells such as Schwert der Legende, Buch der geheimen Künste and Dunkle Energie, were printed in lower numbers and are harder to pull than their rarity suggests.
