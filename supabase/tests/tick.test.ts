@@ -21,12 +21,12 @@ describe('tick', () => {
   it('raises the Preisniveau with the median career level, limited per day, never down', async () => {
     const t = await createTestDb()
     const a = await t.player('Alpha')
-    const b = await t.player('Beta')
+    await t.player('Beta')
     await t.tick()
     expect(await priceLevel(t)).toBe(1) // both level 1: no inflation below the free levels
 
     // Median career level 60 -> target 1.018^40 = 2.04, but only +10 % per day.
-    await t.sql(`update game.players set level = 60 where id in ($1, $2)`, [a, b])
+    await t.sql(`update game.players set level = 60 where true`)
     await t.advance('61 seconds')
     await t.tick()
     expect(await priceLevel(t)).toBe(1) // same day: already processed
@@ -43,7 +43,7 @@ describe('tick', () => {
     expect((await t.rpc(c, 'me_get')).player?.cash_cents).toBe(Math.round(400_00 * 1.21))
 
     // Players dropping back (e.g. after a reset) never lower prices.
-    await t.sql(`update game.players set level = 1 where id in ($1, $2, $3)`, [a, b, c])
+    await t.sql(`update game.players set level = 1 where true`)
     await t.advance('1 day')
     await t.tick()
     expect(await priceLevel(t)).toBe(1.21)
@@ -54,7 +54,7 @@ describe('tick', () => {
 
   it('prunes old rows', async () => {
     const t = await createTestDb()
-    const p = await t.player('Alt')
+    const p = await t.playerId(await t.player('Alt'))
     await t.sql(`select private.notify($1, 'test')`, [p])
     await t.advance('31 days')
     await t.tick()

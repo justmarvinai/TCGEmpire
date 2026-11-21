@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/rubik/wght.css';
+@import '@fontsource-variable/pixelify-sans/wght.css';
+
+/* Design tokens. The default Tailwind palette is removed: only these colours exist. */
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-ink: #0e1018;
+  --color-surface-1: #161a26;
+  --color-surface-2: #1f2433;
+  --color-surface-3: #2a3044;
+  --color-line: #2b3147;
+  --color-line-strong: #3d4563;
+  --color-edge: #080a10;
+
+  --color-fg: #f3f5fa;
+  --color-fg-2: #aab2c8;
+  --color-fg-3: #7f88a3;
+
+  --color-accent: #ff8a3d;
+  --color-accent-hi: #ffb07a;
+  --color-accent-lo: #c45a17;
+  --color-accent-fg: #1a0e04;
+  --color-gold: #ffcf5a;
+
+  --color-gain: #35d48a;
+  --color-loss: #ff5d6c;
+  --color-warn: #ffb547;
+  --color-info: #5fb0ff;
+
+  --color-tier-common: #9aa3b5;
+  --color-tier-uncommon: #4fc97a;
+  --color-tier-rare: #4f9dff;
+  --color-tier-holo: #4fe3e0;
+  --color-tier-alternative: #b47bff;
+  --color-tier-ultra: #ffcf5a;
+  --color-tier-grail: #ff6ad5;
+
+  --font-sans: 'Rubik Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-pixel: 'Pixelify Sans Variable', ui-monospace, monospace;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  --animate-pop: pop 320ms var(--ease-out);
+  --animate-shake: shake 260ms var(--ease-standard);
+  --animate-fade-up: fade-up 220ms var(--ease-out);
+
+  @keyframes pop {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  @keyframes fade-up {
+    0% { transform: translateY(6px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+}
+
+/* Pixel 9-slice frames: stepped corners, 2 px border. One SVG per variant (12x12 units, slice 4). */
+:root {
+  --px-panel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%232b3147' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%23161a26' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3C/svg%3E");
+  --px-inset: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%232b3147' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%230e1018' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3C/svg%3E");
+  --px-btn-accent: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%23c45a17' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%23ff8a3d' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3Cpath fill='%23ffb07a' d='M3 1h6v1H3z'/%3E%3C/svg%3E");
+  --px-btn-neutral: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%233d4563' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%232a3044' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3Cpath fill='%233d4563' d='M3 1h6v1H3z'/%3E%3C/svg%3E");
+  --px-btn-danger: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%23a8323f' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%23ff5d6c' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3Cpath fill='%23ff8f99' d='M3 1h6v1H3z'/%3E%3C/svg%3E");
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-ink text-fg font-sans antialiased;
+    font-feature-settings: 'tnum';
+    min-height: 100dvh;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-fg);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@utility px-frame {
+  border: 8px solid transparent;
+  border-image: var(--px-panel) 4 fill / 8px;
+  image-rendering: pixelated;
+}
+@utility px-panel {
+  border: 8px solid transparent;
+  border-image: var(--px-panel) 4 fill / 8px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 3px 0 var(--color-edge));
+}
+@utility px-inset {
+  border: 8px solid transparent;
+  border-image: var(--px-inset) 4 fill / 8px;
+  image-rendering: pixelated;
+}
+@utility pixelated {
+  image-rendering: pixelated;
+}
+@utility nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle pixel grid behind everything. */
+.app-bg {
+  background-color: var(--color-ink);
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.018) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Honour the player's setting as well as the system preference. */
+[data-reduced-motion='true'] *,
+[data-reduced-motion='true'] *::before,
+[data-reduced-motion='true'] *::after {
+  animation-duration: 1ms !important;
+  transition-duration: 1ms !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* Buttons: pixel frame, hard edge shadow, sink on press. */
+.btn {
+  border: 8px solid transparent;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 3px 0 var(--color-edge));
+  transition: transform 80ms var(--ease-standard), filter 80ms var(--ease-standard);
+}
+.btn:hover:not(:disabled) {
+  filter: brightness(1.1) drop-shadow(0 3px 0 var(--color-edge));
+}
+.btn:active:not(:disabled) {
+  transform: translateY(2px);
+  filter: brightness(0.95) drop-shadow(0 1px 0 var(--color-edge));
+}
+.btn:disabled {
+  opacity: 0.5;
+}
+.btn-primary {
+  border-image: var(--px-btn-accent) 4 fill / 8px;
+  color: var(--color-accent-fg);
+}
+.btn-neutral {
+  border-image: var(--px-btn-neutral) 4 fill / 8px;
+  color: var(--color-fg);
+}
+.btn-danger {
+  border-image: var(--px-btn-danger) 4 fill / 8px;
+  color: var(--color-accent-fg);
+}
+
+@keyframes dots {
+  0%, 80%, 100% { opacity: 0.25; }
+  40% { opacity: 1; }
+}
+.loading-dots > i {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 0 2px;
+  background: currentColor;
+  animation: dots 900ms infinite;
+}
+.loading-dots > i:nth-child(2) { animation-delay: 150ms; }
+.loading-dots > i:nth-child(3) { animation-delay: 300ms; }
+
+@keyframes shimmer {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+.skeleton {
+  background: var(--color-surface-2);
+  animation: shimmer 1400ms infinite;
+}

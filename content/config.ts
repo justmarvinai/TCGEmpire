@@ -5,6 +5,11 @@
 export const config = {
   version: '0.0.1-alpha_01',
 
+  // Login: bcrypt cost, lock after too many wrong passwords
+  'auth.bcrypt_cost': 10,
+  'auth.max_failures': 8,
+  'auth.lock_seconds': 300,
+
   // Start
   'start.cash_base_cents': 400_00,
 

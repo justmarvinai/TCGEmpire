@@ -1,0 +1,62 @@
+import { expect, test } from '@playwright/test'
+
+const shot = (name: string) => `e2e/.shots/${name}.png`
+
+test('first account registers, sees the shell, signs out and back in', async ({ page }) => {
+  await page.goto('/')
+
+  // Fresh server: the first account sets the invite code and becomes admin.
+  await expect(page.getByRole('tab', { name: 'Neu hier' })).toHaveAttribute('aria-selected', 'true')
+  await expect(page.getByText('Du bist der erste Account')).toBeVisible()
+  await page.screenshot({ path: shot('auth') })
+
+  await page.getByLabel('Benutzername').fill('Testmogul')
+  await page.getByLabel('Passwort').fill('passwort1')
+  await page.getByLabel('Einladungscode').fill('geheim123')
+  await page.getByRole('button', { name: 'Imperium gründen' }).click()
+
+  await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
+  await expect(page.getByText('400,00 €').first()).toBeVisible()
+  await expect(page.getByText('Admin', { exact: true })).toBeVisible()
+  await expect(page.getByText('NEU IM GESCHÄFT: Testmogul')).toBeVisible()
+  await page.screenshot({ path: shot('home') })
+
+  // Locked and not-yet-built features are visible, not hidden.
+  await expect(page.getByTitle('Firma: Ab Level 30')).toBeVisible()
+  await page.getByRole('link', { name: 'Sammlung' }).click()
+  await expect(page.getByText('Kommt bald')).toBeVisible()
+
+  // Every stat explains itself.
+  await page.getByRole('button', { name: 'Preisniveau: Was ist das?' }).click()
+  await expect(page.getByText('Alles, was das Spiel bepreist oder auszahlt')).toBeVisible()
+  await page.keyboard.press('Escape')
+
+  // Sign out, wrong password, sign in again.
+  await page.getByRole('button', { name: 'Einstellungen' }).click()
+  await page.getByRole('button', { name: 'Abmelden' }).click()
+  await expect(page.getByRole('tab', { name: 'Anmelden' })).toHaveAttribute('aria-selected', 'true')
+  await page.getByLabel('Benutzername').fill('testmogul')
+  await page.getByLabel('Passwort').fill('falsch123')
+  await page.getByRole('button', { name: 'Rein da' }).click()
+  await expect(page.getByRole('alert')).toContainText('Name oder Passwort falsch')
+  await page.getByLabel('Passwort').fill('passwort1')
+  await page.getByRole('button', { name: 'Rein da' }).click()
+  await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
+})
+
+test('component showcase renders and local dev tools move money and levels', async ({ page }) => {
+  await page.goto('/')
+  await page.getByLabel('Benutzername').fill('Baumeister')
+  await page.getByLabel('Passwort').fill('passwort1')
+  await page.getByLabel('Einladungscode').fill('geheim123')
+  await page.getByRole('button', { name: 'Imperium gründen' }).click()
+  await expect(page.getByRole('heading', { name: 'Moin, Baumeister.' })).toBeVisible()
+
+  await page.goto('/dev/ui')
+  await expect(page.getByRole('heading', { name: 'Baukasten' })).toBeVisible()
+  await page.getByRole('button', { name: '+1.000 €' }).click()
+  await expect(page.getByText('1.400 €')).toBeVisible()
+  await page.getByRole('button', { name: '+viel EP' }).click()
+  await expect(page.getByText(/Level (1[0-9]|[2-9][0-9])/)).toBeVisible()
+  await page.screenshot({ path: shot('dev-ui'), fullPage: true })
+})

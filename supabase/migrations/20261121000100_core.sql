@@ -90,7 +90,7 @@ $$;
 -- Players
 -- ---------------------------------------------------------------------------------------------
 create table game.players (
-  id uuid primary key references auth.users (id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
   username text not null,
   username_key text generated always as (lower(username)) stored,
   cash_cents bigint not null default 0 check (cash_cents between 0 and 9000000000000000),
@@ -110,18 +110,43 @@ create table game.players (
 );
 alter table game.players enable row level security;
 
+-- Identity: Supabase only provides an anonymous auth user per browser. Our own username + password
+-- (bcrypt) decide which player that browser is signed in as. No e-mail anywhere.
+create table game.credentials (
+  player_id uuid primary key references game.players (id) on delete cascade,
+  password_hash text not null,
+  failed_count int not null default 0,
+  locked_until timestamptz
+);
+create table game.sessions (
+  auth_uid uuid primary key,
+  player_id uuid not null references game.players (id) on delete cascade,
+  created_at timestamptz not null,
+  last_used_at timestamptz not null
+);
+create index sessions_player on game.sessions (player_id);
+alter table game.credentials enable row level security;
+alter table game.sessions enable row level security;
+
+-- The player the calling browser is signed in as, or null.
+create function private.current_player() returns uuid
+language sql stable set search_path = '' as $$
+  select player_id from game.sessions where auth_uid = auth.uid()
+$$;
+
 create function private.require_player() returns uuid
 language plpgsql stable set search_path = '' as $$
 declare
-  v_uid uuid := auth.uid();
+  v_player uuid;
 begin
-  if v_uid is null then
+  if auth.uid() is null then
     perform private.fail('not_authenticated');
   end if;
-  if not exists (select 1 from game.players where id = v_uid) then
+  v_player := private.current_player();
+  if v_player is null then
     perform private.fail('no_player');
   end if;
-  return v_uid;
+  return v_player;
 end $$;
 
 -- ---------------------------------------------------------------------------------------------

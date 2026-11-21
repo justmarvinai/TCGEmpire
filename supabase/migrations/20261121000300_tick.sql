@@ -102,6 +102,7 @@ begin
   delete from game.job_runs where started_at < v_now - interval '7 days';
   delete from game.notifications where at < v_now - interval '30 days';
   delete from game.feed where id <= (select max(id) from game.feed) - 2000;
+  delete from game.sessions where last_used_at < v_now - interval '90 days';
 end $$;
 
 insert into game.tick_systems (name, every_seconds) values ('daily', 60), ('cleanup', 3600);

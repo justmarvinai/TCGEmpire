@@ -25,10 +25,10 @@
                 │ supabase-js: auth, rpc()      │ Realtime: Broadcast + Presence
                 ▼                               ▼
 ┌──────────────────────────────── Supabase (Free, eu-central) ────────────────────────┐
-│ Auth (username + password, invite codes)                                            │
-│ PostgREST → exposes ONLY functions in schema `api`                                  │
-│ Postgres 17                                                                         │
-│   api.*      RPC functions (SECURITY DEFINER): the whole game API                   │
+│ Auth: anonymous session per browser; own username + password + invite code in SQL   │
+│ PostgREST → schema `public` holds ONLY the RPC functions                            │
+│ Postgres                                                                            │
+│   public.*   RPC functions (SECURITY DEFINER): the whole game API                   │
 │   game.*     state tables (not exposed)                                             │
 │   content.*  catalog + balance config (generated from TypeScript content)           │
 │   private.*  internal functions: engines, tick, helpers                             │
@@ -47,7 +47,7 @@
 | Layer | Choice | Why |
 |-------|--------|-----|
 | App | **Vite + React 19 + TypeScript (strict)**, single-page app | The game is fully behind login, client-heavy and animation-heavy. A SPA has no hydration pitfalls, no server runtime to pay for, instant navigation, and a very fast dev loop. SSR/SEO bring nothing here. |
-| Routing / data | **TanStack Router** (typed routes), **TanStack Query** (server state), **Zustand** (UI state) | Typed, small, well known. |
+| Routing / data | **React Router** (declarative routes), **TanStack Query** (server state), **Zustand** (UI state) | Small, well known. |
 | Validation | **Zod 4** schemas for every RPC response | Contract between SQL and client, checked in tests. |
 | Styling | **Tailwind CSS 4** with our own design tokens only (default palette removed) | Consistent look, no ad-hoc colours. |
 | UI primitives | **Radix UI** (dialog, popover, tooltip, tabs …) | Accessible behaviour, our own visuals. |
@@ -56,7 +56,7 @@
 | Pixel art | Own **painter toolkit** (TypeScript) → build-time PNG atlases | See `ART_DIRECTION.md`. |
 | Backend | **Supabase**: Postgres + PL/pgSQL RPCs, Auth, Realtime, pg_cron | Everything on the free plan; no invocation limits on RPCs; transactions for free. |
 | Tests | **Vitest**; **PGlite** (in-process Postgres) for SQL logic, contracts and economy simulation **SPIKE**; **Playwright** for end-to-end and screenshots | No Docker needed; runs in any agent session and in CI. |
-| Tooling | pnpm, ESLint, Prettier, GitHub Actions, Supabase CLI (migrations) | — |
+| Tooling | pnpm, ESLint, Prettier, GitHub Actions, own psql migration runner | — |
 
 Text is German only, kept in typed message modules (`src/texts/`), not in components. No i18n library.
 
@@ -68,7 +68,7 @@ rules duplicated in TypeScript and SQL (drift between the two is a known source 
 
 ## 4. Core principles
 
-1. **Server authority.** Money, items, EP, timers and randomness change only inside `api.*` functions.
+1. **Server authority.** Money, items, EP, timers and randomness change only inside the RPC functions.
    The client has no table access at all.
 2. **One source of truth per rule.** Formulas exist only in SQL. The client displays what RPCs return
    (including previews like "cost of next level"). The only client-side maths is interpolating time
@@ -95,7 +95,7 @@ rules duplicated in TypeScript and SQL (drift between the two is a known source 
 
 ```
 client:  rpc('market_buy_listing', { request_id, listing_id })        ← request_id = fresh UUID
-server:  api.market_buy_listing(p_request_id uuid, p_listing_id uuid) returns jsonb
+server:  public.market_buy_listing(p_request_id uuid, p_listing_id uuid) returns jsonb
            1. v_player := private.require_player()            -- auth.uid() → player row, or error
            2. replay?  := private.request_begin(...)          -- same request_id → return stored answer
            3. private.rate_limit(v_player, 'market', ...)
@@ -134,7 +134,7 @@ The tick takes an advisory lock; if a run is still active the next one skips. Ev
 
 ## 7. Staying in sync
 
-- **`api.sync(cursor)`** is the one polling call: every 15 s while the tab is visible (none while hidden,
+- **`sync(cursors)`** is the one polling call: every 15 s while the tab is visible (none while hidden,
   one immediately on focus). It returns the server time, version counters per state area, new
   notifications, new feed items and due timers. The client refetches only the areas whose counter changed.
 - **Realtime Broadcast** makes things instant where it matters: world channel (Grail pulls, events,
@@ -148,11 +148,13 @@ The tick takes an advisory lock; if a run is still active the next one skips. Ev
 
 ## 8. Security
 
-- **Signup:** username + password (internally a synthetic e-mail, e-mail confirmation off) plus the
-  **shared invite code** (Q-4): one code for everybody, set once, stored hashed, changeable by the admin.
-  An auth user who has not entered it has no player row and can call nothing; attempts are rate-limited.
-- **Exposure:** PostgREST exposes only schema `api`. Tables live in unexposed schemas, additionally with
-  RLS enabled and no policies (deny all) as a second wall. No service-role key anywhere in the client.
+- **Login:** Supabase gives every browser an anonymous auth user. Our RPCs `join` (username, password,
+  **shared invite code**), `login` and `logout` bind that session to a player. Passwords are bcrypt
+  hashes; wrong passwords are counted and lock the account for a few minutes. The invite code is one code
+  for everybody (Q-4): the first account sets it, it is stored hashed. No e-mail anywhere.
+- **Exposure:** schema `public` contains nothing but the RPC functions, each granted to signed-in
+  sessions only. Tables live in unexposed schemas, additionally with RLS enabled and no policies (deny
+  all) as a second wall. No service-role key anywhere in the client.
 - **Admin:** the first account created gets the admin flag (Q-5); it plays normally and additionally sees
   the admin console. Admin RPCs check the flag and write to an audit log. If that account is deleted, the
   oldest remaining account becomes admin.
@@ -204,16 +206,15 @@ logic stays in SQL either way.
 | Local | `pnpm dev` (local mode) | PGlite in the browser |
 | Production | Vercel, deploys from `main` | The one Supabase project |
 
-- **Migrations:** plain SQL files in `supabase/migrations/`, applied by the Supabase CLI
-  (`supabase db push`) from a GitHub Action after tests pass. The CLI's migration table is the ledger of
-  what ran. One short transaction per file. No hand-maintained copies, no megabyte bundles.
+- **Migrations:** plain SQL files in `supabase/migrations/`, applied by `scripts/db-migrate.sh` (psql)
+  from a GitHub Action after tests pass. `private.migrations` is the ledger of what ran. One short
+  transaction per file. No hand-maintained copies, no megabyte bundles.
 - **Content seed:** generated SQL, applied only when its hash changed. Admin live overrides are stored
   separately and survive deploys.
 - **Order:** database first, then frontend; RPC changes are backwards compatible for one release, and the
   client shows "Neue Version verfügbar — neu laden" when the server's version is newer.
-- **Owner setup, once** (Q-2): create the Supabase project (Frankfurt) and Vercel project, add three
-  GitHub secrets. Fallback if secrets are not wanted: one generated SQL file per release to paste into the
-  Supabase SQL editor.
+- **Owner setup, once** (Q-2): `docs/SETUP.md` — Supabase project (Frankfurt, anonymous sign-ins on),
+  Vercel project, three GitHub secrets.
 - **Alpha data policy** (Q-21): during alphas a migration may reset game data when needed; it is announced
   in the changelog.
 

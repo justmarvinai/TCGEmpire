@@ -38,9 +38,17 @@ export const zSync = zMe.extend({ notifications: z.array(zEntry), feed: z.array(
 export type Sync = z.infer<typeof zSync>
 
 // One schema per RPC. A test fails if an RPC has no entry here.
+// login reports wrong credentials as a value (so the failed attempt is stored), everything else throws.
+export const zLogin = z.union([
+  z.object({ error: z.string() }),
+  zMe.extend({ error: z.null() }),
+])
+
 export const RPC_SCHEMAS = {
   me_get: zMe,
   join: zMe,
+  login: zLogin,
+  logout: zMe,
   sync: zSync,
 } as const
 export type RpcName = keyof typeof RPC_SCHEMAS

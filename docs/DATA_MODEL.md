@@ -7,7 +7,7 @@
 
 | Schema | Content | Exposed to the client? |
 |--------|---------|------------------------|
-| `api` | RPC functions only | **Yes** (execute for `authenticated`) |
+| `public` | RPC functions only | **Yes** (execute for `authenticated`, never `anon`) |
 | `game` | State tables | No |
 | `content` | Catalog and balance, generated from `content/` | No (read through RPCs / shipped in the client bundle) |
 | `private` | Internal functions (engines, tick, helpers) | No |
@@ -22,10 +22,11 @@ RLS enabled on every table with no policies.
 
 | Table | Key columns | Purpose |
 |-------|-------------|---------|
-| `game.players` | id (= auth user), username, cash_cents, level, ep, skill_points, ruf, pfandbons, energy, energy_at, prestige, stars, is_admin, created_at, last_seen_at | The player row; the only place cash lives. |
+| `game.players` | id, username, cash_cents, level, ep, skill_points, ruf, pfandbons, energy, energy_at, prestige, stars, is_admin, created_at, last_seen_at | The player row; the only place cash lives. |
 | `game.player_stats` | player_id, stats jsonb, computed_at | Resolved modifiers (cache). |
 | `game.modifiers` | player_id, source_kind, source_key, stat, op, value, expires_at | One row per active effect from upgrades, skills, perks, decor, set goals, buffs. |
-| `game.server` | single row: invite_code_hash, price_level, price_level_day, daily_event, version | Server-wide settings and the Preisniveau. |
+| `game.server` | single row: invite_code_hash, price_level, price_level_day, clock_offset | Server-wide settings and the Preisniveau. |
+| `game.credentials`, `game.sessions` | password_hash, failed_count, locked_until · auth_uid → player_id | Own login: bcrypt hashes; which anonymous Supabase session is signed in as which player. |
 | `game.unlocks` | player_id, feature, unlocked_at, tour_seen | Feature gates and seen tours. |
 | `game.settings` | player_id, data jsonb | Sound, animations, etc. |
 
@@ -142,12 +143,12 @@ RLS enabled on every table with no policies.
 
 ## 3. RPC catalog (planned)
 
-Naming: `api.<area>_<verb>`. Reads are `stable` and return one jsonb document for a page; writes take
+Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one jsonb document for a page; writes take
 `p_request_id` first and return the changed state.
 
 | Area | Reads | Writes |
 |------|-------|--------|
-| Session | `sync`, `me_get`, `recap_get` | `join` (invite code + username), `recap_collect`, `settings_set`, `tour_seen`, `account_reset`, `account_delete` |
+| Session | `sync`, `me_get`, `recap_get` | `join` (username, password, invite code), `login`, `logout`, `recap_collect`, `settings_set`, `tour_seen`, `account_reset`, `account_delete` |
 | Packs | `shop_get`, `opening_get` | `store_buy` (qty), `pack_open` (qty 1/5/10/36, returns every pack's content at once), `opening_finish`, `display_unbox` |
 | Collection | `binder_get`, `card_get`, `inventory_get` | `bulk_sell`, `vitrine_set`, `attic_move`, `bulk_recycle` |
 | Market | `market_overview`, `market_card`, `my_listings`, `ads_get`, `auctions_get`, `trade_get` | `listing_create/cancel/buy`, `order_create/cancel`, `ad_offer`, `ad_post`, `ad_answer`, `auction_create`, `auction_bid`, `trade_propose/update/confirm/cancel`, `ankauf_sell` |

@@ -7,15 +7,12 @@ begin
   if not exists (select 1 from pg_roles where rolname = 'service_role') then create role service_role nologin; end if;
 end $$;
 
+-- Supabase keeps pgcrypto in the `extensions` schema.
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
+
+-- auth.uid(): the id of the (anonymous) Supabase auth user making the request.
 create schema if not exists auth;
-
-create table if not exists auth.users (
-  id uuid primary key default gen_random_uuid(),
-  email text unique not null,
-  encrypted_password text not null,
-  created_at timestamptz not null default now()
-);
-
 create or replace function auth.uid() returns uuid
 language sql stable as $$
   select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid

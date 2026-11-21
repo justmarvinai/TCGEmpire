@@ -1,0 +1,35 @@
+name: Deploy database
+# Applies new migrations and the content seed to the Supabase project when main changes.
+# Needs the repository secret SUPABASE_DB_URL (Supabase > Connect > Session pooler connection string).
+on:
+  push:
+    branches: [main]
+    paths: ['supabase/**', 'content/**', 'scripts/db-migrate.sh']
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-db
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Tests must pass before the database changes
+        run: pnpm test
+      - name: Apply migrations and seed
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::warning::SUPABASE_DB_URL is not set, skipping the database deploy."
+            exit 0
+          fi
+          bash scripts/db-migrate.sh

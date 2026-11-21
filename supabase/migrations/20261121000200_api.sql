@@ -1,4 +1,4 @@
--- Session API: join, me, sync.
+-- Session API: join, login, logout, me, sync.
 
 create function private.player_doc(r game.players) returns jsonb
 language sql stable set search_path = '' as $$
@@ -32,17 +32,16 @@ language sql stable set search_path = '' as $$
   from game.server s where s.id
 $$;
 
--- The signed-in user's player (null until they joined) plus server info.
+-- The player this browser is signed in as (null if none) plus server info.
 create function public.me_get() returns jsonb
 language plpgsql stable security definer set search_path = '' as $$
 declare
-  v_uid uuid := auth.uid();
   r game.players;
 begin
-  if v_uid is null then
+  if auth.uid() is null then
     perform private.fail('not_authenticated');
   end if;
-  select * into r from game.players where id = v_uid;
+  select * into r from game.players where id = private.current_player();
   return jsonb_build_object(
     'player', case when found then private.player_doc(r) end,
     'server', private.server_doc()
@@ -50,26 +49,33 @@ begin
 end $$;
 select private.expose('public.me_get()');
 
--- Creates the player for the signed-in user. One shared invite code: the very first account sets it
--- (and becomes admin); everyone after must enter the same code.
-create function public.join(p_username text, p_invite_code text) returns jsonb
+create function private.session_bind(p_player uuid) returns void
+language sql set search_path = '' as $$
+  insert into game.sessions (auth_uid, player_id, created_at, last_used_at)
+  values (auth.uid(), p_player, private.now(), private.now())
+  on conflict (auth_uid) do update set player_id = excluded.player_id, last_used_at = excluded.last_used_at
+$$;
+
+-- Registers a new player and signs this browser in. One shared invite code: the very first account
+-- sets it (and becomes admin); everyone after must enter the same code.
+create function public.join(p_username text, p_password text, p_invite_code text) returns jsonb
 language plpgsql security definer set search_path = '' as $$
 declare
-  v_uid uuid := auth.uid();
   v_name text := btrim(coalesce(p_username, ''));
   v_hash text;
   v_srv game.server;
   v_first boolean;
+  v_player uuid;
   v_now timestamptz := private.now();
 begin
-  if v_uid is null then
+  if auth.uid() is null then
     perform private.fail('not_authenticated');
-  end if;
-  if exists (select 1 from game.players where id = v_uid) then
-    return public.me_get();
   end if;
   if v_name !~ '^[A-Za-z0-9_ÄÖÜäöüß-]{3,16}$' then
     perform private.fail('username_invalid');
+  end if;
+  if p_password is null or length(p_password) not between 6 and 72 then
+    perform private.fail('password_invalid');
   end if;
   if p_invite_code is null or length(p_invite_code) not between 4 and 64 then
     perform private.fail('invite_invalid');
@@ -89,15 +95,68 @@ begin
     perform private.fail('username_taken');
   end if;
 
-  insert into game.players (id, username, is_admin, energy_at, created_at, last_seen_at)
-  values (v_uid, v_name, v_first, v_now, v_now, v_now);
+  insert into game.players (username, is_admin, energy_at, created_at, last_seen_at)
+  values (v_name, v_first, v_now, v_now, v_now)
+  returning id into v_player;
 
-  perform private.money_add(v_uid, private.eur(private.cfg_num('start.cash_base_cents')), 'start_capital');
+  insert into game.credentials (player_id, password_hash)
+  values (v_player, extensions.crypt(p_password, extensions.gen_salt('bf', private.cfg_num('auth.bcrypt_cost')::int)));
+
+  perform private.session_bind(v_player);
+  perform private.money_add(v_player, private.eur(private.cfg_num('start.cash_base_cents')), 'start_capital');
   perform private.feed_add('player_joined', jsonb_build_object('name', v_name));
 
   return public.me_get();
 end $$;
-select private.expose('public.join(text, text)');
+select private.expose('public.join(text, text, text)');
+
+-- Signs this browser in as an existing player. Failures are returned, not raised, so the failed
+-- attempt is stored: after too many wrong passwords the account is locked for a few minutes.
+create function public.login(p_username text, p_password text) returns jsonb
+language plpgsql security definer set search_path = '' as $$
+declare
+  v_player uuid;
+  c game.credentials;
+  v_now timestamptz := private.now();
+begin
+  if auth.uid() is null then
+    perform private.fail('not_authenticated');
+  end if;
+
+  select id into v_player from game.players where username_key = lower(btrim(coalesce(p_username, '')));
+  select * into c from game.credentials where player_id = v_player for update;
+  if not found then
+    return jsonb_build_object('error', 'login_wrong');
+  end if;
+  if c.locked_until is not null and c.locked_until > v_now then
+    return jsonb_build_object('error', 'login_locked');
+  end if;
+
+  if p_password is null or c.password_hash <> extensions.crypt(left(p_password, 72), c.password_hash) then
+    update game.credentials
+    set failed_count = case when failed_count + 1 >= private.cfg_num('auth.max_failures') then 0 else failed_count + 1 end,
+        locked_until = case when failed_count + 1 >= private.cfg_num('auth.max_failures')
+                            then v_now + make_interval(secs => private.cfg_num('auth.lock_seconds')) end
+    where player_id = v_player;
+    return jsonb_build_object('error', 'login_wrong');
+  end if;
+
+  update game.credentials set failed_count = 0, locked_until = null where player_id = v_player;
+  perform private.session_bind(v_player);
+  return jsonb_build_object('error', null) || public.me_get();
+end $$;
+select private.expose('public.login(text, text)');
+
+create function public.logout() returns jsonb
+language plpgsql security definer set search_path = '' as $$
+begin
+  if auth.uid() is null then
+    perform private.fail('not_authenticated');
+  end if;
+  delete from game.sessions where auth_uid = auth.uid();
+  return public.me_get();
+end $$;
+select private.expose('public.logout()');
 
 -- The one polling call: own state, new notifications, new feed entries, server time.
 create function public.sync(p_after_notification bigint default 0, p_after_feed bigint default 0) returns jsonb
