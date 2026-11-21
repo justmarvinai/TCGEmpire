@@ -60,7 +60,7 @@ seven tiers.
 | Holo | 20.0 % | 5 |
 | Alternative | 4.17 % | 24 |
 | Ultra | 1.39 % | 72 |
-| Grail | 0.167 % | 600 |
+| Grail | 0.139 % | 720 |
 
 - Within a tier, cards are drawn with weights (most cards equal; a Grail tier with two cards may weight
   them differently).

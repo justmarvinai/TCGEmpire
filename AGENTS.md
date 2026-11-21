@@ -95,7 +95,6 @@ Commands are added here when the repo is scaffolded (alpha_01). Until then there
 
 - Real money, purchases, ads, tracking.
 - Public exposure of the game (it is invite-only and `noindex`).
-- Model identifiers in commits, code or docs.
 
 ## 4. Workflow
 

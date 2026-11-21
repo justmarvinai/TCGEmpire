@@ -42,12 +42,12 @@ minutes of standard active play:
 | Level | Active minutes for this level | Cumulative active hours | Target calendar time (2–3 h/day + idle) |
 |-------|-------------------------------|-------------------------|------------------------------------------|
 | 1 | 1 | 0 | first minutes |
-| 10 | 15 | 1.3 | day 1 |
-| 20 | 32 | 5.5 | day 3–4 |
-| 30 | 51 | 13 | day 7 |
-| 50 | 89 | 37 | ~2.5 weeks |
-| 75 | 139 | 85 | ~4.5 weeks |
-| 99 | 188 | 148 | ~6–7 weeks |
+| 10 | 15 | 1.1 | day 1 |
+| 20 | 32 | 4.9 | day 3–4 |
+| 30 | 51 | 12 | day 6–7 |
+| 50 | 89 | 35 | ~2.5 weeks |
+| 75 | 139 | 81 | ~4.5 weeks |
+| 99 | 188 | 146 (level 100 after ~150) | ~6–7 weeks |
 
 ### 3.2 Reference income
 
@@ -80,16 +80,21 @@ base_value = lo × (hi / lo)^((d − 1) / 9)
 
 | Tier | lo | hi |
 |------|----|----|
-| Common | 0,02 € | 0,25 € |
-| Uncommon | 0,10 € | 0,80 € |
-| Rare | 0,40 € | 4 € |
-| Holo | 2,50 € | 30 € |
-| Alternative | 12 € | 90 € |
-| Ultra | 35 € | 250 € |
-| Grail | 300 € | 900 € |
+| Common | 0,01 € | 0,12 € |
+| Uncommon | 0,04 € | 0,35 € |
+| Rare | 0,15 € | 1,20 € |
+| Holo | 1,20 € | 8 € |
+| Alternative | 6 € | 30 € |
+| Ultra | 25 € | 80 € |
+| Grail | 300 € | 500 € |
+
+These are *in-print, ungraded* values. The same Glurak is worth a multiple as a PSA 10 (§4.3) and again a
+multiple once the set is out of print (§4.2) — that is where the big numbers come from.
 
 A calibration script scales each set's values so that the **expected value of a booster = 72 % ± 3 % of
-its UVP** with that set's odds. A test fails the build if a set leaves the band.
+its UVP** with that set's odds (with the ranges above the scaling factor is expected to stay between 0.8
+and 1.25). A test fails the build if a set leaves the band. A typical Holo is therefore worth less than
+the booster it came from; opening packs is a gamble, not an income source.
 
 ### 4.2 Market value formula
 

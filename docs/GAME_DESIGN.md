@@ -167,7 +167,7 @@ Angekündigt → Vorbestellung → Im Druck (Restock-Wellen) → Letzte Welle �
 
 Each booster has filler slots (Common/Uncommon) and one **Hit-Slot** that always holds at least a Rare
 and can upgrade to Holo / Alternative / Ultra / Grail with set-specific odds (starting values:
-Holo 1:5, Alternative 1:24, Ultra 1:72, Grail 1:600 — auto-calibrated per set so that the average pack
+Holo 1:5, Alternative 1:24, Ultra 1:72, Grail 1:720 — auto-calibrated per set so that the average pack
 is worth about 72 % of its price). The larger One Piece and Riftbound boosters have one extra fixed Rare
 slot. Exact structure per set: `SETS.md`.
 
