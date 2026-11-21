@@ -49,9 +49,18 @@ export async function createLocalBackend(): Promise<Backend> {
   void tick()
   setInterval(tick, 60_000)
 
+  // PGlite writes to IndexedDB lazily; flush after every call so a reload never loses state.
+  const flushed = async <T>(work: Promise<T>) => {
+    try {
+      return await work
+    } finally {
+      await db.syncToFs()
+    }
+  }
+
   return {
     mode: 'local',
-    rpc: (fn, args) => localRpc(db, uid, fn, args),
-    devSql: async (query, params) => (await db.query(query, params)).rows,
+    rpc: (fn, args) => flushed(localRpc(db, uid, fn, args)),
+    devSql: (query, params) => flushed(db.query(query, params).then((r) => r.rows)),
   }
 }

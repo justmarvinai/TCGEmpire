@@ -23,10 +23,10 @@ const DOENER_BASE_CENTS = 150_00
 export function Shell({ me }: { me: Me & { player: Player } }) {
   useSync(true)
   return (
-    <div className="app-bg grid h-dvh grid-cols-[15rem_1fr] grid-rows-[3.5rem_1fr] max-lg:grid-cols-[3.5rem_1fr] min-[1440px]:grid-cols-[15rem_1fr_20rem]">
+    <div className="app-bg grid h-dvh grid-cols-[15rem_1fr] grid-rows-[3.5rem_1fr] max-lg:grid-cols-[3.5rem_1fr] min-[1440px]:grid-cols-[15rem_1fr_18rem]">
       <Sidebar level={me.player.level} />
       <TopBar me={me} />
-      <main className="overflow-y-auto" id="scroll-root">
+      <main className="col-start-2 row-start-2 min-w-0 overflow-y-auto" id="scroll-root">
         <div className="mx-auto max-w-[75rem] p-6 max-lg:p-3">
           <Outlet />
         </div>
@@ -41,7 +41,7 @@ export function Shell({ me }: { me: Me & { player: Player } }) {
 // ----------------------------------------------------------------------------------------------
 function Sidebar({ level }: { level: number }) {
   return (
-    <aside className="row-span-2 flex flex-col overflow-y-auto border-r-2 border-line bg-surface-1">
+    <aside className="col-start-1 row-span-2 row-start-1 flex flex-col overflow-y-auto border-r-2 border-line bg-surface-1">
       <NavLink to="/" className="flex h-14 shrink-0 items-center gap-2 border-b-2 border-line px-4 max-lg:justify-center max-lg:px-0">
         <PixelIcon name="card" scale={2} className="text-accent" />
         <span className="font-pixel text-2xl leading-none max-lg:hidden">
@@ -105,34 +105,39 @@ function SidebarItem({ item, level }: { item: NavItem; level: number }) {
 function TopBar({ me }: { me: Me & { player: Player } }) {
   const p = me.player
   return (
-    <header className="flex items-center gap-4 border-b-2 border-line bg-surface-1 px-4 max-lg:gap-2 max-lg:px-2">
-      <div className="flex min-w-0 items-center gap-3">
+    <header className="col-start-2 row-start-1 flex min-w-0 items-center gap-4 border-b-2 border-line bg-surface-1 px-4 max-lg:gap-2 max-lg:px-2">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
         <div className="grid size-9 shrink-0 place-items-center bg-accent font-pixel text-xl text-accent-fg" aria-hidden>
           {p.username.slice(0, 1).toUpperCase()}
         </div>
-        <div className="min-w-0 max-md:hidden">
+        <div className="min-w-0 flex-1 max-md:hidden">
           <div className="flex items-center gap-2 leading-tight">
             <span className="truncate font-semibold">{p.username}</span>
-            <span className="bg-surface-3 px-1.5 font-pixel text-sm text-gold">
+            {p.is_admin && <PixelIcon name="crown" className="text-accent" title={texts.hud.admin} />}
+            <span className="shrink-0 bg-surface-3 px-1.5 font-pixel text-sm whitespace-nowrap text-gold">
               {texts.hud.level} {p.level}
             </span>
-            {p.is_admin && <span className="bg-accent px-1.5 text-[0.625rem] font-bold text-accent-fg uppercase">{texts.hud.admin}</span>}
-            <InfoTip>{texts.hud.epTip}</InfoTip>
+            <InfoTip label={`${texts.hud.ep}: ${texts.common.info}`}>
+              <strong className="text-fg">
+                {p.ep_to_next ? `${formatNumber(p.ep)} / ${formatNumber(p.ep_to_next)} ${texts.hud.ep}` : texts.hud.maxLevel}.
+              </strong>{' '}
+              {texts.hud.epTip}
+            </InfoTip>
           </div>
-          <div className="mt-1 flex items-center gap-2">
-            <Progress className="w-40" tone="gold" value={p.ep_to_next ? p.ep / p.ep_to_next : 1} label={texts.hud.ep} />
-            <span className="nums text-xs text-fg-3">
+          <div className="mt-1.5 flex items-center gap-2">
+            <Progress className="max-w-56" tone="gold" value={p.ep_to_next ? p.ep / p.ep_to_next : 1} label={texts.hud.ep} />
+            <span className="nums text-xs whitespace-nowrap text-fg-3 max-[1599px]:hidden">
               {p.ep_to_next ? `${formatNumber(p.ep)} / ${formatNumber(p.ep_to_next)} ${texts.hud.ep}` : texts.hud.maxLevel}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="ml-auto flex items-center gap-1">
+      <div className="ml-auto flex shrink-0 items-center gap-1 whitespace-nowrap">
         <Stat icon="coin" tone="text-gold" label={texts.hud.cash} tip={texts.hud.cashTip}>
           <NumberTicker value={p.cash_cents} format={formatMoney} className="nums font-semibold" />
         </Stat>
-        <Stat icon="bottle" tone="text-gain" label={texts.hud.pfandbons} tip={texts.hud.pfandbonsTip} className="max-xl:hidden">
+        <Stat icon="bottle" tone="text-gain" label={texts.hud.pfandbons} tip={texts.hud.pfandbonsTip} className="max-[1599px]:hidden">
           <span className="nums font-semibold">{formatNumber(p.pfandbons)}</span>
         </Stat>
         <Stat icon="star" tone="text-warn" label={texts.hud.ruf} tip={texts.hud.rufTip} className="max-xl:hidden">
@@ -230,8 +235,9 @@ function SettingsMenu() {
     try {
       const me = await rpc('logout')
       reset()
-      client.clear()
       setMe(me)
+      // Drop everything that belonged to the signed-out player; keep the session query and static art.
+      client.removeQueries({ predicate: (q) => q.queryKey[0] !== 'me' && q.queryKey[0] !== 'atlas' })
     } catch (e) {
       toast('error', errorText(e))
     }
@@ -280,7 +286,7 @@ function FeedRail({ priceLevel }: { priceLevel: number }) {
   const feed = useWorld((s) => s.feed)
   const doener = formatMoney(Math.round(DOENER_BASE_CENTS * priceLevel))
   return (
-    <aside className="row-span-1 flex flex-col overflow-hidden border-l-2 border-line bg-surface-1 max-[1439px]:hidden">
+    <aside className="col-start-3 row-span-2 row-start-1 flex flex-col overflow-hidden border-l-2 border-line bg-surface-1 max-[1439px]:hidden">
       <div className="border-b-2 border-line px-3 py-2">
         <p className="flex items-center gap-2 font-pixel text-xl leading-none text-loss">
           <PixelIcon name="news" />

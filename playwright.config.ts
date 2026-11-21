@@ -5,6 +5,8 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './e2e',
   timeout: 60_000,
+  // Local mode boots a whole Postgres in the browser: the first screen takes a few seconds.
+  expect: { timeout: 20_000 },
   fullyParallel: true,
   reporter: [['list']],
   use: { baseURL: 'http://127.0.0.1:4173', trace: 'off' },

@@ -17,7 +17,7 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
 
   await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
   await expect(page.getByText('400,00 €').first()).toBeVisible()
-  await expect(page.getByText('Admin', { exact: true })).toBeVisible()
+  await expect(page.getByRole('img', { name: 'Admin' })).toBeVisible()
   await expect(page.getByText('NEU IM GESCHÄFT: Testmogul')).toBeVisible()
   await page.screenshot({ path: shot('home') })
 
@@ -41,6 +41,9 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   await expect(page.getByRole('alert')).toContainText('Name oder Passwort falsch')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByRole('button', { name: 'Rein da' }).click()
+  // Signed in again, still on the page where we left.
+  await expect(page.getByText('Kommt bald')).toBeVisible()
+  await page.getByRole('link', { name: 'Übersicht' }).click()
   await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
 })
 
@@ -58,5 +61,7 @@ test('component showcase renders and local dev tools move money and levels', asy
   await expect(page.getByText('1.400 €')).toBeVisible()
   await page.getByRole('button', { name: '+viel EP' }).click()
   await expect(page.getByText(/Level (1[0-9]|[2-9][0-9])/)).toBeVisible()
-  await page.screenshot({ path: shot('dev-ui'), fullPage: true })
+  // The page scrolls inside the shell: use a tall window to capture the whole showcase.
+  await page.setViewportSize({ width: 1440, height: 2700 })
+  await page.screenshot({ path: shot('dev-ui') })
 })
