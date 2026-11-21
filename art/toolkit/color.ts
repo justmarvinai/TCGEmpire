@@ -72,7 +72,7 @@ function hueTowards(h: number, target: number, deg: number): number {
 
 /**
  * Build a hue-shifted ramp around a base colour. The base sits one step below the top;
- * shadows drift towards violet-blue and gain saturation, highlights drift towards yellow.
+ * shadows drift towards violet-blue and lose a little saturation, highlights drift towards yellow.
  */
 export function ramp(base: RGB, steps = 4, hueShift = 14): RGB[] {
   const [h, s, l] = toHsl(base)
@@ -82,7 +82,7 @@ export function ramp(base: RGB, steps = 4, hueShift = 14): RGB[] {
     const k = i - baseIndex
     if (k === 0) out.push(base)
     else if (k < 0)
-      out.push(fromHsl(hueTowards(h, 265, hueShift * -k), s + 0.05 * -k, l * Math.pow(0.72, -k)))
+      out.push(fromHsl(hueTowards(h, 265, hueShift * -k), s * Math.pow(0.88, -k), l * Math.pow(0.78, -k)))
     else out.push(fromHsl(hueTowards(h, 55, hueShift * k), s - 0.04 * k, l + (1 - l) * 0.42 * k))
   }
   return out
