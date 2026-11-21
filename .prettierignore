@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+dist
+public
+docs
+*.md
+supabase/seed

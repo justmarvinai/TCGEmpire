@@ -1,0 +1,12 @@
+node_modules
+dist
+.env
+.env.local
+.vercel
+*.log
+/public/atlas
+/art/.sheets
+/test-results
+/playwright-report
+/e2e/.shots
+.DS_Store
