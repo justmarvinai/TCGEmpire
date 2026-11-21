@@ -32,7 +32,26 @@ Vite, React 19, TypeScript strict, React Router, TanStack Query, Zustand, Zod 4,
 only), Radix UI, Motion, own WebAudio synth, own pixel painter toolkit. Supabase: Postgres with PL/pgSQL
 RPCs, Auth, Realtime, pg_cron. Tests: Vitest, PGlite, Playwright. Package manager: pnpm.
 
-Commands are added here when the repo is scaffolded (alpha_01). Until then there are none.
+```bash
+pnpm dev          # dev server; without .env.local it runs in local mode (real server SQL in the browser)
+pnpm typecheck    # tsc --noEmit
+pnpm lint         # ESLint
+pnpm test         # Vitest: SQL logic and RPC contracts (in-memory Postgres), formatting, art quality gates
+pnpm test:e2e     # Playwright smoke tests against the production build in local mode
+pnpm build        # art atlases + type check + production build
+pnpm seed         # regenerate supabase/seed/config.sql from content/ (run after changing content/)
+pnpm art:build    # build the PNG atlases into public/atlas (not committed)
+pnpm art:sheet    # contact sheets for art review into art/.sheets (not committed)
+bash scripts/db-migrate.sh   # apply migrations + seed to $DATABASE_URL (CI does this on main)
+```
+
+Where things are: `supabase/migrations` (schema and RPCs), `supabase/tests` (SQL tests and the harness),
+`content/` (balance and content data), `src/lib/schemas.ts` (one Zod contract per RPC), `src/lib/backend`
+(Supabase and local mode), `src/texts/de.ts` (all German UI text), `src/components/ui` (building blocks,
+shown on `/dev/ui`), `art/` (painter toolkit, frames, card art), `docs/SETUP.md` (owner's one-time setup).
+
+New RPC checklist: SQL function in a migration → `select private.expose(...)` → contract in
+`RPC_SCHEMAS` → test in `supabase/tests` (a test fails if an exposed function has no contract).
 
 ## 3. Hard rules
 

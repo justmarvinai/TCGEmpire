@@ -26,16 +26,17 @@ Goal: a friend can register with an invite code on the live site and see an empt
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Repo setup: Vite, React, TypeScript strict, Tailwind tokens, ESLint, Prettier, Vitest, Playwright, CI | M |
-| ☐ | **Spikes:** PGlite runs our SQL pattern (auth shim, RPC, tick); Supabase free-plan limits re-checked; Realtime broadcast from the database | M |
-| ☐ | Database core: schemas, players, ledger, requests, config, Preisniveau (`private.eur`), modifiers engine, event bus, tick dispatcher, `sync` | M |
-| ☐ | Auth: username + password + shared invite code; first account becomes admin | M |
-| ☐ | App shell: sidebar, top bar HUD, right rail, page frame, routing, locked-feature states | M |
-| ☐ | Design system v1 on `/dev/ui`: tokens, buttons, panels, dialogs, sheets, toasts, number ticker, InfoTip ("i"), empty/skeleton/error states | M |
-| ☐ | Painter toolkit v1 + atlas build + contact sheets; the small icon set; bitmap fonts | M |
-| ☐ | Audio synth v1 with a handful of presets; settings (sound, reduced motion) | M |
-| ☐ | Deploy pipeline: Vercel from `main`, migrations from CI, keep-alive | M |
-| ☐ | **Art quality gate:** Pokémon card frame + 10 Basis-Set cards (incl. Glurak, Pikachu, a trainer, an energy), booster and slab mock-up at final quality, shown to the owner | M |
+| ☑ | Repo setup: Vite, React, TypeScript strict, Tailwind tokens, ESLint, Prettier, Vitest, Playwright, CI | M |
+| ☑ | **Spike:** the unchanged SQL runs in PGlite (Node tests and in the browser) and on Postgres 16 | M |
+| ☐ | **Spike:** Realtime broadcast from the database — needs the real Supabase project; moved to the first feature that needs it (feed/chat in alpha_04). Polling `sync` covers everything until then. | M |
+| ☑ | Database core: schemas, players, ledger, requests, config, Preisniveau (`private.eur`), modifiers engine, event bus, tick dispatcher, `sync` | M |
+| ☑ | Login: own username + password on anonymous sessions, shared invite code; first account becomes admin | M |
+| ☑ | App shell: sidebar, top bar HUD, feed rail, page frame, routing, locked-feature states | M |
+| ☑ | Design system v1 on `/dev/ui`: tokens, buttons, panels, dialogs, toasts, number ticker, InfoTip ("i"), empty/skeleton/error states | M |
+| ☑ | Painter toolkit v1 + atlas build + contact sheets; the small icon set (56 icons); bitmap fonts | M |
+| ☑ | Audio synth v1 with a handful of presets; settings (sound, reduced motion) | M |
+| ☑ | Deploy pipeline: Vercel config, migration runner from CI, keep-alive, owner guide `docs/SETUP.md` (the owner's one-time setup is still to do) | M |
+| ◐ | **Art quality gate:** Pokémon card frame + 10 Basis-Set cards (incl. Glurak, Pikachu, a trainer, an energy), booster and slab mock-up at final quality, shown to the owner | M |
 
 ### alpha_02 — Rip
 
