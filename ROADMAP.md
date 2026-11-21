@@ -1,7 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: plan approved with the owner's answers (21 Nov 2026). No code has been written.
-> Coding starts with the owner's explicit go for alpha_01.**
+> **Current phase: building `alpha_01` (owner's go on 21 Nov 2026). Later alphas each need a new go.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -17,7 +16,7 @@ Legend: ☐ open · ◐ in progress · ☑ done · **M** must for 0.0.1 · **S**
 | ☑ | Curated card lists for the four first sets (`docs/sets/`) |
 | ☑ | Agent guides (`CLAUDE.md`, `AGENTS.md`), changelog, roadmap |
 | ☑ | Owner answered `USER_QUESTIONS.md`; answers worked into all documents |
-| ☐ | **Owner gives the go for coding alpha_01** |
+| ☑ | **Owner gave the go for coding alpha_01** |
 
 ## Milestones
 

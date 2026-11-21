@@ -5,14 +5,11 @@ trading-card hobby. Private game for one friend group. Must run on **Vercel Hobb
 
 ## 0. Gate: are you allowed to code?
 
-**Project phase: PLAN APPROVED, CODING NOT STARTED.** The owner answered all open questions on
-21 Nov 2026 (`USER_QUESTIONS.md`) but has **not yet given the explicit go for `alpha_01`**.
+**Approved milestone: `alpha_01` (Fundament).** The owner gave the explicit go on 21 Nov 2026.
 
-- Until this section names an approved milestone, do not create application code, configs, migrations
-  or content data. Documentation and planning only.
-- When the owner explicitly says go, update this section to name the approved milestone, and work on
-  that milestone only.
-- After each alpha: report and wait for the go for the next one.
+- Work on `alpha_01` only (scope: `ROADMAP.md`). When it is done: changelog, version, report — then
+  **stop and wait** for the owner's go for `alpha_02`.
+- When the owner approves the next milestone, update this section to name it.
 - Never start a later milestone, deploy, or change platform settings without the owner's go.
 
 ## 1. Read first
@@ -31,7 +28,7 @@ trading-card hobby. Private game for one friend group. Must run on **Vercel Hobb
 
 ## 2. Stack (planned)
 
-Vite, React 19, TypeScript strict, TanStack Router and Query, Zustand, Zod 4, Tailwind CSS 4 (own tokens
+Vite, React 19, TypeScript strict, React Router, TanStack Query, Zustand, Zod 4, Tailwind CSS 4 (own tokens
 only), Radix UI, Motion, own WebAudio synth, own pixel painter toolkit. Supabase: Postgres with PL/pgSQL
 RPCs, Auth, Realtime, pg_cron. Tests: Vitest, PGlite, Playwright. Package manager: pnpm.
 
@@ -41,7 +38,8 @@ Commands are added here when the repo is scaffolded (alpha_01). Until then there
 
 ### Server authority
 
-- Money, items, EP, timers and randomness change **only** inside `api.*` Postgres functions.
+- Money, items, EP, timers and randomness change **only** inside the RPC functions (schema `public`,
+  which holds nothing but the API; tables live in `game`, helpers in `private`).
 - The client has no table access. No `.from()` calls. No service-role key in the frontend.
 - Every write RPC takes `p_request_id` and is idempotent.
 - **A rule is implemented once, in SQL.** The client shows what RPCs return and never recomputes costs,
