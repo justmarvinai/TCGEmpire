@@ -1,0 +1,199 @@
+# TCGEmpire — Roadmap to 0.0.1
+
+> **Current phase: PLANNING. No code has been written. Coding starts only after the owner's explicit go.**
+
+Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
+Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
+short report to the owner.
+
+Legend: ☐ open · ◐ in progress · ☑ done · **M** must for 0.0.1 · **S** should (first to slip to 0.0.2)
+
+## Phase 0 — Plan (this phase)
+
+| | Task |
+|---|------|
+| ☑ | Game design, economy, architecture, data model, art direction, humour bible, decisions |
+| ☑ | Curated card lists for the four first sets (`docs/sets/`) |
+| ☑ | Agent guides (`CLAUDE.md`, `AGENTS.md`), changelog, roadmap |
+| ☐ | Owner answers `USER_QUESTIONS.md` (or accepts the defaults) |
+| ☐ | **Owner gives the go for coding** |
+
+## Milestones
+
+### alpha_01 — Fundament
+
+Goal: a friend can register with an invite code on the live site and see an empty but real game shell.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Repo setup: Vite, React, TypeScript strict, Tailwind tokens, ESLint, Prettier, Vitest, Playwright, CI | M |
+| ☐ | **Spikes:** PGlite runs our SQL pattern (auth shim, RPC, tick); Supabase free-plan limits re-checked; Realtime broadcast from the database | M |
+| ☐ | Database core: schemas, players, ledger, requests, config, modifiers engine, event bus, tick dispatcher, `sync` | M |
+| ☐ | Auth: username + password + invite code; admin flag | M |
+| ☐ | App shell: sidebar, top bar HUD, right rail, page frame, routing, locked-feature states | M |
+| ☐ | Design system v1 on `/dev/ui`: tokens, buttons, panels, dialogs, sheets, toasts, number ticker, InfoTip ("i"), empty/skeleton/error states | M |
+| ☐ | Painter toolkit v1 + atlas build + contact sheets; first icons; bitmap fonts | M |
+| ☐ | Audio synth v1 with a handful of presets; settings (sound, reduced motion) | M |
+| ☐ | Deploy pipeline: Vercel from `main`, migrations from CI, keep-alive | M |
+| ☐ | **Art quality gate:** Pokémon card frame + 10 Basis-Set cards (incl. Glurak, Pikachu, a trainer, an energy), booster and slab mock-up at final quality, shown to the owner | M |
+
+### alpha_02 — Rip
+
+Goal: the core loop is fun on its own — earn a little, buy boosters, open them, collect.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Content pipeline (TypeScript → seed) and the complete **Pokémon Basis-Set** (data + art P1/P2) | M |
+| ☐ | Kiosk: buy boosters; inventory for sealed, stacks and copies; quality values on hits | M |
+| ☐ | **Pack opening**: tear, reveal, hit suspense by tier, summary, bulk ×5/×10, skip, keyboard, fake chat | M |
+| ☐ | Foil system and card inspect view | M |
+| ☐ | Sammlung: binder per set, card detail, set progress | M |
+| ☐ | Kartenladen-Ankauf (instant sell), bulk sell | M |
+| ☐ | EP, levels 1–100 table, level-up overlay, level rewards, Level-Pfad | M |
+| ☐ | Minijob **Pfandflaschen sammeln**, energy | M |
+| ☐ | Tutorial with Mutti and Opa; mini-quests v1 | M |
+| ☐ | Grail broadcast to everyone online | M |
+
+### alpha_03 — Grind
+
+Goal: there is always something to do and something running while away.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Quest engine: mini, daily, weekly, Stempelkarte; rerolls; deep links | M |
+| ☐ | Geldbunker with four upgrade tracks and visual tiers | M |
+| ☐ | Jobs: 3 more minijobs (Regale, Karten sortieren, Pakete), shifts with ranks and check-ins | M |
+| ☐ | Upgrades (all groups, first tiers) with "jetzt → danach" | M |
+| ☐ | "Willkommen zurück" recap; notifications centre (Mutti writes) | M |
+| ☐ | Achievements v1, statistics page, titles | M |
+| ☐ | Pfandbons and the Pfandautomat shop; consumables (Döner, Fettfinger) | M |
+| ☐ | Simulation harness v1 with pace assertions for levels 1–30 | M |
+
+### alpha_04 — Flip
+
+Goal: a living market with NPCs, and stores worth racing for.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Price model, tick, history, charts; Hype-Index per game | M |
+| ☐ | **Cardmarket**: listings, buy orders, fees, shipping timers, seller pages | M |
+| ☐ | **Kleinanzeigen**: NPC ads, haggling, own ads, lowballers, fakes | M |
+| ☐ | NPC traders v1 (scalper, collector, investor, bulk buyer, Kevin) | M |
+| ☐ | Retail stores with shared stock, restock schedule, limits; displays; Lager capacity | M |
+| ☐ | Set lifecycle + admin console v1 (phases, restocks, invites, config, job log) | M |
+| ☐ | Net worth; toplists (Vermögen, Level, Bargeld, Sammlung) with NPC rivals | M |
+| ☐ | Direkthandel and gifts with allowance | M |
+| ☐ | KARTEN-BILD feed and Stammtisch chat; presence | M |
+
+### alpha_05 — Vier Spiele
+
+Goal: all four games are in, each with its own look.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | **Yu-Gi-Oh! LOB**, **One Piece OP-01**, **Riftbound Origins**: data, frames, card backs, packs, displays, art P1/P2 | M |
+| ☐ | Starter choice and Händlerlizenzen | M |
+| ☐ | Themed collection goals (Exodia, Strohhut crew, starters) and set bonuses | M |
+| ☐ | Hobby lore worked into events, achievements and feed lines for all four games | M |
+
+### alpha_06 — Grading
+
+Goal: the gamble that multiplies value.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Vorprüfung with tools; submission to PSA / BGS / CGC; service levels; timers | M |
+| ☐ | Slab renderer (all label styles), grade reveal, Pop Report | M |
+| ☐ | Slab pricing, crack and re-submit, Black Label | M |
+| ☐ | Vitrine on the profile | M |
+| ☐ | Minijobs "Echt oder Fake?" and "Grading-Praktikum" | M |
+
+### alpha_07 — Leben
+
+Goal: identity, build choices and the first big sinks.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Skill tree (4 branches, keystones, respec) | M |
+| ☐ | Housing ladder with room scenes, decor slots, Wohnwert, storage, visits and Gästebuch | M |
+| ☐ | Avatar and cosmetics (outfits, sleeves, binder skins, frames, pack effects), wardrobe | M |
+| ☐ | Profile pages; more toplists (Ruf, Bester Pull, joke lists); Wochenwertung | M |
+| ☐ | Insurance | M |
+
+### alpha_08 — Freunde
+
+Goal: playing together, live.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | **Pack Battles**: lobby, modes, synced replay, spectators, emotes, bots | M |
+| ☐ | Realtime layer in full (world, player, battle channels) | M |
+| ☐ | Aushelfen, Kaffee und Kuchen, Sammelbestellung | M |
+| ☐ | Box Breaks | S |
+| ☐ | Privatkredit, Ehre record | S |
+
+### alpha_09 — Firma
+
+Goal: the business sim.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Gewerbeanmeldung quest chain; founding; label designer | M |
+| ☐ | Pipeline simulation, demand, costs, cycles, "Wo es hakt" panel | M |
+| ☐ | Staff (applicants, hiring, training, loyalty), equipment, stages 1–4 | M |
+| ☐ | Player orders to companies; brand factor on slabs; reviews; Ruf system complete | M |
+| ☐ | Decisions, manual grading mini-game, marketing, taxes | M |
+| ☐ | Shady options and scandals | M |
+| ☐ | Großhandel | M |
+| ☐ | Research, stages 5–7, Stille Teilhaberschaft | S |
+
+### alpha_10 — Risiko
+
+Goal: the world happens to you.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Event engine with at least 25 events (market, supply, grading, personal, company) | M |
+| ☐ | Schattenwirtschaft: Bunker knacken, Finanzamt, 1-Stern, Gerücht, Abwerben, resealed/gewogen, Rache; daily loss cap | M |
+| ☐ | Sonntags-Flohmarkt | S |
+| ☐ | eBay-Auktionen | S |
+| ☐ | Bares für Rares | S |
+| ☐ | Calendar event framework + first calendar event | S |
+
+### alpha_11 — Mogul
+
+Goal: the endgame and the reason to start again.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | **Prestige (Exit)**: Empire-Sterne, perks, Omas Dachboden, ranks | M |
+| ☐ | Achievements complete (~200), titles | M |
+| ☐ | Luxus, Megaprojekte, Museum auctions | S |
+| ☐ | Streaming with Followers and sponsors | S |
+| ☐ | Höhle der Löwen | S |
+
+### alpha_12 — Feinschliff → **0.0.1**
+
+Goal: it feels finished.
+
+| | Scope | |
+|---|-------|---|
+| ☐ | Onboarding pass: every unlock has a tour; "i" on every panel; TCG-Lexikon; rules page | M |
+| ☐ | Balance pass with the simulation over levels 1–100 and two prestiges; admin economy dashboard | M |
+| ☐ | Art pass: all P1 hero art reviewed again; alternative pack artworks; animated Grails | M |
+| ☐ | Sound pass; performance pass (bundle, atlas loading, tick duration); database size report | M |
+| ☐ | Full playtest by the group; bug bash; final data policy decision (wipe or keep) | M |
+| ☐ | Release `0.0.1` | M |
+
+## After 0.0.1 (not planned in detail)
+
+More sets (admin-released), further business units (Kartenladen, Automaten, Auktionshaus), free room
+editor, tournaments, Vereine (guilds), music, more calendar events, phone polish.
+
+## Working agreement
+
+- One milestone at a time; inside a milestone small commits that each pass typecheck, lint and tests.
+- Each milestone starts with a short task breakdown in this file and ends with: changelog entry, version
+  bump, deploy, a "what to try" list for the group, and open questions for the owner.
+- Balance values are never guessed twice: the simulation says what a change did.
+- Scope changes are written here before they are built.

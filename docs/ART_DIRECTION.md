@@ -1,0 +1,203 @@
+# TCGEmpire — Art Direction, Pixel Art Pipeline and UI
+
+> Status: **PLAN.** Sizes, fonts and colours are confirmed in alpha_01 on a living showcase page
+> (`/dev/ui`) and with contact sheets, before any volume production starts.
+
+## 1. Look and feel
+
+**"A polished indie game dashboard, with real pixel art where it counts."**
+
+- **UI: modern, calm, clean.** Dark theme, generous spacing, clear hierarchy, readable type. Data
+  (numbers, prices, tables) is always in a clean typeface with tabular figures.
+- **Pixel art: the personality.** Cards, packs, displays, slabs, avatars, rooms, icons, NPC portraits,
+  mini-games. Always integer-scaled, never blurred, never mixed pixel sizes inside one element.
+- **Chunky game feel on controls:** 2 px borders, hard "pressed" shadows, stepped pixel corners on panels,
+  buttons that sink when pressed.
+- **Juice with restraint:** big effects are reserved for big moments (hit reveal, level-up, Grail,
+  collecting the bunker). Everyday actions get small, fast feedback.
+
+Things we avoid: generic gradient-purple "AI dashboard" look, glassmorphism, emoji as icons, stock
+illustration, blurry upscaled pixels, pixel fonts for body text or numbers.
+
+## 2. Design tokens (starting values)
+
+| Token group | Values |
+|-------------|--------|
+| Background | ink `#0e1018`, surface 1 `#161a26`, surface 2 `#1f2433`, surface 3 `#2a3044` |
+| Text | primary `#f3f5fa`, secondary `#aab2c8`, muted `#7f88a3` |
+| Lines / pixel edge | `#2b3147`, edge shadow `#080a10` |
+| Brand accent | **Glurak-Orange** `#ff8a3d` (primary actions), gold `#ffcf5a` (money) |
+| Semantic | gain `#35d48a`, loss `#ff5d6c`, warning `#ffb547`, info `#5fb0ff` |
+| Rarity | Common `#9aa3b5`, Uncommon `#4fc97a`, Rare `#4f9dff`, Holo `#4fe3e0`, Alternative `#b47bff`, Ultra `#ffcf5a`, Grail animated rainbow-gold |
+| Game colours | Pokémon yellow/blue, Yu-Gi-Oh! brown/orange, One Piece red/straw, Riftbound teal/gold (used for tabs and set headers) |
+| Radii | 0 (pixel panels), 4, 8 px |
+| Shadows | hard offset `0 3px 0 edge`, no soft blur on game elements |
+| Motion | 80 / 150 / 220 / 320 / 480 ms; springs snappy / smooth / bouncy; one token file used by CSS and JS |
+
+Contrast is tested automatically (WCAG AA for text). Tailwind's default palette is removed so only tokens
+can be used. One dark theme in 0.0.1.
+
+**Typography:** UI and numbers in a friendly geometric sans (candidates: Rubik, Nunito Sans, Inter);
+headings and celebration text in a pixel display font (candidates: Pixelify Sans, Silkscreen). All
+open-licence, self-hosted. Final pick on the showcase page.
+
+## 3. Layout (desktop-first)
+
+```
+┌────────────┬──────────────────────────────────────────────────────────────┬───────────────┐
+│  Sidebar   │ Top bar: avatar + level ring + EP bar · Geld · Pfandbons ·   │  Right rail   │
+│  grouped   │ Ruf ★ · Energie · Bunker fill · notifications                │  (≥1440 px)   │
+│  nav with  ├──────────────────────────────────────────────────────────────┤  KARTEN-BILD  │
+│  pixel     │                                                              │  feed,        │
+│  icons,    │ Page: pixel header banner, one-line explanation, "i",        │  Stammtisch,  │
+│  locks +   │ content in max 1200 px                                       │  running      │
+│  NEU       │                                                              │  timers       │
+└────────────┴──────────────────────────────────────────────────────────────┴───────────────┘
+```
+
+- Navigation groups: **Start · Sammeln** (Shop, Öffnen, Sammlung, Grading) **· Handeln** (Cardmarket,
+  Kleinanzeigen, Auktionen, Tausch) **· Verdienen** (Jobs, Geldbunker, Firma, Streaming) **· Aufsteigen**
+  (Quests, Upgrades, Skills, Level-Pfad, Prestige) **· Leben** (Wohnen, Stil, Luxus) **· Freunde**
+  (Battles, Toplisten, Spieler, Megaprojekte).
+- Target 1280–1920 px. Usable down to 390 px (bottom tab bar, sheets) but phones are not the design
+  target (Q-14).
+- Every page: skeleton loading in the shape of its content, a designed empty state, a designed error
+  state. No bare spinners.
+- Every action has hover, pressed, focus, disabled, loading and success states. Full keyboard support
+  for pack opening and dialogs.
+
+## 4. Pixel art specifications
+
+| Asset | Art size (px) | Typical display scale | Notes |
+|-------|---------------|-----------------------|-------|
+| UI icon | 12×12 / 16×16 | ×2 | Single colour (inherits text colour) or max 6 colours. |
+| Item / decor icon | 24×24, 32×32 | ×2–×3 | Max 16 colours. |
+| **Card** | **80×112** (5:7) | ×2 binder, ×4 opening, ×6 inspect | Art window 68×48 (classic) or full art 80×112. Max ~32 colours per card. |
+| **Booster pack** | 84×132 | ×3–×4 | Crimped top and bottom, foil bands, set logo, hero creature. |
+| **Display** | 144×104 | ×2–×3 | Open-top box with pack fronts visible. |
+| **Case** | 128×112 | ×2 | Brown carton, tape, shipping label. |
+| **Slab** | 96×152 | ×2–×4 | Acrylic case with highlights, label area 80×22, card inset 80×112. |
+| Avatar | 32×48 | ×3–×4 | Layered: body, skin, hair, outfit, hat, accessory. |
+| NPC portrait | 32×32 | ×3 | |
+| Room scene | 240×136 | ×3–×4 | Background per home + decor layers at fixed anchor points. |
+| Bunker / company / store scene | 160×96 | ×3 | Evolves with level. |
+| Mini-game sprites | 16–32 | ×3 | Shared with icons where possible. |
+
+House style rules:
+
+- Light from the top left. Outlines are a darker shade of the local colour, not pure black; the silhouette
+  gets a consistent dark outline so cards read at thumbnail size.
+- Shading with 3–5 step colour ramps per material; hue-shifted (shadows cooler, highlights warmer).
+- Dithering only for large gradients (skies, foil bands), ordered 4×4 Bayer.
+- No anti-aliasing against transparent backgrounds. No orphan pixels.
+- Readability test: every card must be recognisable at ×2 in the binder grid.
+
+## 5. Cards: looking like the real thing — but our own
+
+Each game gets its own **card frame family** that evokes the real layout without copying artwork or
+logos pixel for pixel:
+
+| Game | Frame cues |
+|------|------------|
+| Pokémon | Yellow border, type-coloured body, name and KP at the top, art window, attack lines, weakness/resistance bar, set symbol. |
+| Yu-Gi-Oh! | Card-kind coloured frame (normal yellow-brown, effect orange, spell teal, trap magenta), attribute orb, level stars, square art window, text box, ATK/DEF. |
+| One Piece | Full-bleed art, cost badge top left, power top right, colour band, name plate at the bottom, type line. |
+| Riftbound | Modern full-art frame, domain-coloured gem, energy cost, might value, slim name bar. |
+
+- **Text on cards** is drawn with our own bitmap fonts (5×7, condensed 4×6, micro 3×5) directly into the
+  pixel image, with automatic condensing for long names ("Blauäugiger w. Drache"). Cards are therefore
+  complete images that can be shared as PNG.
+- **Tier treatments:** Common–Rare classic frame; Holo foil art window; Alternative new artwork with
+  textured frame; Ultra full art with gold accents; Grail full art, animated rainbow-gold border, serial
+  style numbering.
+- **Foil:** per-card foil mask (which pixels shine) plus animated, pixel-stepped gradient layers that
+  follow the pointer. A recipe per tier (strength, pattern: cosmos dots, linear rainbow, cracked ice,
+  gold sweep). Cheap: transforms and blend modes only.
+- **Card back** per game, own design in the spirit of the original.
+- **Artwork** is an original pixel-art interpretation of the character described by the art brief in the
+  set file — recognisable, on-model in colours and silhouette, in a new pose and scene.
+
+**Slabs** imitate the real cases: PSA-style red-white label, BGS-style gold/silver/black label with four
+sub-grades, CGC-style blue label, and player-company labels built from the owner's colours and pixel
+logo. Label text (grade, card name, cert number) is rendered at runtime.
+
+## 6. The pipeline: art as code
+
+```
+art/toolkit      painter library: canvas of indexed pixels + primitives + post-passes
+art/<domain>/    one small TypeScript file per artwork, exporting draw(painter)
+scripts          build → PNG atlases + JSON index per set   (runs in `pnpm build`, deterministic)
+                 sheet → contact-sheet PNGs for review       (cards at ×1, ×2 and ×4 on dark and light)
+client           loads one atlas per set on demand; composes slabs and dynamic labels at runtime; caches
+```
+
+**Painter toolkit** (built first, in alpha_01/02):
+
+| Capability | Purpose |
+|------------|---------|
+| Primitives: ellipse, blob, capsule/limb, polygon, bezier stroke, line, rect | Build bodies from shapes instead of typing pixel grids. |
+| Symmetry and transforms | Mirrored creatures, rotated parts. |
+| Auto-shading: light direction, ramp lookup, rim light | Consistent volume without hand shading. |
+| Auto-outline (selective, coloured) and silhouette outline | Readability. |
+| Dither fills, gradients, noise, sunbursts, speed lines, sparkles | Backgrounds and energy effects. |
+| Material presets: flame, water, lightning, smoke, rock, metal, scales, fur | Reused across creatures. |
+| Stamps: small hand-authored grids for eyes, mouths, claws, logos | Precision where it matters. |
+| Palette management: ramps, hue shift, max-colour check | Cohesion. |
+| Cleanup pass: remove orphan pixels, fix double lines | Quality. |
+| Bitmap fonts and text layout | Card text, labels. |
+| Templates: quadruped, biped, serpent, bird, humanoid, item, spell scene | Faster production of non-hero cards. |
+
+**Review loop (mandatory for every artwork):** write draw code → build contact sheet → *look at the
+image* → compare against the art brief and the checklist → refine. An artwork is done only when it passes
+the checklist at ×2 and ×4. Automated gates: colour count, orphan pixels, minimum silhouette coverage,
+atlas size.
+
+Atlases are built from code on every build and are not committed. Art source is lazy-loaded per set and
+never bundled into the main app.
+
+## 7. Production plan for ~350 cards
+
+| Priority | What | When |
+|----------|------|------|
+| P0 | Toolkit, card frames for all four games, card backs, pack and display art for the first set, slab frames | alpha_01–02 |
+| P1 | **Hero art** for every Holo, Alternative, Ultra and Grail card plus fan-favourite commons (Pikachu, Kuriboh-class) — about 25–30 per set, each individually crafted and reviewed | With each set's alpha |
+| P2 | Template-based art for Rares, Uncommons, Commons — every card individually recognisable, less polish | With each set's alpha |
+| P3 | Polish passes: upgrade P2 art, add alternative pack artworks, animated Grails | alpha_12 and after |
+
+Estimated effort is dominated by P1/P2 card art; the roadmap reserves explicit art blocks for it.
+Quality bar before volume: the first ten cards of the Basis-Set (incl. Glurak, Pikachu, a trainer and an
+energy) are taken to final quality and shown to the owner before the rest is produced.
+
+## 8. Motion and feedback
+
+| Moment | Feedback |
+|--------|----------|
+| Money gained | Coins fly to the wallet, number ticks up, soft coin sound. |
+| EP gained | EP orbs to the level ring. |
+| Level-up | Full overlay: level number bounces in, unlock list staggers, confetti, fanfare, then the mini-tour. |
+| Hit reveal | Tiered charge, flash, shake, particles, value count-up (see `GAME_DESIGN.md` §5). |
+| Grail | Blackout, heartbeat, white flash, rainbow beams, server-wide toast. |
+| Bunker collect | Vault door, coin fountain, big number. |
+| Quest done | Stamp animation, reward pop. |
+| Error / loss | Short shake, low thud; losses are shown clearly but without humiliation effects. |
+
+Rules: animate transform and opacity only; appearing is slower than disappearing; "Animationen
+reduzieren" and the system setting are respected; nothing blocks input for more than 300 ms except
+deliberate reveals (which can always be skipped).
+
+## 9. Sound
+
+- All sounds are synthesised in code at runtime (small WebAudio synth with named presets): chip-style
+  pulse and triangle voices, noise bursts, short envelopes, one musical scale so everything harmonises.
+- Sound families: UI ticks, coins, pack (crinkle, tear), reveal ladder by tier (2 notes → fanfare with
+  drum → long Grail sequence), level-up, quest, market (sold, outbid), company (stamp, printer), alarms
+  (heist, restock), mini-games.
+- Throttling and slight pitch variation prevent fatigue. Separate volume sliders for effects and (later)
+  music; default on at moderate volume (Q-15).
+
+## 10. Showcase and quality gates
+
+- `/dev/ui` shows every component and state, all tokens, all sound presets, and a gallery of card frames,
+  packs and slabs. New components land there first.
+- Visual changes are verified with Playwright screenshots at 1440 px and 390 px.
+- A pull request that adds art includes the contact sheet image in its description.
