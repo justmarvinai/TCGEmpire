@@ -3,6 +3,27 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_01] — Fundament (in progress)
+
+The foundation: no gameplay yet, but a real, running game shell.
+
+### Added
+
+- **Login:** register with username, password and the shared invite code; the first account sets the code
+  and becomes admin. Sign in from any browser, sign out, account lock after too many wrong passwords.
+- **Server core:** players, money with a full ledger, levels 1–100 with EP and skill points, the
+  Preisniveau (daily, tied to the group's progress), notifications, news feed, the server tick with daily
+  reset at 00:00, and automatic clean-up of old data.
+- **App shell:** sidebar with every planned area (locked ones show their level, unfinished ones say
+  "Bald"), top bar with money, level, Ruf, energy and Preisniveau, the KARTEN-BILD feed, start page.
+  Every stat has an "i" that explains it.
+- **Look and sound:** dark pixel-framed design, 56 pixel icons, sound effects generated in code, settings
+  for volume and reduced animations.
+- **Card art pipeline:** cards, card backs, boosters and slabs are drawn by code. First Basis-Set cards
+  as a quality sample.
+- **Operations:** local mode (the whole game runs in one browser for development), automatic tests,
+  database migrations and a daily keep-alive for the free Supabase plan, setup guide `docs/SETUP.md`.
+
 ## [Unreleased]
 
 ### Planning
