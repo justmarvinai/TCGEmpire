@@ -6,7 +6,10 @@ interface Settings {
   reducedMotion: boolean
   /** skip the pack opening animation and show the result at once */
   instantReveal: boolean
+  /** feature tours finished on this device, as `${playerId}:${feature}` */
+  seenTours: string[]
   set: (patch: Partial<Pick<Settings, 'volume' | 'reducedMotion' | 'instantReveal'>>) => void
+  seeTour: (key: string) => void
 }
 
 // Device settings stay on the device.
@@ -16,7 +19,9 @@ export const useSettings = create<Settings>()(
       volume: 0.5,
       reducedMotion: false,
       instantReveal: false,
+      seenTours: [],
       set: (patch) => set(patch),
+      seeTour: (key) => set((s) => (s.seenTours.includes(key) ? s : { seenTours: [...s.seenTours, key] })),
     }),
     { name: 'tcge.settings' },
   ),

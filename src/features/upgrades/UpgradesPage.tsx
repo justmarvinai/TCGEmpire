@@ -20,7 +20,7 @@ export function UpgradesPage() {
       ) : ups.isError ? (
         <ErrorState message={errorText(ups.error)} onRetry={() => void ups.refetch()} />
       ) : (
-        <div className="grid gap-4 xl:grid-cols-2">
+        <div className="grid items-start gap-4 xl:grid-cols-2">
           {GROUPS.map((g) => (
             <Panel key={g} title={T.groups[g]}>
               <div className="flex flex-col gap-2">

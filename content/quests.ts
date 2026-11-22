@@ -5,7 +5,7 @@ export interface QuestTemplate {
   event: string
   min: number
   max: number
-  /** German text, {n} = target */
+  /** German text, {n} = target, [Einzahl|Mehrzahl] picks the form for the target */
   text: string
   path: string
   /** the feature behind the quest must be unlocked */
@@ -32,9 +32,9 @@ export const DAILY_QUESTS: readonly QuestTemplate[] = [
   { key: 'd_hits', event: 'hit_pulled', min: 2, max: 4, text: 'Zieh heute {n} Holos oder besser.', path: '/open' },
   { key: 'd_quests', event: 'quest_claimed', min: 4, max: 8, text: 'Hol dir heute {n} Quest-Belohnungen.', path: '/quests' },
   { key: 'd_bunker', event: 'bunker_collected', min: 2, max: 4, text: 'Leer den Geldbunker {n}× heute.', path: '/bunker', minLevel: 3 },
-  { key: 'd_upgrade', event: 'upgrade_bought', min: 1, max: 3, text: 'Kauf heute {n} Upgrades.', path: '/upgrades', minLevel: 5 },
-  { key: 'd_shift', event: 'shift_done', min: 1, max: 2, text: 'Beende heute {n} Schichten.', path: '/jobs', minLevel: 7 },
-  { key: 'd_snack', event: 'snack_eaten', min: 1, max: 2, text: 'Gönn dir heute {n} Snacks.', path: '/shop' },
+  { key: 'd_upgrade', event: 'upgrade_bought', min: 1, max: 3, text: 'Kauf heute {n} [Upgrade|Upgrades].', path: '/upgrades', minLevel: 5 },
+  { key: 'd_shift', event: 'shift_done', min: 1, max: 2, text: 'Beende heute {n} [Schicht|Schichten].', path: '/jobs', minLevel: 7 },
+  { key: 'd_snack', event: 'snack_eaten', min: 1, max: 2, text: 'Gönn dir heute {n} [Snack|Snacks].', path: '/shop' },
 ]
 
 export const WEEKLY_QUESTS: readonly QuestTemplate[] = [

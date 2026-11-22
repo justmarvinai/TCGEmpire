@@ -22,6 +22,7 @@ export const texts = {
   },
 
   nav: {
+    new: 'NEU',
     groups: {
       start: 'Start',
       sammeln: 'Sammeln',
@@ -89,7 +90,7 @@ export const texts = {
     reducedMotion: 'Animationen reduzieren',
     logout: 'Abmelden',
     admin: 'Admin',
-    buffs: { doener: 'Fettfinger', lernbon: 'Lern-Bon', gluecksbon: 'Glücks-Bon' } as Record<string, string>,
+    buffUntil: (time: string) => `Läuft bis ${time} Uhr.`,
   },
 
   feed: {
@@ -107,6 +108,60 @@ export const texts = {
     player_reset: (d: Record<string, unknown>) =>
       `NEUSTART: ${String(d.name)} hat alles verbrannt und fängt von vorne an. Die Feuerwehr ermittelt.`,
     unknown: 'Irgendwas ist passiert. Die Redaktion schläft noch.',
+  },
+
+  // Mutti's tour of a feature that a level unlocks; shown once on the feature's page.
+  tour: {
+    title: (name: string) => `Neu: ${name}!`,
+    next: 'Weiter',
+    done: 'Verstanden',
+    features: {
+      daily_quests: {
+        name: 'Tagesquests',
+        steps: [
+          'Jeden Tag fünf Aufgaben, um Mitternacht kommen neue. Wie Hausaufgaben, nur dass es Geld gibt.',
+          'Passt dir eine nicht, würfel sie neu. Einmal am Tag gratis. Wählerisch warst du ja schon immer.',
+          'Schaffst du alle fünf, gibt es einen Bonus obendrauf. Ich glaub an dich. Ein bisschen.',
+        ],
+      },
+      stamps: {
+        name: 'Stempelkarte',
+        steps: [
+          'Einmal am Tag stempeln, jeden Tag gibt es mehr Geld. Am siebten Tag liegt ein Booster drauf.',
+          'Montags gibt es eine neue Karte. Einen Tag verpennt? Der Joker holt ihn nach, einmal pro Woche.',
+        ],
+      },
+      bunker: {
+        name: 'Geldbunker',
+        steps: [
+          'Der Bunker füllt sich von allein, auch wenn du offline bist. Endlich verdienst du Geld im Schlaf.',
+          'Ist er voll, kommt nichts mehr dazu. Also leer ihn regelmäßig, du Faulpelz.',
+          'Rechts baust du ihn aus: mehr Ertrag, mehr Platz, Zinsen und Sicherheit. Sicherheit wovor? Wirst du noch merken.',
+        ],
+      },
+      upgrades: {
+        name: 'Upgrades',
+        steps: [
+          'Upgrades machen dich besser in dem, was du eh schon tust. Jede Stufe zeigt dir: jetzt → danach.',
+          'Jede Stufe kostet mehr als die letzte. Kauf zuerst, was du am meisten nutzt. Nicht das, was am geilsten klingt.',
+        ],
+      },
+      shifts: {
+        name: 'Schichten',
+        steps: [
+          'Schichten laufen nebenbei, von 15 Minuten bis 8 Stunden. Du musst nicht mal hingucken.',
+          'Schau zwischendurch rein und check ein, das gibt mehr Lohn. Wer viele Stunden schuftet, steigt im Rang auf.',
+          'Früher Feierabend geht auch. Dann gibt es eben nur Geld für die Zeit, die du wirklich da warst.',
+        ],
+      },
+      weekly_quests: {
+        name: 'Wochenquests',
+        steps: [
+          'Fünf große Aufgaben für die ganze Woche. Montag um Mitternacht kommen neue.',
+          'Schaffst du alle fünf, geht die Wochentruhe auf. Da sind Booster drin. Echte.',
+        ],
+      },
+    },
   },
 
   notifications: {
@@ -312,6 +367,7 @@ export const texts = {
   },
 
   quests: {
+    reward: (money: string, ep: number, bons: number) => `${money} · ${ep} EP · ${bons} ${bons === 1 ? 'Pfandbon' : 'Pfandbons'}`,
     title: 'Quests',
     subtitle: 'Kleine Aufgaben für kleines Geld. Hören nie auf. Wie das Leben.',
     daily: 'Tagesquests',
@@ -377,7 +433,9 @@ export const texts = {
     fullIn: (time: string) => `Voll in ${time}`,
     collect: 'Abholen',
     collected: (money: string) => `${money} abgeholt. Riecht nach Geld.`,
-    interest: (pct: string) => `+${pct} Zinsen, wenn mindestens 90 % voll`,
+    interestLabel: 'Zinsen',
+    interest: (pct: string) => `+${pct} %`,
+    interestNote: (fill: string) => `ab ${fill} % voll`,
     locked: (level: number) => `Der Geldbunker öffnet ab Level ${level}.`,
     upgradesTitle: 'Ausbau',
     upgradesTip: 'Beim Ausbau wird der Bunker vorher geleert, das Geld landet auf deinem Konto.',

@@ -57,3 +57,13 @@ export function formatAgo(iso: string, nowMs: number): string {
   if (s < 86400) return `vor ${Math.round(s / 3600)} h`
   return `vor ${Math.round(s / 86400)} T`
 }
+
+/** Clock time for "läuft bis": 14:05 */
+export function formatClock(iso: string): string {
+  return new Date(iso).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
+}
+
+/** Fills a content text with a count: {n} is the number, [Snack|Snacks] picks singular or plural. */
+export function fillCount(text: string, n: number): string {
+  return text.replace(/\[([^|\]]*)\|([^\]]*)\]/g, (_, one: string, many: string) => (n === 1 ? one : many)).replace('{n}', formatNumber(n))
+}

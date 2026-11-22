@@ -4,17 +4,22 @@ import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { texts } from '@/texts/de.ts'
 import { sfx } from '@/lib/sfx.ts'
 
-/** The "i" next to every panel, stat and price: a short plain-German explanation. */
-export function InfoTip({ children, label = texts.common.info }: { children: ReactNode; label?: string }) {
+/** The "i" next to every panel, stat and price: a short plain-German explanation. A custom trigger
+ *  (for example a buff chip) replaces the "i". */
+export function InfoTip({ children, label = texts.common.info, trigger }: { children: ReactNode; label?: string; trigger?: ReactNode }) {
   return (
     <Popover.Root onOpenChange={(open) => open && sfx('toggle')}>
       <Popover.Trigger asChild>
         <button
           type="button"
           aria-label={label}
-          className="inline-grid size-5 place-items-center text-fg-3 hover:text-accent data-[state=open]:text-accent transition-colors"
+          className={
+            trigger
+              ? 'flex items-center bg-surface-3 px-1.5 py-1 text-warn outline-accent hover:outline-2 data-[state=open]:outline-2'
+              : 'inline-grid size-5 place-items-center text-fg-3 hover:text-accent data-[state=open]:text-accent transition-colors'
+          }
         >
-          <PixelIcon name="info" />
+          {trigger ?? <PixelIcon name="info" />}
         </button>
       </Popover.Trigger>
       <Popover.Portal>

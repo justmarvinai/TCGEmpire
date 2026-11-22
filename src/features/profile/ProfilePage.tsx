@@ -11,7 +11,7 @@ import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { useAct, useStats } from '@/lib/actions.ts'
 import { ACHIEVEMENTS, STAT_LABELS } from '@/lib/catalog.ts'
-import { formatMoney, formatNumber } from '@/lib/format.ts'
+import { fillCount, formatMoney, formatNumber } from '@/lib/format.ts'
 import { errorText } from '@/lib/rpc.ts'
 import type { Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
@@ -99,7 +99,7 @@ export function ProfilePage() {
                       <p className="font-semibold">
                         {a.name} <span className="nums text-xs font-normal text-fg-3">{T.tierOf(tier, a.tiers.length)}</span>
                       </p>
-                      <p className="text-xs text-fg-3">{a.text.replace('{n}', formatNumber(next ?? a.tiers.at(-1)!))}</p>
+                      <p className="text-xs text-fg-3">{fillCount(a.text, next ?? a.tiers.at(-1)!)}</p>
                       {!done && <Progress value={have / next} tone="gold" className="mt-1" />}
                       {done && <p className="text-xs text-gain">{T.done}</p>}
                     </div>

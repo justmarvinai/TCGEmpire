@@ -11,7 +11,7 @@ import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { useAct, useQuests } from '@/lib/actions.ts'
 import { ALL_QUESTS } from '@/lib/catalog.ts'
-import { formatMoney } from '@/lib/format.ts'
+import { fillCount, formatMoney } from '@/lib/format.ts'
 import { errorText } from '@/lib/rpc.ts'
 import type { Quest, Quests } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
@@ -20,7 +20,7 @@ import { texts } from '@/texts/de.ts'
 const T = texts.quests
 
 const template = (key: string) => ALL_QUESTS.find((q) => q.key === key)
-export const questText = (key: string, target: number) => (template(key)?.text ?? key).replace('{n}', String(target))
+export const questText = (key: string, target: number) => fillCount(template(key)?.text ?? key, target)
 
 /** Claims, rerolls and stamps all answer with the whole quest document. */
 function useQuestAction() {
@@ -52,26 +52,24 @@ export function QuestList({ quests, list, reroll, compact }: { quests: Quests; l
         const done = q.progress >= q.target
         const path = template(q.template)?.path
         return (
-          <div key={q.id} className={clsx('flex items-center gap-3 bg-surface-2 p-2 animate-fade-up', q.claimed && 'opacity-50')}>
+          <div key={q.id} className={clsx('flex flex-wrap items-center gap-x-3 gap-y-2 bg-surface-2 p-2 animate-fade-up', q.claimed && 'opacity-50')}>
             <PixelIcon name={done ? 'check' : 'scroll'} className={done ? 'text-gain' : 'text-fg-3'} />
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 basis-56">
               <p className="text-sm">{questText(q.template, q.target)}</p>
               <div className="mt-1 flex flex-wrap items-center gap-2">
-                <Progress value={q.progress / q.target} tone={done ? 'gain' : 'accent'} className="max-w-48" />
+                <Progress value={q.progress / q.target} tone={done ? 'gain' : 'accent'} className="w-32 shrink-0" />
                 <span className="nums text-xs text-fg-3">
                   {q.progress}/{q.target}
                 </span>
                 {!compact && (
-                  <span className="nums text-xs text-fg-3">
-                    · {formatMoney(q.reward_cents)} · {q.reward_ep} EP · {q.reward_pfandbons} Pfandbon
-                  </span>
+                  <span className="nums text-xs text-fg-3">{T.reward(formatMoney(q.reward_cents), q.reward_ep, q.reward_pfandbons)}</span>
                 )}
               </div>
             </div>
             {q.claimed ? (
-              <span className="font-pixel text-sm text-gain anim-stamp">{T.claimed}</span>
+              <span className="ml-auto font-pixel text-sm text-gain anim-stamp">{T.claimed}</span>
             ) : (
-              <div className="flex items-center gap-1">
+              <div className="ml-auto flex items-center gap-1">
                 {!done && path && !compact && (
                   <Link to={path} className="px-2 text-xs font-semibold text-accent hover:underline">
                     {T.go}
@@ -125,7 +123,7 @@ function Stamps({ q }: { q: Quests }) {
           >
             <span className="font-pixel text-lg">{i + 1}</span>
             {i < s.days ? <PixelIcon name="check" scale={2} className="text-gain anim-stamp" /> : <PixelIcon name={i === 6 ? 'pack' : 'coin'} scale={2} className="text-fg-3" />}
-            <span className="nums text-[0.625rem] text-gold">{formatMoney(cents)}</span>
+            <span className="nums text-xs whitespace-nowrap text-gold">{formatMoney(cents)}</span>
           </div>
         ))}
       </div>
@@ -153,7 +151,10 @@ export function QuestsPage() {
       ) : quests.isError || !q ? (
         <ErrorState message={errorText(quests.error)} onRetry={() => void quests.refetch()} />
       ) : (
-        <div className="grid gap-4 xl:grid-cols-2">
+        <div className="flex flex-col gap-4">
+          <Panel title={texts.stamps.title} tip={texts.stamps.tip}>
+            <Stamps q={q} />
+          </Panel>
           <Panel title={T.daily} tip={T.dailyTip}>
             {q.daily.length === 0 ? (
               <EmptyState icon="lock" title={T.dailyLocked(q.unlock_daily)} />
@@ -166,9 +167,6 @@ export function QuestsPage() {
                 </p>
               </>
             )}
-          </Panel>
-          <Panel title={texts.stamps.title} tip={texts.stamps.tip}>
-            <Stamps q={q} />
           </Panel>
           <Panel title={T.mini} tip={T.miniTip}>
             <QuestList quests={q} list={q.mini} />

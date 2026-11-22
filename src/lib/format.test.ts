@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatAgo, formatDuration, formatFactor, formatMoney, formatStars } from './format.ts'
+import { fillCount, formatAgo, formatDuration, formatFactor, formatMoney, formatStars } from './format.ts'
 
 describe('format', () => {
   it('formats money on our price scale', () => {
@@ -24,5 +24,13 @@ describe('format', () => {
     expect(formatAgo('2026-11-21T11:59:50Z', now)).toBe('gerade eben')
     expect(formatAgo('2026-11-21T11:30:00Z', now)).toBe('vor 30 min')
     expect(formatAgo('2026-11-19T12:00:00Z', now)).toBe('vor 2 T')
+  })
+})
+
+describe('fillCount', () => {
+  it('fills the number and picks singular or plural', () => {
+    expect(fillCount('Gönn dir heute {n} [Snack|Snacks].', 1)).toBe('Gönn dir heute 1 Snack.')
+    expect(fillCount('Gönn dir heute {n} [Snack|Snacks].', 2)).toBe('Gönn dir heute 2 Snacks.')
+    expect(fillCount('Verkauf {n} Karten.', 1500)).toBe('Verkauf 1.500 Karten.')
   })
 })

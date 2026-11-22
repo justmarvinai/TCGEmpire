@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
+import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
@@ -10,17 +10,9 @@ import { formatMoney } from '@/lib/format.ts'
 import type { Player, Shop } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { texts } from '@/texts/de.ts'
+import { SNACK_ICON } from './icons.ts'
 
 const T = texts.snacks
-const ICON: Record<string, IconName> = {
-  doener: 'doener',
-  mate: 'bottle',
-  kaffee: 'fire',
-  energiebon: 'bolt',
-  lernbon: 'scroll',
-  gluecksbon: 'star',
-  kioskbon: 'pack',
-}
 
 /** Kiosk snacks (money) or the Pfandautomat (Pfandbons). */
 export function Snacks({ shop, player, where }: { shop: Shop; player: Player; where: 'kiosk' | 'pfandautomat' }) {
@@ -48,7 +40,7 @@ export function Snacks({ shop, player, where }: { shop: Shop; player: Player; wh
           const affordable = where === 'kiosk' ? player.cash_cents >= (offer?.price_cents ?? Infinity) : player.pfandbons >= (c.pfandbons ?? Infinity)
           return (
             <div key={c.key} className="flex items-center gap-3 bg-surface-2 p-2">
-              <PixelIcon name={ICON[c.key] ?? 'gift'} scale={2} className="text-accent" />
+              <PixelIcon name={SNACK_ICON[c.key] ?? 'gift'} scale={2} className="text-accent" />
               <div className="min-w-0 flex-1">
                 <p className="flex items-center gap-1 font-semibold">
                   {c.name} <InfoTip>{c.text}</InfoTip>

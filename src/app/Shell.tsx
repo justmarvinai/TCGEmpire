@@ -9,16 +9,17 @@ import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { formatAgo, formatFactor, formatMoney, formatNumber, formatStars } from '@/lib/format.ts'
+import { formatAgo, formatClock, formatFactor, formatMoney, formatNumber, formatStars } from '@/lib/format.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
 import type { FeedEntry, Me, Player } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { serverNow, useSetMe, useSync, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
-import { ACHIEVEMENTS, cardName } from '@/lib/catalog.ts'
-import { NAV, type NavItem } from './nav.ts'
-import { Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
+import { ACHIEVEMENTS, CONSUMABLES, cardName } from '@/lib/catalog.ts'
+import { SNACK_ICON } from '@/features/shop/icons.ts'
+import { NAV, type NavItem, unseenFeatures } from './nav.ts'
+import { FeatureTour, Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
 
 const DOENER_BASE_CENTS = 150_00
 
@@ -31,6 +32,7 @@ export function Shell({ me }: { me: Me & { player: Player } }) {
       <main className="col-start-2 row-start-2 min-w-0 overflow-y-auto" id="scroll-root">
         <div className="mx-auto max-w-[75rem] p-6 max-lg:p-3">
           <TutorialBanner player={me.player} />
+          <FeatureTour player={me.player} />
           <Outlet />
         </div>
       </main>
@@ -46,6 +48,7 @@ export function Shell({ me }: { me: Me & { player: Player } }) {
 function Sidebar({ player }: { player: Player }) {
   const level = player.level
   const badges: Partial<Record<NavItem['id'], number>> = { open: player.sealed_total, quests: player.quests_ready }
+  const fresh = unseenFeatures(player, useSettings((s) => s.seenTours))
   return (
     <aside className="col-start-1 row-span-2 row-start-1 flex flex-col overflow-y-auto border-r-2 border-line bg-surface-1">
       <NavLink to="/" className="flex h-14 shrink-0 items-center gap-2 border-b-2 border-line px-4 max-lg:justify-center max-lg:px-0">
@@ -61,7 +64,7 @@ function Sidebar({ player }: { player: Player }) {
               {texts.nav.groups[group.group]}
             </p>
             {group.items.map((item) => (
-              <SidebarItem key={item.id} item={item} level={level} badge={badges[item.id]} />
+              <SidebarItem key={item.id} item={item} level={level} badge={badges[item.id]} isNew={fresh.some((f) => f.path === item.path)} />
             ))}
           </div>
         ))}
@@ -70,7 +73,7 @@ function Sidebar({ player }: { player: Player }) {
   )
 }
 
-function SidebarItem({ item, level, badge }: { item: NavItem; level: number; badge?: number }) {
+function SidebarItem({ item, level, badge, isNew }: { item: NavItem; level: number; badge?: number; isNew: boolean }) {
   const label = texts.nav.items[item.id]
   const locked = level < item.level
   const base = 'flex h-9 items-center gap-2.5 px-2 text-sm font-medium max-lg:justify-center'
@@ -101,6 +104,7 @@ function SidebarItem({ item, level, badge }: { item: NavItem; level: number; bad
           {texts.nav.soon}
         </span>
       )}
+      {isNew && <span className="bg-gain px-1.5 py-0.5 text-[0.625rem] font-bold tracking-wide text-ink uppercase max-lg:hidden">{texts.nav.new}</span>}
       {!!badge && <span className="nums min-w-5 bg-accent px-1 text-center text-xs font-bold text-accent-fg max-lg:hidden">{badge}</span>}
     </NavLink>
   )
@@ -157,12 +161,15 @@ function TopBar({ me }: { me: Me & { player: Player } }) {
             <span className="text-fg-3">/{p.energy_max}</span>
           </span>
         </Stat>
-        {p.buffs.map((b) => (
-          <span key={b.key} className="flex items-center gap-1 bg-surface-3 px-1.5 py-0.5 text-xs font-semibold max-xl:hidden" title={texts.hud.buffs[b.key] ?? b.key}>
-            <PixelIcon name={b.key === 'doener' ? 'doener' : b.key === 'gluecksbon' ? 'star' : 'scroll'} className="text-warn" />
-            {texts.hud.buffs[b.key] ?? b.key}
-          </span>
-        ))}
+        {p.buffs.map((b) => {
+          const buff = CONSUMABLES.find((c) => c.key === b.key)?.buff
+          const name = buff?.name ?? b.key
+          return (
+            <InfoTip key={b.key} label={name} trigger={<PixelIcon name={SNACK_ICON[b.key] ?? 'gift'} />}>
+              <strong className="text-fg">{name}.</strong> {buff?.text} {texts.hud.buffUntil(formatClock(b.expires_at))}
+            </InfoTip>
+          )
+        })}
         <Stat icon="doener" tone="text-accent" label={texts.hud.price} tip={texts.hud.priceTip} className="max-lg:hidden">
           <span className="nums font-semibold">{formatFactor(me.server.price_level)}</span>
         </Stat>

@@ -93,8 +93,9 @@ export function BunkerPage() {
                   <dd className="nums font-semibold">{b.capacity_h} h</dd>
                 </div>
                 <div>
-                  <dt className="text-fg-3">%</dt>
-                  <dd className="nums text-xs font-semibold">{T.interest(String(b.interest_pct ?? 0))}</dd>
+                  <dt className="text-fg-3">{T.interestLabel}</dt>
+                  <dd className="nums font-semibold">{T.interest(String(b.interest_pct ?? 0))}</dd>
+                  <dd className="nums text-xs text-fg-3">{T.interestNote(String(Math.round((b.interest_fill ?? 0) * 100)))}</dd>
                 </div>
               </dl>
             </div>

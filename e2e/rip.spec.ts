@@ -29,8 +29,12 @@ test('core loop: tutorial booster, opening, summary, binder, kiosk, sell, quests
   await stage.getByRole('button', { name: 'Schließen', exact: true }).last().click()
 
   // The level-up waited for the stage to close.
-  await expect(page.getByText('LEVEL UP!')).toBeVisible()
-  await page.getByRole('button', { name: 'Weiter' }).click()
+  const firstLevelUp = page.getByRole('dialog', { name: 'LEVEL UP!' })
+  await expect(firstLevelUp).toBeVisible()
+  await firstLevelUp.getByRole('button', { name: 'Weiter' }).click()
+  // From here on any further level-up is just dismissed.
+  const levelUp = page.getByRole('dialog', { name: 'LEVEL UP!' })
+  await page.addLocatorHandler(levelUp, () => levelUp.getByRole('button', { name: 'Weiter' }).click())
 
   // Binder shows 11 of 90 at least.
   await page.getByRole('link', { name: 'Sammlung' }).click()
@@ -45,8 +49,14 @@ test('core loop: tutorial booster, opening, summary, binder, kiosk, sell, quests
   await page.getByLabel('Sofort aufdecken').check()
   await page.getByRole('button', { name: '1× öffnen' }).click()
   await expect(stage.getByText('Bilanz')).toBeVisible()
-  await stage.getByRole('button', { name: /Bulk verkaufen/ }).click()
-  await expect(page.getByText(/Karten verkauft für/)).toBeVisible()
+  // Bulk sell takes this pack's duplicates; by chance a second pack can have none.
+  const bulk = stage.getByRole('button', { name: /Bulk verkaufen/ })
+  if (await bulk.isEnabled()) {
+    await bulk.click()
+    await expect(page.getByText(/Karten verkauft für/)).toBeVisible()
+  } else {
+    await expect(bulk).toHaveText(/\(0\)/)
+  }
   await stage.getByRole('button', { name: 'Schließen', exact: true }).last().click()
 
   // Quests and the level path render.

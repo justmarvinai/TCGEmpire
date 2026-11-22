@@ -66,3 +66,23 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
 ]
 
 export const ALL_ITEMS = NAV.flatMap((g) => g.items)
+
+type Feature = keyof typeof UNLOCKS
+
+/** The page of every feature a level unlocks: its tour runs there and its nav entry shows NEU. */
+const FEATURE_PAGE: Record<Feature, string> = {
+  daily_quests: '/quests',
+  stamps: '/quests',
+  bunker: '/bunker',
+  upgrades: '/upgrades',
+  shifts: '/jobs',
+  weekly_quests: '/quests',
+}
+
+export const FEATURES = (Object.keys(FEATURE_PAGE) as Feature[])
+  .map((key) => ({ key, level: UNLOCKS[key], path: FEATURE_PAGE[key] }))
+  .sort((a, b) => a.level - b.level)
+
+/** Unlocked features whose tour this device has not finished yet (never during Mutti's tutorial). */
+export const unseenFeatures = (p: { id: string; level: number; tutorial_step: number }, seen: string[]) =>
+  p.tutorial_step >= 0 ? [] : FEATURES.filter((f) => f.level <= p.level && !seen.includes(`${p.id}:${f.key}`))

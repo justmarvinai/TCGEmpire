@@ -61,7 +61,7 @@ export function UpgradeRow({ u, level, cash }: { u: Upgrade; level: number; cash
               <span className="font-semibold text-gain">{effect(def.unit, u.next!)}</span>
             </>
           )}
-          {payback !== null && <span className="ml-3 text-xs text-fg-3">{T.payback(formatDuration(payback))}</span>}
+          {payback !== null && <span className="ml-3 inline-block text-xs whitespace-nowrap text-fg-3">{T.payback(formatDuration(payback))}</span>}
         </p>
       </div>
       <div className="flex flex-col items-end gap-1 max-md:items-start">

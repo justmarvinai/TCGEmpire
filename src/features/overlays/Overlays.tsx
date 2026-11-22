@@ -1,8 +1,8 @@
 // Things that appear on top of every page: level-up celebration, Mutti's tutorial, big pulls of others.
 import clsx from 'clsx'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
-import { ALL_ITEMS } from '@/app/nav.ts'
+import { useLocation, useNavigate } from 'react-router'
+import { ALL_ITEMS, FEATURES, unseenFeatures } from '@/app/nav.ts'
 import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { useQuery } from '@tanstack/react-query'
@@ -14,6 +14,7 @@ import { cardName, JOBS, TUTORIAL } from '@/lib/catalog.ts'
 import { formatDuration, formatMoney } from '@/lib/format.ts'
 import { hash01, useNow } from '@/lib/pure.ts'
 import type { Player } from '@/lib/schemas.ts'
+import { useSettings } from '@/lib/settings.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
@@ -92,6 +93,36 @@ function RecapSheet({ away, player }: { away: number; player: Player }) {
   )
 }
 
+/** Mutti's 2–3 step tour of a freshly unlocked feature, on the page where it lives. */
+export function FeatureTour({ player }: { player: Player }) {
+  const { pathname } = useLocation()
+  const seeTour = useSettings((s) => s.seeTour)
+  const feature = unseenFeatures(player, useSettings((s) => s.seenTours)).find((f) => f.path === pathname)
+  return feature ? <TourDock key={feature.key} tour={TOURS[feature.key]} onDone={() => seeTour(`${player.id}:${feature.key}`)} /> : null
+}
+
+type Tour = { name: string; steps: readonly string[] }
+const TOURS: Record<(typeof FEATURES)[number]['key'], Tour> = texts.tour.features
+
+function TourDock({ tour, onDone }: { tour: Tour; onDone: () => void }) {
+  const [step, setStep] = useState(0)
+  const last = step === tour.steps.length - 1
+  return (
+    <aside className="px-panel mb-4 flex flex-wrap items-center gap-3 p-3 animate-fade-up" aria-live="polite" aria-label={texts.tour.title(tour.name)}>
+      <span className="grid size-10 shrink-0 place-items-center bg-tier-grail font-pixel text-xl text-accent-fg">M</span>
+      <div className="min-w-64 flex-1">
+        <p className="text-xs text-fg-3">
+          <span className="font-semibold text-gain">{texts.tour.title(tour.name)}</span> · {step + 1} / {tour.steps.length}
+        </p>
+        <p className="text-sm leading-snug">{tour.steps[step]}</p>
+      </div>
+      <Button variant="primary" size="sm" onClick={() => (last ? onDone() : setStep(step + 1))}>
+        {last ? texts.tour.done : texts.tour.next}
+      </Button>
+    </aside>
+  )
+}
+
 /** Mutti's current message, on top of every page while the tutorial runs. */
 export function TutorialBanner({ player }: { player: Player }) {
   return player.tutorial_step >= 0 ? <TutorialDock key={player.tutorial_step} step={player.tutorial_step} /> : null
@@ -106,7 +137,15 @@ function LevelUpOverlay() {
   const top = queue.length ? queue.reduce((a, b) => (b.level > a.level ? b : a)) : null
   const reward = queue.reduce((s, l) => s + l.reward_cents, 0)
   const boosters = queue.filter((l) => l.booster).length
-  const unlocks = top ? ALL_ITEMS.filter((i) => queue.some((l) => l.level === i.level)) : []
+  const reached = (level: number) => queue.some((l) => l.level === level)
+  const pages = top ? ALL_ITEMS.filter((i) => reached(i.level)) : []
+  // Features inside an older page (Tagesquests, Schichten …) are listed too, with that page's icon.
+  const inside = (top ? FEATURES.filter((f) => reached(f.level) && !pages.some((i) => i.path === f.path)) : []).map((f) => ({
+    id: f.key,
+    icon: ALL_ITEMS.find((i) => i.path === f.path)?.icon ?? 'star',
+    name: TOURS[f.key].name,
+  }))
+  const unlocks = [...pages.map((i) => ({ id: i.id, icon: i.icon, name: texts.nav.items[i.id] })), ...inside]
 
   useEffect(() => {
     if (top) sfx('levelup')
@@ -151,7 +190,7 @@ function LevelUpOverlay() {
               {unlocks.map((u, i) => (
                 <span key={u.id} className="flex items-center gap-1 bg-surface-3 px-2 py-1 text-sm font-semibold anim-deal" style={{ animationDelay: `${200 + i * 120}ms` }}>
                   <PixelIcon name={u.icon} className="text-accent" />
-                  {texts.nav.items[u.id]}
+                  {u.name}
                 </span>
               ))}
             </div>

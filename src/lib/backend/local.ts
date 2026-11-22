@@ -61,6 +61,8 @@ export async function createLocalBackend(): Promise<Backend> {
   return {
     mode: 'local',
     rpc: (fn, args) => flushed(localRpc(db, uid, fn, args)),
-    devSql: (query, params) => flushed(db.query(query, params).then((r) => r.rows)),
+    // Without parameters several statements may run at once (exec); with parameters only one (query).
+    devSql: (query, params) =>
+      flushed(params?.length ? db.query(query, params).then((r) => r.rows) : db.exec(query).then((r) => r.at(-1)?.rows ?? [])),
   }
 }
