@@ -33,7 +33,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
     group: 'handeln',
     items: [
       item('kleinanzeigen', 'tag', 4),
-      item('cardmarket', 'market', 10),
+      item('cardmarket', 'market', UNLOCKS.cardmarket, true),
       item('trade', 'trade', 10),
       item('auctions', 'gavel', 25),
     ],
@@ -76,6 +76,7 @@ const FEATURE_PAGE: Record<Feature, string> = {
   bunker: '/bunker',
   upgrades: '/upgrades',
   shifts: '/jobs',
+  cardmarket: '/cardmarket',
   weekly_quests: '/quests',
 }
 

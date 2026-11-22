@@ -37,6 +37,9 @@ export const TIER_TEXT: Record<Tier, string> = {
   grail: 'text-tier-grail',
 }
 
+/** Display name of a card or a sealed product. */
+export const itemName = (id: string) => cardById.get(id)?.name ?? productById.get(id)?.name ?? id
+
 export const setOfCard = (id: string) => SETS.find((s) => s.cards.some((c) => c.id === id))?.id ?? 'pokemon-base'
 
 /** Card name as shown in lists. */

@@ -73,6 +73,11 @@ export const config = {
   'market.day_down_pct': 22,
   'market.history_fine_h': 48,
   'market.history_hourly_d': 14,
+  // Cardmarket: seller fee, shipping time, places for listings and buy orders together
+  'market.fee_bps': 500,
+  'market.ship_min_minutes': 5,
+  'market.ship_max_minutes': 20,
+  'market.slots': 10,
 
   // Energy (minijobs only)
   'energy.max': 100,
@@ -151,6 +156,7 @@ export const config = {
   'rate.open': 30,
   'rate.sell': 30,
   'rate.minigame': 6,
+  'rate.market': 60,
 } as const satisfies Record<string, Json>
 
 export type ConfigKey = keyof typeof config

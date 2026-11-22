@@ -20,7 +20,7 @@ export function Page({
   children: ReactNode
 }) {
   const { pathname } = useLocation()
-  const item = ALL_ITEMS.find((i) => i.path === pathname)
+  const item = ALL_ITEMS.find((i) => i.path === pathname) ?? ALL_ITEMS.find((i) => i.path !== '/' && pathname.startsWith(`${i.path}/`))
   const group = item && NAV.find((g) => g.items.includes(item))
   return (
     <div className="animate-fade-up">

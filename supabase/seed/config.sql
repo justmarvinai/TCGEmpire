@@ -52,6 +52,10 @@ insert into game.config (key, value) values
   ('market.day_down_pct', '22'::jsonb),
   ('market.history_fine_h', '48'::jsonb),
   ('market.history_hourly_d', '14'::jsonb),
+  ('market.fee_bps', '500'::jsonb),
+  ('market.ship_min_minutes', '5'::jsonb),
+  ('market.ship_max_minutes', '20'::jsonb),
+  ('market.slots', '10'::jsonb),
   ('energy.max', '100'::jsonb),
   ('energy.regen_seconds', '180'::jsonb),
   ('pack.hit_odds_ppm', '{"holo":200000,"alternative":41667,"ultra":13889,"grail":1389}'::jsonb),
@@ -106,10 +110,12 @@ insert into game.config (key, value) values
   ('rate.open', '30'::jsonb),
   ('rate.sell', '30'::jsonb),
   ('rate.minigame', '6'::jsonb),
+  ('rate.market', '60'::jsonb),
   ('unlock.daily_quests', '2'::jsonb),
   ('unlock.stamps', '2'::jsonb),
   ('unlock.bunker', '3'::jsonb),
   ('unlock.upgrades', '5'::jsonb),
   ('unlock.shifts', '7'::jsonb),
+  ('unlock.cardmarket', '10'::jsonb),
   ('unlock.weekly_quests', '13'::jsonb)
 on conflict (key) do update set value = excluded.value;

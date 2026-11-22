@@ -216,6 +216,49 @@ export const zMarketOverview = z.object({
 })
 export type MarketOverview = z.infer<typeof zMarketOverview>
 
+const zTrader = z.object({ id: z.string(), kind: z.enum(['player', 'npc']), name: z.string(), ruf: z.number() })
+const zMyMarket = z.object({
+  listings: z.array(z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number() })),
+  orders: z.array(z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number() })),
+  parcels: z.array(
+    z.object({ id: z.number(), item_id: z.string(), qty: z.number(), total_cents: z.number(), payout_cents: z.number(), arrives_at: z.string(), incoming: z.boolean() }),
+  ),
+  slots: z.number(),
+  used: z.number(),
+})
+export const zCardmarket = z.object({
+  unlocked: z.boolean(),
+  unlock_level: z.number(),
+  items: z.array(
+    z.object({
+      item_id: z.string(),
+      kind: z.enum(['card', 'sealed']),
+      value_cents: z.number(),
+      change_pct: z.number(),
+      offers: z.number(),
+      from_cents: z.number().nullable(),
+      best_order_cents: z.number().nullable(),
+    }),
+  ),
+  mine: zMyMarket,
+})
+export type Cardmarket = z.infer<typeof zCardmarket>
+export const zCardmarketItem = z.object({
+  item_id: z.string(),
+  kind: z.enum(['card', 'sealed']),
+  value_cents: z.number(),
+  listings: z.array(z.object({ id: z.number(), item_kind: z.string(), qty: z.number(), price_cents: z.number(), seller: zTrader, mine: z.boolean() })),
+  orders: z.array(z.object({ id: z.number(), qty: z.number(), price_cents: z.number(), buyer: zTrader, mine: z.boolean() })),
+  sales: z.array(z.object({ qty: z.number(), price_cents: z.number(), at: z.string() })),
+  owned: z.object({ qty: z.number(), copies: z.array(z.string()) }),
+})
+export type CardmarketItem = z.infer<typeof zCardmarketItem>
+const zMarketWrite = z.object({ item: zCardmarketItem, mine: zMyMarket, player: zPlayer })
+export const zSeller = z.object({
+  seller: zTrader,
+  listings: z.array(z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number() })),
+})
+
 export const zHome = z.object({
   last_hit: z.object({ card_id: z.string(), tier: z.string(), value_cents: z.number(), pulled_at: z.string() }).nullable(),
 })
@@ -252,6 +295,15 @@ export const RPC_SCHEMAS = {
   home_get: zHome,
   market_item: zMarketItem,
   market_overview: zMarketOverview,
+  cardmarket_get: zCardmarket,
+  cardmarket_item: zCardmarketItem,
+  seller_get: zSeller,
+  listing_create: zMarketWrite,
+  listing_cancel: zMarketWrite,
+  listing_buy: zMarketWrite,
+  order_create: zMarketWrite,
+  order_cancel: zMarketWrite,
+  order_fill: zMarketWrite,
   bunker_collect: z.object({ collected_cents: z.number(), interest_cents: z.number(), bunker: zBunker, ...withPlayer }),
   upgrades_get: zUpgrades,
   upgrade_buy: zUpgrades.extend({ bunker: zBunker, ...withPlayer }),

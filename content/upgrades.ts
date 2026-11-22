@@ -3,7 +3,7 @@
 // `stat` + `per` become a modifier (value = per * level); bunker yield has its own formula (docs/ECONOMY.md §6).
 export interface UpgradeDef {
   key: string
-  group: 'bunker' | 'jobs' | 'oeffnen' | 'fortschritt'
+  group: 'bunker' | 'jobs' | 'oeffnen' | 'handel' | 'fortschritt'
   name: string
   text: string
   max: number
@@ -27,5 +27,6 @@ export const UPGRADES: readonly UpgradeDef[] = [
   { key: 'ausdauer', group: 'jobs', name: 'Ausdauer', text: 'Energie lädt schneller nach. +10 % pro Stufe.', max: 10, costBaseCents: 1_200_00, growth: 1.45, minLevel: 6, levelStep: 2, stat: 'energy_regen_pct', op: 'flat', per: 10, unit: 'pct' },
   { key: 'fleiss', group: 'jobs', name: 'Fleiß', text: 'Mehr Lohn in Schichten und Minijobs. +5 % pro Stufe.', max: 20, costBaseCents: 1_500_00, growth: 1.35, minLevel: 7, levelStep: 1, stat: 'wage_pct', op: 'flat', per: 5, unit: 'pct' },
   { key: 'pack_glueck', group: 'oeffnen', name: 'Pack-Glück', text: 'Höhere Chance auf Alternative, Ultra und Grail. +5 % pro Stufe, höchstens +50 % insgesamt.', max: 10, costBaseCents: 3_000_00, growth: 1.6, minLevel: 5, levelStep: 3, stat: 'pack_luck', op: 'flat', per: 5, unit: 'pct' },
+  { key: 'verkaufsflaeche', group: 'handel', name: 'Verkaufsfläche', text: 'Mehr Plätze für Angebote und Gesuche am Cardmarket. +5 pro Stufe.', max: 10, costBaseCents: 2_500_00, growth: 1.5, minLevel: 10, levelStep: 2, stat: 'listing_slots', op: 'flat', per: 5, unit: 'pts' },
   { key: 'schnelllerner', group: 'fortschritt', name: 'Schnelllerner', text: 'Mehr EP aus allem. +3 % pro Stufe.', max: 20, costBaseCents: 2_000_00, growth: 1.4, minLevel: 5, levelStep: 2, stat: 'ep', op: 'pct', per: 3, unit: 'pct' },
 ]

@@ -5,6 +5,9 @@ import { ErrorState } from '@/components/ui/States.tsx'
 import { ToastViewport } from '@/components/ui/toast.tsx'
 import { AuthPage } from '@/features/auth/AuthPage.tsx'
 import { ComingSoonPage } from '@/features/common/ComingSoonPage.tsx'
+import { CardmarketPage } from '@/features/cardmarket/CardmarketPage.tsx'
+import { CardmarketItemPage } from '@/features/cardmarket/ItemPage.tsx'
+import { SellerPage } from '@/features/cardmarket/SellerPage.tsx'
 import { HomePage } from '@/features/home/HomePage.tsx'
 import { CollectionPage } from '@/features/collection/CollectionPage.tsx'
 import { JobsPage } from '@/features/jobs/JobsPage.tsx'
@@ -67,6 +70,9 @@ function Game() {
           <Route path="bunker" element={<BunkerPage />} />
           <Route path="upgrades" element={<UpgradesPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="cardmarket" element={<CardmarketPage />} />
+          <Route path="cardmarket/seller/:id" element={<SellerPage />} />
+          <Route path="cardmarket/:item" element={<CardmarketItemPage />} />
           <Route
             path="dev/ui"
             element={

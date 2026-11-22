@@ -138,6 +138,7 @@ insert into game.upgrade_defs (key, grp, max_level, cost_base_cents, growth, min
   ('ausdauer', 'jobs', 10, 120000, 1.45, 6, 2, 'energy_regen_pct', 'flat', 10),
   ('fleiss', 'jobs', 20, 150000, 1.35, 7, 1, 'wage_pct', 'flat', 5),
   ('pack_glueck', 'oeffnen', 10, 300000, 1.6, 5, 3, 'pack_luck', 'flat', 5),
+  ('verkaufsflaeche', 'handel', 10, 250000, 1.5, 10, 2, 'listing_slots', 'flat', 5),
   ('schnelllerner', 'fortschritt', 20, 200000, 1.4, 5, 2, 'ep', 'pct', 3)
 on conflict (key) do update set grp = excluded.grp, max_level = excluded.max_level, cost_base_cents = excluded.cost_base_cents,
   growth = excluded.growth, min_level = excluded.min_level, level_step = excluded.level_step, stat = excluded.stat,
