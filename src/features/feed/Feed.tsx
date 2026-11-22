@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { slabName } from '@/components/cards/Slab.tsx'
 import { HOMES } from '@/lib/catalog.ts'
 import { AWARDS } from '../../../content/company.ts'
+import { ATTACKS } from '../../../content/darkside.ts'
 import { eventDef, eventTarget, eventWhen } from '@/features/events/eventText.ts'
 import { CONSUMABLES, cardName, gameOf, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
@@ -32,6 +33,14 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'audit') return texts.feed.audit(f.data)
   if (f.kind === 'award') return texts.feed.award(f.data, AWARDS.find((x) => x.key === f.data.key)?.name ?? '')
   if (f.kind === 'loan_defaulted') return texts.feed.loan_defaulted(f.data, formatMoney(Number(f.data.cents)))
+  if (f.kind === 'attack' || f.kind === 'attack_blocked') {
+    const kind = String(f.data.kind)
+    const card = f.data.card_id ? cardName(String(f.data.card_id)) : ''
+    if (f.kind === 'attack') return texts.feed.attack(kind, f.data, formatMoney(Number(f.data.cents ?? 0)), card)
+    const defence = ATTACKS.find((a) => a.key === kind)?.defenceName ?? ''
+    return texts.feed.attack_blocked(kind, f.data, formatMoney(Number(f.data.fine_cents ?? 0)), card, defence)
+  }
+  if (f.kind === 'resealed_caught') return texts.feed.resealed_caught(f.data)
   if (f.kind === 'battle')
     return texts.feed.battle(f.data, texts.battles.modes[f.data.mode as BattleMode]?.name ?? String(f.data.mode), formatMoney(Number(f.data.pot)))
   if (f.kind === 'home') {

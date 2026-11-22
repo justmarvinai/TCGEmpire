@@ -21,6 +21,7 @@ import { SkillsPage } from '@/features/skills/SkillsPage.tsx'
 import { HousingPage } from '@/features/housing/HousingPage.tsx'
 import { StylePage } from '@/features/style/StylePage.tsx'
 import { InsurancePage } from '@/features/insurance/InsurancePage.tsx'
+import { DarksidePage } from '@/features/darkside/DarksidePage.tsx'
 import { BattlePage } from '@/features/battles/BattlePage.tsx'
 import { BattlesPage } from '@/features/battles/BattlesPage.tsx'
 import { BreakPage } from '@/features/battles/BreakPage.tsx'
@@ -90,6 +91,7 @@ function Game() {
           <Route path="housing" element={<HousingPage />} />
           <Route path="style" element={<StylePage />} />
           <Route path="insurance" element={<InsurancePage />} />
+          <Route path="darkside" element={<DarksidePage />} />
           <Route path="battles" element={<BattlesPage />} />
           <Route path="battles/:id" element={<BattlePage />} />
           <Route path="battles/break/:id" element={<BreakPage />} />

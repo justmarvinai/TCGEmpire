@@ -5,6 +5,8 @@ import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { Field } from '@/components/ui/Field.tsx'
+import { HoldButton } from '@/components/ui/HoldButton.tsx'
+import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
@@ -16,6 +18,7 @@ import type { Honor, Loan, Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
+import { UNLOCKS } from '../../../content/unlocks.ts'
 
 const T = texts.loans
 
@@ -62,7 +65,7 @@ export function LoansPanel({ player }: { player: Player }) {
           ) : (
             <ul className="flex flex-col gap-2">
               {d.loans.map((l) => (
-                <LoanRow key={l.id} l={l} cash={player.cash_cents} />
+                <LoanRow key={l.id} l={l} cash={player.cash_cents} level={player.level} />
               ))}
             </ul>
           )}
@@ -80,7 +83,7 @@ const STATE_TEXT: Record<Loan['state'], string> = {
   cancelled: T.stateCancelled,
 }
 
-function LoanRow({ l, cash }: { l: Loan; cash: number }) {
+function LoanRow({ l, cash, level }: { l: Loan; cash: number; level: number }) {
   const act = useAct()
   const client = useQueryClient()
   const now = useNow() + useWorld((w) => w.clockOffsetMs)
@@ -88,7 +91,7 @@ function LoanRow({ l, cash }: { l: Loan; cash: number }) {
 
   const run = async (
     key: string,
-    fn: 'loan_respond' | 'loan_cancel' | 'loan_repay',
+    fn: 'loan_respond' | 'loan_cancel' | 'loan_repay' | 'loan_burst',
     args: Record<string, unknown>,
     done: string,
   ) => {
@@ -97,8 +100,8 @@ function LoanRow({ l, cash }: { l: Loan; cash: number }) {
     setBusy(null)
     if (!res) return
     client.setQueryData(['loans'], res.loans)
-    sfx(key === 'decline' || key === 'withdraw' ? 'toggle' : 'success')
-    toast(key === 'decline' || key === 'withdraw' ? 'info' : 'success', done)
+    sfx(key === 'decline' || key === 'withdraw' ? 'toggle' : key === 'burst' ? 'shard' : 'success')
+    toast(key === 'decline' || key === 'withdraw' || key === 'burst' ? 'info' : 'success', done)
   }
 
   return (
@@ -187,6 +190,14 @@ function LoanRow({ l, cash }: { l: Loan; cash: number }) {
           >
             {T.repay(formatMoney(l.due_cents))}
           </Button>
+        )}
+        {l.state === 'active' && l.role === 'borrower' && level >= UNLOCKS.darkside && (
+          <span className="flex items-center gap-1">
+            <HoldButton disabled={busy !== null} onHold={() => void run('burst', 'loan_burst', {}, T.burstDone(l.other.name))}>
+              {T.burst}
+            </HoldButton>
+            <InfoTip>{T.burstTip}</InfoTip>
+          </span>
         )}
       </span>
     </li>

@@ -49,6 +49,7 @@ export const WEEKLY_QUESTS: readonly QuestTemplate[] = [
   { key: 'w_upgrade', event: 'upgrade_bought', min: 5, max: 10, text: 'Kauf diese Woche {n} Upgrades.', path: '/upgrades' },
   { key: 'w_graded', event: 'graded', min: 4, max: 8, text: 'Lass diese Woche {n} Karten graden.', path: '/grading', minLevel: 13 },
   { key: 'w_battles', event: 'battle_played', min: 2, max: 4, text: 'Spiel diese Woche {n} Pack Battles.', path: '/battles', minLevel: 16 },
+  { key: 'w_dark', event: 'attack_done', min: 1, max: 3, text: 'Mach diese Woche {n} [Ding|Dinger] in der Schattenwirtschaft. Ein Gerücht geht immer.', path: '/darkside', minLevel: 35 },
   { key: 'w_stamps', event: 'stamp_claimed', min: 5, max: 6, text: 'Stempel diese Woche {n}× die Stempelkarte.', path: '/quests' },
 ]
 

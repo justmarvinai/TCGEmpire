@@ -293,19 +293,23 @@ success % = clamp( base % + attacker's Angriff bonus − defender's Abwehr bonus
 - A **blocked** attack costs the attacker the price plus a fine, and the defender gets a notification, a
   small "Schadenfreude" payout and the feed headline.
 
-| Attack | Base success | Loot / effect | Matching Abwehr upgrade |
-|--------|--------------|---------------|-------------------------|
-| Bunker knacken | 45 % | Up to 25 % of the *uncollected* bunker content | Tresortür, Wachhund Rex |
-| Beim Finanzamt anschwärzen | 50 % (only if there is something to find) | Target pays back tax + penalty | Steuerberater |
-| 1-Stern-Bewertung | 55 % | −Ruf for a rival company | Rechtsschutz |
-| Gerücht streuen | 50 % | One card's price ±15 % for hours | Faktencheck (protects your listings and holdings from panic effects) |
-| Abwerben | 40 % | Take one employee | Betriebsklima |
-| Einbruch | 20 % | One slab from the Vitrine | Alarmanlage (and insurance pays 80 %) |
-| Resealed / gewogene Booster | — (sale) | Buyer gets worse packs | Prüfgerät (reveals it before buying) |
+| Attack | Base success | Cost (min of ref. income) | Loot / effect | Matching Abwehr upgrade |
+|--------|--------------|---------------------------|---------------|-------------------------|
+| Bunker knacken | 45 % | 10 | 25 % of the *uncollected* bunker content (within the loss cap) | Sicherheit ("Wachhund Rex") |
+| Beim Finanzamt anschwärzen | 50 % (only if there is something to find) | 10 | Target pays back tax + penalty (and the Zoll fine for Schwarzarbeit); tipster gets 10 % | Steuerkanzlei |
+| 1-Stern-Bewertung | 55 % | 5 | −25 Ruf and a 1-star review | Rechtsschutz |
+| Gerücht streuen | 50 % | 5 | One card's price pressure ±15 %, fading with the 4 h half-life | Faktencheck (the best one at the Stammtisch defends) |
+| Abwerben | 40 % | 20 | Take the best employee (+20 % wage, loyalty 60) | Betriebsklima (+ loyalty / 5) |
+| Präparierte Booster | 55 % (when opened) | 20 % of the booster value to prepare | Opener gets commons only | Prüfgerät (catches it; preparer pays the booster's value) |
+| Kredit platzen lassen | — | — | Borrower keeps the money now (decision 085 consequences) | — |
 
-Limits: max 2 successful attacks of one kind on the same victim per day; each attacker–victim pair has a
-cooldown; **daily loss cap from other players = 10 % of net worth excluding the collection**. Victims get
-a discounted Rache for 24 hours.
+Angriff: +5 per learned Schlitzohr skill, +10 as Rache. Abwehr: +5 per upgrade level, 10 levels. A blocked
+attack costs the price again as a fine; 50 % of the fine goes to the defender as Schadenfreude.
+
+Limits: max 2 successful attacks of one kind on the same victim per day; one action per attacker–victim pair
+per hour; **daily loss cap from other players = 10 % of net worth excluding the collection**; targets need
+level 35 like the attacker. Victims get Rache for 24 hours: half price and +10. Einbruch (slabs from the
+Vitrine) is not built (decision 094).
 
 ### 10.2 Other risks
 

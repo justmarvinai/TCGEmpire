@@ -797,6 +797,93 @@ export const zEvents = z.object({
 })
 export type Events = z.infer<typeof zEvents>
 
+// Schattenwirtschaft (alpha_10)
+export const ATTACK_KINDS = ['bunker', 'finanzamt', 'bewertung', 'abwerben', 'geruecht', 'resealed', 'kredit'] as const
+export type AttackKind = (typeof ATTACK_KINDS)[number]
+const zAttackPreview = z.object({
+  ok: z.boolean(),
+  reason: z.string().nullable(),
+  chance: z.number(),
+  cost_cents: z.number(),
+  /** Bunker knacken: what a success would take right now */
+  loot_cents: z.number().nullable(),
+  ready_at: z.string().nullable(),
+})
+export type AttackPreview = z.infer<typeof zAttackPreview>
+export const zDarkside = z.object({
+  unlock_level: z.number(),
+  angriff: z.number(),
+  abwehr: z.record(z.string(), z.number()),
+  cap_left_cents: z.number(),
+  rules: z.object({
+    cooldown_minutes: z.number(),
+    daily_successes: z.number(),
+    loss_cap_pct: z.number(),
+    revenge_hours: z.number(),
+    revenge_cost_pct: z.number(),
+    revenge_bonus: z.number(),
+    fine_pct: z.number(),
+    schadenfreude_pct: z.number(),
+    angriff_per_skill: z.number(),
+    bunker_loot_pct: z.number(),
+    tip_pct: z.number(),
+    review_ruf: z.number(),
+    rumour_pct: z.number(),
+    rumour_card_hours: z.number(),
+  }),
+  targets: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      level: z.number(),
+      look: zLook,
+      honor: zHonor,
+      company: z.string().nullable(),
+      revenge_until: z.string().nullable(),
+      attacks: z.object({ bunker: zAttackPreview, finanzamt: zAttackPreview, bewertung: zAttackPreview, abwerben: zAttackPreview }),
+    }),
+  ),
+  rumour: zAttackPreview.extend({
+    defender: z.string().nullable(),
+    cards: z.array(z.object({ card_id: z.string(), value_cents: z.number(), busy: z.boolean() })),
+  }),
+  resealed: z.object({
+    fee_pct: z.number(),
+    max: z.number(),
+    stock: z.array(z.object({ product_id: z.string(), qty: z.number(), prepared: z.number(), fee_cents: z.number() })),
+  }),
+  log: z.array(
+    z.object({
+      id: z.number(),
+      kind: z.enum(ATTACK_KINDS),
+      at: z.string(),
+      success: z.boolean(),
+      role: z.enum(['attacker', 'victim']),
+      other: z.string().nullable(),
+      loss_cents: z.number(),
+      data: z.record(z.string(), z.unknown()),
+    }),
+  ),
+})
+export type Darkside = z.infer<typeof zDarkside>
+const zAttackResult = z.object({
+  kind: z.enum(ATTACK_KINDS),
+  success: z.boolean(),
+  chance: z.number(),
+  cost_cents: z.number(),
+  other: z.string().nullable(),
+  cents: z.number().optional(),
+  fine_cents: z.number().optional(),
+  joy_cents: z.number().optional(),
+  fee_cents: z.number().optional(),
+  ruf: z.number().optional(),
+  clean: z.boolean().optional(),
+  company: z.string().optional(),
+  card_id: z.string().optional(),
+  up: z.boolean().optional(),
+})
+export type AttackResult = z.infer<typeof zAttackResult>
+
 // Firma (alpha_09)
 export const COMPANY_STATIONS = ['annahme', 'pruefung', 'slabbing', 'versand'] as const
 export type CompanyStation = (typeof COMPANY_STATIONS)[number]
@@ -1180,6 +1267,13 @@ export const RPC_SCHEMAS = {
   company_shady: zCompany.extend(withPlayer),
   company_research: zCompany,
   events_get: zEvents,
+  darkside_get: zDarkside,
+  attack: zDarkside.extend({ result: zAttackResult, ...withPlayer }),
+  reseal: zDarkside.extend({
+    prepared: z.object({ product_id: z.string(), qty: z.number(), fee_cents: z.number(), value_cents: z.number(), hits: z.number() }),
+    ...withPlayer,
+  }),
+  loan_burst: z.object({ loans: zLoans, ...withPlayer }),
   admin_event_start: zAdmin,
   wholesale_buy: zCompany.extend(withPlayer),
   company_order_submit: z.object({ fee_cents: z.number(), grading: zGrading, ...withPlayer }),

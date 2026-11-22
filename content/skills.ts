@@ -26,7 +26,7 @@ export const SKILL_BRANCHES: readonly { key: SkillBranch; name: string; text: st
   { key: 'sammler', name: 'Sammler', text: 'Glück und ein scharfes Auge.' },
   { key: 'haendler', name: 'Händler', text: 'Bessere Deals, kleinere Gebühren.' },
   { key: 'unternehmer', name: 'Unternehmer', text: 'Fleiß, Kapital, Größe.' },
-  { key: 'schlitzohr', name: 'Schlitzohr', text: 'Straßenschläue und kreative Steuerplanung.' },
+  { key: 'schlitzohr', name: 'Schlitzohr', text: 'Straßenschläue und kreative Steuerplanung. Jeder Skill hier gibt +5 Angriff in der Schattenwirtschaft.' },
 ]
 
 export const SKILLS: readonly SkillDef[] = [

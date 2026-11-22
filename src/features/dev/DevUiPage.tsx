@@ -186,8 +186,11 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
         <Button
           size="sm"
           onClick={() =>
-            run(`insert into game.players (username, level, cash_cents, energy_at, created_at, last_seen_at)
-                 select 'Kumpel' || count(*), 20, 0, private.now(), private.now() - interval '2 hours', private.now() from game.players`)
+            run(`with p as (
+                   insert into game.players (username, level, cash_cents, energy_at, created_at, last_seen_at)
+                   select 'Kumpel' || count(*), 40, 0, private.now(), private.now() - interval '2 hours', private.now() from game.players
+                   returning id)
+                 insert into game.bunker (player_id, accrual_at) select id, private.now() - interval '3 hours' from p`)
           }
         >
           +Kumpel

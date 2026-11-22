@@ -413,6 +413,7 @@ insert into game.quest_templates (key, event, min_target, max_target, kind, min_
   ('w_upgrade', 'upgrade_bought', 5, 10, 'weekly', 1),
   ('w_graded', 'graded', 4, 8, 'weekly', 13),
   ('w_battles', 'battle_played', 2, 4, 'weekly', 16),
+  ('w_dark', 'attack_done', 1, 3, 'weekly', 35),
   ('w_stamps', 'stamp_claimed', 5, 6, 'weekly', 1)
 on conflict (key) do update set event = excluded.event, min_target = excluded.min_target, max_target = excluded.max_target,
   kind = excluded.kind, min_level = excluded.min_level;
@@ -429,7 +430,12 @@ insert into game.upgrade_defs (key, grp, max_level, cost_base_cents, growth, min
   ('lagerregal', 'handel', 10, 300000, 1.5, 18, 2, 'lager_units', 'flat', 30),
   ('pruefwerkzeug', 'grading', 2, 250000, 4, 13, 8, 'pregrade_skill', 'flat', 1),
   ('einsendeslots', 'grading', 17, 150000, 1.3, 13, 2, 'grading_slots', 'flat', 1),
-  ('schnelllerner', 'fortschritt', 20, 200000, 1.4, 5, 2, 'ep', 'pct', 3)
+  ('schnelllerner', 'fortschritt', 20, 200000, 1.4, 5, 2, 'ep', 'pct', 3),
+  ('steuerkanzlei', 'abwehr', 10, 400000, 1.5, 30, 2, 'def_finanzamt', 'flat', 5),
+  ('rechtsschutz', 'abwehr', 10, 300000, 1.5, 30, 2, 'def_bewertung', 'flat', 5),
+  ('betriebsklima', 'abwehr', 10, 400000, 1.5, 30, 2, 'def_abwerben', 'flat', 5),
+  ('faktencheck', 'abwehr', 10, 300000, 1.5, 35, 2, 'def_geruecht', 'flat', 5),
+  ('pruefgeraet', 'abwehr', 10, 100000, 1.5, 10, 2, 'def_resealed', 'flat', 5)
 on conflict (key) do update set grp = excluded.grp, max_level = excluded.max_level, cost_base_cents = excluded.cost_base_cents,
   growth = excluded.growth, min_level = excluded.min_level, level_step = excluded.level_step, stat = excluded.stat,
   op = excluded.op, per_level = excluded.per_level;

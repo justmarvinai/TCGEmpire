@@ -63,7 +63,7 @@ RLS enabled on every table with no policies.
 |-------|-------------|---------|
 | `game.card_stacks` | owner_id, card_id, qty, qty_listed | Bulk cards (Common–Rare). |
 | `game.card_copies` | id, card_id, owner_id, q_centering, q_corners, q_edges, q_surface, is_fake, grader, grade, label_grade, cert_no, location (inventory / vitrine / attic / listed / grading / escrow), pulled_by, pulled_at | Individual hits and slabs. |
-| `game.sealed_stacks` | owner_id, product_id, variant (normal / weighed / resealed), qty | Sealed product. |
+| `game.sealed` (+ `game.sealed_marks`) | player_id, product_id, qty; marks: player_id, product_id, by_id, qty | Sealed product; of a stock, `qty` boosters per preparer are Präparierte Booster (alpha_10). |
 | `game.openings` | id, player_id, product_id, cards jsonb, state, at | Decided pack contents awaiting reveal; opening history (thinned). |
 | `game.pity` | player_id, set_id, dry_streak | Pech-Schutz counters. |
 | `game.collection` | player_id, card_id, first_owned_at, best_grade | Binder progress (survives selling). |
@@ -126,7 +126,7 @@ RLS enabled on every table with no policies.
 | `game.battles`, `game.battle_seats`, `game.battle_pulls`, `game.battle_emotes` | alpha_08 · Pack Battles: lobby (mode, booster, packs, seats, stake per seat = Marktwert × packs, state open/running/done/cancelled, `started_at`, `round_seconds`, `ends_at`, `result` with winning seats and totals); seats (player or NPC bot, paid stake, total); every card rolled at the start (seat, round, value then, quality of hits); emotes. Clients only get rounds whose time has come. Settled by the tick `battles` or the first `battle_get` after `ends_at`. |
 | `game.breaks`, `game.break_spots`, `game.break_pulls`, `game.break_emotes` | alpha_08 · Box Breaks: the display on the table (taken from the host's shelf, given back on cancel), its booster and pack count, spot price, state and timeline; sold spots per pack number with the escrowed payment; every card rolled at the start per pack; emotes. Settled by the tick `battles` or the first `break_get` after `ends_at`. |
 | `game.loans`, `players.honor_kept`, `players.honor_broken`, `players.schufa_until` | alpha_08 · Privatkredit: lender, borrower, principal, interest %, days, state (offered/active/repaid/defaulted/cancelled), due date, reminder flag; open loans count in net worth (lender +, borrower −). Ehre: kept and broken deals on the player row (a title is derived from them); Schufa blocks new loans after a burst one. Gifts: `game.gift_days` (alpha_04). |
-| `game.attacks` | Every attack: kind, attacker, target, roll, outcome (success / blocked), loot, cooldown. |
+| `game.attacks` | alpha_10 · Every hostile action: kind (bunker, finanzamt, bewertung, abwerben, geruecht, resealed, kredit), attacker, victim (a rumour: the defender, if any), success, what the victim lost in money (`loss_cents`, counts for the daily cap), `data` (loot, fine, Schadenfreude, card, company). Cooldowns, daily limits, the loss cap and Rache are read from it. |
 | `game.insurance` | Active policies. |
 | `game.streams`, `game.sponsor_deals` | Streaming. |
 
@@ -134,6 +134,7 @@ RLS enabled on every table with no policies.
 
 | Table | Purpose |
 |-------|---------|
+| `game.sealed_marks` | alpha_10 · Präparierte Booster: of player_id's sealed stock of product_id, `qty` were prepared by by_id. Marks move first in gifts and trades (`private.goods_move`); opening uses up others' marks first (bulk, attack roll against the Prüfgerät) and one's own only when the normal boosters are gone; a deferred constraint trigger on `game.sealed` trims marks that left any other way and charges their value to the preparer (Käuferschutz). |
 | `game.events`, global `game.modifiers` | alpha_10 · Every event: key (content/events.ts), slot (daily, random, highlight, personal, admin, calendar), player (personal) or none (everyone), start, end, what it hit (`data`: game, card, set, store, money) and whether it has started. Modifiers without a player count for everyone (`private.stat` sums both); events add them with the source `event:<id>`. `server.events_at` is the last events tick. |
 | `game.megaprojects`, `game.donations` | Server goals. |
 | `game.licenses` | alpha_05 · Händlerlizenzen per player and game; the first is the favourite (`game.players.fav_game`, free). Triggers on `store_purchases` and `store_buys` refuse unlicensed games (`no_license`). |
@@ -248,7 +249,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 | Life | `home_get`, `wardrobe_get`, `profile_get`, `luxury_get` | `home_buy`, `decor_buy/place`, `cosmetic_buy/equip`, `title_set`, `guestbook_sign`, `visit_gift`, `luxury_buy` |
 | Social | `chat_get`, `feed_get`, `players_get`, `toplist_get` | `chat_send`, `gift_send`, `loan_offer/accept/repay`, `help_friend`, `feed_react` |
 | Battles | `battles_get`, `battle_get`, `break_get` | `battle_create/join/leave/start`, `break_create/buy_spot/start`, `emote_send` |
-| Dark side | `attacks_get` (incl. own Abwehr and success preview) | `attack_start` (kind, target), `reseal_packs`, `weigh_packs`, `revenge` |
+| Dark side | `darkside_get` (own Angriff and Abwehr, cap, per target and kind: chance, cost, loot, reason, Rache; rumour cards; booster stock; log) | `attack` (kind + target, or `geruecht` + card + direction), `reseal`, `loan_burst` |
 | Events / world | `events_get`, `megaprojects_get` | `event_claim`, `megaproject_donate`, `insurance_buy/cancel`, `lotto_buy` |
 | Prestige | `prestige_get` | `prestige_do`, `perk_buy` |
 | Admin | `admin_dashboard`, `admin_players`, `admin_jobs` | `admin_set_phase`, `admin_restock`, `admin_event_start/stop`, `admin_config_set`, `admin_invite_set`, `admin_grant`, `admin_announce`, `admin_auction_create` |

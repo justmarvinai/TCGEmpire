@@ -580,8 +580,8 @@ Every hostile action costs money, has a cooldown and is decided by one roll:
 
 - **Abwehr** is bought as **account upgrades** — one ladder per attack type. A well-defended player blocks
   most attempts.
-- **Angriff** comes from **skills** in the Schlitzohr branch: higher success, more loot, lower cost,
-  shorter cooldowns.
+- **Angriff** comes from **skills** in the Schlitzohr branch: every learned Schlitzohr skill adds to the
+  success chance (decision 094).
 - A **blocked** attack costs the attacker the price plus a fine; the defender gets a notification, a
   small Schadenfreude payout and the headline ("ABGEBLITZT: {name} scheitert an Wachhund Rex").
 - Losses are capped per day (10 % of net worth without the collection). The victim always learns what
@@ -596,7 +596,7 @@ Every hostile action costs money, has a cooldown and is decided by one roll:
 | **Abwerben** | Poach an employee with a better offer | Loyalty, raises, counter-offer window |
 | **Resealed / gewogene Booster verkaufen** | Sell opened-and-reglued or weighed packs as fresh | Buyer protection on Cardmarket; none in Direkthandel ("Privatverkauf, keine Garantie, keine Rücknahme") |
 | **Kredit platzen lassen** | Keep the borrowed money | Schufa entry: big Ruf loss, no new loans for a while |
-| **Einbruch** | Steal one slab from the target's Vitrine (rare, expensive, hard) | Alarmanlage, insurance pays the value |
+| **Einbruch** | Steal one slab from the target's Vitrine (not built, decision 094) | Alarmanlage, insurance pays the value |
 
 **Ehre:** every player has a public record of kept and broken deals and gets a title from it
 (Ehrenmann/Ehrenfrau … Schlitzohr … Judas).

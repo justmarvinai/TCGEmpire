@@ -597,6 +597,9 @@ export const texts = {
     stateDefaulted: 'Geplatzt',
     stateCancelled: 'Abgelehnt oder zurückgezogen',
     due: (money: string, time: string) => `${money} fällig in ${time}`,
+    burst: 'Platzen lassen',
+    burstTip: 'Gedrückt halten: Du behältst das Geld sofort. Dafür Schufa, Ruf weg, ein gebrochener Deal und 24 Stunden Rache für den Verleiher.',
+    burstDone: (name: string) => `Kredit geplatzt. ${name} schaut jetzt sehr böse. Das Geld bleibt bei dir.`,
     accept: 'Annehmen',
     decline: 'Ablehnen',
     withdraw: 'Zurückziehen',
@@ -762,6 +765,27 @@ export const texts = {
   },
 
   feed: {
+    attack: (kind: string, d: Record<string, unknown>, money: string, card: string) =>
+      ({
+        bunker: `BUNKER GEKNACKT! ${String(d.name)} räumt ${money} aus dem Bunker von ${String(d.other)}. Wachhund Rex hat geschlafen.`,
+        finanzamt: `ANGESCHWÄRZT! Das Finanzamt kassiert bei „${String(d.company)}“ von ${String(d.other)}. Der anonyme Hinweis kam von ${String(d.name)}. Anonym war er nicht lange.`,
+        bewertung: `1 STERN! ${String(d.name)} zerreißt „${String(d.company)}“ im Netz: „Karten kamen in Butterbrotpapier. Nie wieder.“`,
+        abwerben: `ABGEWORBEN! ${String(d.name)} schnappt ${String(d.other)} einen Mitarbeiter weg. Mit Obstkorb und Dienstwagen.`,
+        geruecht: d.up
+          ? `GERÜCHT! Angeblich wird ${card} nie wieder gedruckt. Der Preis zieht an. Quelle: ${String(d.name)}, vertrauenswürdig wie immer.`
+          : `GERÜCHT! Angeblich kommt ein Reprint von ${card}. Der Preis fällt. Quelle: ${String(d.name)}. Natürlich.`,
+        resealed: `SKANDAL! ${String(d.name)} hat ${String(d.other)} präparierte Booster angedreht! Drin war nur Bulk. Freundschaft beendet.`,
+      })[kind] ?? '',
+    attack_blocked: (kind: string, d: Record<string, unknown>, money: string, card: string, defence: string) =>
+      d.clean
+        ? `FALSCHE VERDÄCHTIGUNG: ${String(d.name)} zeigt ${String(d.other)} beim Finanzamt an. Alles sauber. ${String(d.name)} zahlt ${money}. Peinlich.`
+        : kind === 'geruecht'
+          ? d.other
+            ? `ENTLARVT: Der Faktencheck von ${String(d.other)} zerlegt das Gerücht von ${String(d.name)} über ${card}.`
+            : `Keiner glaubt ${String(d.name)} das Gerücht über ${card}. Nicht mal die Kommentarspalte.`
+          : `ABGEBLITZT: ${String(d.name)} scheitert an ${defence} von ${String(d.other)}. Strafe: ${money}.`,
+    resealed_caught: (d: Record<string, unknown>) =>
+      `KÄUFERSCHUTZ: ${String(d.name)} hat präparierte Booster verkauft und muss erstatten. Der Käufer hatte eine Waage.`,
     scandal: (d: Record<string, unknown>) =>
       `SKANDAL BEI „${String(d.company)}“! Geschönte Noten aufgeflogen. ${String(d.name)} schweigt. Sammler zittern um ihre Slabs.`,
     zoll: (d: Record<string, unknown>) => `RAZZIA! Der Zoll stürmt „${String(d.company)}“. Schwarzarbeit! ${String(d.name)} wird abgeführt. Fast.`,
@@ -903,6 +927,14 @@ export const texts = {
         steps: [
           'Deine Firma darf jetzt beim Großhändler bestellen: Displays zum Händlerpreis, billiger als überall sonst.',
           'Jede Woche gibt es ein Kontingent. Je größer deine Rechtsform, desto mehr. Du findest den Großhandel im Büro deiner Firma.',
+        ],
+      },
+      darkside: {
+        name: 'Schattenwirtschaft',
+        steps: [
+          'Ab jetzt darfst du schmutzig spielen: Bunker knacken, anschwärzen, Gerüchte streuen, Leute abwerben, präparierte Booster andrehen.',
+          'Jede Aktion ist ein Wurf gegen die Abwehr des Opfers. Geht sie schief, zahlst du drauf, und das Opfer lacht dich aus.',
+          'Schütz dich mit Abwehr-Upgrades und leer deinen Bunker regelmäßig. Deine Freunde sind ab Level 35 auch Schlitzohren.',
         ],
       },
       company: {
@@ -1053,6 +1085,24 @@ export const texts = {
   },
 
   notifications: {
+    attacked: (kind: string, d: Record<string, unknown>, money: string) =>
+      ({
+        bunker: `${String(d.name)} hat deinen Bunker geknackt und ${money} mitgenommen. Rache ist 24 Stunden lang billiger.`,
+        finanzamt: `${String(d.name)} hat dich beim Finanzamt angeschwärzt. Nachzahlung: ${money}. Rache ist 24 Stunden lang billiger.`,
+        bewertung: `${String(d.name)} hat deiner Firma eine 1-Stern-Bewertung verpasst. ${String(d.ruf)} Ruf weg.`,
+        abwerben: `${String(d.name)} hat dir einen Mitarbeiter abgeworben. Der hat nicht mal tschüss gesagt.`,
+        resealed: `Der Booster war präpariert! Nur Bulk. Angedreht hat ihn dir ${String(d.name)}.`,
+      })[kind] ?? '',
+    attack_blocked: (kind: string, d: Record<string, unknown>, money: string, attack: string) =>
+      kind === 'geruecht'
+        ? `Dein Faktencheck hat ein Gerücht von ${String(d.name)} entlarvt. ${money} Schadenfreude für dich.`
+        : kind === 'resealed'
+          ? `Dein Prüfgerät hat einen präparierten Booster von ${String(d.name)} erwischt. Du hast einen echten bekommen und ${money} Schadenfreude.`
+          : d.clean
+            ? `${String(d.name)} hat dich beim Finanzamt angezeigt. Du warst sauber. ${money} Schadenfreude für dich.`
+            : `${String(d.name)} wollte „${attack}“ und ist an deiner Abwehr gescheitert. ${money} Schadenfreude für dich.`,
+    resealed_caught: (d: Record<string, unknown>, money: string) =>
+      `Käuferschutz! ${String(d.qty)} präparierte Booster sind aufgeflogen. Du erstattest ${money}.`,
     level_up: (d: Record<string, unknown>) => `Level ${String(d.level)} erreicht. +1 Skillpunkt. Mutti ist verhalten stolz.`,
     unlock: (d: Record<string, unknown>, name: string) => {
       const f = String(d.feature)
@@ -1076,6 +1126,7 @@ export const texts = {
         friends: 'Mama: Hilf deinen Freunden mal. Und nimm Kuchen mit, man kommt nicht mit leeren Händen.',
         group_orders: 'Mama: Ihr bestellt zusammen eine ganze Kiste? Wehe, die steht dann in meinem Flur.',
         wholesale: 'Mama: Jetzt kaufst du Kisten beim Großhändler? Wie Papa damals mit den Gartenzwergen. Die stehen heute noch im Keller.',
+        darkside: 'Mama: Ich hab gehört, du beklaust jetzt deine Freunde? So hab ich dich nicht erzogen. Lass dich wenigstens nicht erwischen.',
         company: 'Mama: Eine eigene Firma? In der Garage? Papas Auto muss dann draußen stehen. Das sagst du ihm.',
         loans: 'Mama: Du verleihst jetzt Geld? An deine Freunde? Dann sieh es schon mal als Geschenk.',
         breaks: 'Mama: Du machst jetzt Live-Shows? Zieh dir wenigstens was Ordentliches an.',
@@ -1323,6 +1374,78 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  darkside: {
+    title: 'Schattenwirtschaft',
+    subtitle: 'Wo Freundschaften enden und Gewinne anfangen.',
+    tip: 'Jede krumme Tour ist ein Wurf: Chance = Grundchance + dein Angriff − die Abwehr des Opfers, mindestens 5 %, höchstens 85 %. Geht sie schief, zahlst du die Kosten plus Strafe, und das Opfer kassiert die Hälfte der Strafe als Schadenfreude. Wer angegriffen wurde, kriegt 24 Stunden Rache zum halben Preis.',
+    locked: (n: number) => `Die Schattenwirtschaft öffnet ab Level ${n}. Bis dahin bist du zu unschuldig.`,
+    status: 'Deine Lage',
+    statusTip: (per: number) =>
+      `Angriff: +${per} für jeden gelernten Schlitzohr-Skill. Abwehr: die Abwehr-Upgrades, eins pro Angriffsart. Zehn Stufen blocken fast alles.`,
+    angriff: 'Angriff',
+    abwehr: 'Abwehr',
+    capLeft: 'Heute noch bei dir zu holen',
+    capTip: (pct: number) => `Mehr als ${pct} % deines Vermögens ohne Sammlung kann dir an einem Tag niemand aus dem Bunker holen.`,
+    defend: 'Abwehr ausbauen',
+    targets: 'Opfer',
+    targetsTip: (cool: number, daily: number) =>
+      `Gegen dasselbe Opfer eine Aktion pro ${cool} Minuten, jede Art höchstens ${daily}× am Tag mit Erfolg. Wer unter dem Freischalt-Level ist, ist tabu.`,
+    noTargets: 'Keiner da, den du abziehen kannst. Deine Freunde sind noch zu klein für die Schattenwirtschaft.',
+    revenge: (time: string) => `Rache bis ${time} Uhr: halber Preis, +10 % Chance`,
+    chance: 'Chance',
+    cost: 'Kosten',
+    loot: 'Beute',
+    hold: 'Halten',
+    reasons: {
+      attack_cooldown: 'Abklingzeit',
+      attack_limit: 'Heute genug',
+      attack_cap: 'Heute genug geblutet',
+      bunker_empty: 'Bunker leer',
+      no_company: 'Keine Firma',
+      no_staff: 'Keine Leute',
+      no_own_company: 'Du brauchst eine Firma',
+      no_slots: 'Deine Firma ist voll',
+      target_protected: 'Anfängerschutz',
+    } as Record<string, string>,
+    readyAt: (time: string) => `ab ${time} Uhr`,
+    success: {
+      bunker: (money: string) => `Geknackt! ${money} aus dem Bunker. Lauf.`,
+      finanzamt: (money: string) => `Das Finanzamt war da. Dein Tippgeld: ${money}.`,
+      bewertung: () => 'Ein Stern. Die Firma blutet Ruf.',
+      abwerben: () => 'Abgeworben! Der Neue sitzt schon in deiner Firma.',
+      geruecht: () => 'Das Gerücht verbreitet sich. Beim nächsten Markt-Update siehst du es am Preis.',
+    } as Record<string, (money: string) => string>,
+    blocked: (money: string) => `Abgeblitzt. Kosten und ${money} Strafe sind weg.`,
+    falseReport: (money: string) => `Die Firma war sauber. Falsche Verdächtigung: ${money} Strafe.`,
+    rumour: 'Gerücht streuen',
+    rumourCard: 'Karte',
+    rumourUp: 'Hochjubeln',
+    rumourDown: 'Schlechtreden',
+    rumourBusy: 'Über diese Karte läuft schon ein Gerücht.',
+    rumourRunning: 'Gerücht läuft',
+    level: (n: number) => `Level ${n}`,
+    rumourDefender: (name: string) => `Bester Faktencheck am Stammtisch: ${name}.`,
+    rumourNoDefender: 'Keiner am Stammtisch hat einen Faktencheck. Freie Bahn.',
+    resealed: 'Präparierte Booster',
+    resealedRules:
+      'Im Direkthandel gehen präparierte Booster immer zuerst raus. Verlassen sie dein Lager anders (Markt, Kleinanzeigen, Paket), fliegen sie auf: Du erstattest den Wert. Öffnest du sie selbst, ist nur Bulk drin.',
+    resealedEmpty: 'Keine Booster im Lager. Erst kaufen, dann präparieren.',
+    prepared: (n: number) => `${n} präpariert`,
+    inStock: (n: number) => `${n} im Lager`,
+    prepare: (n: number, money: string) => `${n} präparieren (${money})`,
+    preparedDone: (n: number, hits: number, money: string) =>
+      `${n} Booster präpariert. Rausgeholt: ${hits} Hits, Karten für ${money}. Jetzt nur noch einen Dummen finden.`,
+    log: 'Akte',
+    logTip: 'Alles, was du getan hast und was dir angetan wurde. Das Opfer erfährt immer, wer es war.',
+    logEmpty: 'Noch eine weiße Weste. Wie langweilig.',
+    logMine: (attack: string, other: string, ok: boolean, money: string) =>
+      ok ? `${attack} gegen ${other}${money ? `: ${money}` : ''}` : `${attack} gegen ${other} gescheitert${money ? `: −${money}` : ''}`,
+    logTheirs: (attack: string, other: string, ok: boolean, money: string) =>
+      ok ? `${other}: ${attack} gegen dich${money ? `, −${money}` : ''}` : `${other} ist mit ${attack} an dir gescheitert${money ? `: +${money}` : ''}`,
+    market: 'den Markt',
+    kredit: 'Kredit platzen lassen',
   },
 
   insurance: {
@@ -1850,7 +1973,7 @@ export const texts = {
     title: 'Upgrades',
     subtitle: 'Bessere Version von dir. Kostet Geld. Wie Selbstoptimierung, nur ehrlicher.',
     tip: 'Upgrades sind dauerhaft. Jede Stufe kostet mehr als die vorige und manche brauchen ein Mindestlevel.',
-    groups: { bunker: 'Geldbunker', jobs: 'Arbeit', oeffnen: 'Öffnen', handel: 'Handel', grading: 'Grading', fortschritt: 'Fortschritt' } as Record<string, string>,
+    groups: { bunker: 'Geldbunker', jobs: 'Arbeit', oeffnen: 'Öffnen', handel: 'Handel', grading: 'Grading', fortschritt: 'Fortschritt', abwehr: 'Abwehr' } as Record<string, string>,
     level: (n: number, max: number) => `Stufe ${n}/${max}`,
     buy: 'Kaufen',
     max: 'Maximum',
@@ -1990,6 +2113,13 @@ export const texts = {
   },
 
   errors: {
+    attack_cooldown: 'Nicht so hastig. Zwischen zwei Aktionen gegen dasselbe Opfer vergeht eine Stunde.',
+    attack_limit: 'Für heute hast du das Opfer damit genug gerupft.',
+    attack_cap: 'Das Opfer hat heute schon genug geblutet. Mehr gibt der Tagesdeckel nicht her.',
+    target_protected: 'Anfängerschutz. An die Kleinen gehst du nicht ran.',
+    no_company: 'Das Opfer hat keine Firma.',
+    no_own_company: 'Dafür brauchst du eine eigene Firma.',
+    no_staff: 'Da gibt es niemanden zum Abwerben.',
     server_error: 'Der Server hat sich verschluckt. Versuch es gleich nochmal.',
     not_found: 'Gibt es nicht (mehr). Jemand war schneller.',
     lager_full: 'Lager voll. Öffnen, verkaufen oder das Lagerregal ausbauen.',
