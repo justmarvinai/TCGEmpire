@@ -17,11 +17,13 @@ import type { Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useMe, useSetMe, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
+import { useProfile, VitrinePanel } from './Vitrine.tsx'
 
 const T = texts.profile
 
 export function ProfilePage() {
   const stats = useStats()
+  const profile = useProfile(null)
   const player = useMe().data?.player
   const act = useAct()
   const client = useQueryClient()
@@ -71,6 +73,8 @@ export function ProfilePage() {
               </select>
             </label>
           </Panel>
+
+          {profile.data && <VitrinePanel profile={profile.data} />}
 
           <Panel title={T.stats} tip={T.statsTip}>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">

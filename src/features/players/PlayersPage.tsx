@@ -51,7 +51,9 @@ export function PlayersPage() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-2">
-                        <b className="truncate">{p.name}</b>
+                        <Link to={p.me ? '/profile' : `/players/${p.id}`} className="truncate font-bold hover:underline">
+                          {p.name}
+                        </Link>
                         {p.me && <span className="rounded-md bg-grad px-1.5 py-0.5 text-[0.65rem] font-bold text-white">{T.you}</span>}
                         {p.is_admin && <span className="rounded-md bg-surface-3 px-1.5 py-0.5 text-[0.65rem] font-bold text-fg-3">{T.admin}</span>}
                       </span>

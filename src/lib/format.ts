@@ -58,6 +58,11 @@ export function formatAgo(iso: string, nowMs: number): string {
   return `vor ${Math.round(s / 86400)} T`
 }
 
+/** A date: 22.11.2026 */
+export function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
 /** Clock time for "läuft bis": 14:05 */
 export function formatClock(iso: string): string {
   return new Date(iso).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })

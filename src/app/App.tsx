@@ -17,6 +17,7 @@ import { TradePage } from '@/features/trade/TradePage.tsx'
 import { HomePage } from '@/features/home/HomePage.tsx'
 import { CollectionPage } from '@/features/collection/CollectionPage.tsx'
 import { GradingPage } from '@/features/grading/GradingPage.tsx'
+import { PlayerProfilePage } from '@/features/profile/PlayerProfilePage.tsx'
 import { JobsPage } from '@/features/jobs/JobsPage.tsx'
 import { OpenPage } from '@/features/open/OpenPage.tsx'
 import { PathPage } from '@/features/path/PathPage.tsx'
@@ -82,6 +83,7 @@ function Game() {
           <Route path="kleinanzeigen" element={<KleinanzeigenPage />} />
           <Route path="toplists" element={<ToplistsPage />} />
           <Route path="players" element={<PlayersPage />} />
+          <Route path="players/:id" element={<PlayerProfilePage />} />
           <Route path="stammtisch" element={<StammtischPage />} />
           <Route path="admin" element={<AdminPage />} />
           <Route path="trade" element={<TradePage />} />
