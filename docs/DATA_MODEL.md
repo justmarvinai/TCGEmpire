@@ -141,7 +141,7 @@ RLS enabled on every table with no policies.
 | `game.admin_audit` | Admin actions. |
 | `game.versions` | State-area version counters per player for `sync`. |
 
-## 2a. Implemented so far (alpha_01–02)
+## 2a. Implemented so far (alpha_01–03)
 
 | Table | Purpose |
 |-------|---------|
@@ -159,6 +159,13 @@ RLS enabled on every table with no policies.
 | `game.quest_templates`, `game.quests` | mini-quest templates (seeded) and active/claimed quests |
 | `game.tutorial_steps` | seeded steps; progress in `players.tutorial_step` (-1 = done) |
 | `game.minigame_runs` | started/finished minijob rounds |
+| `game.stamps` | alpha_03 · Stempelkarte of the week: stamped days, last day, joker used |
+| `game.upgrade_defs`, `game.upgrades_owned` | alpha_03 · upgrade catalog (seeded); level per player; effects are `modifiers` rows (source `upgrade:<key>`, unique per player, source and stat) |
+| `game.bunker` | alpha_03 · accrual start; rate, capacity, interest and security come from upgrades |
+| `game.job_defs`, `game.job_hours`, `game.shifts` | alpha_03 · jobs (seeded); hours per job for ranks; one running shift per player with check-ins |
+| `game.consumable_defs` | alpha_03 · snacks and Pfandautomat items (seeded); buffs are `modifiers` rows with `expires_at` |
+| `game.achievement_defs`, `game.achievements` | alpha_03 · tiers and titles (seeded); reached tier per player |
+| new columns | alpha_03 · `players.title, reroll_day, daily_bonus_day, weekly_bonus_week, reset_at`; `quest_templates.kind, min_level`; `quests.kind, period` |
 
 | RPC | Kind | Notes |
 |-----|------|-------|
@@ -173,6 +180,14 @@ RLS enabled on every table with no policies.
 | `tutorial_ack`, `tutorial_skip` | write | steps complete through `private.emit` |
 | `minigame_start`, `minigame_finish` | write | energy cost, time check, score cap |
 | `level_path_get` | read | EP and rewards per level |
+| `quests_get`, `quest_claim`, `quest_reroll`, `stamp_claim(joker)` | read/write | alpha_03 · mini, daily (00:00) and weekly (Monday) quests; one free reroll a day; Stempelkarte |
+| `bunker_get`, `bunker_collect` | read/write | idle money up to capacity; interest when at least 90 % full |
+| `upgrades_get`, `upgrade_buy` | read/write | now → next per upgrade; bunker upgrades pay the bunker out first |
+| `jobs_get`, `shift_start`, `shift_checkin`, `shift_claim` | read/write | shifts of 15 min–8 h, ranks from hours, check-ins every 30 min; early end pays the time worked |
+| `consumable_use` | write | snacks (money) and Pfandautomat items (Pfandbons) |
+| `stats_get`, `title_set` | read/write | counters, achievements, titles |
+| `recap_get`, `recap_collect` | read/write | "Willkommen zurück": bunker and finished shift in one click |
+| `account_reset`, `account_delete` | write | Gefahrenzone; confirmed with the username; reset once per 24 h |
 
 
 
@@ -181,7 +196,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 
 | Area | Reads | Writes |
 |------|-------|--------|
-| Session | `sync`, `me_get`, `recap_get` | `join` (username, password, invite code), `login`, `logout`, `recap_collect`, `settings_set`, `tour_seen`, `account_reset`, `account_delete` |
+| Session | `sync`, `me_get`, `recap_get` | `join` (username, password, invite code), `login`, `logout`, `recap_collect`, `settings_set`, `account_reset`, `account_delete` |
 | Packs | `shop_get`, `opening_get` | `store_buy` (qty), `pack_open` (qty 1/5/10/36, returns every pack's content at once), `opening_finish`, `display_unbox` |
 | Collection | `binder_get`, `card_get`, `inventory_get` | `bulk_sell`, `vitrine_set`, `attic_move`, `bulk_recycle` |
 | Market | `market_overview`, `market_card`, `my_listings`, `ads_get`, `auctions_get`, `trade_get` | `listing_create/cancel/buy`, `order_create/cancel`, `ad_offer`, `ad_post`, `ad_answer`, `auction_create`, `auction_bid`, `trade_propose/update/confirm/cancel`, `ankauf_sell` |

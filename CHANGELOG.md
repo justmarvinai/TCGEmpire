@@ -3,6 +3,42 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_03] — Grind (22 Nov 2026)
+
+There is always something to do now, and something keeps running while you are away.
+
+### Added
+
+- **Tagesquests** (from level 2): five a day, new at midnight, one free reroll per day, a bonus for all
+  five. **Wochenquests** (from level 13): five per week, new on Monday, a chest with three boosters for
+  all five. "Hin" takes you straight to where a quest gets done.
+- **Stempelkarte** (from level 2): stamp once a day for a little more money each day and a booster on day
+  7; a weekly joker catches up one missed day.
+- **Geldbunker** (from level 3): fills with money on its own, offline too, until it is full. Four upgrade
+  tracks: Ertrag, Kapazität, Zinsen (a bonus when you empty it at least 90 % full) and Sicherheit. Seven
+  stages from Sparschwein to Geldspeicher.
+- **Upgrades** (from level 5): nine upgrades for opening, work, progress and the bunker; each shows
+  "jetzt → danach", income upgrades also when they have paid for themselves.
+- **New minijobs:** Regale einräumen bei Müller (level 3), Karten sortieren in der Würfelbude (level 6),
+  Pakete ausliefern für DHL (level 10).
+- **Schichten** (from level 7): 15 minutes to 8 hours, running while you do other things; check in every
+  30 minutes for more pay; ranks from Aushilfe to Filialleitung pay more per hour.
+- **Snacks and the Pfandautomat:** Döner (lots of energy, but Fettfinger: fresh hits get worse surfaces
+  for 10 minutes), Club-Mate and Kaffee at the Kiosk; Pfandbons from quests buy Energie-Bon, Lern-Bon,
+  Glücks-Bon and a Kiosk-Gutschein. Running effects sit as icons in the top bar.
+- **Profil:** statistics, 18 achievements with tiers, and titles to wear next to your name.
+- **Gefahrenzone:** reset your account to a fresh start (once per 24 h) or delete it for good; type your
+  name and hold the button.
+- **Willkommen zurück:** after ten minutes away you get a summary and collect bunker and finished shift
+  with one click.
+- **Neu freigeschaltet:** every feature a level unlocks gets a NEU badge in the menu and a short tour
+  from Mutti on its page.
+
+### Changed
+
+- Quests, stamps and achievements pay EP relative to your level, so they stay worth it all the way up.
+  Level-up money is a little smaller in return.
+
 ## [0.0.1-alpha_02] — Rip (22 Nov 2026)
 
 The first real gameplay: earn a little, buy boosters, rip them, collect, sell.
@@ -30,7 +66,7 @@ The first real gameplay: earn a little, buy boosters, rip them, collect, sell.
 
 - Prices follow the new price scale: a booster costs 100 € (110 € at the Kiosk).
 
-
+## [0.0.1-alpha_01] — Fundament (22 Nov 2026)
 
 The foundation: no gameplay yet, but a real, running game shell.
 

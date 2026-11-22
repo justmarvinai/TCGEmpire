@@ -9,7 +9,10 @@ import { useBunker, useJobs, useQuests, useShop } from '@/lib/actions.ts'
 import { useBunkerContent } from '@/features/bunker/BunkerPage.tsx'
 import { formatFactor, formatMoney } from '@/lib/format.ts'
 import type { Me, Player } from '@/lib/schemas.ts'
+import { Button } from '@/components/ui/Button.tsx'
+import { useSettings } from '@/lib/settings.ts'
 import { texts } from '@/texts/de.ts'
+import { PATCH_NOTES } from '@/texts/patchnotes.ts'
 import { config } from '../../../content/config.ts'
 
 const T = texts.home
@@ -37,6 +40,9 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
   const bunker = useBunker()
   const jobs = useJobs()
   const live = useBunkerContent(bunker.data)
+  const notes = PATCH_NOTES.find((n) => n.version === me.server.version)
+  const seen = useSettings((s) => s.notesSeen)
+  const setSettings = useSettings((s) => s.set)
   const next = nextStep(p, shop.data?.kiosk[0]?.price_cents, {
     bunkerFull: !!live && live.fill >= 1,
     shiftDone: !!jobs.data?.shift?.done,
@@ -62,6 +68,19 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
           </div>
         </Panel>
 
+        {notes && seen !== notes.version && p.tutorial_step < 0 && (
+          <Panel title={T.notesTitle(notes.version, notes.title)} tip={T.notesTip} className="lg:col-span-3">
+            <ul className="flex list-disc flex-col gap-1 pl-5 text-sm text-fg-2 marker:text-accent">
+              {notes.items.map((n) => (
+                <li key={n}>{n}</li>
+              ))}
+            </ul>
+            <Button size="sm" className="mt-3" onClick={() => setSettings({ notesSeen: notes.version })}>
+              {T.notesRead}
+            </Button>
+          </Panel>
+        )}
+
         <Panel title={T.questsTitle} tip={texts.quests.miniTip} className="lg:col-span-2">
           {quests.data ? <QuestList quests={quests.data} list={quests.data.mini} compact /> : <Skeleton className="h-32 w-full" />}
         </Panel>
@@ -76,6 +95,11 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
               <dt className="text-fg-3">{T.version}</dt>
               <dd className="nums font-semibold">{me.server.version}</dd>
             </div>
+            {notes && seen === notes.version && (
+              <button type="button" className="justify-self-start text-sm font-semibold text-accent hover:underline" onClick={() => setSettings({ notesSeen: '' })}>
+                {T.notesAgain}
+              </button>
+            )}
           </dl>
         </Panel>
       </div>

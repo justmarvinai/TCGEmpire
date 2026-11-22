@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: building `alpha_03` (owner's go on 22 Nov 2026; alpha_02 accepted).**
+> **Current phase: `alpha_03` is finished and waits for the owner's review. `alpha_04` starts only with the owner's go.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -62,15 +62,20 @@ Goal: there is always something to do and something running while away.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Quest engine: mini, daily, weekly, Stempelkarte; rerolls; deep links | M |
-| ☐ | Geldbunker with four upgrade tracks and visual tiers | M |
-| ☐ | Jobs: 3 more minijobs (Regale, Karten sortieren, Pakete), shifts with ranks and check-ins | M |
-| ☐ | Upgrades (all groups, first tiers) with "jetzt → danach" | M |
-| ☐ | "Willkommen zurück" recap; notifications centre (Mutti writes) | M |
-| ☐ | Profile page with **Gefahrenzone** (account reset, account deletion) | M |
-| ☐ | Achievements v1, statistics page, titles | M |
-| ☐ | Pfandbons and the Pfandautomat shop; consumables (Döner, Fettfinger) | M |
-| ☐ | Simulation harness v1 with pace assertions for levels 1–30 | M |
+| ☑ | Quest engine: mini, daily, weekly, Stempelkarte; rerolls; deep links | M |
+| ☑ | Geldbunker with four upgrade tracks and visual tiers (simplified: the seven stages take the seven card-tier colours, no extra pixel art) | M |
+| ☑ | Jobs: 3 more minijobs (Regale, Karten sortieren, Pakete), shifts with ranks and check-ins | M |
+| ☑ | Upgrades (all groups, first tiers) with "jetzt → danach" | M |
+| ☑ | "Willkommen zurück" recap; notifications centre (Mutti writes) | M |
+| ☑ | Profile page with **Gefahrenzone** (account reset, account deletion) | M |
+| ☑ | Achievements v1, statistics page, titles | M |
+| ☑ | Pfandbons and the Pfandautomat shop; consumables (Döner, Fettfinger) | M |
+| ☑ | Simulation harness v1 with pace assertions for levels 1–30 | M |
+| ☑ | Unlock moments: NEU badge and a 2–3 step tour by Mutti for every level-unlocked feature (generic, data in `src/texts/de.ts`) | M |
+
+Measured pace (simulation, 150 active minutes a day): level 10 after 12 minutes, 20 on day 2, 30 on
+day 3, 45 on day 5. Level 30 is a day later than the design's curve: day 1 has idle waiting that the
+market (alpha_04) is meant to fill; the simulation will tell after alpha_04.
 
 ### alpha_04 — Flip
 

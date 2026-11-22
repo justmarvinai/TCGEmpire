@@ -506,6 +506,10 @@ export const texts = {
     subtitle: 'Dein Imperium auf einen Blick. Viel ist es noch nicht.',
     netWorth: 'Vermögen',
     nextTitle: 'Als Nächstes',
+    notesTitle: (version: string, title: string) => `Neu in ${version}: ${title}`,
+    notesTip: 'Was sich mit dem letzten Update geändert hat. Verschwindet, sobald du es gelesen hast.',
+    notesRead: 'Gelesen',
+    notesAgain: 'Was ist neu?',
     netWorthTip: 'Bargeld plus der aktuelle Wert all deiner Karten.',
     next: {
       recap: 'Du warst weg. Hol dir ab, was liegen geblieben ist.',

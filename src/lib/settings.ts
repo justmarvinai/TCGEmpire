@@ -8,7 +8,9 @@ interface Settings {
   instantReveal: boolean
   /** feature tours finished on this device, as `${playerId}:${feature}` */
   seenTours: string[]
-  set: (patch: Partial<Pick<Settings, 'volume' | 'reducedMotion' | 'instantReveal'>>) => void
+  /** version whose patch notes were marked as read */
+  notesSeen: string
+  set: (patch: Partial<Pick<Settings, 'volume' | 'reducedMotion' | 'instantReveal' | 'notesSeen'>>) => void
   seeTour: (key: string) => void
 }
 
@@ -20,6 +22,7 @@ export const useSettings = create<Settings>()(
       reducedMotion: false,
       instantReveal: false,
       seenTours: [],
+      notesSeen: '',
       set: (patch) => set(patch),
       seeTour: (key) => set((s) => (s.seenTours.includes(key) ? s : { seenTours: [...s.seenTours, key] })),
     }),

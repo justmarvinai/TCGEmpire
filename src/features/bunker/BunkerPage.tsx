@@ -21,6 +21,10 @@ import { useQueryClient } from '@tanstack/react-query'
 const T = texts.bunker
 
 /** Bunker content now, interpolated from the server's rate between syncs. */
+// Seven stages, seven card-tier colours: Sparschwein grey … Geldspeicher pink. No extra art needed.
+const STAGE_TONE = ['text-tier-common', 'text-tier-uncommon', 'text-tier-rare', 'text-tier-holo', 'text-tier-alternative', 'text-tier-ultra', 'text-tier-grail']
+const STAGE_OUTLINE = ['outline-tier-common', 'outline-tier-uncommon', 'outline-tier-rare', 'outline-tier-holo', 'outline-tier-alternative', 'outline-tier-ultra', 'outline-tier-grail']
+
 export function useBunkerContent(b: Bunker | undefined) {
   const now = useNow()
   const offset = useWorld((s) => s.clockOffsetMs)
@@ -68,8 +72,9 @@ export function BunkerPage() {
             <div className="flex flex-col items-center gap-4 py-2">
               <div
                 className={clsx(
-                  'grid size-40 place-items-center bg-surface-2 outline-2 outline-line',
-                  live.fill >= 1 ? 'text-gold anim-heartbeat' : 'text-fg-2',
+                  'grid size-40 place-items-center bg-surface-2 outline-2',
+                  STAGE_OUTLINE[b.stage ?? 0],
+                  live.fill >= 1 ? 'text-gold anim-heartbeat' : STAGE_TONE[b.stage ?? 0],
                 )}
               >
                 <PixelIcon name="vault" scale={4} />

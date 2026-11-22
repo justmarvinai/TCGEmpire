@@ -5,10 +5,10 @@ trading-card hobby. Private game for one friend group. Must run on **Vercel Hobb
 
 ## 0. Gate: are you allowed to code?
 
-**Approved milestone: `alpha_03` (Grind).** The owner gave the go on 22 Nov 2026 (`alpha_02` is accepted).
+**No milestone is approved right now.** `alpha_03` (Grind) is finished and reported (22 Nov 2026).
 
-- Work on `alpha_03` only (scope: `ROADMAP.md`). When it is done: changelog, version, report — then
-  **stop and wait** for the owner's go for `alpha_04`.
+- Do not start `alpha_04` (or any other code) until the owner says go. Fixes the owner asks for in
+  `alpha_03` are allowed.
 - When the owner approves the next milestone, update this section to name it.
 - Never deploy or change platform settings without the owner's go.
 

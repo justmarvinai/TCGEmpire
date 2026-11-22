@@ -21,6 +21,13 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   for (let i = 0; i < 5; i++) await page.getByRole('button', { name: '+1.000 €' }).click()
   await page.getByRole('button', { name: '+1 Stunde' }).click()
 
+  // Patch notes of this version on the home page, until read.
+  await page.getByRole('link', { name: 'Übersicht' }).click()
+  await expect(page.getByText(/^Neu in 0\.0\.1-alpha_03/)).toBeVisible()
+  await page.screenshot({ path: shot('home-notes') })
+  await page.getByRole('button', { name: 'Gelesen' }).click()
+  await expect(page.getByText(/^Neu in 0\.0\.1-alpha_03/)).toBeHidden()
+
   // Geldbunker: an hour of income is waiting.
   await expect(page.getByRole('link', { name: 'Geldbunker NEU' })).toBeVisible()
   await page.getByRole('link', { name: 'Geldbunker' }).click()
