@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_05` delivered (22 Nov 2026). Waiting for the owner's go for `alpha_06`.**
+> **Current phase: `alpha_06` (Grading) in progress — owner go on 22 Nov 2026.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -114,7 +114,7 @@ Goal: all four games are in, each with its own look.
 
 | | Scope | |
 |---|-------|---|
-| ☑ | **Yu-Gi-Oh! LOB**, **One Piece OP-01**, **Riftbound Origins**: data, frames, card backs, packs, displays; hero art for Ultra and Grail, simple template art for the rest (one shared card back by owner rule; Riftbound hero style is open question Q-24) | M |
+| ☑ | **Yu-Gi-Oh! LOB**, **One Piece OP-01**, **Riftbound Origins**: data, frames, card backs, packs, displays; hero art for Ultra and Grail, simple template art for the rest (one shared card back by owner rule; Riftbound hero style kept, Q-24) | M |
 | ☑ | Starter choice and Händlerlizenzen | M |
 | ☑ | Themed collection goals (Exodia, Strohhut crew, starters) and set bonuses | M |
 | ☑ | Hobby lore worked into events, achievements and feed lines for all four games (events follow with the event engine in alpha_10) | M |

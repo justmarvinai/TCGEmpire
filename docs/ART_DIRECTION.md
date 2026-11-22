@@ -173,6 +173,7 @@ never bundled into the main app.
 | P1 | **Hero art only for the two rarest tiers: Ultra and Grail** (4–5 cards per set). Individually crafted, full-art, up to four review rounds each. | With each set's alpha |
 | P2 | **Everything else (Common, Uncommon, Rare, Holo, Alternative): simple and cheap.** Built from shared templates and material presets with few shapes, a plain background and a small palette; recognisable and clean, not elaborate. Produced in batches, **one contact-sheet review per batch**, fixes only for clear flaws. Holo and Alternative get their value from the frame treatment and foil, not from extra art detail. | With each set's alpha |
 | P3 | Optional later polish: upgrade favourite P2 cards, alternative pack artworks, animated Grails | after 0.0.1 |
+| — | **Sets added after 0.0.1:** card text (name, kind, numbers, effect lines) in a real font at runtime; pixel art only for the artwork and the frame. Ultra and Grail keep the full hand-made treatment (owner rule, decision 065). | after 0.0.1 |
 
 Owner rule (22 Nov 2026): **only Ultra and Grail cards get the detailed treatment; all lower tiers are
 deliberately simpler to save development time and tokens.** Guide values per P2 card: 30–60 lines of draw

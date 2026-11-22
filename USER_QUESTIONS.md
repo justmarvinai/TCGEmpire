@@ -32,6 +32,7 @@ New questions are appended at the bottom with a recommended default.
 | Q-21 | Alpha save data | Wipes allowed during alpha, announced; fresh start at 0.0.1. | default |
 | Q-22 | Daily reset | **00:00 German time**; weekly reset Monday 00:00. | owner |
 | Q-23 | Additions | See below. | owner |
+| Q-24 | Riftbound hero art | Keep our own archetypes ("your current take on the art is fine"). | owner |
 
 ## Additional owner requirements (21 Nov 2026)
 
@@ -47,6 +48,9 @@ New questions are appended at the bottom with a recommended default.
    card name and grade in normal font. A reusable card model for everything below Ultra. Reuse wherever
    possible to save tokens.
 7. **Go for alpha_02** given on 22 Nov 2026.
+8. **Card text in real fonts for later sets (22 Nov 2026):** for every set added after the first full release
+   (`0.0.1`), the text on cards is rendered at runtime in a real font; pixel art covers only the artwork and the
+   card frame. Ultra and Grail keep their full hand-made art. Go for `alpha_06` given the same day.
 
 ## How to answer later
 
@@ -55,11 +59,5 @@ changes.
 
 ## Open questions
 
-- **Q-24 Riftbound hero art (alpha_05).** The five Riftbound Ultra/Grail cards (Ahri, Jinx, Lee Sin, Miss Fortune,
-  Kai'Sa) were painted as our own archetypes that fit the card titles — a nine-tailed shrine fox, a blindfolded
-  monk, a punk riding a cannon, a pirate captain, a winged void huntress — instead of on-model champion portraits;
-  the painter declined to reproduce Riot's character designs. Every other card follows the art direction (our own
-  pixel interpretation, recognisable in colours and silhouette). **Default: keep them**; on request they are
-  redrawn closer to the champions.
 - Deployment still needs (see Q-2) the Supabase project, the Vercel project and three GitHub secrets — exact steps
   are given when deployment is wanted; coding and local testing work without them.
