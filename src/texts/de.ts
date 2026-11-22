@@ -168,6 +168,65 @@ export const texts = {
     ruf: 'Ruf',
   },
 
+  players: {
+    title: 'Spieler',
+    subtitle: 'Alle auf dem Server. Freunde, Rivalen, Schnorrer.',
+    tip: 'Wer gerade da ist, hat einen grünen Punkt. Ab Level 10 kannst du anderen etwas schenken oder einen Tausch anbieten.',
+    online: 'online',
+    seen: (ago: string) => `zuletzt ${ago}`,
+    you: 'Du',
+    admin: 'Admin',
+    gift: 'Schenken',
+    trade: 'Tausch anbieten',
+    lockedLevel: (n: number) => `Schenken und Tauschen ab Level ${n}.`,
+    fresh: (min: number) => `Neu hier: noch ${min} Min. gesperrt.`,
+    giftTitle: (name: string) => `Geschenk für ${name}`,
+    giftDesc: 'Bis zum Freibetrag ist es steuerfrei. Darüber nimmt sich das Finanzamt 20 %. Von dir.',
+    giftDone: (name: string, money: string) => `${money} an ${name} verschenkt. Wie großzügig. Oder dumm.`,
+    allowance: 'Freibetrag heute',
+    allowanceTip: 'So viel darfst du heute steuerfrei verschenken. Wächst mit deinem Level, um Mitternacht gibt es neuen.',
+    empty: 'Außer dir ist keiner da. Lad mal Leute ein.',
+  },
+
+  trade: {
+    title: 'Tausch',
+    subtitle: 'Karten gegen Karten, Geld gegen Booster. Unter Freunden. Angeblich.',
+    tip: 'Du stellst ein Angebot zusammen, die andere Seite nimmt an oder lehnt ab. Reserviert wird nichts: Fehlt beim Annehmen etwas, platzt der Deal. Gibt eine Seite mehr Wert, als sie bekommt, zählt der Unterschied als Geschenk.',
+    incoming: 'Angebote an dich',
+    outgoing: 'Deine Angebote',
+    none: 'Keine offenen Angebote. Niemand will mit dir handeln. Noch.',
+    new: 'Neues Angebot',
+    newTip: 'Wähle, was du gibst und was du dafür willst. Die Werte rechnet der Server zum Marktwert.',
+    partner: 'Mit wem?',
+    pickPartner: 'Spieler wählen …',
+    give: 'Du gibst',
+    get: 'Du bekommst',
+    money: 'Geld (€)',
+    search: 'Suchen …',
+    noItems: 'Nichts zum Tauschen da.',
+    value: 'Wert',
+    yourTax: 'Deine Schenkungssteuer',
+    theirTax: 'Schenkungssteuer der anderen Seite',
+    taxTip: 'Wer mehr Wert hergibt, als er bekommt, verschenkt den Unterschied. Über dem Freibetrag kostet das 20 % Steuer.',
+    send: 'Angebot senden',
+    sent: 'Angebot raus. Jetzt heißt es warten.',
+    accept: 'Annehmen',
+    decline: 'Ablehnen',
+    cancel: 'Zurückziehen',
+    accepted: 'Deal! Alles hat den Besitzer gewechselt.',
+    declined: 'Abgelehnt. Hart, aber fair.',
+    cancelled: 'Angebot zurückgezogen.',
+    from: (name: string) => `von ${name}`,
+    to: (name: string) => `an ${name}`,
+    expires: (t: string) => `läuft ab in ${t}`,
+    taxNote: (money: string) => `Kostet dich ${money} Schenkungssteuer.`,
+    locked: (n: number) => `Tauschen und Schenken gehen ab Level ${n}.`,
+    nothing: 'nichts',
+    hit: 'Einzelstück',
+    sealed: 'Sealed',
+    selected: (n: number) => (n === 1 ? '1 Sache ausgewählt' : `${n} Sachen ausgewählt`),
+  },
+
   toplists: {
     title: 'Toplisten',
     subtitle: 'Wer hat, der hat. Wer nicht hat, steht hier unten.',
@@ -324,6 +383,21 @@ export const texts = {
           'Eigene Anzeigen kosten nichts. Lars will alles für die Hälfte, Kevin (12) zahlt zu viel. Mit Mamas Karte. Rate mal, wie das endet.',
         ],
       },
+      players: {
+        name: 'Spieler',
+        steps: [
+          'Hier siehst du alle auf dem Server. Grüner Punkt heißt: gerade da und hat nichts Besseres zu tun.',
+          'Ab Level 10 kannst du anderen etwas schenken oder einen Tausch vorschlagen.',
+        ],
+      },
+      trade: {
+        name: 'Tausch und Geschenke',
+        steps: [
+          'Stell ein Angebot zusammen: was du gibst, was du willst. Die andere Seite sagt ja oder nein.',
+          'Reserviert wird nichts. Fehlt beim Annehmen etwas, platzt der Deal.',
+          'Schenken ist bis zum Freibetrag frei, darüber kassiert das Finanzamt 20 %. Gibt beim Tausch eine Seite mehr Wert, zählt der Unterschied als Geschenk.',
+        ],
+      },
       toplists: {
         name: 'Toplisten',
         steps: [
@@ -351,7 +425,7 @@ export const texts = {
 
   notifications: {
     level_up: (d: Record<string, unknown>) => `Level ${String(d.level)} erreicht. +1 Skillpunkt. Mutti ist verhalten stolz.`,
-    unlock: (d: Record<string, unknown>) => {
+    unlock: (d: Record<string, unknown>, name: string) => {
       const f = String(d.feature)
       const lines: Record<string, string> = {
         daily_quests: 'Mama: Ab jetzt gibt es Tagesquests. Wie Hausaufgaben, nur mit Geld.',
@@ -360,8 +434,13 @@ export const texts = {
         upgrades: 'Mama: Upgrades sind freigeschaltet. Investier in dich, sagt Opa. Opa hat in Telefonkarten investiert.',
         shifts: 'Mama: Du darfst jetzt richtige Schichten arbeiten. Ich hab den Leuten gesagt, du bist pünktlich. Enttäusch mich nicht.',
         weekly_quests: 'Mama: Jetzt gibt es auch Wochenquests. Mehr Arbeit, mehr Belohnung. So ist das Leben.',
+        stores: 'Mama: Du darfst jetzt allein in die Läden. Nimm einen Beutel mit und drängel nicht.',
+        kleinanzeigen: 'Mama: Kleinanzeigen! Pass auf, da sind Verrückte unterwegs. Triff dich nie im Wald.',
+        cardmarket: 'Mama: Der Cardmarket ist offen. Verkauf nicht Opas Sammlung, das merkt der.',
+        trade: 'Mama: Jetzt kannst du mit deinen Freunden tauschen und ihnen was schenken. Lass dich nicht übers Ohr hauen.',
+        lager: 'Mama: Jetzt gibt es Displays. Und nein, die stellst du nicht in mein Wohnzimmer.',
       }
-      return lines[f] ?? `Neu freigeschaltet: ${f}`
+      return lines[f] ?? `Neu freigeschaltet: ${name}`
     },
     achievement: (d: Record<string, unknown>, name: string) =>
       `Erfolg „${name}“ Stufe ${String(d.tier)} erreicht.${d.title ? ` Neuer Titel: ${String(d.title)}.` : ''}`,
@@ -372,6 +451,10 @@ export const texts = {
     chargeback: (money: string) => `Rückbuchung: Kevins Mama hat die Kreditkarte gefunden. ${money} sind weg.`,
     daily_bonus: 'Alle Tagesquests geschafft. Bonus ist da. Morgen wieder, du Sklave des Systems.',
     weekly_chest: 'Wochentruhe geöffnet: Booster liegen bereit.',
+    gift_received: (name: string, money: string) => `${name} schenkt dir Sachen im Wert von ${money}. Einfach so. Verdächtig.`,
+    trade_offer: (name: string) => `${name} hat dir ein Tauschangebot gemacht. Schau unter Tausch.`,
+    trade_accepted: (name: string) => `${name} hat deinen Tausch angenommen. Deal!`,
+    trade_declined: (name: string) => `${name} hat deinen Tausch abgelehnt. Nimm es nicht persönlich. Oder doch.`,
     unknown: 'Du hast Post. Was drin steht, weiß keiner.',
   },
 
@@ -812,6 +895,9 @@ export const texts = {
     store_limit: 'Mehr verkauft dir der Kiosk heute nicht. „Sonst ist nix mehr für die Kinder da.“',
     not_enough_sealed: 'So viele Booster hast du nicht.',
     not_owned: 'Die Karte gehört dir nicht (mehr).',
+    trade_locked: 'Neue und frisch zurückgesetzte Konten dürfen in der ersten Stunde nicht tauschen oder schenken.',
+    partner_locked: 'Die andere Seite darf noch nicht: zu neu oder unter Level 10.',
+    trade_invalid: 'Das passt nicht mehr: Jemand hat die Sachen nicht mehr oder das Geld reicht nicht.',
     quest_not_ready: 'Die Quest ist noch nicht fertig.',
     tutorial_not_skippable: 'Erst die ersten Schritte, dann darfst du Mama ignorieren.',
     not_enough_energy: 'Keine Energie mehr. Iss was oder warte.',

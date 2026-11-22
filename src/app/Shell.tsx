@@ -304,7 +304,10 @@ function NotificationBell() {
 
 function notificationText(n: FeedEntry) {
   if (n.kind === 'level_up') return texts.notifications.level_up(n.data)
-  if (n.kind === 'unlock') return texts.notifications.unlock(n.data)
+  if (n.kind === 'unlock') {
+    const f = String(n.data.feature)
+    return texts.notifications.unlock(n.data, (texts.tour.features as Record<string, { name: string } | undefined>)[f]?.name ?? f)
+  }
   if (n.kind === 'achievement')
     return texts.notifications.achievement(n.data, ACHIEVEMENTS.find((a) => a.key === n.data.key)?.name ?? String(n.data.key))
   if (n.kind === 'parcel_arrived') return texts.notifications.parcel_arrived(n.data, itemName(String(n.data.item_id)))
@@ -314,6 +317,10 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'chargeback') return texts.notifications.chargeback(formatMoney(Number(n.data.cents)))
   if (n.kind === 'daily_bonus') return texts.notifications.daily_bonus
   if (n.kind === 'weekly_chest') return texts.notifications.weekly_chest
+  if (n.kind === 'gift_received') return texts.notifications.gift_received(String(n.data.name), formatMoney(Number(n.data.cents)))
+  if (n.kind === 'trade_offer') return texts.notifications.trade_offer(String(n.data.name))
+  if (n.kind === 'trade_accepted') return texts.notifications.trade_accepted(String(n.data.name))
+  if (n.kind === 'trade_declined') return texts.notifications.trade_declined(String(n.data.name))
   return texts.notifications.unknown
 }
 

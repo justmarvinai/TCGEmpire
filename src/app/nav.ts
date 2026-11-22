@@ -34,7 +34,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
     items: [
       item('kleinanzeigen', 'tag', UNLOCKS.kleinanzeigen, true),
       item('cardmarket', 'market', UNLOCKS.cardmarket, true),
-      item('trade', 'trade', 10),
+      item('trade', 'trade', UNLOCKS.trade, true),
       item('auctions', 'gavel', 25),
     ],
   },
@@ -57,7 +57,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
     group: 'freunde',
     items: [
       item('toplists', 'trophy', UNLOCKS.toplists, true),
-      item('players', 'people', 1),
+      item('players', 'people', UNLOCKS.players, true),
       item('battles', 'swords', 16),
       item('darkside', 'skull', 35),
       item('megaprojects', 'crane', 65),
@@ -72,6 +72,8 @@ type Feature = keyof typeof UNLOCKS
 /** The page of every feature a level unlocks: its tour runs there and its nav entry shows NEU. */
 const FEATURE_PAGE: Record<Feature, string> = {
   toplists: '/toplists',
+  players: '/players',
+  trade: '/trade',
   daily_quests: '/quests',
   stamps: '/quests',
   bunker: '/bunker',

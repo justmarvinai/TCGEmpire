@@ -2,6 +2,7 @@
 // the navigation shows them.
 export const UNLOCKS = {
   toplists: 1,
+  players: 1,
   daily_quests: 2,
   stamps: 2,
   bunker: 3,
@@ -10,6 +11,7 @@ export const UNLOCKS = {
   stores: 4,
   kleinanzeigen: 4,
   cardmarket: 10,
+  trade: 10,
   weekly_quests: 13,
   lager: 18,
 } as const

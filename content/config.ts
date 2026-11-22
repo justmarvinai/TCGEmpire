@@ -91,6 +91,16 @@ export const config = {
   'ads.offer_chance_pct': 35,
   'ads.max_offers': 3,
   'ads.chargeback_pct': 25,
+  // Direkthandel and gifts: free gift value per day and level (Basis-€), Schenkungssteuer above it; fresh and
+  // reset accounts wait before trading; open offers per player, items per side, offer lifetime
+  'gift.allowance_base_cents_per_level': 50_00,
+  'gift.tax_bps': 2000,
+  'trade.lock_minutes': 60,
+  'trade.max_open': 10,
+  'trade.max_items': 20,
+  'trade.expiry_hours': 48,
+  // Presence: seen within this many seconds counts as online
+  'presence.online_seconds': 120,
   // Toplists: rows shown; net worth snapshots stay hourly this long, then daily
   'toplist.size': 50,
   'snapshots.hourly_days': 7,
@@ -178,6 +188,7 @@ export const config = {
   'rate.sell': 30,
   'rate.minigame': 6,
   'rate.market': 60,
+  'rate.trade': 20,
 } as const satisfies Record<string, Json>
 
 export type ConfigKey = keyof typeof config

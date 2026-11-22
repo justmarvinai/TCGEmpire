@@ -345,6 +345,76 @@ export const zHome = z.object({
 })
 export type Home = z.infer<typeof zHome>
 
+// Direkthandel and gifts
+const zGoodsItem = z.object({
+  kind: z.enum(['card', 'copy', 'sealed']),
+  item_id: z.string(),
+  copy_id: z.string().nullable().optional(),
+  qty: z.number(),
+})
+export type GoodsItem = z.infer<typeof zGoodsItem>
+export interface Goods {
+  money_cents: number
+  items: GoodsItem[]
+}
+const zGoodsDoc = z.object({
+  money_cents: z.number(),
+  items: z.array(zGoodsItem.extend({ value_cents: z.number() })),
+  value_cents: z.number(),
+})
+export const zTrades = z.object({
+  allowance_left_cents: z.number(),
+  allowance_cents: z.number(),
+  tax_bps: z.number(),
+  locked_until: z.string(),
+  unlock_level: z.number(),
+  open: z.array(
+    z.object({
+      id: z.number(),
+      mine: z.boolean(),
+      from: z.object({ id: z.string(), name: z.string() }),
+      to: z.object({ id: z.string(), name: z.string() }),
+      give: zGoodsDoc,
+      take: zGoodsDoc,
+      my_tax_cents: z.number(),
+      created_at: z.string(),
+      expires_at: z.string(),
+    }),
+  ),
+})
+export type Trades = z.infer<typeof zTrades>
+export type TradeDoc = Trades['open'][number]
+export const zPlayers = z.object({
+  players: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      title: z.string().nullable(),
+      level: z.number(),
+      online: z.boolean(),
+      last_seen_at: z.string(),
+      me: z.boolean(),
+      locked_until: z.string(),
+      is_admin: z.boolean(),
+    }),
+  ),
+  trades: zTrades,
+})
+export type Players = z.infer<typeof zPlayers>
+export const zTradeInventory = z.object({
+  items: z.array(zGoodsItem.extend({ value_cents: z.number() })),
+  cash_cents: z.number().nullable(),
+})
+export type TradeInventory = z.infer<typeof zTradeInventory>
+export const zTradeQuote = z.object({
+  give_cents: z.number(),
+  take_cents: z.number(),
+  my_tax_cents: z.number(),
+  their_tax_cents: z.number(),
+  allowance_left_cents: z.number(),
+})
+const zTradeWrite = z.object({ trades: zTrades, player: zPlayer })
+
 export const TOPLISTS = ['worth', 'level', 'cash', 'collection'] as const
 export type ToplistId = (typeof TOPLISTS)[number]
 export const zToplist = z.object({
@@ -396,6 +466,12 @@ export const RPC_SCHEMAS = {
   bunker_get: zBunker,
   home_get: zHome,
   toplist_get: zToplist,
+  players_get: zPlayers,
+  trade_inventory: zTradeInventory,
+  trade_quote: zTradeQuote,
+  gift_send: zTradeWrite.extend({ value_cents: z.number(), tax_cents: z.number() }),
+  trade_offer: zTradeWrite,
+  trade_answer: zTradeWrite.extend({ tax_cents: z.number() }),
   market_item: zMarketItem,
   market_overview: zMarketOverview,
   retail_buy: z.object({ bought: z.number(), paid_cents: z.number(), player: zPlayer }),

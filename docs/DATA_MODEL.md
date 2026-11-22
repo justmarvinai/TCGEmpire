@@ -80,7 +80,8 @@ RLS enabled on every table with no policies.
 | `game.listings`, `game.buy_orders` | Cardmarket. |
 | `game.auctions`, `game.bids` | eBay and museum auctions. |
 | `game.ads`, `game.ad_offers` | Kleinanzeigen (NPC ads, player ads, haggling state). |
-| `game.trades` | Direct trades (offer, both sides' items, state). |
+| `game.trades` | alpha_04 · open Direkthandel offers: both sides as goods JSON (`money_cents`, `items`), nothing reserved; expire after `trade.expiry_hours`. |
+| `game.gift_days` | alpha_04 · gift value given per player and Berlin day (against the allowance). |
 | `game.sales_log` | Completed sales (for charts, tax, anti-wash rules; thinned). |
 | `game.shipments` | Shipping timers, insurance. |
 | `game.store_stock`, `game.store_purchases` | Shared retail stock per restock and per-player limits. |
@@ -191,6 +192,8 @@ RLS enabled on every table with no policies.
 | `account_reset`, `account_delete` | write | Gefahrenzone; confirmed with the username; reset once per 24 h |
 | `home_get` | read | home page document: latest Holo-or-better pull (index `card_copies_pulled`); alpha_04 adds `worth` (now, 7-day hourly history ending now, value at the end of yesterday) |
 | `toplist_get(list, npcs)` | read | alpha_04 · `worth`, `level`, `cash`, `collection`; top `toplist.size` rows plus the caller and the row directly ahead; rivals optional |
+| `players_get`, `trade_inventory(player)`, `trade_quote(to, give, take)` | read | alpha_04 · players with presence and trade lock; tradeable goods of any player; values and Schenkungssteuer of a planned gift or trade |
+| `gift_send`, `trade_offer`, `trade_answer(trade, accept)` | write | alpha_04 · gifts move at once; trades on acceptance (both sides re-checked, players locked by id); the side giving more value books the difference against its allowance and pays 20 % above it; the offerer withdraws with `accept = false` |
 
 
 
