@@ -97,6 +97,7 @@ export const texts = {
     jobBuffs: {
       mj_fake: { name: 'Geschärfter Blick', text: 'Fakes in den Kleinanzeigen fallen dir sofort auf.' },
       mj_praktikum: { name: 'Geschulte Lupe', text: 'Die Vorprüfung zeigt um eine Note engere Spannen.' },
+      kuchen: { name: 'Zuckerschock', text: 'Kaffee und Kuchen bei Freunden: mehr EP auf alles.' },
     } as Record<string, { name: string; text: string } | undefined>,
     menu: 'Menü',
     search: 'Suchen oder springen …',
@@ -302,6 +303,42 @@ export const texts = {
     allowance: 'Freibetrag heute',
     allowanceTip: 'So viel darfst du heute steuerfrei verschenken. Wächst mit deinem Level, um Mitternacht gibt es neuen.',
     empty: 'Außer dir ist keiner da. Lad mal Leute ein.',
+    help: 'Aushelfen',
+    helpTip: (min: number) =>
+      `Einmal am Tag pro Freund: Du nimmst ein Viertel der Restzeit (höchstens ${min} Minuten) von seinen Grading-Aufträgen und seiner Schicht. Ihr kriegt beide etwas Geld und EP.`,
+    helped: (name: string, min: number) =>
+      min > 0 ? `${name} ist ${min} Minuten schneller fertig. Ihr kriegt beide was.` : `${name} hatte nichts zu tun. Ihr kriegt trotzdem beide was. Danke für nichts.`,
+    kaffee: 'Kaffee und Kuchen',
+    kaffeeTip: (pct: number, min: number) => `Einmal am Tag pro Freund: Ihr bekommt beide ${min / 60} Stunden lang +${pct} % EP. Zucker ist Leistung.`,
+    kaffeeDone: (name: string) => `Kaffee und Kuchen mit ${name}. Ihr seid beide auf Zucker.`,
+    doneToday: 'Heute schon',
+    friendsLocked: (n: number) => `Aushelfen und Kaffee und Kuchen ab Level ${n}.`,
+  },
+
+  groupOrders: {
+    title: 'Sammelbestellung',
+    tip: 'Zusammen kauft ihr eine Kiste Displays zum Großhandelspreis. Keiner darf die ganze Kiste allein nehmen. Ist sie voll, wird bestellt: jeder bekommt seine Displays als Paket. Kommt sie nicht rechtzeitig voll, gibt es das Geld zurück.',
+    locked: (n: number) => `Sammelbestellungen ab Level ${n}.`,
+    display: 'Display',
+    shares: 'Displays für dich',
+    unit: 'pro Display',
+    list: (money: string) => `statt ${money}`,
+    start: 'Bestellung starten',
+    started: 'Sammelbestellung gestartet. Jetzt brauchst du Mitstreiter.',
+    take: (n: number) => `${n} nehmen`,
+    taken: 'Eingetragen. Die Kiste füllt sich.',
+    done: 'Die Kiste ist voll und bestellt! Das Paket kommt bald.',
+    leave: 'Austragen',
+    cancel: 'Abblasen',
+    left: 'Ausgetragen. Geld ist zurück.',
+    cancelled: 'Abgeblasen. Alle kriegen ihr Geld zurück.',
+    filled: (taken: number, max: number) => `${taken} von ${max} Displays vergeben`,
+    expires: (time: string) => `läuft bis ${time}`,
+    weekLeft: (n: number, max: number) => `Diese Woche noch ${n} von ${max} Displays.`,
+    delivery: (min: number) => `Lieferung ${min} Minuten nach Bestellung.`,
+    none: 'Gerade sammelt keiner. Fang du an.',
+    open: 'Offene Bestellungen',
+    recent: 'Deine letzten Kisten',
   },
 
   trade: {
@@ -527,6 +564,21 @@ export const texts = {
           'Früher Feierabend geht auch. Dann gibt es eben nur Geld für die Zeit, die du wirklich da warst.',
         ],
       },
+      friends: {
+        name: 'Freundschaftsdienste',
+        steps: [
+          'Bei jedem Spieler stehen jetzt zwei Knöpfe: Aushelfen und Kaffee und Kuchen. Jeder geht einmal am Tag pro Freund.',
+          'Aushelfen macht seine Grading-Aufträge und seine Schicht schneller fertig. Ihr kriegt beide etwas Geld und EP.',
+          'Kaffee und Kuchen gibt euch beiden eine Weile mehr EP. Freundschaft lohnt sich. Manchmal.',
+        ],
+      },
+      group_orders: {
+        name: 'Sammelbestellung',
+        steps: [
+          'Zusammen kauft ihr eine ganze Kiste Displays zum Großhandelspreis. Billiger kriegst du keine.',
+          'Keiner darf die ganze Kiste allein nehmen, und pro Woche ist die Menge begrenzt. Ist die Kiste voll, kommt das Paket.',
+        ],
+      },
       battles: {
         name: 'Pack Battles',
         steps: [
@@ -673,6 +725,8 @@ export const texts = {
         skills: 'Mama: Jetzt hast du Fähigkeiten? Seit wann? Na gut, verteil sie halt.',
         housing: 'Mama: Wann ziehst du endlich aus? Ich frag nur. Dein Zimmer wird ein Fitnessraum.',
         style: 'Mama: Du kaufst dir jetzt einen goldenen Namen? Für das Geld hätte ich dir Socken gekauft.',
+        friends: 'Mama: Hilf deinen Freunden mal. Und nimm Kuchen mit, man kommt nicht mit leeren Händen.',
+        group_orders: 'Mama: Ihr bestellt zusammen eine ganze Kiste? Wehe, die steht dann in meinem Flur.',
         battles: 'Mama: Glücksspiel mit Pappkarten? Dein Onkel hat so angefangen. Jetzt wohnt er im Wohnwagen.',
         insurance: 'Mama: Du verschickst jetzt Pakete? Versicher die bloß. Dein Onkel hat mal einen Toaster verloren. Die Familie redet nicht drüber.',
       }
@@ -706,6 +760,14 @@ export const texts = {
     league_done: (rank: number, pct: string, boosters: number) =>
       `Wochenwertung: Platz ${rank} mit ${pct}. ${boosters} ${boosters === 1 ? 'Booster liegt' : 'Booster liegen'} bereit. Der Pokal steht auf deinem Profil.`,
     guestbook: (name: string) => `${name} hat in dein Gästebuch geschrieben. Lies es lieber nicht vor Publikum.`,
+    helped: (d: Record<string, unknown>) =>
+      Number(d.minutes) > 0
+        ? `${String(d.name)} hat dir ausgeholfen: ${String(d.minutes)} Minuten schneller fertig. Und ein bisschen Geld gab es auch.`
+        : `${String(d.name)} wollte dir helfen, aber du hattest nichts zu tun. Ein bisschen Geld gab es trotzdem.`,
+    kaffee: (d: Record<string, unknown>) => `${String(d.name)} war zu Kaffee und Kuchen da. Ihr kriegt beide eine Weile mehr EP.`,
+    group_order_done: (d: Record<string, unknown>, name: string) =>
+      `Sammelbestellung voll: ${String(d.qty)}× ${name} sind unterwegs. Der Großhändler hat gegrinst.`,
+    group_order_cancelled: (name: string) => `Sammelbestellung für ${name} geplatzt. Dein Geld ist zurück.`,
     battle_done: (d: Record<string, unknown>, pot: string) =>
       d.mode === 'freundschaft'
         ? 'Freundschaftsspiel vorbei. Deine Karten liegen in der Sammlung. Freundschaft gerettet. Vorerst.'
@@ -1513,6 +1575,9 @@ export const texts = {
     server_error: 'Der Server hat sich verschluckt. Versuch es gleich nochmal.',
     not_found: 'Gibt es nicht (mehr). Jemand war schneller.',
     lager_full: 'Lager voll. Öffnen, verkaufen oder das Lagerregal ausbauen.',
+    already_done: 'Heute schon erledigt. Morgen wieder.',
+    group_alone: 'Die ganze Kiste allein? Das ist keine Sammelbestellung, das ist Großhandel. Lass den anderen was übrig.',
+    group_week_limit: 'Diese Woche hast du genug Displays bestellt. Nächste Woche wieder.',
     store_closed: 'Heute zu. Sonntags gibt es nur den Flohmarkt.',
     sold_out: 'Ausverkauft. Zu langsam. Wie immer.',
     no_slots: 'Keine Plätze frei. Zieh etwas zurück oder bau die Verkaufsfläche aus.',

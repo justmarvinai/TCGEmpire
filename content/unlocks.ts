@@ -11,6 +11,7 @@ export const UNLOCKS = {
   style: 5,
   skills: 5,
   shifts: 7,
+  friends: 7,
   stores: 4,
   kleinanzeigen: 4,
   cardmarket: 10,
@@ -21,5 +22,6 @@ export const UNLOCKS = {
   grading: 13,
   battles: 16,
   lager: 18,
+  group_orders: 18,
   housing: 20,
 } as const

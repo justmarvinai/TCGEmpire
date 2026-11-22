@@ -442,6 +442,13 @@ export const zPlayers = z.object({
     }),
   ),
   trades: zTrades,
+  friends: z.object({
+    unlock_level: z.number(),
+    done: z.record(z.string(), z.array(z.enum(['aushelfen', 'kaffee']))),
+    help_minutes: z.number(),
+    kaffee_pct: z.number(),
+    kaffee_minutes: z.number(),
+  }),
 })
 export type Players = z.infer<typeof zPlayers>
 export const zTradeInventory = z.object({
@@ -758,6 +765,32 @@ export const zBattles = z.object({
 })
 export type Battles = z.infer<typeof zBattles>
 
+// Sammelbestellung (alpha_08)
+const zGroupOrder = z.object({
+  id: z.number(),
+  product_id: z.string(),
+  unit_cents: z.number(),
+  state: z.enum(['open', 'done', 'cancelled']),
+  host_id: z.string().nullable(),
+  created_at: z.string(),
+  expires_at: z.string(),
+  taken: z.number(),
+  mine: z.number(),
+  shares: z.array(z.object({ player_id: z.string(), name: z.string(), look: zLook, shares: z.number() })),
+})
+export type GroupOrder = z.infer<typeof zGroupOrder>
+export const zGroupOrders = z.object({
+  unlock_level: z.number(),
+  case_displays: z.number(),
+  max_shares_week: z.number(),
+  shares_left: z.number(),
+  delivery_minutes: z.number(),
+  displays: z.array(z.object({ product_id: z.string(), unit_cents: z.number(), list_cents: z.number() })),
+  open: z.array(zGroupOrder),
+  recent: z.array(zGroupOrder),
+})
+export type GroupOrders = z.infer<typeof zGroupOrders>
+
 export const RPC_SCHEMAS = {
   me_get: zMe,
   join: zMe,
@@ -877,5 +910,10 @@ export const RPC_SCHEMAS = {
   battle_start: z.object({ battle: zBattle, ...withPlayer }),
   battle_leave: z.object(withPlayer),
   emote_send: z.object({ ok: z.boolean() }),
+  friend_act: z.object({ kind: z.enum(['aushelfen', 'kaffee']), minutes: z.number(), reward_cents: z.number(), ...withPlayer }),
+  group_orders_get: zGroupOrders,
+  group_order_create: z.object({ orders: zGroupOrders, ...withPlayer }),
+  group_order_join: z.object({ orders: zGroupOrders, ...withPlayer }),
+  group_order_leave: z.object({ orders: zGroupOrders, ...withPlayer }),
 } as const
 export type RpcName = keyof typeof RPC_SCHEMAS

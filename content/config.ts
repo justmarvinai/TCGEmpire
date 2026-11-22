@@ -239,6 +239,21 @@ export const config = {
   'battle.max_packs': 10,
   'battle.headline_base_cents': 300_00,
   'battle.emotes': ['🔥', '💀', '😂', '🤡', '💸', '😭', '👀', '🙏'],
+  // Aushelfen: share of the remaining time taken off a friend's grading orders and shift (at most this many minutes);
+  // both get this many minutes of reference income and this much EP. Kaffee und Kuchen: EP bonus for both.
+  'help.speedup_pct': 25,
+  'help.max_minutes': 60,
+  'help.reward_minutes': 3,
+  'help.ep': 20,
+  'kaffee.ep_pct': 10,
+  'kaffee.minutes': 120,
+  // Sammelbestellung: displays per case, wholesale price in basis points of the list price, shares per player and
+  // week, hours until an unfilled order is cancelled, minutes until the parcels arrive
+  'group_order.case_displays': 6,
+  'group_order.price_bps': 9_500,
+  'group_order.max_shares_week': 6,
+  'group_order.open_hours': 48,
+  'group_order.delivery_minutes': 60,
 
   // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,
@@ -298,6 +313,7 @@ export const config = {
   'rate.grading': 30,
   'rate.battle': 6,
   'rate.emote': 20,
+  'rate.friend': 20,
 } as const satisfies Record<string, Json>
 
 export type ConfigKey = keyof typeof config

@@ -147,6 +147,8 @@ RLS enabled on every table with no policies.
 | `game.cosmetic_defs`, `game.cosmetics_owned`, `players.style`, `players.avatar_card` | alpha_07 · Stil from `content/cosmetics.ts`; equipped look per kind (jsonb) and the card used as profile picture. |
 | `players.best_pull_card`, `players.best_pull_cents`, `game.league` | alpha_07 · the most valuable card ever pulled (value then); Wochenwertung per week and player: start net worth, value moved to/from other players (`adjust_cents`), final growth and rank. |
 | `game.insurance` | alpha_07 · policies (versand, hausrat) with the day the premium was paid. |
+| `game.friend_acts` | alpha_08 · Aushelfen and Kaffee und Kuchen: actor, target, kind and German day (one per pair, kind and day). |
+| `game.group_orders`, `game.group_order_shares` | alpha_08 · Sammelbestellung: a case of displays (product, wholesale unit price fixed at the start, state, expiry) and each player's shares and payment; a full case becomes one shipment per player. |
 | `players.rt_topic` | alpha_08 · random id of the player's private Realtime channel (`player:<rt_topic>`); triggers on notifications, feed, chat and battles send pokes (`private.rt_send`). |
 | `game.worth_snapshots` | alpha_04 · net worth per player, hourly for `snapshots.hourly_days`, then the last one per Berlin day; deleted on reset. |
 | `game.rivals` | alpha_04 · 40 NPC tycoons (seeded from `content/rivals.ts`); their numbers are pure functions of the days since `game.server.started_at`. `game.server.worth_ranking` remembers the last Vermögen order for overtake headlines. |

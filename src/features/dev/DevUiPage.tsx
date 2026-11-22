@@ -178,6 +178,15 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
         <Button
           size="sm"
           onClick={() =>
+            run(`insert into game.players (username, level, cash_cents, energy_at, created_at, last_seen_at)
+                 select 'Kumpel' || count(*), 20, 0, private.now(), private.now() - interval '2 hours', private.now() from game.players`)
+          }
+        >
+          +Kumpel
+        </Button>
+        <Button
+          size="sm"
+          onClick={() =>
             run(
               `insert into game.card_copies (owner_id, card_id, q_centering, q_corners, q_edges, q_surface, pulled_at)
                select $1, id, private.roll_quality(), private.roll_quality(), private.roll_quality(), private.roll_quality(), private.now()

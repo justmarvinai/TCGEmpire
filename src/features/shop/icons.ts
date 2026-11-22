@@ -11,4 +11,5 @@ export const SNACK_ICON: Record<string, IconName> = {
   kioskbon: 'pack',
   mj_fake: 'search',
   mj_praktikum: 'loupe',
+  kuchen: 'heart',
 }
