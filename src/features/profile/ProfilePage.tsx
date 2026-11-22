@@ -17,6 +17,7 @@ import type { Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useMe, useSetMe, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
+import { Guestbook, HomeCard } from './HomeAndGuestbook.tsx'
 import { useProfile, VitrinePanel } from './Vitrine.tsx'
 
 const T = texts.profile
@@ -74,7 +75,9 @@ export function ProfilePage() {
             </label>
           </Panel>
 
+          {profile.data && <HomeCard p={profile.data} />}
           {profile.data && <VitrinePanel profile={profile.data} />}
+          {profile.data && <Guestbook p={profile.data} />}
 
           <Panel title={T.stats} tip={T.statsTip}>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">

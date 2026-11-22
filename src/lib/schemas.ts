@@ -637,6 +637,9 @@ export const zProfile = z.object({
   slots: z.number(),
   unlocked: z.boolean(),
   stats: z.object({ pack_opened: z.number(), graded: z.number(), graded_10: z.number(), collection: z.number() }),
+  home: z.object({ tier: z.number(), wohnwert: z.number(), furnishings: z.record(z.string(), z.string()) }),
+  guestbook: z.lazy(() => zGuestbook),
+  signed_today: z.boolean(),
 })
 export type Profile = z.infer<typeof zProfile>
 export const zPopReport = z.object({
@@ -646,6 +649,22 @@ export const zPopReport = z.object({
   mine: z.number(),
 })
 export type PopReport = z.infer<typeof zPopReport>
+
+// Wohnen (alpha_07)
+const zGuestbook = z.array(z.object({ id: z.number(), author_id: z.string().nullable(), name: z.string().nullable(), body: z.string(), at: z.string() }))
+export type GuestbookEntry = z.infer<typeof zGuestbook>[number]
+export const zHousing = z.object({
+  unlock_level: z.number(),
+  tier: z.number(),
+  wohnwert: z.number(),
+  paid_cents: z.number(),
+  refund_cents: z.number(),
+  nebenkosten_cents: z.number(),
+  homes: z.array(z.object({ tier: z.number(), price_cents: z.number(), nebenkosten_cents: z.number() })),
+  furnishings: z.record(z.string(), z.string()),
+  furniture: z.array(z.object({ key: z.string(), price_cents: z.number() })),
+})
+export type Housing = z.infer<typeof zHousing>
 
 // Skillbaum (alpha_07)
 export const zSkills = z.object({
@@ -748,6 +767,11 @@ export const RPC_SCHEMAS = {
   level_path_get: zLevelPath,
   grading_get: zGrading,
   skills_get: zSkills,
+  housing_get: zHousing,
+  home_buy: zHousing.extend(withPlayer),
+  furniture_buy: zHousing.extend(withPlayer),
+  guestbook_sign: z.object({ guestbook: zGuestbook }),
+  guestbook_delete: z.object({ guestbook: zGuestbook }),
   skill_learn: zSkills.extend(withPlayer),
   skills_respec: zSkills.extend(withPlayer),
   bailout_claim: zSkills.extend({ paid_cents: z.number(), ...withPlayer }),

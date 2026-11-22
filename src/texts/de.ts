@@ -412,6 +412,8 @@ export const texts = {
   },
 
   feed: {
+    home: (d: Record<string, unknown>, home: string, article: 'das' | 'die') =>
+      `UMZUG: ${String(d.name)} zieht ${article === 'die' ? 'in die' : 'ins'} ${home}. Die Nachbarn wurden nicht gefragt.`,
     bailout: (d: Record<string, unknown>, money: string) =>
       `STAATSHILFE! ${String(d.name)} ist too big to fail: ${money} aus Steuergeld. Der Bund der Steuerzahler schäumt.`,
     slab: (d: Record<string, unknown>, card: string, label: string) =>
@@ -510,6 +512,14 @@ export const texts = {
           'Schichten laufen nebenbei, von 15 Minuten bis 8 Stunden. Du musst nicht mal hingucken.',
           'Schau zwischendurch rein und check ein, das gibt mehr Lohn. Wer viele Stunden schuftet, steigt im Rang auf.',
           'Früher Feierabend geht auch. Dann gibt es eben nur Geld für die Zeit, die du wirklich da warst.',
+        ],
+      },
+      housing: {
+        name: 'Wohnen',
+        steps: [
+          'Endlich raus bei Mutti. Jede Wohnung bringt mehr Lager, mehr Vitrinenplätze, schnellere Energie und mehr Platz für Möbel.',
+          'Beim Umzug verkaufst du die alte Bude für die Hälfte zurück. Jeden Tag kommen Nebenkosten. Erwachsensein halt.',
+          'Möbel geben kleine Boni und Wohnwert. Pro Platz ein Teil, der alte Kram landet auf dem Sperrmüll. Freunde sehen alles und schreiben ins Gästebuch.',
         ],
       },
       skills: {
@@ -625,6 +635,7 @@ export const texts = {
         lager: 'Mama: Jetzt gibt es Displays. Und nein, die stellst du nicht in mein Wohnzimmer.',
         grading: 'Mama: Du bezahlst Leute dafür, dass sie deine Karten in Plastik schweißen? Dein Vater hat für so was nicht studiert.',
         skills: 'Mama: Jetzt hast du Fähigkeiten? Seit wann? Na gut, verteil sie halt.',
+        housing: 'Mama: Wann ziehst du endlich aus? Ich frag nur. Dein Zimmer wird ein Fitnessraum.',
       }
       return lines[f] ?? `Neu freigeschaltet: ${name}`
     },
@@ -643,6 +654,8 @@ export const texts = {
     trade_offer: (name: string) => `${name} hat dir ein Tauschangebot gemacht. Schau unter Tausch.`,
     trade_accepted: (name: string) => `${name} hat deinen Tausch angenommen. Deal!`,
     trade_declined: (name: string) => `${name} hat deinen Tausch abgelehnt. Nimm es nicht persönlich. Oder doch.`,
+    nebenkosten: (money: string) => `Nebenkosten: ${money} sind weg. Der Vermieter dankt.`,
+    guestbook: (name: string) => `${name} hat in dein Gästebuch geschrieben. Lies es lieber nicht vor Publikum.`,
     grading_back: (n: number) => `${n === 1 ? 'Ein Slab ist' : `${n} Slabs sind`} vom Grader zurück. Trommelwirbel bereit.`,
     unknown: 'Du hast Post. Was drin steht, weiß keiner.',
   },
@@ -814,6 +827,57 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  housing: {
+    title: 'Wohnen',
+    subtitle: 'Vom Kinderzimmer zur Privatinsel. Mit Umzugskartons voller Pappe.',
+    tip: 'Jede Wohnung bringt Lagerplatz, Vitrinenplätze, schnellere Energie und Platz für Möbel. Beim Umzug verkaufst du die alte für die Hälfte. Nebenkosten fallen jeden Tag an, nie mehr als dein Bargeld.',
+    current: 'Du wohnst',
+    theirs: 'Wohnt hier',
+    currentTip: 'Dein Zuhause und was es dir bringt. Besucher sehen es auf deinem Profil.',
+    wohnwert: 'Wohnwert',
+    wohnwertTip: 'Wie schick du wohnst: Wohnung plus Möbel. Reine Angeberei, steht auf deinem Profil.',
+    nebenkosten: 'Nebenkosten pro Tag',
+    nebenkostenTip: 'Werden einmal am Tag abgebucht, nie mehr als dein Bargeld.',
+    perks: (lager: number, vitrine: number, energy: number, slots: number) =>
+      [lager ? `+${lager} Lager` : '', vitrine ? `+${vitrine} Vitrine` : '', energy ? `+${energy} % Energie` : '', `${slots} Möbelplätze`].filter(Boolean).join(' · '),
+    homes: 'Wohnungen',
+    homesTip: 'Höher hinaus kostet viel. Die alte Wohnung geht beim Umzug für die Hälfte des Kaufpreises zurück.',
+    move: (money: string) => `Umziehen · ${money}`,
+    moved: (name: string, article: 'das' | 'die') => `Willkommen ${article === 'die' ? 'in der' : 'im'} ${name}. Die Umzugskartons packst du nie aus.`,
+    here: 'Hier wohnst du',
+    behind: 'Hast du hinter dir',
+    refund: (money: string) => `Die alte Wohnung bringt ${money} zurück.`,
+    fromLevel: (level: number) => `ab Level ${level}`,
+    furnishing: 'Einrichtung',
+    furnishingTip: 'Pro Platz ein Möbelstück. Jedes gibt einen kleinen Bonus und Wohnwert. Ein neues ersetzt das alte, ohne Geld zurück.',
+    slotLocked: 'Braucht eine größere Wohnung.',
+    empty: 'Leer',
+    buy: (money: string) => `Kaufen · ${money}`,
+    bought: (name: string) => `${name} steht. Der alte Kram ist auf dem Sperrmüll.`,
+    bonus: { pct: (v: number) => `+${v} %`, energy: (v: number) => `+${v} Energie`, places: (v: number) => `+${v} Vitrine`, h: (v: number) => `+${v} h Bunker` },
+    bonusOf: {
+      schreibtisch: 'Lohn',
+      sofa: 'max. Energie',
+      wand: 'EP',
+      vitrine: 'Vitrinenplätze',
+      teppich: 'Energie lädt schneller',
+      gaming: 'Pack-Glück',
+      haustier: 'Bunker-Kapazität',
+      deko: 'Bunker-Zinsen',
+    } as Record<string, string>,
+    locked: (level: number) => `Ausziehen darfst du ab Level ${level}.`,
+    guestbook: 'Gästebuch',
+    guestbookTip: 'Besucher hinterlassen hier einen Eintrag, einmal am Tag. Was drinsteht, liegt bei ihnen. Löschen kannst du nur in deinem eigenen.',
+    guestbookEmpty: 'Noch keine Einträge. Lad halt jemanden ein.',
+    guestbookPlaceholder: 'Schreib was Nettes. Oder was Ehrliches.',
+    sign: 'Eintragen',
+    signed: 'Eingetragen. Für immer. Oder bis zum Löschen.',
+    signedToday: 'Heute hast du dich schon eingetragen.',
+    remove: 'Löschen',
+    removed: 'Weg damit.',
+    deleted: 'Gelöschter Spieler',
   },
 
   skills: {

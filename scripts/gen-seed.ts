@@ -16,6 +16,7 @@ import { STORES } from '../content/stores.ts'
 import { RIVALS } from '../content/rivals.ts'
 import { GOALS } from '../content/goals.ts'
 import { SKILL_COST, SKILLS } from '../content/skills.ts'
+import { FURNISHING_SLOTS, FURNITURE, HOMES } from '../content/housing.ts'
 
 const q = (v: string | null | undefined) => (v == null ? 'null' : `'${v.replace(/'/g, "''")}'`)
 const rows = (list: string[]) => list.map((r) => `  (${r})`).join(',\n')
@@ -92,6 +93,21 @@ export function buildCatalogSql(): string {
     ),
     'on conflict (key) do update set branch = excluded.branch, tier = excluded.tier, cost = excluded.cost, requires = excluded.requires,',
     '  stat = excluded.stat, op = excluded.op, value = excluded.value;',
+    'insert into game.home_defs (tier, key, min_level, price_base_cents, wohnwert, slots, lager_units, vitrine_slots, energy_regen_pct) values',
+    rows(HOMES.map((h) => `${h.tier}, ${q(h.key)}, ${h.minLevel}, ${h.priceBaseCents}, ${h.wohnwert}, ${h.slots}, ${h.lagerUnits}, ${h.vitrineSlots}, ${h.energyRegenPct}`)),
+    'on conflict (tier) do update set key = excluded.key, min_level = excluded.min_level, price_base_cents = excluded.price_base_cents,',
+    '  wohnwert = excluded.wohnwert, slots = excluded.slots, lager_units = excluded.lager_units, vitrine_slots = excluded.vitrine_slots,',
+    '  energy_regen_pct = excluded.energy_regen_pct;',
+    'insert into game.furniture_defs (key, slot, slot_index, rank, min_level, price_base_cents, wohnwert, stat, op, value) values',
+    rows(
+      FURNITURE.map((f) => {
+        const slot = FURNISHING_SLOTS.findIndex((s) => s.key === f.slot)
+        const s = FURNISHING_SLOTS[slot]!
+        return `${q(f.key)}, ${q(f.slot)}, ${slot}, ${f.rank}, ${f.minLevel}, ${f.priceBaseCents}, ${f.wohnwert}, ${q(s.stat)}, ${q(s.op)}, ${f.value}`
+      }),
+    ),
+    'on conflict (key) do update set slot = excluded.slot, slot_index = excluded.slot_index, rank = excluded.rank, min_level = excluded.min_level,',
+    '  price_base_cents = excluded.price_base_cents, wohnwert = excluded.wohnwert, stat = excluded.stat, op = excluded.op, value = excluded.value;',
     'insert into game.job_defs (key, min_level, wage, minigame, shifts) values',
     rows(JOBS.map((j) => `${q(j.key)}, ${j.minLevel}, ${j.wage}, ${q(j.minigame)}, ${j.shifts}`)),
     'on conflict (key) do update set min_level = excluded.min_level, wage = excluded.wage, minigame = excluded.minigame, shifts = excluded.shifts;',

@@ -212,6 +212,13 @@ export const config = {
   // share_bps of the net worth when the cash has fallen below below_bps of it.
   'skills.respec_base_cents_per_level': 500_00,
   'skills.bailout': { below_bps: 500, share_bps: 2_500 },
+  // Wohnen: moving sells the old home for refund_bps of what it cost; Nebenkosten per day are nebenkosten_bps of the
+  // home's price, charged once per German day (never more than the cash).
+  'housing.refund_bps': 5_000,
+  'housing.nebenkosten_bps': 50,
+  // Gästebuch: entries per visitor and host per day, longest entry
+  'guestbook.per_day': 1,
+  'guestbook.max_len': 200,
   // Vitrine: display places on the profile (housing adds more later)
   'vitrine.slots': 3,
 

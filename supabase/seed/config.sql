@@ -118,6 +118,10 @@ insert into game.config (key, value) values
   ('ep.grading', '60'::jsonb),
   ('skills.respec_base_cents_per_level', '50000'::jsonb),
   ('skills.bailout', '{"below_bps":500,"share_bps":2500}'::jsonb),
+  ('housing.refund_bps', '5000'::jsonb),
+  ('housing.nebenkosten_bps', '50'::jsonb),
+  ('guestbook.per_day', '1'::jsonb),
+  ('guestbook.max_len', '200'::jsonb),
   ('vitrine.slots', '3'::jsonb),
   ('quest.mini_slots', '3'::jsonb),
   ('quest.mini_reward_minutes', '1'::jsonb),
@@ -177,5 +181,6 @@ insert into game.config (key, value) values
   ('unlock.licenses', '10'::jsonb),
   ('unlock.weekly_quests', '13'::jsonb),
   ('unlock.grading', '13'::jsonb),
-  ('unlock.lager', '18'::jsonb)
+  ('unlock.lager', '18'::jsonb),
+  ('unlock.housing', '20'::jsonb)
 on conflict (key) do update set value = excluded.value;

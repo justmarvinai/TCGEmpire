@@ -6,6 +6,7 @@ import { formatDate, formatMoney, formatNumber } from '@/lib/format.ts'
 import { errorText } from '@/lib/rpc.ts'
 import type { Profile } from '@/lib/schemas.ts'
 import { texts } from '@/texts/de.ts'
+import { Guestbook, HomeCard } from './HomeAndGuestbook.tsx'
 import { useProfile, VitrinePanel } from './Vitrine.tsx'
 
 const T = texts.profile
@@ -27,7 +28,9 @@ export function PlayerProfilePage() {
         <div className="grid gap-4 xl:grid-cols-2">
           <ProfileHeader p={q.data} />
           <ProfileNumbers p={q.data} />
+          <HomeCard p={q.data} />
           <VitrinePanel profile={q.data} />
+          <Guestbook p={q.data} />
         </div>
       )}
     </Page>
