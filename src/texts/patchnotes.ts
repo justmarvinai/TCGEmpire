@@ -1,6 +1,20 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1-alpha_08',
+    title: 'Freunde',
+    items: [
+      'Pack Battles ab Level 16: zwei bis vier Leute, gleicher Einsatz, gleiche Booster. Alle sehen Runde für Runde zu, mit Zwischenstand, Emotes und Zuschauern.',
+      'Sechs Modi: Klassisch, Krepel-Battle, Top-Karte, Jackpot, Team 2v2 und Freundschaftsspiel. Keiner da? Bots springen ein. Gewinnt ein Bot, sind die Karten weg.',
+      'Box Breaks ab Level 18: Leg ein Display auf den Tisch und verkauf die Packs einzeln. Die Käufer sehen live zu, wie ihre Packs aufgehen.',
+      'Aushelfen ab Level 7: einmal am Tag pro Freund seine Grading-Aufträge und Schicht schneller machen. Kaffee und Kuchen gibt euch beiden mehr EP.',
+      'Sammelbestellung ab Level 18: Zusammen eine Kiste Displays zum Großhandelspreis kaufen. Allein geht nicht.',
+      'Privatkredit ab Level 10 auf dem Bierdeckel: Betrag, Zinsen, Laufzeit. Wer nicht zahlt, verliert Ruf, kriegt Schufa und landet in der Zeitung.',
+      'Ehre: Jeder sieht, wer seine Deals hält. Von Solide bis Judas.',
+      'Chat, Schlagzeilen, Mitteilungen und Battles kommen jetzt sofort an.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_07',
     title: 'Leben',
     items: [

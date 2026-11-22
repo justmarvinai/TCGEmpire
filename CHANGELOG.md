@@ -3,6 +3,29 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_08] — Freunde (22 Nov 2026)
+
+Playing together, live.
+
+### Added
+
+- **Pack Battles** (level 16): lobbies for 2–4 players, everyone pays the same stake (the boosters' Marktwert).
+  The server opens all packs at once with the same odds for everyone; all watch round by round with running
+  totals, emotes and spectators. Modes: Klassisch, Krepel-Battle, Top-Karte, Jackpot, Team 2v2 and
+  Freundschaftsspiel. Bots fill empty seats; what a bot wins is gone.
+- **Box Breaks** (level 18): put a display on the table and sell its packs one by one; buyers watch their packs
+  being opened live and keep the cards. Unsold packs stay with the host.
+- **Aushelfen** (level 7): once a day per friend, take time off their grading orders and shift; both get a little
+  money and EP. **Kaffee und Kuchen:** once a day per friend, both get more EP for two hours.
+- **Sammelbestellung** (level 18): fill a case of six displays with friends at the wholesale price; nobody may
+  take the whole case alone, six displays per week at most.
+- **Privatkredit** (level 10) on a Bierdeckel: amount, interest and days; collected automatically on the due date.
+  A loan that bursts costs Ruf, brings a Schufa entry and makes the headlines.
+- **Ehre:** every player's record of kept and broken deals with a title from Solide to Judas, shown on the player
+  list and on profiles.
+- **Live updates:** chat, headlines, notifications, lobbies and battles update at once instead of every few
+  seconds.
+
 ## [0.0.1-alpha_07] — Leben (22 Nov 2026)
 
 Identity, build choices and the first big money sinks.
