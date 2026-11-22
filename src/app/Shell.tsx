@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/Button.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { formatAgo, formatClock, formatFactor, formatMoney, formatNumber, formatStars } from '@/lib/format.ts'
 import { useCosmetics } from '@/lib/actions.ts'
+import { useRealtimeSync } from '@/lib/realtime.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
 import type { FeedEntry, Me, Player } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
@@ -29,6 +30,7 @@ type SignedIn = Me & { player: Player }
 
 export function Shell({ me }: { me: SignedIn }) {
   useSync(true)
+  useRealtimeSync()
   return (
     <div className="app-bg flex h-dvh">
       <Sidebar player={me.player} />

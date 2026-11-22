@@ -58,9 +58,26 @@ export async function createLocalBackend(): Promise<Backend> {
     }
   }
 
+  // Realtime: the shim's realtime.send is a pg_notify on 'realtime'; hand each message to the topic's subscribers.
+  const subscribers = new Map<string, Set<(event: string, payload: Record<string, unknown>) => void>>()
+  await db.listen('realtime', (raw) => {
+    try {
+      const m = JSON.parse(raw) as { topic: string; event: string; payload: Record<string, unknown> }
+      for (const cb of subscribers.get(m.topic) ?? []) cb(m.event, m.payload)
+    } catch {
+      // ignore malformed messages
+    }
+  })
+
   return {
     mode: 'local',
     rpc: (fn, args) => flushed(localRpc(db, uid, fn, args)),
+    subscribe(topic, onMessage) {
+      const set = subscribers.get(topic) ?? new Set()
+      set.add(onMessage)
+      subscribers.set(topic, set)
+      return () => set.delete(onMessage)
+    },
     // Without parameters several statements may run at once (exec); with parameters only one (query).
     devSql: (query, params) =>
       flushed(params?.length ? db.query(query, params).then((r) => r.rows) : db.exec(query).then((r) => r.at(-1)?.rows ?? [])),

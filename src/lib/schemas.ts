@@ -802,6 +802,7 @@ export const RPC_SCHEMAS = {
   level_path_get: zLevelPath,
   grading_get: zGrading,
   skills_get: zSkills,
+  realtime_get: z.object({ world: z.string(), player: z.string() }),
   insurance_get: zInsurance,
   insurance_set: zInsurance.extend(withPlayer),
   cosmetics_get: zCosmetics,

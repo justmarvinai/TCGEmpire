@@ -17,3 +17,11 @@ create or replace function auth.uid() returns uuid
 language sql stable as $$
   select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
 $$;
+
+-- realtime.send(payload, event, topic, private): Supabase Realtime Broadcast from the database. Locally a
+-- pg_notify on channel 'realtime' that the local backend listens to.
+create schema if not exists realtime;
+create or replace function realtime.send(payload jsonb, event text, topic text, private boolean default true) returns void
+language sql as $$
+  select pg_notify('realtime', jsonb_build_object('topic', topic, 'event', event, 'payload', payload)::text)
+$$;

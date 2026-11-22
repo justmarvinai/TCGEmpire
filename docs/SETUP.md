@@ -10,7 +10,9 @@ After it, every merge to `main` deploys the site and the database by itself.
 2. **Authentication → Sign In / Providers → Anonymous sign-ins: turn ON.**
    (The game has its own username + password login; Supabase only hands every browser an anonymous
    session. No e-mails are ever sent.)
-3. Note three values:
+3. **Realtime → Settings → "Allow public access": turn OFF.** (Live updates use private channels; the game
+   works without them too, just a few seconds slower.)
+4. Note three values:
    - **Project URL** and **anon / publishable key** (Project Settings → API).
    - **Connection string, "Session pooler"** (Connect button at the top), with your password filled in.
 
