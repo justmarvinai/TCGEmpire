@@ -44,16 +44,17 @@ Goal: the core loop is fun on its own — earn a little, buy boosters, open them
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Content pipeline (TypeScript → seed) and the complete **Pokémon Basis-Set**: data; hero art for the remaining Ultras; simple template art in batches for all lower tiers | M |
-| ☐ | Kiosk: buy boosters ×1/×5/×10; inventory for sealed, stacks and copies; quality values on hits | M |
-| ☐ | **Pack opening**: tear, reveal, hit suspense by tier, summary, multi-rip ×5/×10, **Sofort aufdecken** (instant reveal, also as default setting), keyboard, fake chat | M |
-| ☐ | Foil system and card inspect view | M |
-| ☐ | Sammlung: binder per set, card detail, set progress | M |
-| ☐ | Kartenladen-Ankauf (instant sell), bulk sell | M |
-| ☐ | EP, levels 1–100 table, level-up overlay, level rewards, Level-Pfad | M |
-| ☐ | Minijob **Pfandflaschen sammeln**, energy | M |
-| ☐ | Tutorial with Mutti and Opa; mini-quests v1 | M |
-| ☐ | Grail broadcast to everyone online | M |
+| ◐ | Content pipeline (TypeScript → seed) and the complete **Pokémon Basis-Set**: data; hero art for the remaining Ultras; simple template art in batches for all lower tiers | M |
+| ☑ | Kiosk: buy boosters ×1/×5/×10; inventory for sealed, stacks and copies; quality values on hits | M |
+| ☑ | **Pack opening**: tear, reveal, hit suspense by tier, summary, multi-rip ×5/×10, **Sofort aufdecken** (instant reveal, also as default setting), keyboard, fake chat | M |
+| ☑ | Foil system and card inspect view | M |
+| ☑ | Sammlung: binder per set, card detail, set progress | M |
+| ☑ | Kartenladen-Ankauf (instant sell), bulk sell | M |
+| ☑ | EP, levels 1–100 table, level-up overlay, level rewards, Level-Pfad | M |
+| ☑ | Minijob **Pfandflaschen sammeln**, energy | M |
+| ☑ | Tutorial with Mutti and Opa; mini-quests v1 | M |
+| ☑ | Grail broadcast to everyone online | M |
+| ☑ | Owner requests of 22 Nov: one reusable slab frame per grader with runtime text, one card back for all cards, reusable card model below Ultra | M |
 
 ### alpha_03 — Grind
 
