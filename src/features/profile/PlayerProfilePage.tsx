@@ -9,6 +9,7 @@ import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { formatDate, formatMoney, formatNumber } from '@/lib/format.ts'
 import { errorText } from '@/lib/rpc.ts'
 import type { Profile } from '@/lib/schemas.ts'
+import { HonorBadge } from '@/features/players/Loans.tsx'
 import { texts } from '@/texts/de.ts'
 import { Guestbook, HomeCard } from './HomeAndGuestbook.tsx'
 import { useProfile, VitrinePanel } from './Vitrine.tsx'
@@ -54,6 +55,9 @@ export function ProfileHeader({ p }: { p: Profile }) {
           {p.title && <p className="font-semibold text-accent">{p.title}</p>}
           <p className="mt-1 text-sm text-fg-2">
             Level {p.level} · <span className="nums text-gold">{formatMoney(p.net_worth_cents)}</span>
+          </p>
+          <p className="mt-1 flex items-center gap-1.5 text-xs text-fg-3">
+            {texts.loans.honor}: <HonorBadge honor={p.honor} record />
           </p>
           <p className="text-xs text-fg-3">{T.since(formatDate(p.created_at))}</p>
         </div>

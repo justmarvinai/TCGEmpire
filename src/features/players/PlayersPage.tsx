@@ -20,6 +20,7 @@ import { sfx } from '@/lib/sfx.ts'
 import { useMe, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { GroupOrders } from './GroupOrders.tsx'
+import { HonorBadge, LoanDialog, LoansPanel, useLoans } from './Loans.tsx'
 
 const T = texts.players
 
@@ -30,6 +31,8 @@ export function PlayersPage() {
   const now = useNow()
   const offset = useWorld((w) => w.clockOffsetMs)
   const [giftTo, setGiftTo] = useState<Players['players'][number] | null>(null)
+  const [loanTo, setLoanTo] = useState<Players['players'][number] | null>(null)
+  const loanLevel = useLoans().data?.unlock_level
   const d = q.data
   const canTrade = !!d && level >= d.trades.unlock_level
   const canHelp = !!d && level >= d.friends.unlock_level
@@ -95,6 +98,7 @@ export function PlayersPage() {
                             {T.admin}
                           </span>
                         )}
+                        {p.honor.title && <HonorBadge honor={p.honor} />}
                       </span>
                       <span className="block text-xs text-fg-3">
                         Lv {p.level}
@@ -113,6 +117,11 @@ export function PlayersPage() {
                         <Button size="sm" onClick={() => setGiftTo(p)}>
                           {T.gift}
                         </Button>
+                        {loanLevel !== undefined && level >= loanLevel && p.level >= loanLevel && (
+                          <Button size="sm" onClick={() => setLoanTo(p)}>
+                            {texts.loans.give}
+                          </Button>
+                        )}
                         <Link
                           to={`/trade?with=${p.id}`}
                           className="btn btn-neutral inline-flex min-h-8 items-center px-3 text-sm font-semibold"
@@ -139,11 +148,13 @@ export function PlayersPage() {
                 <p className="text-sm text-fg-3">{T.lockedLevel(d.trades.unlock_level)}</p>
               )}
             </Panel>
+            {me && <LoansPanel player={me} />}
             {me && <GroupOrders player={me} />}
           </div>
         </div>
       )}
       {giftTo && <GiftDialog to={giftTo} onClose={() => setGiftTo(null)} />}
+      {loanTo && <LoanDialog to={loanTo} onClose={() => setLoanTo(null)} />}
     </Page>
   )
 }

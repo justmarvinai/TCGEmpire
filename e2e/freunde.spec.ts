@@ -68,7 +68,7 @@ test('freunde: helping out a friend, coffee and cake, and starting a Sammelbeste
   await page.getByRole('button', { name: '+Kumpel' }).click()
 
   await page.getByRole('link', { name: /^Spieler/ }).click()
-  for (const tour of ['Spieler', 'Freundschaftsdienste', 'Sammelbestellung']) await finishTour(page, tour)
+  for (const tour of ['Spieler', 'Freundschaftsdienste', 'Privatkredit', 'Sammelbestellung']) await finishTour(page, tour)
   const kumpel = page.getByRole('listitem').filter({ hasText: 'Kumpel' })
   await kumpel.getByRole('button', { name: 'Aushelfen' }).click()
   await expect(page.getByText(/^Kumpel\d hatte nichts zu tun/)).toBeVisible()
@@ -79,6 +79,14 @@ test('freunde: helping out a friend, coffee and cake, and starting a Sammelbeste
   await page.getByRole('button', { name: 'Bestellung starten' }).click()
   await expect(page.getByText('Sammelbestellung gestartet. Jetzt brauchst du Mitstreiter.')).toBeVisible()
   await expect(page.getByText('1 von 6 Displays vergeben')).toBeVisible()
+
+  // A loan on the Bierdeckel.
+  await kumpel.getByRole('button', { name: 'Kredit' }).click()
+  const dialog = page.getByRole('dialog', { name: /^Kredit für Kumpel/ })
+  await dialog.getByLabel('Betrag in €').fill('500')
+  await dialog.getByRole('button', { name: 'Anbieten' }).click()
+  await expect(page.getByText(/^Angebot an Kumpel\d geht raus/)).toBeVisible()
+  await expect(page.getByText('Angeboten')).toBeVisible()
   await page.screenshot({ path: shot('friends'), animations: 'disabled' })
 })
 

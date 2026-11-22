@@ -17,6 +17,7 @@ import { errorText } from '@/lib/rpc.ts'
 import type { Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useMe, useSetMe, useWorld } from '@/lib/world.ts'
+import { HonorBadge } from '@/features/players/Loans.tsx'
 import { texts } from '@/texts/de.ts'
 import { Guestbook, HomeCard } from './HomeAndGuestbook.tsx'
 import { Trophies } from './PlayerProfilePage.tsx'
@@ -56,6 +57,11 @@ export function ProfilePage() {
                 <p className="mt-1 text-sm text-fg-2">
                   Level {player.level} · <span className="nums text-gold">{formatMoney(player.net_worth_cents)}</span>
                 </p>
+                {profile.data && (
+                  <p className="mt-1 flex items-center gap-1.5 text-xs text-fg-3">
+                    {texts.loans.honor}: <HonorBadge honor={profile.data.honor} record />
+                  </p>
+                )}
               </div>
             </div>
             <label className="mt-4 flex flex-col gap-1 text-sm">

@@ -62,6 +62,14 @@ const withPlayer = { player: zPlayer }
 /** Stil (alpha_07): what friends see of a player. */
 export const zLook = z.object({ name_color: z.string().nullable(), frame: z.string().nullable(), avatar_card: z.string().nullable() })
 export type Look = z.infer<typeof zLook>
+// Ehre: kept and broken deals (alpha_08)
+export const zHonor = z.object({
+  kept: z.number(),
+  broken: z.number(),
+  title: z.enum(['solide', 'ehrenmann', 'schlitzohr', 'judas']).nullable(),
+  schufa_until: z.string().nullable(),
+})
+export type Honor = z.infer<typeof zHonor>
 
 export const zPulledCard = z.object({
   card_id: z.string(),
@@ -439,6 +447,7 @@ export const zPlayers = z.object({
       locked_until: z.string(),
       is_admin: z.boolean(),
       look: zLook,
+      honor: zHonor,
     }),
   ),
   trades: zTrades,
@@ -659,6 +668,7 @@ export const zProfile = z.object({
   home: z.object({ tier: z.number(), wohnwert: z.number(), furnishings: z.record(z.string(), z.string()) }),
   guestbook: z.lazy(() => zGuestbook),
   signed_today: z.boolean(),
+  honor: zHonor,
 })
 export type Profile = z.infer<typeof zProfile>
 export const zPopReport = z.object({
@@ -764,6 +774,31 @@ export const zBattles = z.object({
   done: z.array(zBattleSummary),
 })
 export type Battles = z.infer<typeof zBattles>
+
+// Privatkredit and Ehre (alpha_08)
+const zLoan = z.object({
+  id: z.number(),
+  state: z.enum(['offered', 'active', 'repaid', 'defaulted', 'cancelled']),
+  principal_cents: z.number(),
+  interest_pct: z.number(),
+  due_cents: z.number(),
+  days: z.number(),
+  created_at: z.string(),
+  due_at: z.string().nullable(),
+  closed_at: z.string().nullable(),
+  role: z.enum(['lender', 'borrower']),
+  other: z.object({ id: z.string(), name: z.string(), look: zLook, honor: zHonor }),
+})
+export type Loan = z.infer<typeof zLoan>
+export const zLoans = z.object({
+  unlock_level: z.number(),
+  max_interest_pct: z.number(),
+  max_days: z.number(),
+  min_cents: z.number(),
+  honor: zHonor,
+  loans: z.array(zLoan),
+})
+export type Loans = z.infer<typeof zLoans>
 
 // Box Breaks (alpha_08)
 const zBreakSummary = z.object({
@@ -952,6 +987,11 @@ export const RPC_SCHEMAS = {
   break_start: z.object({ break: zBreak, ...withPlayer }),
   break_cancel: z.object(withPlayer),
   break_emote_send: z.object({ ok: z.boolean() }),
+  loans_get: zLoans,
+  loan_offer: z.object({ loans: zLoans }),
+  loan_respond: z.object({ loans: zLoans, ...withPlayer }),
+  loan_cancel: z.object({ loans: zLoans }),
+  loan_repay: z.object({ loans: zLoans, ...withPlayer }),
   group_order_create: z.object({ orders: zGroupOrders, ...withPlayer }),
   group_order_join: z.object({ orders: zGroupOrders, ...withPlayer }),
   group_order_leave: z.object({ orders: zGroupOrders, ...withPlayer }),

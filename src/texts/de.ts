@@ -315,6 +315,46 @@ export const texts = {
     friendsLocked: (n: number) => `Aushelfen und Kaffee und Kuchen ab Level ${n}.`,
   },
 
+  loans: {
+    title: 'Bierdeckel',
+    tip: 'Hier steht, wer wem was schuldet. Am Fälligkeitstag wird automatisch eingezogen, wenn genug Geld da ist. Sonst platzt der Kredit: Der Schuldner behält das Geld, verliert Ruf, kriegt einen Schufa-Eintrag und einen gebrochenen Deal auf seinem Ehre-Konto.',
+    locked: (n: number) => `Privatkredite ab Level ${n}.`,
+    give: 'Kredit',
+    dialog: (name: string) => `Kredit für ${name}`,
+    dialogDesc: 'Du leihst Geld, der andere zahlt mit Zinsen zurück. Oder auch nicht. Schau dir vorher sein Ehre-Konto an.',
+    amount: 'Betrag in €',
+    interest: 'Zinsen in %',
+    days: 'Laufzeit in Tagen',
+    offer: 'Anbieten',
+    offered: (name: string) => `Angebot an ${name} geht raus. Jetzt heißt es warten.`,
+    empty: 'Der Bierdeckel ist leer. Keiner schuldet keinem was. Langweilig.',
+    stateOffered: 'Angeboten',
+    stateActive: 'Läuft',
+    stateRepaid: 'Zurückgezahlt',
+    stateDefaulted: 'Geplatzt',
+    stateCancelled: 'Abgelehnt oder zurückgezogen',
+    due: (money: string, time: string) => `${money} fällig in ${time}`,
+    accept: 'Annehmen',
+    decline: 'Ablehnen',
+    withdraw: 'Zurückziehen',
+    repay: (money: string) => `Zurückzahlen · ${money}`,
+    accepted: 'Geld ist da. Und die Schulden auch.',
+    declined: 'Abgelehnt. Stolz kann man nicht essen.',
+    withdrawn: 'Angebot zurückgezogen.',
+    repaid: 'Zurückgezahlt. Ehrensache.',
+    honor: 'Ehre',
+    honorTip: 'Gehaltene und gebrochene Deals. Zurückgezahlte Kredite zählen als gehalten, geplatzte als gebrochen. Jeder sieht es auf deinem Profil.',
+    record: (kept: number, broken: number) => `${kept} gehalten · ${broken} gebrochen`,
+    titles: {
+      solide: 'Solide',
+      ehrenmann: 'Ehrenmann/-frau',
+      schlitzohr: 'Schlitzohr',
+      judas: 'Judas',
+    } as Record<string, string>,
+    noTitle: 'Unbeschriebenes Blatt',
+    schufa: (date: string) => `Schufa-Eintrag bis ${date}. Keine neuen Kredite.`,
+  },
+
   groupOrders: {
     title: 'Sammelbestellung',
     tip: 'Zusammen kauft ihr eine Kiste Displays zum Großhandelspreis. Keiner darf die ganze Kiste allein nehmen. Ist sie voll, wird bestellt: jeder bekommt seine Displays als Paket. Kommt sie nicht rechtzeitig voll, gibt es das Geld zurück.',
@@ -459,6 +499,8 @@ export const texts = {
   },
 
   feed: {
+    loan_defaulted: (d: Record<string, unknown>, money: string) =>
+      `SKANDAL! ${String(d.name)} lässt den Kredit von ${String(d.other)} platzen: ${money} weg. Der Stammtisch hat einen neuen Judas.`,
     battle: (d: Record<string, unknown>, mode: string, money: string) =>
       `BATTLE! ${String(d.name)} gewinnt ein ${mode} und kassiert Karten für ${money}. Die anderen fahren schwarz nach Hause.`,
     league: (d: Record<string, unknown>, pct: string) => `WOCHENSIEGER: ${String(d.name)} wächst um ${pct}. Die Konkurrenz prüft die Bücher.`,
@@ -577,6 +619,13 @@ export const texts = {
         steps: [
           'Zusammen kauft ihr eine ganze Kiste Displays zum Großhandelspreis. Billiger kriegst du keine.',
           'Keiner darf die ganze Kiste allein nehmen, und pro Woche ist die Menge begrenzt. Ist die Kiste voll, kommt das Paket.',
+        ],
+      },
+      loans: {
+        name: 'Privatkredit',
+        steps: [
+          'Bei jedem Spieler kannst du jetzt einen Kredit anbieten: Betrag, Zinsen, Laufzeit. Alles steht auf dem Bierdeckel.',
+          'Am Fälligkeitstag wird automatisch eingezogen. Fehlt das Geld, platzt der Kredit: Ruf weg, Schufa, und ein gebrochener Deal fürs Ehre-Konto.',
         ],
       },
       breaks: {
@@ -734,6 +783,7 @@ export const texts = {
         style: 'Mama: Du kaufst dir jetzt einen goldenen Namen? Für das Geld hätte ich dir Socken gekauft.',
         friends: 'Mama: Hilf deinen Freunden mal. Und nimm Kuchen mit, man kommt nicht mit leeren Händen.',
         group_orders: 'Mama: Ihr bestellt zusammen eine ganze Kiste? Wehe, die steht dann in meinem Flur.',
+        loans: 'Mama: Du verleihst jetzt Geld? An deine Freunde? Dann sieh es schon mal als Geschenk.',
         breaks: 'Mama: Du machst jetzt Live-Shows? Zieh dir wenigstens was Ordentliches an.',
         battles: 'Mama: Glücksspiel mit Pappkarten? Dein Onkel hat so angefangen. Jetzt wohnt er im Wohnwagen.',
         insurance: 'Mama: Du verschickst jetzt Pakete? Versicher die bloß. Dein Onkel hat mal einen Toaster verloren. Die Familie redet nicht drüber.',
@@ -776,6 +826,16 @@ export const texts = {
     group_order_done: (d: Record<string, unknown>, name: string) =>
       `Sammelbestellung voll: ${String(d.qty)}× ${name} sind unterwegs. Der Großhändler hat gegrinst.`,
     group_order_cancelled: (name: string) => `Sammelbestellung für ${name} geplatzt. Dein Geld ist zurück.`,
+    loan_offer: (d: Record<string, unknown>, money: string) => `${String(d.name)} bietet dir einen Kredit über ${money} an. Schau auf den Bierdeckel bei den Spielern.`,
+    loan_accepted: (d: Record<string, unknown>, money: string) => `${String(d.name)} hat deinen Kredit über ${money} angenommen. Das Geld ist weg. Vorerst.`,
+    loan_declined: (d: Record<string, unknown>) => `${String(d.name)} will dein Geld nicht. Beleidigend.`,
+    loan_repaid: (d: Record<string, unknown>, money: string) => `${String(d.name)} hat ${money} zurückgezahlt. Ehrenhaft.`,
+    loan_due: (d: Record<string, unknown>, money: string) =>
+      `Erinnerung: Bald sind ${money} an ${String(d.name)} fällig. Ist nicht genug Geld da, platzt der Kredit.`,
+    loan_defaulted: (d: Record<string, unknown>, money: string) =>
+      `${String(d.name)} hat deinen Kredit platzen lassen. ${money} sind weg. Merk dir das.`,
+    loan_defaulted_self: (d: Record<string, unknown>, money: string) =>
+      `Dein Kredit bei ${String(d.name)} ist geplatzt (${money}). Ruf weg, Schufa-Eintrag, und alle wissen es.`,
     break_done: (d: Record<string, unknown>, money: string) =>
       `Box Break vorbei: ${String(d.packs)} ${Number(d.packs) === 1 ? 'Pack' : 'Packs'} mit Karten im Wert von ${money} gehören dir.`,
     battle_done: (d: Record<string, unknown>, pot: string) =>
@@ -1623,6 +1683,8 @@ export const texts = {
     lager_full: 'Lager voll. Öffnen, verkaufen oder das Lagerregal ausbauen.',
     already_done: 'Heute schon erledigt. Morgen wieder.',
     spot_taken: 'Das Pack hat schon wer. Such dir ein anderes.',
+    schufa: 'Schufa-Eintrag. Wer Kredite platzen lässt, kriegt erst mal keine neuen.',
+    lender_broke: 'Der Geldgeber ist selbst pleite. Peinlich für ihn.',
     group_alone: 'Die ganze Kiste allein? Das ist keine Sammelbestellung, das ist Großhandel. Lass den anderen was übrig.',
     group_week_limit: 'Diese Woche hast du genug Displays bestellt. Nächste Woche wieder.',
     store_closed: 'Heute zu. Sonntags gibt es nur den Flohmarkt.',

@@ -17,6 +17,7 @@ export const UNLOCKS = {
   cardmarket: 10,
   insurance: 10,
   trade: 10,
+  loans: 10,
   licenses: 10,
   weekly_quests: 13,
   grading: 13,

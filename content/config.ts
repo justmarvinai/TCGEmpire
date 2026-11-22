@@ -258,6 +258,17 @@ export const config = {
   'group_order.max_shares_week': 6,
   'group_order.open_hours': 48,
   'group_order.delivery_minutes': 60,
+  // Privatkredit: interest, days, smallest loan (Basis-€ cents); a burst loan costs Ruf (of 1000) and blocks new loans
+  // for some days; a reminder goes out this many hours before the due date. Ehre: titles from kept and broken deals.
+  'loan.max_interest_pct': 30,
+  'loan.max_days': 14,
+  'loan.min_base_cents': 100_00,
+  'loan.default_ruf': 100,
+  'loan.schufa_days': 7,
+  'loan.remind_hours': 6,
+  'honor.solide_kept': 3,
+  'honor.ehrenmann_kept': 10,
+  'honor.judas_broken': 5,
 
   // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,

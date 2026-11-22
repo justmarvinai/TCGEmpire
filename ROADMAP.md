@@ -153,7 +153,7 @@ Goal: playing together, live.
 | ☑ | Realtime layer in full (world, player, battle channels) | M |
 | ☑ | Aushelfen, Kaffee und Kuchen, Sammelbestellung | M |
 | ☑ | Box Breaks (spots by pack number; by card type dropped, decision 084) | S |
-| ☐ | Privatkredit, Ehre record | S |
+| ☑ | Privatkredit, Ehre record | S |
 
 ### alpha_09 — Firma
 
