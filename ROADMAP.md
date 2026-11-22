@@ -129,7 +129,7 @@ Goal: the gamble that multiplies value.
 | ☑ | Slab renderer (all label styles), grade reveal, Pop Report | M |
 | ☑ | Slab pricing, crack and re-submit, Black Label | M |
 | ☑ | Vitrine on the profile | M |
-| ☐ | Minijobs "Echt oder Fake?" and "Grading-Praktikum" | M |
+| ☑ | Minijobs "Echt oder Fake?" and "Grading-Praktikum" | M |
 
 ### alpha_07 — Leben
 

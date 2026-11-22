@@ -6,7 +6,7 @@ const B = 'booster-pkm-base'
 const rid = () => crypto.randomUUID()
 const ASPECTS = ['centering', 'corners', 'edges', 'surface'] as const
 /** Typical scores of a decent player per minijob (Basis-€ cents). */
-const SCORE: Record<string, number> = { pfand: 8_000, regale: 9_000, sortieren: 8_000, pakete: 12_000 }
+const SCORE: Record<string, number> = { pfand: 8_000, regale: 9_000, sortieren: 8_000, pakete: 12_000, fake: 14_000, praktikum: 16_000 }
 
 export interface SimResult {
   /** level -> active minutes and day when it was reached */

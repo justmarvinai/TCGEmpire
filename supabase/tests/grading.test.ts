@@ -291,6 +291,8 @@ describe('Grading minijobs', () => {
       await t.advance('45 seconds')
       return t.rpc(me, 'minigame_finish', { p_request_id: rid(), p_run: run.run_id, p_score: score, p_bottles: 0 })
     }
+    // A great round above the cap is paid the cap.
+    expect((await play('fake', 1_200_00)).payout_cents).toBe(1_100_00)
     expect((await play('praktikum', 500_00)).buff).toBe(false)
     expect((await t.rpc(me, 'grading_get')).width).toBe(3)
     expect((await play('praktikum', 800_00)).buff).toBe(true)
@@ -303,6 +305,7 @@ describe('Grading minijobs', () => {
     await t.sql(`insert into game.ads (npc_id, seller_idx, style, item_kind, item_id, qty, ask_cents, min_cents, risk, created_at, expires_at)
                  values ($1, 0, 'attic', 'card', $2, 1, 1000, 500, 'fake', private.now(), private.now() + interval '1 day')`, [npc, HOLO])
     const fake = async () => (await t.rpc(me, 'ads_get')).board.find((a) => a.item_id === HOLO)!.suspicious
+    await t.advance('181 minutes') // the buff from the great round above is over
     expect(await fake()).toBe(false)
     await play('fake', 700_00)
     expect(await fake()).toBe(true)

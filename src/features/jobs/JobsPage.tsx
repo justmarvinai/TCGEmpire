@@ -54,7 +54,7 @@ function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
   const act = useAct()
   const now = useServerNow()
   const [run, setRun] = useState<{ id: string; game: GameKey; duration: number } | null>(null)
-  const [result, setResult] = useState<{ game: string; payout: number; ep: number; bons: number } | null>(null)
+  const [result, setResult] = useState<{ game: string; payout: number; ep: number; bons: number; buff: boolean } | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
 
   const start = async (game: GameKey) => {
@@ -71,7 +71,7 @@ function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
       const res = await act('minigame_finish', { p_run: run.id, p_score: score, p_bottles: count }, ['quests'])
       setRun(null)
       if (res) {
-        setResult({ game: run.game, payout: res.payout_cents, ep: res.ep_gained, bons: res.pfandbons })
+        setResult({ game: run.game, payout: res.payout_cents, ep: res.ep_gained, bons: res.pfandbons, buff: res.buff })
         sfx('coin')
       }
     },
@@ -86,13 +86,14 @@ function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
       ) : (
         <>
           {result && (
-            <div className="mb-3 flex flex-wrap items-center gap-4 rounded-2xl bg-surface-2 p-4 anim-stamp">
+            <div className="mb-3 flex flex-wrap items-center gap-4 rounded-2xl bg-surface-2 p-4 animate-pop">
               <span className="font-pixel text-xl">{T.resultTitle}</span>
-              <span className="nums font-pixel text-2xl text-gold">+{formatMoney(result.payout)}</span>
+              <span className="nums font-pixel text-2xl text-gold anim-stamp">+{formatMoney(result.payout)}</span>
               <span className="nums text-sm text-fg-2">
                 +{result.ep} {T.epGained}
               </span>
               {result.bons > 0 && <span className="text-sm text-gain">{T.pfandbon}</span>}
+              {result.buff && <span className="text-sm text-gain">{T.buff[result.game]}</span>}
             </div>
           )}
           <div className="grid gap-3 md:grid-cols-2">

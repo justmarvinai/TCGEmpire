@@ -981,11 +981,12 @@ begin
   if v_elapsed < (c ->> 'duration_s')::numeric - 3 then
     perform private.fail('too_early');
   end if;
-  -- Implausible or late results pay nothing (the energy is gone anyway).
+  -- A great round pays the cap (fast players of the card games can pass it); impossible results (negative or
+  -- more than twice the cap) and late ones pay nothing (the energy is gone anyway).
   v_score := case
-    when p_score is null or p_score < 0 or p_score > v_cap then 0
+    when p_score is null or p_score < 0 or p_score > 2 * v_cap then 0
     when v_elapsed > (c ->> 'duration_s')::numeric + 300 then 0
-    else p_score
+    else least(p_score, v_cap)
   end;
   v_payout := private.eur(v_score * (1 + private.stat(v_player, 'wage_pct', 0) / 100));
   update game.minigame_runs set finished_at = private.now(), score = v_score, payout_cents = v_payout where id = r.id;

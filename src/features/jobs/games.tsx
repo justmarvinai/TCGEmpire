@@ -1,20 +1,23 @@
-// The minijob games. Each reports a score in Basis-€ cents; the server caps and pays it.
+// The minijob games. Each reports a score in Basis-€ cents; the server checks it against the job's cap and pays it.
 import clsx from 'clsx'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Card } from '@/components/cards/Card.tsx'
 import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
 import { cardById, SETS } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { texts } from '@/texts/de.ts'
+import { minijobs } from '@/texts/minijobs.ts'
 
 const T = texts.jobs
-export type GameKey = 'pfand' | 'regale' | 'sortieren' | 'pakete'
+export type GameKey = 'pfand' | 'regale' | 'sortieren' | 'pakete' | 'fake' | 'praktikum'
 type Done = (score: number, count: number) => void
 
 export function Game({ game, duration, onDone }: { game: GameKey; duration: number; onDone: Done }) {
   if (game === 'pfand') return <PfandGame duration={duration} onDone={onDone} />
   if (game === 'pakete') return <TimingGame duration={duration} onDone={onDone} />
+  if (game === 'fake') return <FakeGame duration={duration} onDone={onDone} />
+  if (game === 'praktikum') return <GradingGame duration={duration} onDone={onDone} />
   return <SortGame key={game} game={game} duration={duration} onDone={onDone} />
 }
 
@@ -329,6 +332,458 @@ function TimingGame({ duration, onDone }: { duration: number; onDone: Done }) {
         </div>
         <p className="mt-2 text-xs text-fg-3">{T.dropHint}</p>
       </button>
+    </div>
+  )
+}
+
+// ----------------------------------------------------------------------------------------------
+// Grading minijobs: one card at a time. An answer counts once the card lies still; after a miss the
+// card stays up for a moment to show why (so blind button mashing does not pay either).
+// ----------------------------------------------------------------------------------------------
+const ALL_CARDS = SETS.flatMap((s) => s.cards)
+/** Answers while the next card is still dealing in do not count (no blind double clicks). */
+const DEAL_MS = 250
+/** Cards are shown at this integer scale; a card is CW x CH card pixels. */
+const PX = 3
+const CW = 80
+const CH = 112
+
+function pick<V>(list: readonly V[]): V {
+  return list[Math.floor(Math.random() * list.length)]!
+}
+
+/** n different items of a list, in random order. */
+function sample<V>(list: readonly V[], n: number): V[] {
+  const rest = [...list]
+  return Array.from({ length: Math.min(n, rest.length) }, () => rest.splice(Math.floor(Math.random() * rest.length), 1)[0]!)
+}
+
+function randomCard(avoid?: string) {
+  for (;;) {
+    const c = pick(ALL_CARDS)
+    if (c.id !== avoid) return c
+  }
+}
+
+const signed = (cents: number) => (cents > 0 ? `+${formatMoney(cents)}` : formatMoney(cents))
+
+/** The current card, the lock while it deals in, and the reveal after a miss. */
+function useCardFlow<C>(deal: (prev?: C) => C, revealMs: number, left: number) {
+  const [card, setCard] = useState(() => deal())
+  const [missed, setMissed] = useState(false)
+  const flow = useRef<{ shownAt: number; busy: boolean; timer?: ReturnType<typeof setTimeout> }>({ shownAt: 0, busy: false })
+  useEffect(() => {
+    const f = flow.current
+    return () => clearTimeout(f.timer)
+  }, [])
+  return {
+    card,
+    missed,
+    /** An answer counts only while the round runs and the card lies still. */
+    ready: () => left > 0 && !flow.current.busy && performance.now() - flow.current.shownAt >= DEAL_MS,
+    /** Deals the next card: at once, or after the reveal when the answer was a miss. */
+    next: (miss: boolean) => {
+      const f = flow.current
+      const go = () => {
+        f.busy = false
+        f.shownAt = performance.now()
+        setMissed(false)
+        setCard(deal(card))
+      }
+      if (!miss) return go()
+      f.busy = true
+      setMissed(true)
+      f.timer = setTimeout(go, revealMs)
+    },
+  }
+}
+
+/** Calls the latest handler for each fresh key press (no auto-repeat, no shortcuts); true = key used. */
+function useKeys(handle: (key: string) => boolean) {
+  const latest = useRef(handle)
+  useEffect(() => {
+    latest.current = handle
+  })
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return
+      if (latest.current(e.key.toLowerCase())) e.preventDefault()
+    }
+    window.addEventListener('keydown', down)
+    return () => window.removeEventListener('keydown', down)
+  }, [])
+}
+
+/** Brief glow behind the card after each answer. */
+function Flash({ good }: { good: boolean }) {
+  return <div className={clsx('pointer-events-none absolute -inset-4 rounded-3xl anim-flash', good ? 'bg-gain/35' : 'bg-loss/40')} />
+}
+
+/** After a miss: a stamp with what it really was and what it cost, then why. */
+function Verdict({ title, cents, tone, children }: { title: string; cents: number; tone: 'loss' | 'warn'; children: ReactNode }) {
+  return (
+    <div className="flex max-w-64 flex-col items-center gap-3 md:items-start">
+      <div className={clsx('anim-stamp rounded-xl border-2 px-4 py-2 text-center', tone === 'loss' ? 'border-loss text-loss' : 'border-warn text-warn')}>
+        <p className="font-pixel text-3xl leading-none">{title}</p>
+        <p className="nums mt-1 font-pixel text-lg">{signed(cents)}</p>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+function Gain({ cents }: { cents: number }) {
+  return <span className="anim-rise font-pixel text-3xl text-gain">{signed(cents)}</span>
+}
+
+function Key({ k }: { k: string }) {
+  return <kbd className="rounded-md bg-surface-3 px-1.5 py-0.5 font-sans text-xs font-semibold text-fg-3">{k}</kbd>
+}
+
+// ----------------------------------------------------------------------------------------------
+// Echt oder Fake? A real card, or a fake with ONE visible tell
+// ----------------------------------------------------------------------------------------------
+const F = minijobs.fake
+/** About 40 % fakes; at 42 % always pressing "Echt" loses money on average. */
+const FAKE = { right: 3_500, wrong: -5_000, share: 0.42, revealMs: 1_200 }
+/** What each tell does to the card (whole class names, one picked at random). */
+const LOOKS = {
+  hue: ['hue-rotate-90', 'hue-rotate-180', '-hue-rotate-90'],
+  faded: ['saturate-25'],
+  mirror: ['-scale-x-100'],
+  dark: ['brightness-50'],
+  name: [''],
+}
+type Tell = keyof typeof LOOKS
+const TELLS = Object.keys(LOOKS) as Tell[]
+
+interface FakeCard {
+  key: number
+  id: string
+  tell: Tell | null
+  look: string
+  plate: string
+}
+
+function nextFake(prev?: FakeCard): FakeCard {
+  const card = randomCard(prev?.id)
+  const tell = Math.random() < FAKE.share ? pick(TELLS) : null
+  return {
+    key: (prev?.key ?? 0) + 1,
+    id: card.id,
+    tell,
+    look: tell ? pick(LOOKS[tell]) : '',
+    plate: tell === 'name' ? misspell(card.name) : card.name,
+  }
+}
+
+/** A believable typo in the printed part of the name (not in a variant like "(Alt-Art)"): two neighbouring letters
+ *  swapped, or one letter doubled. */
+function misspell(name: string) {
+  const [printed = name, ...variant] = name.split(' (')
+  const ch = [...printed]
+  const letter = (i: number) => /\p{L}/u.test(ch[i] ?? '')
+  const swaps = ch.flatMap((c, i) => (i > 0 && letter(i) && letter(i + 1) && c.toLowerCase() !== ch[i + 1]!.toLowerCase() ? [i] : []))
+  if (swaps.length > 0 && Math.random() < 0.5) {
+    const i = pick(swaps)
+    ;[ch[i], ch[i + 1]] = [ch[i + 1]!, ch[i]!]
+  } else {
+    const doubles = ch.flatMap((_, i) => (i > 0 && letter(i) ? [i] : []))
+    const i = doubles.length > 0 ? pick(doubles) : 0
+    ch.splice(i, 0, ch[i]!)
+  }
+  return [ch.join(''), ...variant].join(' (')
+}
+
+function FakeGame({ duration, onDone }: { duration: number; onDone: Done }) {
+  const [score, setScore] = useState(0)
+  const [count, setCount] = useState(0)
+  const [last, setLast] = useState<{ key: number; ok: boolean } | null>(null)
+  const state = useRef({ score: 0, count: 0 })
+  const left = useRound(duration, onDone, useCallback(() => [state.current.score, state.current.count], []))
+  const { card, missed, ready, next } = useCardFlow(nextFake, FAKE.revealMs, left)
+
+  const answer = (saysFake: boolean) => {
+    if (!ready()) return
+    const ok = saysFake === (card.tell !== null)
+    const s = state.current
+    s.score = Math.max(0, s.score + (ok ? FAKE.right : FAKE.wrong))
+    if (ok) s.count += 1
+    setScore(s.score)
+    setCount(s.count)
+    setLast({ key: card.key, ok })
+    sfx(ok ? 'stamp' : 'error')
+    next(!ok)
+  }
+  useKeys((k) => {
+    if (k === 'e' || k === 'arrowleft') answer(false)
+    else if (k === 'f' || k === 'arrowright') answer(true)
+    else return false
+    return true
+  })
+
+  return (
+    <div>
+      <Hud left={left} score={score} extra={`${T.right}: ${count}`} />
+      <div className="flex flex-col items-center gap-4 overflow-x-clip rounded-2xl border border-line bg-surface-2 p-3 select-none md:p-5">
+        <p className="text-sm text-fg-2">{F.hint}</p>
+        <div className="grid w-full items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
+          <div className="max-md:hidden" />
+          <div className="relative flex flex-col items-center gap-3">
+            {last && <Flash key={`flash-${last.key}`} good={last.ok} />}
+            <div key={card.key} className="relative anim-deal">
+              <div className={card.look}>
+                <Card id={card.id} scale={PX} foil="none" />
+              </div>
+            </div>
+            <p
+              className={clsx(
+                'relative rounded-lg bg-surface-3 px-3 py-1.5 text-center outline-2 -outline-offset-2',
+                missed && card.tell === 'name' ? 'outline-loss' : 'outline-transparent',
+              )}
+            >
+              <span className="mr-2 text-xs text-fg-3">{F.plate}</span>
+              <span className="font-semibold">{card.plate}</span>
+            </p>
+          </div>
+          <div className="flex min-h-32 items-center justify-center md:justify-start">
+            {missed ? (
+              card.tell ? (
+                <Verdict title={F.caught} cents={FAKE.wrong} tone="loss">
+                  <p className="text-sm text-fg-2 max-md:text-center">
+                    <span className="font-semibold text-fg">{F.tells[card.tell]}.</span> {F.passed}
+                  </p>
+                </Verdict>
+              ) : (
+                <Verdict title={F.wasReal} cents={FAKE.wrong} tone="loss">
+                  <p className="text-sm text-fg-2 max-md:text-center">{F.flagged}</p>
+                </Verdict>
+              )
+            ) : (
+              last?.ok && <Gain key={last.key} cents={FAKE.right} />
+            )}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            disabled={missed}
+            onClick={() => answer(false)}
+            className="btn btn-neutral flex min-h-12 min-w-32 items-center justify-center gap-3 px-4 text-lg font-semibold md:min-w-44"
+          >
+            <Key k={F.keysReal[1]} />
+            <span className="text-gain">{F.real}</span>
+            <Key k={F.keysReal[0]} />
+          </button>
+          <button
+            type="button"
+            disabled={missed}
+            onClick={() => answer(true)}
+            className="btn btn-neutral flex min-h-12 min-w-32 items-center justify-center gap-3 px-4 text-lg font-semibold md:min-w-44"
+          >
+            <Key k={F.keysFake[0]} />
+            <span className="text-loss">{F.fake}</span>
+            <Key k={F.keysFake[1]} />
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ----------------------------------------------------------------------------------------------
+// Grading-Praktikum: grade the card. The worst of centering, corners, edges and surface counts.
+// ----------------------------------------------------------------------------------------------
+const P = minijobs.praktikum
+/** wrong = off by two or more grades; at -100 € blindly pressing one button earns nothing on average. */
+const PRAKTIKUM = { right: 7_000, near: 1_500, wrong: -10_000, revealMs: 1_500 }
+const GRADES = [10, 9, 8, 7]
+const ASPECTS = ['centering', 'corners', 'edges', 'surface'] as const
+type Aspect = (typeof ASPECTS)[number]
+/** Chance of a 10, 9 or 8 for each quality value (the rest is a 7): every final grade comes up about as often. */
+const VALUE_ODDS = [0.707, 0.134, 0.09]
+/** Light frame around the card in card pixels; bad centering moves the card to one side (7/7, 5/9, 3/11, 1/13). */
+const MARGIN = 7
+/** By damage (10 - value): centering shift, size of each whitened corner (1, 2 or 3 corners), specks along one
+ *  edge, scratches across the art. */
+const SHIFT = [0, 2, 4, 6]
+const CORNER = [0, 4, 6, 8]
+const SPECKS = [0, 5, 8, 13]
+const SCRATCHES = [
+  [],
+  [{ len: 28, tone: 'bg-fg/70' }],
+  [{ len: 46, tone: 'bg-fg' }],
+  [
+    { len: 60, tone: 'bg-fg' },
+    { len: 36, tone: 'bg-fg' },
+  ],
+]
+
+/** In card pixels: a whitened spot (top-left and size) and a scratch (centre, length and angle). */
+interface Spot {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+interface Scratch {
+  x: number
+  y: number
+  len: number
+  deg: number
+  tone: string
+}
+interface GradeCard {
+  key: number
+  id: string
+  values: Record<Aspect, number>
+  grade: number
+  /** top-left of the card inside its frame, in card pixels */
+  at: { x: number; y: number }
+  spots: Spot[]
+  scratches: Scratch[]
+}
+
+function rollValue() {
+  let r = Math.random()
+  for (const [i, p] of VALUE_ODDS.entries()) if ((r -= p) < 0) return 10 - i
+  return 7
+}
+
+function nextGrade(prev?: GradeCard): GradeCard {
+  const values = { centering: rollValue(), corners: rollValue(), edges: rollValue(), surface: rollValue() }
+  const bad = (a: Aspect) => 10 - values[a]
+  const shift = SHIFT[bad('centering')]! * pick([-1, 1])
+  const spots: Spot[] = []
+  // Corners: 1-3 whitened corners, each a stair-step triangle that grows with the damage.
+  const size = CORNER[bad('corners')]!
+  for (const c of sample([0, 1, 2, 3], bad('corners'))) {
+    for (let i = 0; i < size; i++) spots.push({ x: c % 2 ? CW - size + i : 0, y: c < 2 ? i : CH - 1 - i, w: size - i, h: 1 })
+  }
+  // Edges: whitened specks along one edge (top, right, bottom or left), two card pixels deep, longer when worse.
+  const edge = pick([0, 1, 2, 3])
+  const slots = Array.from({ length: ((edge % 2 ? CH : CW) - 10) / 2 }, (_, i) => 5 + i * 2)
+  for (const p of sample(slots, SPECKS[bad('edges')]!)) {
+    const len = 2 + Math.floor(Math.random() * bad('edges'))
+    spots.push(edge % 2 ? { x: edge === 3 ? 0 : CW - 2, y: p, w: 2, h: len } : { x: p, y: edge === 0 ? 0 : CH - 2, w: len, h: 2 })
+  }
+  return {
+    key: (prev?.key ?? 0) + 1,
+    id: randomCard(prev?.id).id,
+    values,
+    grade: Math.min(...Object.values(values)),
+    at: Math.random() < 0.5 ? { x: MARGIN + shift, y: MARGIN } : { x: MARGIN, y: MARGIN + shift },
+    spots,
+    // Surface: scratch lines across the art.
+    scratches: SCRATCHES[bad('surface')]!.map((s) => ({
+      ...s,
+      x: s.len / 2 + 6 + Math.random() * (CW - s.len - 12),
+      y: 24 + Math.random() * 28,
+      deg: Math.random() * 70 - 35,
+    })),
+  }
+}
+
+/** The card in its light frame, with its flaws drawn on top. */
+function GradedCard({ card }: { card: GradeCard }) {
+  return (
+    <div className="relative bg-fg-2" style={{ width: (CW + 2 * MARGIN) * PX, height: (CH + 2 * MARGIN) * PX }}>
+      <div className="absolute" style={{ left: card.at.x * PX, top: card.at.y * PX }}>
+        <Card id={card.id} scale={PX} foil="none" />
+        {card.spots.map((s, i) => (
+          <i key={i} className="absolute bg-fg" style={{ left: s.x * PX, top: s.y * PX, width: s.w * PX, height: s.h * PX }} />
+        ))}
+        {card.scratches.map((s, i) => (
+          <i
+            key={`s${i}`}
+            className={clsx('absolute h-0.5', s.tone)}
+            style={{ left: (s.x - s.len / 2) * PX, top: s.y * PX, width: s.len * PX, transform: `rotate(${s.deg}deg)` }}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function GradingGame({ duration, onDone }: { duration: number; onDone: Done }) {
+  const [score, setScore] = useState(0)
+  const [count, setCount] = useState(0)
+  const [last, setLast] = useState<{ key: number; off: number; cents: number } | null>(null)
+  const state = useRef({ score: 0, count: 0 })
+  const left = useRound(duration, onDone, useCallback(() => [state.current.score, state.current.count], []))
+  const { card, missed, ready, next } = useCardFlow(nextGrade, PRAKTIKUM.revealMs, left)
+
+  const choose = (grade: number) => {
+    if (!ready()) return
+    const off = Math.abs(grade - card.grade)
+    const cents = off === 0 ? PRAKTIKUM.right : off === 1 ? PRAKTIKUM.near : PRAKTIKUM.wrong
+    const s = state.current
+    s.score = Math.max(0, s.score + cents)
+    if (off === 0) s.count += 1
+    setScore(s.score)
+    setCount(s.count)
+    setLast({ key: card.key, off, cents })
+    sfx(off === 0 ? 'stamp' : off === 1 ? 'flip' : 'error')
+    next(off > 0)
+  }
+  useKeys((k) => {
+    const grade = GRADES[Number(k) - 1]
+    if (grade === undefined) return false
+    choose(grade)
+    return true
+  })
+
+  return (
+    <div>
+      <Hud left={left} score={score} extra={`${T.right}: ${count}`} />
+      <div className="flex flex-col items-center gap-4 overflow-x-clip rounded-2xl border border-line bg-surface-2 p-3 select-none md:p-5">
+        <p className="text-sm font-semibold text-fg-2">{P.hint}</p>
+        <div className="grid w-full items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
+          <div className="max-md:hidden" />
+          <div className="relative">
+            {last && <Flash key={`flash-${last.key}`} good={last.off === 0} />}
+            <div key={card.key} className="relative anim-deal">
+              <GradedCard card={card} />
+            </div>
+          </div>
+          <div className="flex min-h-44 items-center justify-center md:justify-start">
+            {missed && last ? (
+              <Verdict title={P.grade(card.grade)} cents={last.cents} tone={last.off === 1 ? 'warn' : 'loss'}>
+                <p className="text-sm text-fg-2">{last.off === 1 ? P.near : P.wrong}</p>
+                <div className="grid grid-cols-[auto_auto] gap-x-4 text-sm">
+                  {ASPECTS.flatMap((a) => {
+                    const tone = card.values[a] === card.grade ? 'font-semibold text-fg' : 'text-fg-3'
+                    return [
+                      <span key={a} className={tone}>
+                        {P.aspects[a]}
+                      </span>,
+                      <span key={`${a}-v`} className={clsx('nums text-right', tone)}>
+                        {card.values[a]}
+                      </span>,
+                    ]
+                  })}
+                </div>
+              </Verdict>
+            ) : (
+              last?.off === 0 && <Gain key={last.key} cents={last.cents} />
+            )}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+          {GRADES.map((g, i) => (
+            <button
+              key={g}
+              type="button"
+              disabled={missed}
+              onClick={() => choose(g)}
+              className="btn btn-neutral flex min-h-12 min-w-28 items-center justify-center gap-2 px-3 font-semibold"
+            >
+              <Key k={String(i + 1)} />
+              {P.grades[g]}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
