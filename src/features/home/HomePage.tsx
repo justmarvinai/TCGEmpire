@@ -5,7 +5,7 @@ import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { Skeleton } from '@/components/ui/States.tsx'
 import { QuestList } from '@/features/quests/QuestsPage.tsx'
-import { useQuests } from '@/lib/actions.ts'
+import { useQuests, useShop } from '@/lib/actions.ts'
 import { formatFactor, formatMoney } from '@/lib/format.ts'
 import type { Me, Player } from '@/lib/schemas.ts'
 import { texts } from '@/texts/de.ts'
@@ -14,18 +14,19 @@ import { config } from '../../../content/config.ts'
 const T = texts.home
 
 /** Exactly one recommendation: the most useful next action. */
-function nextStep(p: Player): { key: keyof typeof T.cta; text: string; to: string; icon: IconName } {
+function nextStep(p: Player, kioskPrice: number | undefined): { key: keyof typeof T.cta; text: string; to: string; icon: IconName } {
   if (p.sealed_total > 0) return { key: 'sealed', text: T.next.sealed(p.sealed_total), to: '/open', icon: 'pack' }
   if (p.quests_ready > 0) return { key: 'quests', text: T.next.quests(p.quests_ready), to: '/quests', icon: 'scroll' }
-  if (p.cash_cents >= 110_00) return { key: 'kiosk', text: T.next.kiosk, to: '/shop', icon: 'shop' }
+  if (kioskPrice !== undefined && p.cash_cents >= kioskPrice) return { key: 'kiosk', text: T.next.kiosk, to: '/shop', icon: 'shop' }
   if (p.energy >= config['minigame.pfand'].energy) return { key: 'pfand', text: T.next.pfand, to: '/jobs', icon: 'bottle' }
   return { key: 'broke', text: T.next.broke, to: '/collection', icon: 'binder' }
 }
 
 export function HomePage({ me }: { me: Me & { player: Player } }) {
   const p = me.player
-  const next = nextStep(p)
   const quests = useQuests()
+  const shop = useShop()
+  const next = nextStep(p, shop.data?.kiosk[0]?.price_cents)
   return (
     <Page icon="home" title={T.greeting(p.username)} subtitle={T.subtitle}>
       <div className="grid gap-4 lg:grid-cols-3">
