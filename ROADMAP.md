@@ -1,6 +1,7 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: building `alpha_01` (owner's go on 21 Nov 2026). Later alphas each need a new go.**
+> **Current phase: `alpha_01` is finished (22 Nov 2026) and waits for the owner's review. `alpha_02` needs the
+> owner's go.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -36,7 +37,7 @@ Goal: a friend can register with an invite code on the live site and see an empt
 | ☑ | Painter toolkit v1 + atlas build + contact sheets; the small icon set (56 icons); bitmap fonts | M |
 | ☑ | Audio synth v1 with a handful of presets; settings (sound, reduced motion) | M |
 | ☑ | Deploy pipeline: Vercel config, migration runner from CI, keep-alive, owner guide `docs/SETUP.md` (the owner's one-time setup is still to do) | M |
-| ◐ | **Art quality sample** for the owner: Pokémon card frame; Glurak (Grail) and Turtok (Ultra) at full detail; Pikachu, Professor Eich, Feuer-Energie as lower-tier cards; a booster and a slab. (Reduced from ten detailed cards by the owner's rule of 22 Nov: detail only for Ultra and Grail.) | M |
+| ☑ | **Art quality sample** for the owner: Pokémon card frame; Glurak (Grail) and Turtok (Ultra) at full detail; Pikachu, Professor Eich, Feuer-Energie as lower-tier cards; a booster and a slab. (Reduced from ten detailed cards by the owner's rule of 22 Nov: detail only for Ultra and Grail.) | M |
 
 ### alpha_02 — Rip
 

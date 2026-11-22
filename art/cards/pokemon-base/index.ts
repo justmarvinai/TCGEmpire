@@ -7,4 +7,11 @@ import { professorEich } from './professor-eich.ts'
 import { turtok } from './turtok.ts'
 
 /** Pokémon Basis-Set: one file per card, registered here in set order. */
-export const pokemonBase: readonly CardDef[] = [pikachu, professorEich, feuerEnergie, pikachuRoteWangen, turtok, glurak]
+export const pokemonBase: readonly CardDef[] = [
+  pikachu,
+  professorEich,
+  feuerEnergie,
+  pikachuRoteWangen,
+  turtok,
+  glurak,
+]

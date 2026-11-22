@@ -3,7 +3,7 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
-## [0.0.1-alpha_01] — Fundament (in progress)
+## [0.0.1-alpha_01] — Fundament (22 Nov 2026)
 
 The foundation: no gameplay yet, but a real, running game shell.
 
@@ -19,8 +19,9 @@ The foundation: no gameplay yet, but a real, running game shell.
   Every stat has an "i" that explains it.
 - **Look and sound:** dark pixel-framed design, 56 pixel icons, sound effects generated in code, settings
   for volume and reduced animations.
-- **Card art pipeline:** cards, card backs, boosters and slabs are drawn by code. First Basis-Set cards
-  as a quality sample.
+- **Card art pipeline:** cards, card backs, boosters and slabs are drawn by code. Quality sample: Glurak
+  (Grail) and Turtok (Ultra) in full detail, three lower-tier cards plus the red-cheeks Pikachu, a
+  Glurak booster, and PSA-, BGS- and CGC-style slabs.
 - **Operations:** local mode (the whole game runs in one browser for development), automatic tests,
   database migrations and a daily keep-alive for the free Supabase plan, setup guide `docs/SETUP.md`.
 

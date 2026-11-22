@@ -1,5 +1,5 @@
 import type { Mask, Painter, Pt } from '../../toolkit/index.ts'
-import { colors, hex, lightning, noise, pts, quad, rng } from '../../toolkit/index.ts'
+import { colors, hex, lightning, noise, pts, quad, rng, spline } from '../../toolkit/index.ts'
 import type { CardDef } from '../types.ts'
 
 /**
@@ -45,8 +45,8 @@ interface Gun {
   bias: number
 }
 const BARREL = 14.5
-const NEAR: Gun = { base: P(58, 34.5), r: 5, reach: 54, jet: [3.4, 7.8], bias: 0 }
-const FAR: Gun = { base: P(34, 34), r: 4, reach: 28, jet: [2.7, 5.4], bias: -1 }
+const NEAR: Gun = { base: P(60, 33), r: 5, reach: 54, jet: [3.4, 7.8], bias: 0 }
+const FAR: Gun = { base: P(31, 30), r: 4, reach: 28, jet: [2.7, 5.4], bias: -1 }
 const muzzle = (g: Gun): Pt => along(g.base, BARREL)
 
 function harbour(p: Painter): void {
@@ -56,8 +56,9 @@ function harbour(p: Painter): void {
     null,
     SKY,
     (x, y) => {
-      const cloud = noise(x, y * 1.7, 5, 14) * 0.3 + noise(x, y * 1.7, 9, 5) * 0.14
-      return cloud + Math.pow(Math.max(0, 1 - Math.abs(y - 60) / 36), 1.4) * 0.78
+      const cloud = noise(x * 0.6, y * 1.5, 5, 11) * 0.34 + noise(x, y * 1.7, 9, 5) * 0.1
+      const flash = Math.max(0, 1 - Math.hypot(x - 70, y - 25) / 15) * 0.4
+      return cloud + flash + Math.pow(Math.max(0, 1 - Math.abs(y - 60) / 36), 1.4) * 0.78
     },
     0.8,
   )
@@ -94,14 +95,17 @@ function harbour(p: Painter): void {
 
   // breakers bursting over the quay: every lump is x, y, rx, ry, from back to front
   p.shine(true)
-  const plume = (lumps: readonly number[], seed: number) => {
+  const plume = (lumps: readonly number[], seed: number, bias: number) => {
     for (let i = 0; i + 3 < lumps.length; i += 4) {
-      const lump = p.m().blob(lumps[i] ?? 0, lumps[i + 1] ?? 0, lumps[i + 2] ?? 0, lumps[i + 3] ?? 0, seed + i, 0.2)
-      p.part(lump, SPRAY, { bevel: 3.5, line: 'shadow' })
+      const lump = p
+        .m()
+        .blob(lumps[i] ?? 0, lumps[i + 1] ?? 0, lumps[i + 2] ?? 0, lumps[i + 3] ?? 0, seed + i, 0.2)
+      p.part(lump, SPRAY, { bevel: 3.5, line: 'shadow', bias })
     }
   }
-  plume([76, 79, 8, 8, 70, 68, 7, 8, 76.5, 58, 7, 8, 72, 47, 5.5, 6.5, 77, 40, 4, 5], 3)
-  plume([3, 81, 8, 7, 13, 84, 6, 5, 2, 71, 5, 6, 9, 75, 5, 5], 9)
+  // the right one shows only its shadow side past the shell, so it is painted a step lighter
+  plume([76, 79, 8, 8, 70, 68, 7, 8, 76, 59, 7, 8, 73, 50, 6, 7, 76, 42, 5, 6, 71, 38, 4, 4.5], 3, 1)
+  plume([3, 81, 8, 7, 13, 84, 6, 5, 2, 71, 5, 6, 9, 75, 5, 5], 9, 0)
   for (const [x, y] of pts([69, 40, 73, 34, 78, 33, 66, 44, 11, 68, 5, 64, 15, 71, 18, 78]))
     p.px(x, y, (x + y) % 2 === 0 ? WATER[3] : WATER[4])
   p.shine(false)
@@ -111,7 +115,13 @@ function harbour(p: Painter): void {
   p.fill(quay, SKY[0])
   p.edge(quay, SKY[2], [0, -1])
   for (const [x, y] of pts([6, 96, 30, 96, 54, 96, 18, 106, 42, 106, 66, 106]))
-    p.fill(p.m().rect(x, y - 9, 1, 9).rect(x - 12, y, 24, 1), SKY[1])
+    p.fill(
+      p
+        .m()
+        .rect(x, y - 9, 1, 9)
+        .rect(x - 12, y, 24, 1),
+      SKY[1],
+    )
   for (const [x, y] of pts([36, 87, 40, 88, 62, 88, 14, 88])) p.fill(p.m().rect(x, y, 5, 1), STEEL[1])
   p.fill(p.m().rect(8, 79, 6, 2).rect(9, 81, 4, 6).rect(7, 86, 8, 1), SKY[0])
   p.fill(p.m().rect(8, 79, 5, 1).rect(9, 81, 1, 5), SKY[3])
@@ -130,75 +140,101 @@ function cannon(d: Painter, g: Gun): void {
 
 /** A white claw: a small spike from (x, y) in the direction (dx, dy). */
 function claw(d: Painter, x: number, y: number, dx: number, dy: number, len = 3.6): void {
-  const spike = d.m().poly([x - dy * 1.3, y + dx * 1.3, x + dx * len, y + dy * len, x + dy * 1.3, y - dx * 1.3])
+  const spike = d
+    .m()
+    .poly([x - dy * 1.3, y + dx * 1.3, x + dx * len, y + dy * len, x + dy * 1.3, y - dx * 1.3])
   d.fill(spike, STEEL[3])
   d.fill(spike.facing([1, 0, 0, 1]).and(spike.moved(-1, -1)), STEEL[1])
 }
 
-const EYE = ['...kkkk', '.kkwwwk', 'kkpiwwk', '.kpiwk.', '..kkk..']
+const EYE = ['....kkkk', '..kkwwwk', 'kkpiiwwk', '.kppiwwk', '..kkkkk.']
+/** Outline of the skull, from the tip of the muzzle over the brow and round the cheek. */
+const SKULL = [
+  15, 39, 18, 36.2, 22, 34.5, 25, 31.8, 30, 29.5, 35, 29.5, 39.5, 32, 42, 37, 41.5, 43, 38, 48, 33, 49.5, 29,
+  47, 24, 46, 19, 44.5, 15.5, 43, 14.2, 41, 15, 39,
+]
+const JAW = [33, 48.5, 27, 49.5, 21, 50, 16.5, 49, 15.5, 51, 18, 54, 24, 55.5, 30, 54, 35, 51, 33, 48.5]
 
 function tortoise(d: Painter, jets: Mask): void {
   const m = (): Mask => d.m()
 
   // behind everything: far cannon and the stubby tail
   cannon(d, FAR)
-  d.part(m().limb([62, 78, 70, 81, 75, 76], [4.6, 3.6, 2]), BLUE, { bias: -1 })
+  d.part(m().limb([64, 78, 71, 81, 75.5, 76], [4.6, 3.6, 2]), BLUE, { bias: -1 })
 
   // shell: a brown dome on the back, scutes hinted along its edge
-  const shell = m().ellipse(52.5, 59, 19.5, 23, -8)
+  const shell = m().ellipse(51, 59.5, 21.5, 23, -8)
   d.part(shell, SHELL, { bevel: 11 })
-  d.fill(shell.shrunk(5).facing([1, 0, 0, -1]).and(m().rect(56, 36, 20, 44)), SHELL[1])
+  d.fill(
+    shell
+      .shrunk(5)
+      .facing([1, 0, 0, -1])
+      .and(m().rect(56, 36, 20, 44)),
+    SHELL[1],
+  )
   for (const seam of [
-    [63, 44, 67, 41],
-    [68, 55, 72, 54],
-    [67, 67, 71, 69],
+    [64, 43, 68, 40],
+    [68.5, 54, 73, 53],
+    [68, 68, 72, 70],
   ])
     d.fill(m().path(seam).and(shell.shrunk(1)), SHELL[1])
   cannon(d, NEAR)
 
   // far leg and far arm, reaching forward to brace
-  d.part(m().limb([35, 72, 31.5, 78, 31, 83], [6.5, 6, 5.5]), BLUE, { bias: -1 })
-  d.part(m().ellipse(27.5, 84.6, 8, 3.2), BLUE, { bias: -1, bevel: 3 })
-  for (const x of [20.5, 24.5, 28.5]) claw(d, x, 86, -0.95, 0.3, 3)
-  d.part(m().limb([30, 61, 21, 66, 14.5, 63.5], [4.6, 4.2, 4.2]), BLUE, { bias: -1 })
-  claw(d, 11.5, 61, -0.8, -0.6)
-  claw(d, 10.5, 64, -1, 0.1)
-  claw(d, 11.5, 67, -0.75, 0.65)
+  d.part(m().limb([33, 73, 28, 79, 27, 83.5], [6.5, 6, 5.5]), BLUE, { bias: -1 })
+  d.part(m().ellipse(23.5, 84.8, 8, 3.2), BLUE, { bias: -1, bevel: 3 })
+  for (const x of [16.5, 20.5, 24.5]) claw(d, x, 86.2, -0.95, 0.3, 3)
+  d.part(m().limb([28, 63, 19.5, 68, 13, 65.5], [5, 4.6, 4.8]), BLUE, { bias: -1 })
+  claw(d, 9.5, 62.5, -0.8, -0.6)
+  claw(d, 8.5, 66, -1, 0.1)
+  claw(d, 9.5, 69.5, -0.75, 0.65)
 
   // belly plate inside the white rim of the shell
-  const plate = m().ellipse(42.5, 63.5, 15, 19, -6)
+  const plate = m().ellipse(41.5, 64, 16, 18.5, -6)
   d.part(plate.grown(2), STEEL, { bevel: 2.5 })
   d.shade(plate, CREAM, { bevel: 10 })
-  for (const y of [53, 61, 69, 76]) {
-    d.fill(m().path(quad(P(26, y + 1.5), P(40, y - 2.5), P(59, y + 1))).and(plate), CREAM[1])
+  for (const y of [54, 62, 70, 77]) {
+    d.fill(
+      m()
+        .path(quad(P(24, y + 1.5), P(39, y - 2.5), P(59, y + 1)))
+        .and(plate),
+      CREAM[1],
+    )
   }
-  d.fill(m().path(quad(P(39.5, 45), P(36.5, 64), P(41.5, 83))).and(plate), CREAM[1])
+  d.fill(
+    m()
+      .path(quad(P(38.5, 46), P(35.5, 64), P(40.5, 83)))
+      .and(plate),
+    CREAM[1],
+  )
 
   // near leg, planted wide
-  d.part(m().limb([54, 70, 58.5, 77, 58, 83], [7.5, 7, 6]), BLUE)
-  d.part(m().ellipse(54.5, 84.6, 9, 3.4), BLUE, { bevel: 3 })
-  for (const x of [46.5, 51, 55.5]) claw(d, x, 86, -0.95, 0.3, 3.4)
+  d.part(m().limb([54, 71, 59.5, 77.5, 59.5, 83.5], [8, 7.5, 6.3]), BLUE)
+  d.part(m().ellipse(56, 84.8, 9.5, 3.4), BLUE, { bevel: 3 })
+  for (const x of [48, 52.5, 57]) claw(d, x, 86.2, -0.95, 0.3, 3.4)
 
-  // neck and ears, then the head thrust forward with the jaws wide open
-  d.part(m().limb([39, 49, 34, 44], 6.5), BLUE)
-  d.part(m().poly([26, 34, 28.5, 28, 32.5, 33]), BLUE, { bias: -1, bevel: 2 })
-  const ear = m().poly([33.5, 34, 38.5, 28.5, 39.8, 36.5])
+  // neck and ears
+  d.part(m().limb([41, 52, 37, 46], 7), BLUE)
+  d.part(m().poly([29.5, 31, 31, 27, 34, 30.5]), BLUE, { bias: -1, bevel: 2 })
+  const ear = m().poly([34, 32, 38.5, 27.5, 41, 35])
   d.part(ear, BLUE, { bevel: 2 })
   d.fill(ear.shrunk(1).and(ear.moved(1, 1)), BLUE[0])
-  d.part(m().ellipse(31, 39.5, 10, 7.6).ellipse(22.5, 39.5, 8, 4.2, 16), BLUE)
-  const mouth = m().poly([16.5, 41, 22, 43.5, 30.5, 45.5, 27, 49.5, 19, 53])
-  d.contact(mouth).fill(mouth, MOUTH)
-  d.fill(m().ellipse(23.5, 49, 4.2, 1.8, -22).and(mouth), RED)
-  d.part(m().limb([31, 48, 25, 51.5, 18.5, 54], [2.8, 2.8, 2.3]), CREAM, { bevel: 2.5 })
-  d.stamp(EYE, 23, 36, { k: BLUE[0], w: STEEL[3], p: OUTLINE, i: SHELL[2] })
-  d.px(17, 39, BLUE[0])
 
-  // near arm, out of its white-rimmed port, claws spread
-  d.part(m().ellipse(57.5, 54, 6.2, 6.8), STEEL, { bevel: 2.5 })
-  d.part(m().limb([57.5, 54, 66, 59.5, 68.5, 67.5], [5.2, 5, 5.2]), BLUE)
-  claw(d, 65.5, 71.5, -0.6, 0.8)
-  claw(d, 69, 72.5, 0, 1)
-  claw(d, 72, 71, 0.55, 0.85)
+  // head thrust forward, jaws open: the mouth first, then the cream lower jaw and the skull over it
+  const mouth = m().poly([15, 41, 30, 44, 33, 48.5, 27, 51, 16.5, 51])
+  d.contact(mouth).fill(mouth, MOUTH)
+  d.fill(m().ellipse(22.5, 49, 5, 1.8, -5).and(mouth), RED)
+  d.part(m().poly(spline(JAW, 5)), CREAM, { bevel: 2.5 })
+  d.part(m().poly(spline(SKULL, 5)), BLUE)
+  d.stamp(EYE, 21, 36, { k: BLUE[0], w: STEEL[3], p: OUTLINE, i: SHELL[2] })
+  d.px(16, 40, BLUE[0])
+
+  // near arm out of its white-rimmed port, the fist clenched in front of the belly
+  d.part(m().ellipse(57.5, 54.5, 6.4, 7), STEEL, { bevel: 2.5 })
+  d.part(m().limb([58, 54.5, 66, 61.5, 59.5, 68], [5.6, 5.6, 6.4]), BLUE)
+  claw(d, 53.5, 66, -1, -0.2)
+  claw(d, 52.8, 69.5, -1, 0.1)
+  claw(d, 54.5, 72.8, -0.9, 0.45)
 
   // the jets light what is close to them, the lightning the right-hand rim
   d.tone(d.mask().and(jets.grown(3)), 1)
@@ -223,6 +259,13 @@ function jetLayer(p: Painter, g: Gun, scale: number, phase: number): Mask {
 
 function jet(p: Painter, g: Gun, seed: number): void {
   const outer = jetLayer(p, g, 1, seed)
+  // mist on the storm air around the jet
+  outer
+    .grown(3)
+    .minus(p.subjectMask)
+    .each((x, y) => {
+      if ((x + y) % 2 === 0) p.set(x, y, WATER[0])
+    })
   p.fill(outer.grown(1), WATER[0])
   p.fill(outer, WATER[1])
   p.fill(jetLayer(p, g, 0.76, seed + 1.3), WATER[2])
