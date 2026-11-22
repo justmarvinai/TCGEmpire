@@ -359,6 +359,12 @@ export const config = {
   'company.mystery_per_hour': 25,
   'company.award_ruf': 20,
   'loan.repaid_ruf': 5,
+  // Research from this stage on. Großhandel (level 40, with a company): displays per week by company stage at
+  // price_bps of the list price, delivered after delivery_minutes.
+  'company.research_stage': 3,
+  'wholesale.price_bps': 8_000,
+  'wholesale.displays_per_stage': [2, 4, 8, 12, 18, 24, 30],
+  'wholesale.delivery_minutes': 60,
 
   // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,

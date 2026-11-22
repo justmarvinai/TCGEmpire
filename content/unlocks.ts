@@ -27,4 +27,5 @@ export const UNLOCKS = {
   breaks: 18,
   housing: 20,
   company: 30,
+  wholesale: 40,
 } as const

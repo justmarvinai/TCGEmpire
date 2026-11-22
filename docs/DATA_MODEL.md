@@ -106,12 +106,12 @@ RLS enabled on every table with no policies.
 | `game.grading_orders` | Player submissions to NPC graders or companies: copy, service, fee, due_at, result. |
 | `game.company_founding`, `game.companies` | alpha_09 · Gewerbeanmeldung progress (step, ready_at). The company: owner, name (unique among open ones), slogan, label (`bg`, `fg` colour keys, 8×8 `emblem` as 16 hex digits), stage and a pending stage with its ready time, own account `cash_cents`, prices per service, equipment level per station (jsonb), backlog, fractional Ruf drift, invested money (stages and equipment), lifetime orders, `last_cycle_at`, `closed_at` (a reset closes it; its slabs keep the label). |
 | `game.company_staff`, `game.company_applicants` | alpha_09 · Staff (archetype, name indexes into the content pools, station, Tempo, Genauigkeit, Treue, wage per hour in Basis-€, trainings) and the applicants of the German day. |
-| `game.company_research` | Research (planned; equipment is `companies.equipment`). |
+| `companies.research`, `game.wholesale_buys` | alpha_09 · Research keys owned by the company (brand bonus, own Black Label); Großhandel displays bought per player and week. |
 | `game.company_days` | alpha_09 · Orders, revenue and costs per company and German day (14 days kept). Cycles run in the tick `company` and on every `company_get`. |
 | `game.company_decisions`, `game.company_awards`, `companies` (marketing, tax, shady columns), `card_copies.bumped` | alpha_09 · The open decision card (key, expiry; the ignore choice happens after it); awards per company; on the company: running campaign (key, boost, until), next tax date and Steuerberater, Schwarzarbeit, Kapitalertragsteuer evaded, Gefälligkeitsgutachten in the world (`bumped`), scandal end, Mystery-Boxen still unopened. `card_copies.bumped` marks a slab one grade too good (set when its order is revealed); cracking it starts a scandal. |
 | `game.company_vip`, `grading_orders.bumped`, grader `co:<id>` | alpha_09 · VIP orders (card, hidden quality values, shown range width, fee, expiry) graded by the owner; player orders to a company are grading orders with the grader `co:<company id>` (constraint widened on `card_copies` and `grading_orders`), `bumped` marks a Gefälligkeitsgutachten. Company slabs carry the company's label in `slab_doc` and its brand from the owner's Ruf. |
 | `game.company_reviews` | alpha_09 · Generated customer reviews (stars, text index into the content pool); the newest 50 are kept. |
-| `game.shares` | Stille Teilhaberschaft. |
+| `game.shares` | Stille Teilhaberschaft (moved to 0.0.2). |
 
 ### Life and social
 

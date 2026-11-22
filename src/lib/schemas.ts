@@ -903,6 +903,13 @@ export const zCompany = z.object({
         mystery_max: z.number(),
       }),
       awards: z.array(z.object({ key: z.string(), at: z.string() })),
+      research: z.object({ owned: z.array(z.string()), stage: z.number(), costs: z.record(z.string(), z.number()) }),
+      wholesale: z.object({
+        unlock_level: z.number(),
+        left: z.number(),
+        delivery_minutes: z.number(),
+        displays: z.array(z.object({ product_id: z.string(), price_cents: z.number(), list_cents: z.number() })),
+      }),
     })
     .nullable(),
 })
@@ -1153,6 +1160,8 @@ export const RPC_SCHEMAS = {
   company_tax_file: zCompany.extend({ filed: z.boolean() }),
   company_tax_advisor: zCompany,
   company_shady: zCompany.extend(withPlayer),
+  company_research: zCompany,
+  wholesale_buy: zCompany.extend(withPlayer),
   company_order_submit: z.object({ fee_cents: z.number(), grading: zGrading, ...withPlayer }),
   company_vip_grade: zCompany.extend({
     result: z.object({ truth: z.array(z.number()), guess: z.array(z.number()), error: z.number(), paid_cents: z.number(), ruf: z.number() }),

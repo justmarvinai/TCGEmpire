@@ -16,7 +16,8 @@ import type { Company, CompanyDoc, RpcName } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
-import { AWARDS, CAMPAIGNS, DECISIONS, STAGES, TAX_FORM } from '../../../content/company.ts'
+import { itemName } from '@/lib/catalog.ts'
+import { AWARDS, CAMPAIGNS, DECISIONS, RESEARCH, STAGES, TAX_FORM } from '../../../content/company.ts'
 
 const T = texts.company
 const leftOf = (iso: string, now: number) =>
@@ -373,6 +374,103 @@ export function Awards({ co }: { co: Company }) {
           </li>
         ))}
       </ul>
+    </Panel>
+  )
+}
+
+export function Research({ co }: { co: Company }) {
+  const { busy, run } = useRun()
+  const locked = co.stage < co.research.stage
+  return (
+    <Panel title={T.research} tip={T.researchTip}>
+      {locked && (
+        <p className="mb-3 text-sm text-fg-3">
+          {T.researchLocked(STAGES.find((s) => s.stage === co.research.stage)?.name ?? '')}
+        </p>
+      )}
+      <ul className="flex flex-col gap-2">
+        {RESEARCH.map((r) => {
+          const owned = co.research.owned.includes(r.key)
+          const cost = co.research.costs[r.key] ?? 0
+          return (
+            <li
+              key={r.key}
+              className={clsx(
+                'flex flex-wrap items-center gap-3 rounded-xl p-3',
+                owned ? 'bg-gain/10' : 'bg-surface-2',
+                locked && 'opacity-60',
+              )}
+            >
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-bold">{r.name}</span>
+                <span className="block text-xs text-fg-3">{r.text}</span>
+                <span className="block text-xs text-fg-2">
+                  {r.blackLabel ? T.researchBlack : T.researchBrand(String(r.brandBps / 100))}
+                </span>
+              </span>
+              {owned ? (
+                <span className="flex items-center gap-1 text-xs font-bold text-gain">
+                  <PixelIcon name="check" /> {T.researchOwned}
+                </span>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="primary"
+                  loading={busy === r.key}
+                  disabled={locked || busy !== null || co.cash_cents < cost}
+                  onClick={async () => {
+                    if (await run(r.key, 'company_research', { p_key: r.key })) {
+                      sfx('success')
+                      toast('success', T.researchDone(r.name))
+                    }
+                  }}
+                >
+                  {T.researchBuy(formatMoney(cost))}
+                </Button>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </Panel>
+  )
+}
+
+export function Wholesale({ co, level }: { co: Company; level: number }) {
+  const { busy, run } = useRun()
+  const w = co.wholesale
+  return (
+    <Panel title={T.wholesale} tip={T.wholesaleTip(w.delivery_minutes)}>
+      {level < w.unlock_level ? (
+        <p className="text-sm text-fg-3">{T.wholesaleLocked(w.unlock_level)}</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-fg-2">{T.wholesaleLeft(w.left)}</p>
+          {w.displays.length === 0 && <p className="text-sm text-fg-3">{T.wholesaleEmpty}</p>}
+          {w.displays.map((d) => (
+            <div key={d.product_id} className="flex flex-wrap items-center gap-3 rounded-xl bg-surface-2 p-3">
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-bold">{itemName(d.product_id)}</span>
+                <span className="nums block text-xs text-fg-3 line-through">{formatMoney(d.list_cents)}</span>
+              </span>
+              <Button
+                size="sm"
+                variant="primary"
+                loading={busy === d.product_id}
+                disabled={busy !== null || w.left < 1}
+                onClick={async () => {
+                  if (await run(d.product_id, 'wholesale_buy', { p_product: d.product_id, p_qty: 1 })) {
+                    sfx('coin')
+                    toast('success', T.wholesaleBought)
+                  }
+                }}
+              >
+                {T.wholesaleBuy(formatMoney(d.price_cents))}
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
     </Panel>
   )
 }

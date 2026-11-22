@@ -228,6 +228,10 @@ insert into game.config (key, value) values
   ('company.mystery_per_hour', '25'::jsonb),
   ('company.award_ruf', '20'::jsonb),
   ('loan.repaid_ruf', '5'::jsonb),
+  ('company.research_stage', '3'::jsonb),
+  ('wholesale.price_bps', '8000'::jsonb),
+  ('wholesale.displays_per_stage', '[2,4,8,12,18,24,30]'::jsonb),
+  ('wholesale.delivery_minutes', '60'::jsonb),
   ('quest.mini_slots', '3'::jsonb),
   ('quest.mini_reward_minutes', '1'::jsonb),
   ('quest.mini_pfandbons', '1'::jsonb),
@@ -284,6 +288,7 @@ insert into game.config (key, value) values
   ('company.label_colors', '["weiss","schwarz","rot","blau","gruen","gold","silber","lila","orange","pink","tuerkis","braun"]'::jsonb),
   ('company.campaigns', '{"flyer":{"costBaseCents":50000,"boost":0.2,"hours":24,"minStage":1},"instagram":{"costBaseCents":250000,"boost":0.4,"hours":24,"minStage":2},"youtuber":{"costBaseCents":900000,"boost":0.7,"hours":24,"minStage":2},"messe":{"costBaseCents":3000000,"boost":1.2,"hours":48,"minStage":3}}'::jsonb),
   ('company.decisions', '[{"key":"reklamation","weight":4,"minStage":1,"ignore":2,"choices":[{"cash":-30000,"ruf":4},{"ruf":-2},{"ruf":-6}]},{"key":"bestechung","weight":3,"minStage":1,"ignore":1,"choices":[{"cash":150000,"bump":1},{"ruf":2}]},{"key":"journalistin","weight":2,"minStage":1,"ignore":1,"choices":[{"rufAccuracy":8},{"ruf":-2}]},{"key":"schweissgeraet","weight":3,"minStage":1,"ignore":1,"choices":[{"cash":-80000},{"downgrade":"slabbing"}]},{"key":"betriebsrat","weight":2,"minStage":2,"ignore":0,"choices":[{"loyalty":15,"wagePct":5},{"loyalty":-20,"ruf":-4}]},{"key":"praktikant","weight":3,"minStage":1,"ignore":1,"choices":[{"cash":-60000,"ruf":1},{"ruf":-5,"loyalty":-5}]},{"key":"nachbar","weight":2,"minStage":1,"ignore":1,"choices":[{"cash":-3000,"boost":0.1,"hours":12},{"cash":-40000,"ruf":-2}]},{"key":"kooperation","weight":2,"minStage":2,"ignore":1,"choices":[{"cash":-200000,"boost":0.3,"hours":48},{}]},{"key":"abwerbung","weight":2,"minStage":2,"ignore":1,"choices":[{"wagePct":8,"loyalty":10},{"loyalty":-15}]}]'::jsonb),
+  ('company.research', '{"uv":{"blackLabel":false,"costBaseCents":200000000,"brandBps":300},"hologramm":{"blackLabel":false,"costBaseCents":600000000,"brandBps":400},"nfc":{"blackLabel":false,"costBaseCents":1500000000,"brandBps":500},"blacklabel":{"blackLabel":true,"costBaseCents":4000000000,"brandBps":0}}'::jsonb),
   ('unlock.toplists', '1'::jsonb),
   ('unlock.players', '1'::jsonb),
   ('unlock.stammtisch', '1'::jsonb),
@@ -309,5 +314,6 @@ insert into game.config (key, value) values
   ('unlock.group_orders', '18'::jsonb),
   ('unlock.breaks', '18'::jsonb),
   ('unlock.housing', '20'::jsonb),
-  ('unlock.company', '30'::jsonb)
+  ('unlock.company', '30'::jsonb),
+  ('unlock.wholesale', '40'::jsonb)
 on conflict (key) do update set value = excluded.value;

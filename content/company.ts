@@ -345,6 +345,25 @@ export const AWARDS: readonly AwardDef[] = [
   { key: 'din', name: 'DIN-Norm für Slabs', text: '5.000 Aufträge und mindestens 4 Sterne Ruf.' },
 ]
 
+export interface ResearchDef {
+  key: string
+  name: string
+  text: string
+  costBaseCents: number
+  /** brand of the company's slabs, in basis points of PSA */
+  brandBps: number
+  /** four quality values of 10 become the company's own Black Label */
+  blackLabel?: boolean
+}
+
+/** Research (from the UG on): better slabs, a stronger brand. */
+export const RESEARCH: readonly ResearchDef[] = [
+  { key: 'uv', name: 'UV-Schutz-Slab', text: 'Slabs, die nicht vergilben. Behauptet zumindest die Werbung.', costBaseCents: 2_000_000_00, brandBps: 300 },
+  { key: 'hologramm', name: 'Hologramm-Label', text: 'Schillert, glitzert und ist schwer zu fälschen. Leichter als gedacht, aber schwer.', costBaseCents: 6_000_000_00, brandBps: 400 },
+  { key: 'nfc', name: 'NFC-Zertifikat', text: 'Handy an den Slab halten, das Zertifikat erscheint. Opa hält ihn ans Ohr.', costBaseCents: 15_000_000_00, brandBps: 500 },
+  { key: 'blacklabel', name: 'Eigenes Black Label', text: 'Vier glatte 10er bekommen dein schwarzes Etikett. Und den Wert dazu.', costBaseCents: 40_000_000_00, brandBps: 0, blackLabel: true },
+]
+
 /** Umsatzsteuer-Voranmeldung: a form with one honest number and two wrong ones. */
 export const TAX_FORM = {
   title: 'Umsatzsteuer-Voranmeldung',
@@ -366,4 +385,5 @@ export const COMPANY_CONFIG = {
   'company.label_colors': Object.keys(LABEL_COLORS),
   'company.campaigns': Object.fromEntries(CAMPAIGNS.map(({ key, name: _n, text: _t, ...c }) => [key, c])),
   'company.decisions': DECISIONS.map(({ title: _t, text: _x, choices, ...d }) => ({ ...d, choices: choices.map((c) => c.effect) })),
+  'company.research': Object.fromEntries(RESEARCH.map(({ key, name: _n, text: _t, ...r }) => [key, { blackLabel: false, ...r }])),
 } as const

@@ -31,7 +31,7 @@ import { EQUIPMENT, REVIEWS, STAGES, STATION_DEFS } from '../../../content/compa
 import { LabelDesigner, LabelPreview } from './LabelDesigner.tsx'
 import { personCv, personName } from './people.ts'
 import { PlayerOrders, VipOrder } from './Orders.tsx'
-import { Awards, DecisionCard, Marketing, Shady, Taxes } from './Business.tsx'
+import { Awards, DecisionCard, Marketing, Research, Shady, Taxes, Wholesale } from './Business.tsx'
 
 const T = texts.company
 const TABS = ['overview', 'team', 'build', 'office', 'reviews'] as const
@@ -107,6 +107,7 @@ export function Dashboard({ d, player }: { d: CompanyDoc; player: Player }) {
           <Prices co={co} />
           <Stage co={co} />
           <Equipment co={co} />
+          <Research co={co} />
           <LabelEdit co={co} />
         </div>
       )}
@@ -117,6 +118,7 @@ export function Dashboard({ d, player }: { d: CompanyDoc; player: Player }) {
             <Taxes co={co} />
             <Awards co={co} />
           </div>
+          <Wholesale co={co} level={player.level} />
           <Shady co={co} />
         </div>
       )}

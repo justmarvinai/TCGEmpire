@@ -532,6 +532,24 @@ export const texts = {
     // Awards
     awards: 'Auszeichnungen',
     awardsTip: 'Gibt es nur für ehrliche Firmen: keine geschönten Slabs, keine Schwarzarbeit, keine offene Steuer, kein Skandal. Jede bringt Ruf.',
+    // Research
+    research: 'Forschung',
+    researchTip: 'Forschung macht deine Slabs wertvoller: Sie stärkt deine Marke. Das eigene Black Label gibt es für vier glatte 10er.',
+    researchLocked: (stage: string) => `Forschung gibt es ab der ${stage}.`,
+    researchBrand: (pct: string) => `Marke +${pct} %`,
+    researchBlack: 'Black Label für vier 10er',
+    researchBuy: (money: string) => `Erforschen · ${money}`,
+    researchDone: (name: string) => `${name} ist erforscht. Die Laborkittel hängen wieder am Haken.`,
+    researchOwned: 'Erforscht',
+    // Großhandel
+    wholesale: 'Großhandel',
+    wholesaleTip: (minutes: number) =>
+      `Als Firma bekommst du jede Woche ein Kontingent Displays zum Händlerpreis. Größere Rechtsform, größeres Kontingent. Lieferung ${minutes} Minuten nach Bestellung, Lager brauchst du trotzdem.`,
+    wholesaleLocked: (level: number) => `Den Großhandel gibt es ab Level ${level}.`,
+    wholesaleLeft: (n: number) => `Diese Woche noch ${n} ${n === 1 ? 'Display' : 'Displays'}.`,
+    wholesaleBuy: (money: string) => `Bestellen · ${money}`,
+    wholesaleBought: 'Bestellt. Der Lieferwagen ist unterwegs.',
+    wholesaleEmpty: 'Gerade ist kein Set im Druck. Der Großhändler zuckt mit den Schultern.',
   },
 
   loans: {
@@ -847,6 +865,13 @@ export const texts = {
           'Keiner darf die ganze Kiste allein nehmen, und pro Woche ist die Menge begrenzt. Ist die Kiste voll, kommt das Paket.',
         ],
       },
+      wholesale: {
+        name: 'Großhandel',
+        steps: [
+          'Deine Firma darf jetzt beim Großhändler bestellen: Displays zum Händlerpreis, billiger als überall sonst.',
+          'Jede Woche gibt es ein Kontingent. Je größer deine Rechtsform, desto mehr. Du findest den Großhandel im Büro deiner Firma.',
+        ],
+      },
       company: {
         name: 'Firma',
         steps: [
@@ -1017,6 +1042,7 @@ export const texts = {
         style: 'Mama: Du kaufst dir jetzt einen goldenen Namen? Für das Geld hätte ich dir Socken gekauft.',
         friends: 'Mama: Hilf deinen Freunden mal. Und nimm Kuchen mit, man kommt nicht mit leeren Händen.',
         group_orders: 'Mama: Ihr bestellt zusammen eine ganze Kiste? Wehe, die steht dann in meinem Flur.',
+        wholesale: 'Mama: Jetzt kaufst du Kisten beim Großhändler? Wie Papa damals mit den Gartenzwergen. Die stehen heute noch im Keller.',
         company: 'Mama: Eine eigene Firma? In der Garage? Papas Auto muss dann draußen stehen. Das sagst du ihm.',
         loans: 'Mama: Du verleihst jetzt Geld? An deine Freunde? Dann sieh es schon mal als Geschenk.',
         breaks: 'Mama: Du machst jetzt Live-Shows? Zieh dir wenigstens was Ordentliches an.',

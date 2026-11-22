@@ -167,8 +167,8 @@ Goal: the business sim.
 | ☑ | Player orders to companies; brand factor on slabs; reviews; Ruf system complete | M |
 | ☑ | Decisions, manual grading mini-game, marketing, taxes | M |
 | ☑ | Shady options and scandals | M |
-| ☐ | Großhandel | M |
-| ☐ | Research, stages 5–7, Stille Teilhaberschaft | S |
+| ☑ | Großhandel | M |
+| ☑ | Research, stages 5–7 (Stille Teilhaberschaft moved to 0.0.2, decision 091) | S |
 
 ### alpha_10 — Risiko
 
@@ -212,6 +212,9 @@ Goal: it feels finished.
 
 More sets (admin-released), further business units (Kartenladen, Automaten, Auktionshaus), drawn room
 scenes and avatars, tournaments, Vereine (guilds), music, more calendar events, phone polish.
+
+Moved here from alpha milestones: Stille Teilhaberschaft (alpha_09, decision 091); Box Break spots by card type
+(alpha_08, decision 084).
 
 ## Working agreement
 
