@@ -232,7 +232,7 @@ function TopBar({ me }: { me: SignedIn }) {
           </span>
         </InfoTip>
         {p.buffs.map((b) => {
-          const buff = CONSUMABLES.find((c) => c.key === b.key)?.buff
+          const buff = CONSUMABLES.find((c) => c.key === b.key)?.buff ?? texts.hud.jobBuffs[b.key]
           const name = buff?.name ?? b.key
           return (
             <InfoTip key={b.key} label={name} trigger={<PixelIcon name={SNACK_ICON[b.key] ?? 'gift'} />}>
@@ -327,6 +327,7 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'trade_offer') return texts.notifications.trade_offer(String(n.data.name))
   if (n.kind === 'trade_accepted') return texts.notifications.trade_accepted(String(n.data.name))
   if (n.kind === 'trade_declined') return texts.notifications.trade_declined(String(n.data.name))
+  if (n.kind === 'grading_back') return texts.notifications.grading_back(Number(n.data.n))
   return texts.notifications.unknown
 }
 

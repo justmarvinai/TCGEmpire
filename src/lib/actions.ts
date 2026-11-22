@@ -42,5 +42,6 @@ export const useStats = () => useQuery({ queryKey: ['stats'], queryFn: () => rpc
 export const useHome = () => useQuery({ queryKey: ['home'], queryFn: () => rpc('home_get') })
 export const usePlayers = () => useQuery({ queryKey: ['players'], queryFn: () => rpc('players_get') })
 export const useLicenses = () => useQuery({ queryKey: ['licenses'], queryFn: () => rpc('licenses_get') })
+export const useGrading = () => useQuery({ queryKey: ['grading'], queryFn: () => rpc('grading_get') })
 export const useLevelPath = () =>
   useQuery({ queryKey: ['levelpath'], queryFn: () => rpc('level_path_get'), staleTime: 5 * 60_000 })

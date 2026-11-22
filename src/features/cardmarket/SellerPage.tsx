@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
+import { slabName } from '@/components/cards/Slab.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
@@ -45,6 +46,7 @@ export function SellerPage() {
                 <li key={l.id} className="flex flex-wrap items-center gap-3 rounded-xl bg-surface-2 p-3">
                   <Link to={`/cardmarket/${l.item_id}`} className="min-w-40 flex-1 font-semibold hover:underline">
                     {l.qty}× {itemName(l.item_id)}
+                    {l.slab && <span className="ml-1.5 rounded-md bg-surface-3 px-1.5 text-xs font-bold">{slabName(l.slab)}</span>}
                   </Link>
                   <ItemTier id={l.item_id} className="text-xs" />
                   <span className="nums text-sm text-fg-2">

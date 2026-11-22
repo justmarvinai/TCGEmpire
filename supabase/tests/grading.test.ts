@@ -218,9 +218,15 @@ describe('Slabs afterwards', () => {
     const inv = await t.rpc(other, 'trade_inventory', { p_player: id })
     expect(inv.items.find((i) => i.copy_id === c)).toMatchObject({ value_cents: slab.value_cents, slab: { grade: 10 } })
 
-    // A collector NPC buys a slab listed well below its slab value, not below its raw value.
+    // A raw buy order (Gesuch) never takes the slab.
     await t.sql(`update game.players set level = 13 where true`)
-    await t.sql(`update game.players set level = 10 where id = $1`, [id])
+    const order = (await t.sql<{ id: number }>(
+      `insert into game.buy_orders (buyer_id, item_kind, item_id, qty, price_cents, created_at)
+       values ($1, 'card', $2, 1, 100, private.now()) returning id`, [oid, HOLO],
+    ))[0]!.id
+    await expect(t.rpc(me, 'order_fill', { p_request_id: rid(), p_order: order, p_qty: 1 })).rejects.toThrow('not_owned')
+
+    // A collector NPC buys a slab listed well below its slab value, not below its raw value.
     const price = Math.round(slab.value_cents * 0.5)
     const market = await t.rpc(me, 'listing_create', { p_request_id: rid(), p_kind: 'copy', p_item: HOLO, p_copy: c, p_qty: 1, p_price: price })
     expect(market.mine.listings[0]).toMatchObject({ slab: { grade: 10 }, value_cents: slab.value_cents })

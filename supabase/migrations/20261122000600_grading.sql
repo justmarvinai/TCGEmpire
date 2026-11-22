@@ -661,6 +661,7 @@ language sql stable set search_path = '' as $$
 $$;
 
 -- Value of one goods line: a copy by its own value (slab or raw), anything else by Marktwert × qty.
+-- (goods_doc shows the value per piece.)
 create function private.goods_item_value(i jsonb) returns bigint
 language sql stable set search_path = '' as $$
   select case when i ->> 'kind' = 'copy' then private.copy_value((i ->> 'copy_id')::uuid)
@@ -679,7 +680,9 @@ language sql stable set search_path = '' as $$
   select jsonb_build_object(
     'money_cents', (p_goods ->> 'money_cents')::bigint,
     'items', coalesce((
-      select jsonb_agg(i || jsonb_build_object('value_cents', private.goods_item_value(i),
+      select jsonb_agg(i || jsonb_build_object(
+        'value_cents', case when i ->> 'kind' = 'copy' then private.copy_value((i ->> 'copy_id')::uuid)
+                            else private.card_or_product_value(i ->> 'item_id') end,
         'slab', case when i ->> 'kind' = 'copy' then private.slab_of((i ->> 'copy_id')::uuid) end))
       from jsonb_array_elements(p_goods -> 'items') i
     ), '[]'::jsonb),
@@ -1009,4 +1012,57 @@ begin
   return private.request_done(v_player, p_request_id, jsonb_build_object(
     'score', v_score, 'payout_cents', v_payout, 'ep_gained', (v_ep ->> 'ep_gained')::bigint,
     'pfandbons', v_bons, 'buff', v_buff, 'player', private.me(v_player)));
+end $$;
+
+-- Buy orders ask for raw cards: filling one never hands over a slab.
+create or replace function public.order_fill(p_request_id uuid, p_order bigint, p_qty int) returns jsonb
+language plpgsql security definer set search_path = '' as $$
+declare
+  v_player uuid := private.require_player();
+  v_replay jsonb := private.request_begin(v_player, p_request_id, 'order_fill');
+  o game.buy_orders;
+  v_copy uuid;
+  v_n int := 0;
+begin
+  if v_replay is not null then
+    return v_replay;
+  end if;
+  perform private.require_level(v_player, 'cardmarket');
+  perform private.rate_limit(v_player, 'market', private.cfg_num('rate.market')::int, 60);
+  select * into o from game.buy_orders where id = p_order for update;
+  if not found then
+    perform private.fail('not_found');
+  end if;
+  if o.buyer_id = v_player then
+    perform private.fail('own_listing');
+  end if;
+  if coalesce(p_qty, 0) < 1 or p_qty > o.qty then
+    perform private.fail('invalid_request');
+  end if;
+  if o.item_kind = 'card' and private.is_hit(o.item_id) then
+    for v_copy in
+      select id from game.card_copies
+      where owner_id = v_player and card_id = o.item_id and location = 'inventory' and grader is null
+      order by q_centering + q_corners + q_edges + q_surface, pulled_at
+      limit p_qty
+      for update
+    loop
+      perform private.item_take(v_player, 'copy', o.item_id, v_copy, 1, 'shipping');
+      perform private.sale_ship(v_player, null, o.buyer_id, o.npc_id, 'copy', o.item_id, v_copy, 1, o.price_cents);
+      v_n := v_n + 1;
+    end loop;
+    if v_n < p_qty then
+      perform private.fail('not_owned');
+    end if;
+  else
+    perform private.item_take(v_player, o.item_kind, o.item_id, null, p_qty, 'shipping');
+    perform private.sale_ship(v_player, null, o.buyer_id, o.npc_id, o.item_kind, o.item_id, null, p_qty, o.price_cents * p_qty);
+  end if;
+  if o.qty = p_qty then
+    delete from game.buy_orders where id = o.id;
+  else
+    update game.buy_orders set qty = qty - p_qty where id = o.id;
+  end if;
+  return private.request_done(v_player, p_request_id, jsonb_build_object(
+    'item', private.cardmarket_item_doc(v_player, o.item_id), 'mine', private.my_market_doc(v_player), 'player', private.me(v_player)));
 end $$;

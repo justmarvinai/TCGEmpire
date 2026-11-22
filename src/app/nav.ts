@@ -27,7 +27,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
   { group: 'start', items: [item('home', 'home', 1, true), item('profile', 'star', 1, true)] },
   {
     group: 'sammeln',
-    items: [item('shop', 'shop', 1, true), item('open', 'pack', 1, true), item('collection', 'binder', 1, true), item('grading', 'loupe', 13)],
+    items: [item('shop', 'shop', 1, true), item('open', 'pack', 1, true), item('collection', 'binder', 1, true), item('grading', 'loupe', UNLOCKS.grading, true)],
   },
   {
     group: 'handeln',

@@ -16,6 +16,7 @@ import { AdminPage } from '@/features/admin/AdminPage.tsx'
 import { TradePage } from '@/features/trade/TradePage.tsx'
 import { HomePage } from '@/features/home/HomePage.tsx'
 import { CollectionPage } from '@/features/collection/CollectionPage.tsx'
+import { GradingPage } from '@/features/grading/GradingPage.tsx'
 import { JobsPage } from '@/features/jobs/JobsPage.tsx'
 import { OpenPage } from '@/features/open/OpenPage.tsx'
 import { PathPage } from '@/features/path/PathPage.tsx'
@@ -70,6 +71,7 @@ function Game() {
           <Route path="shop" element={<ShopPage />} />
           <Route path="open" element={<OpenPage />} />
           <Route path="collection" element={<CollectionPage />} />
+          <Route path="grading" element={<GradingPage />} />
           <Route path="jobs" element={<JobsPage />} />
           <Route path="quests" element={<QuestsPage />} />
           <Route path="path" element={<PathPage />} />

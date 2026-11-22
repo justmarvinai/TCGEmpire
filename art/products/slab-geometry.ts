@@ -2,13 +2,14 @@
  * Geometry of the reusable slab frames `slab-psa`, `slab-bgs`, `slab-cgc` and `slab-company`, in
  * slab pixels from the top left. A frame carries no card and no card-specific text: the client puts
  * the 80×112 card sprite into `card` and writes the label texts as normal HTML text into `zones`.
- * Every grader uses the same layout; only the label colours differ.
+ * Every label style uses the same layout; only the colours differ. BGS has three: gold (9.5 and 10),
+ * silver (below 9.5) and the Black Label (four sub-grades of 10).
  *
  * Pure data without imports: the client imports this file as well as the art build.
  */
-export type SlabGrader = 'psa' | 'bgs' | 'cgc' | 'company'
+export type SlabStyle = 'psa' | 'bgs' | 'bgs-silver' | 'bgs-black' | 'cgc' | 'company'
 
-export const SLAB_GRADERS: readonly SlabGrader[] = ['psa', 'bgs', 'cgc', 'company']
+export const SLAB_STYLES: readonly SlabStyle[] = ['psa', 'bgs', 'bgs-silver', 'bgs-black', 'cgc', 'company']
 
 export const SLAB = {
   w: 96,
@@ -38,6 +39,8 @@ export const SLAB = {
   colors: {
     psa: { ink: '#1e1a24', accent: '#c9202e', onBand: '#ffffff' },
     bgs: { ink: '#2b1b06', accent: '#6a4208', onBand: '#fff0a4' },
+    'bgs-silver': { ink: '#1d222c', accent: '#465063', onBand: '#ffffff' },
+    'bgs-black': { ink: '#f4d77e', accent: '#c9a23a', onBand: '#141418' },
     cgc: { ink: '#13244c', accent: '#1c4fb2', onBand: '#ffffff' },
     company: { ink: '#1c2030', accent: '#4a5470', onBand: '#ffffff' },
   },

@@ -8,7 +8,7 @@ import { texts } from '@/texts/de.ts'
 import { UpgradeRow } from './UpgradeRow.tsx'
 
 const T = texts.upgrades
-const GROUPS = ['oeffnen', 'jobs', 'handel', 'fortschritt', 'bunker']
+const GROUPS = ['oeffnen', 'jobs', 'handel', 'grading', 'fortschritt', 'bunker']
 
 export function UpgradesPage() {
   const ups = useUpgrades()

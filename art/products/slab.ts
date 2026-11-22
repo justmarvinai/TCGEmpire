@@ -2,8 +2,8 @@ import { MICRO, drawText, measure } from '../fonts.ts'
 import type { RGB } from '../toolkit/index.ts'
 import { Mask, Painter, colors, hex, mix } from '../toolkit/index.ts'
 import type { ProductDef } from './index.ts'
-import type { SlabGrader } from './slab-geometry.ts'
-import { SLAB, SLAB_GRADERS } from './slab-geometry.ts'
+import type { SlabStyle } from './slab-geometry.ts'
+import { SLAB, SLAB_STYLES } from './slab-geometry.ts'
 
 /**
  * Grading slab frames: a clear acrylic case with a printed label and an empty card window, one
@@ -26,9 +26,11 @@ interface Label {
   band: RGB
 }
 
-const LABELS: Readonly<Record<SlabGrader, Label>> = {
+const LABELS: Readonly<Record<SlabStyle, Label>> = {
   psa: { brand: 'PSA', paper: hex('fbf8ee'), band: hex('c9202e') },
   bgs: { brand: 'BGS', paper: hex('f2c94a'), band: hex('5e3c08') },
+  'bgs-silver': { brand: 'BGS', paper: hex('d8dde6'), band: hex('465063') },
+  'bgs-black': { brand: 'BGS', paper: hex('141418'), band: hex('c9a23a') },
   cgc: { brand: 'CGC', paper: hex('e6eefb'), band: hex('1c4fb2') },
   company: { brand: '', paper: hex('f3f5f9'), band: hex('8a93a8') },
 }
@@ -58,7 +60,7 @@ function plate(r: Rect, cuts: readonly number[] = []): Mask {
   return m
 }
 
-function drawLabel(p: Painter, grader: SlabGrader): void {
+function drawLabel(p: Painter, grader: SlabStyle): void {
   const k = LABELS[grader]
   const { label } = SLAB
   const { brand, title, cert } = SLAB.zones
@@ -87,8 +89,8 @@ function drawLabel(p: Painter, grader: SlabGrader): void {
     if (BARCODE[i] === '#') p.fill(box({ x: title.x + i, y: cert.y, w: 1, h: cert.h }), ink)
 }
 
-/** The empty frame of one grading company as a 96×152 raster. */
-export function renderSlabFrame(grader: SlabGrader): Painter {
+/** The empty frame of one label style as a 96×152 raster. */
+export function renderSlabFrame(grader: SlabStyle): Painter {
   const p = new Painter(SLAB.w, SLAB.h)
   const { label, card } = SLAB
 
@@ -130,8 +132,8 @@ export function renderSlabFrame(grader: SlabGrader): Painter {
   return p
 }
 
-/** One product per grading company: `slab-psa`, `slab-bgs`, `slab-cgc`, `slab-company`. */
-export const SLAB_FRAMES: readonly ProductDef[] = SLAB_GRADERS.map((grader) => ({
+/** One product per label style: `slab-psa`, `slab-bgs`, `slab-bgs-silver`, `slab-bgs-black`, `slab-cgc`, `slab-company`. */
+export const SLAB_FRAMES: readonly ProductDef[] = SLAB_STYLES.map((grader) => ({
   id: `slab-${grader}`,
   w: SLAB.w,
   h: SLAB.h,

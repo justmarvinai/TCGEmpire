@@ -5,7 +5,7 @@ import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
 import { useCardAtlas, useSpriteAtlas } from '@/components/pixel/atlas.ts'
 import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
 import { Card, TiltCard } from '@/components/cards/Card.tsx'
-import { Slab } from '@/components/cards/Slab.tsx'
+import { Slab, SlabOf } from '@/components/cards/Slab.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { Field } from '@/components/ui/Field.tsx'
@@ -141,12 +141,14 @@ export default function DevUiPage() {
 
         <ArtGallery />
 
-        <Panel title="Slabs" className="lg:col-span-2" tip="Ein Rahmen pro Grading-Firma. Karte und Beschriftung kommen zur Laufzeit dazu.">
-          <div className="flex flex-wrap gap-6">
-            <Slab grader="psa" cardId="pkm-base-090" title="Glurak" subtitle="Basis-Set · 090" grade="10" gradeWord="GEM MT" cert="40117352" />
-            <Slab grader="bgs" cardId="pkm-base-088" title="Turtok" subtitle="Basis-Set · 088" grade="9.5" gradeWord="GEM MINT" cert="00902841" scale={2} />
-            <Slab grader="cgc" cardId="pkm-base-028" title="Pikachu" subtitle="Basis-Set · 028" grade="9" gradeWord="MINT" cert="38650127" scale={2} />
-            <Slab grader="company" cardId="pkm-base-084" title="Pikachu" subtitle="Basis-Set · 084" grade="8" gradeWord="NM-MT" cert="00000001" brand="KALLE" scale={2} />
+        <Panel title="Slabs" className="lg:col-span-2" tip="Ein Rahmen pro Etikett-Stil (PSA, BGS Gold/Silber/Black Label, CGC, Spielerfirma). Karte und Beschriftung kommen zur Laufzeit dazu.">
+          <div className="flex flex-wrap items-end gap-6">
+            <SlabOf cardId="pkm-base-090" slab={{ grader: 'psa', grade: 10, subgrades: null, black_label: false, cert_no: '40117352', pop: 1, pop_higher: 0 }} scale={3} />
+            <SlabOf cardId="pkm-base-088" slab={{ grader: 'bgs', grade: 9.5, subgrades: [10, 9.5, 9.5, 10], black_label: false, cert_no: '0000902841', pop: 2, pop_higher: 0 }} />
+            <SlabOf cardId="pkm-base-087" slab={{ grader: 'bgs', grade: 8.5, subgrades: [9, 8.5, 9, 8], black_label: false, cert_no: '0001772030', pop: 1, pop_higher: 3 }} />
+            <SlabOf cardId="pkm-base-089" slab={{ grader: 'bgs', grade: 10, subgrades: [10, 10, 10, 10], black_label: true, cert_no: '0000007919', pop: 1, pop_higher: 0 }} />
+            <SlabOf cardId="pkm-base-028" slab={{ grader: 'cgc', grade: 9, subgrades: null, black_label: false, cert_no: '3038650127', pop: 4, pop_higher: 1 }} />
+            <Slab variant="company" cardId="pkm-base-084" title="Pikachu" subtitle="Basis-Set · 084" grade="8" gradeWord="NM-MT" cert="00000001" brand="KALLE" scale={2} />
           </div>
         </Panel>
 
@@ -173,6 +175,19 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
         <Button size="sm" onClick={() => run(`update game.server set clock_offset = clock_offset + interval '1 day' where id; select private.tick()`)}>+1 Tag</Button>
         <Button size="sm" onClick={() => run(`update game.server set clock_offset = clock_offset + interval '1 hour' where id; select private.tick()`)}>+1 Stunde</Button>
         <Button size="sm" onClick={() => run(`update game.players set tutorial_step = -1 where id = $1`, [id])}>Tutorial aus</Button>
+        <Button
+          size="sm"
+          onClick={() =>
+            run(
+              `insert into game.card_copies (owner_id, card_id, q_centering, q_corners, q_edges, q_surface, pulled_at)
+               select $1, id, private.roll_quality(), private.roll_quality(), private.roll_quality(), private.roll_quality(), private.now()
+               from game.card_defs where tier in ('holo', 'alternative', 'ultra', 'grail') order by random() limit 5`,
+              [id],
+            )
+          }
+        >
+          +5 Hits
+        </Button>
       </div>
     </Panel>
   )

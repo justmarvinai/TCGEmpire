@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { slabName } from '@/components/cards/Slab.tsx'
 import { CONSUMABLES, cardName, gameOf, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
 import type { FeedEntry } from '@/lib/schemas.ts'
@@ -16,6 +17,12 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'overtake') return texts.feed.overtake(f.data)
   if (f.kind === 'set_phase')
     return texts.feed.set_phase(String(f.data.phase), Boolean(f.data.reprint), SETS.find((s) => s.id === f.data.set_id)?.name ?? String(f.data.set_id))
+  if (f.kind === 'slab')
+    return texts.feed.slab(
+      f.data,
+      cardName(String(f.data.card_id)),
+      slabName({ grader: String(f.data.grader) as 'psa', grade: Number(f.data.grade), black_label: Boolean(f.data.black_label) }),
+    )
   if (f.kind === 'goal') return texts.feed.goal(f.data, GOALS.find((g) => g.key === f.data.goal)?.name ?? String(f.data.goal))
   if (f.kind === 'license') return texts.feed.license(f.data, texts.games[f.data.game as Game] ?? String(f.data.game))
   if (f.kind === 'announcement') return texts.feed.announcement(String(f.data.text))

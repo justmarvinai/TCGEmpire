@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { slabName } from '@/components/cards/Slab.tsx'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
@@ -184,6 +185,7 @@ function MyListings({ mine }: { mine: Cardmarket['mine'] }) {
           <li key={l.id} className="flex flex-wrap items-center gap-3 rounded-xl bg-surface-2 p-3">
             <Link to={`/cardmarket/${l.item_id}`} className="min-w-40 flex-1 font-semibold hover:underline">
               {l.qty}× {itemName(l.item_id)}
+              {l.slab && <span className="ml-1.5 rounded-md bg-surface-3 px-1.5 text-xs font-bold">{slabName(l.slab)}</span>}
             </Link>
             <span className="nums text-sm text-fg-2">
               {formatMoney(l.price_cents)} {T.each} · {T.value} {formatMoney(l.value_cents)}

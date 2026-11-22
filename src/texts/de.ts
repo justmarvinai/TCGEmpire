@@ -92,6 +92,11 @@ export const texts = {
     logout: 'Abmelden',
     admin: 'Admin',
     buffUntil: (time: string) => `Läuft bis ${time} Uhr.`,
+    /** buffs from good rounds of a minijob (key = mj_<game>) */
+    jobBuffs: {
+      mj_fake: { name: 'Geschärfter Blick', text: 'Fakes in den Kleinanzeigen fallen dir sofort auf.' },
+      mj_praktikum: { name: 'Geschulte Lupe', text: 'Die Vorprüfung zeigt um eine Note engere Spannen.' },
+    } as Record<string, { name: string; text: string } | undefined>,
     menu: 'Menü',
     search: 'Suchen oder springen …',
     searchKey: 'Strg K',
@@ -146,6 +151,9 @@ export const texts = {
     listTip: 'Die Ware liegt im Angebot, bis jemand kauft oder du zurückziehst. Bezahlt wird bei Ankunft des Pakets, minus 5 % Gebühr.',
     owned: (n: number) => `Du hast ${n} Stück.`,
     ownedNone: 'Du hast keins davon.',
+    which: 'Welches Exemplar?',
+    rawCopy: (n: number) => `Roh (${n} Stück)`,
+    slabValue: (money: string) => `Slab-Wert ${money}`,
     orderTitle: 'Gesuch aufgeben',
     orderTip: 'Das Geld wird sofort hinterlegt. Verkauft dir jemand, kommt die Ware per Paket. Zurückziehen gibt den Rest zurück.',
     order: 'Gesuch aufgeben',
@@ -363,6 +371,8 @@ export const texts = {
     tabs: { board: 'Anzeigen', mine: 'Meine Anzeigen' },
     empty: 'Keine Anzeigen. Die Gegend ist leergekauft.',
     vb: 'VB',
+    suspicious: 'Riecht nach Fake',
+    suspiciousTip: 'Dein geschärfter Blick aus der Cardmarket-Prüfstelle sagt: Finger weg. Gilt, solange der Bonus aus „Echt oder Fake?“ läuft.',
     value: 'Marktwert',
     left: (t: string) => `noch ${t}`,
     yourOffer: 'Dein Angebot (€)',
@@ -400,6 +410,12 @@ export const texts = {
   },
 
   feed: {
+    slab: (d: Record<string, unknown>, card: string, label: string) =>
+      d.black_label
+        ? `BLACK LABEL! ${String(d.name)} bekommt vier glatte 10er auf ${card}. Beckett prüft angeblich, ob die Maschine kaputt ist.`
+        : Number(d.grade) === 10
+          ? `${label}! ${String(d.name)} lässt ${card} graden und bekommt die Höchstnote. Der Rest des Stammtischs schweigt beleidigt.`
+          : `AUTSCH: ${String(d.name)} schickt ${card} ein und bekommt eine ${label}. Pressekonferenz folgt.`,
     title: 'KARTEN-BILD',
     subtitle: 'Wir berichten. Du verlierst.',
     empty: 'Noch keine Schlagzeilen. Mach halt was.',
@@ -613,6 +629,7 @@ export const texts = {
     trade_offer: (name: string) => `${name} hat dir ein Tauschangebot gemacht. Schau unter Tausch.`,
     trade_accepted: (name: string) => `${name} hat deinen Tausch angenommen. Deal!`,
     trade_declined: (name: string) => `${name} hat deinen Tausch abgelehnt. Nimm es nicht persönlich. Oder doch.`,
+    grading_back: (n: number) => `${n === 1 ? 'Ein Slab ist' : `${n} Slabs sind`} vom Grader zurück. Trommelwirbel bereit.`,
     unknown: 'Du hast Post. Was drin steht, weiß keiner.',
   },
 
@@ -765,6 +782,8 @@ export const texts = {
     ankaufPrice: 'Ankauf',
     sellOne: 'Eine verkaufen',
     sellAll: 'Alle verkaufen',
+    toGrading: 'Zum Grading',
+    slabs: 'Deine Slabs',
     sellOneTip: 'Verkauft ein Exemplar sofort an den Kartenladen (60 % des Werts).',
     close: 'Zurück',
     seen: 'Schon mal gezogen, aber verkauft.',
@@ -781,6 +800,114 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  grading: {
+    title: 'Grading',
+    subtitle: 'Plastik drum, Note drauf, Wert mal zehn. Oder durch zwei.',
+    tip: 'Grading macht aus einer Karte einen Slab mit Note. Eine 10 vervielfacht den Wert, unter 7 ist der Slab weniger wert als die rohe Karte. Gebühr und Wartezeit sind in jedem Fall weg.',
+    tabs: { check: 'Prüfen & Einschicken', orders: 'Beim Grader', slabs: 'Deine Slabs', pop: 'Pop Report' },
+    slots: 'Einsende-Slots',
+    slotsTip: 'So viele Karten können gleichzeitig beim Grader liegen. Mehr gibt es mit dem Upgrade Einsende-Slots und für jedes Master Set.',
+    lupe: 'Lupe',
+    lupeTip:
+      'Die Vorprüfung zeigt für Zentrierung, Ecken, Kanten und Oberfläche je eine Spanne, in der der echte Wert liegt. Das Upgrade Prüfwerkzeug und gute Runden im Grading-Praktikum machen die Spanne enger.',
+    width: (w: number) => (w === 0 ? 'exakt' : `${w + 1} Noten breit`),
+    slabCount: 'Slabs',
+    slabCountTip: 'Deine Slabs zu Hause, in der Vitrine und im Angebot. Ihr Wert zählt voll ins Vermögen.',
+    aspects: { centering: 'Zentrierung', corners: 'Ecken', edges: 'Kanten', surface: 'Oberfläche' },
+    copiesTitle: 'Rohe Karten',
+    copiesTip:
+      'Holos und besser, die noch nicht gegradet sind. Die schlechteste der vier Stellen bestimmt die Note bei PSA und CGC. Bulk-Karten prüfst du in der Sammlung: Dann werden sie zu Einzelstücken.',
+    copiesEmpty: 'Keine rohen Hits da. Zieh Holos oder besser, oder prüf eine Bulk-Karte in der Sammlung.',
+    inspect: 'Mit der Lupe prüfen',
+    reinspect: 'Genauer prüfen',
+    notInspected: 'Noch nicht geprüft',
+    expected: (lo: number, hi: number) => (lo === hi ? `Note etwa ${lo}` : `Note etwa ${lo}–${hi}`),
+    select: (name: string) => `${name} auswählen`,
+    selected: (n: number) => `${n} ausgewählt`,
+    graderTitle: 'Grader und Service',
+    graderTip:
+      'PSA ist der Standard: teuer, langsam, streng. BGS vergibt halbe Noten und vier Unternoten, vier glatte 10er sind das Black Label. CGC ist billig und schnell, Sammler zahlen dafür etwas weniger. Der Markenfaktor geht direkt in den Wert des Slabs.',
+    graders: {
+      psa: 'Der Standard. Teuer, langsam, streng. Eine PSA 10 ist die Währung des Hobbys.',
+      bgs: 'Halbe Noten, vier Unternoten auf dem Etikett. Vier glatte 10er geben das Black Label: das Zwanzigfache.',
+      cgc: 'Billig und schnell. Sammler zahlen dafür etwas weniger.',
+    },
+    brand: (pct: number) => `Markenfaktor ${pct} %`,
+    services: { economy: 'Economy', standard: 'Standard', express: 'Express' },
+    perCard: 'pro Karte',
+    upcharge: (pct: string, from: string) => `+${pct} % vom Kartenwert über ${from}`,
+    total: 'Gesamt',
+    submit: (n: number) => (n === 1 ? '1 Karte einschicken' : `${n} Karten einschicken`),
+    noneSelected: 'Wähl links erst Karten aus.',
+    slotsFull: 'Alle Slots belegt. Warte auf deine Pakete oder bau Slots aus.',
+    tooMany: (free: number) => `Nur noch ${free} ${free === 1 ? 'Slot' : 'Slots'} frei.`,
+    submitted: (n: number, grader: string) => `${n === 1 ? 'Eine Karte' : `${n} Karten`} an ${grader} geschickt. Jetzt heißt es warten.`,
+    inspected: 'Geprüft. Die Lupe lügt nicht. Meistens.',
+    bulkInspect: 'Lupe ansetzen',
+    bulkInspectTip: 'Nimmt eine Karte aus dem Stapel und macht sie zum Einzelstück mit eigenen Zustandswerten. Danach kannst du sie graden lassen.',
+    bulkDone: 'Ist jetzt ein Einzelstück. Ab zum Grading.',
+    ordersEmpty: 'Nichts unterwegs. Deine Karten liegen sicher zu Hause. Langweilig.',
+    ordersTip: 'Die Karten liegen beim Grader, bis die Zeit um ist. Dann kommt das Paket zurück und du deckst die Note auf.',
+    backIn: (time: string) => `zurück in ${time}`,
+    arrived: 'Paket ist da',
+    reveal: 'Aufdecken',
+    revealAll: (n: number) => `Alle aufdecken (${n})`,
+    revealTitle: 'Post vom Grader',
+    parcel: (grader: string) => `Paket von ${grader}`,
+    open: 'Aufreißen',
+    drum: 'Trommelwirbel …',
+    skip: 'Klick zeigt die Note sofort.',
+    rawToSlab: (raw: string, slab: string) => `Roh ${raw} → Slab ${slab}`,
+    fee: (money: string) => `Gebühr ${money}`,
+    next: 'Nächster Slab',
+    done: 'Ab in die Sammlung',
+    verdict: (grade: number, black: boolean) =>
+      black
+        ? 'BLACK LABEL. Vier glatte 10er. Das hat hier noch keiner gesehen. Ehrlich.'
+        : grade === 10
+          ? 'Die Höchstnote. Du darfst jetzt arrogant sein.'
+          : grade >= 9
+            ? 'Solide. Mama wäre stolz, wenn sie wüsste, was das ist.'
+            : grade >= 8
+              ? 'Geht so. Wie dein Abi.'
+              : grade >= 7
+                ? 'Sieben. Hättest du dir sparen können.'
+                : 'Autsch. Der Slab ist weniger wert als die rohe Karte.',
+    slabsEmpty: 'Noch keine Slabs. Ab zum Einschicken.',
+    slabsTip: 'Wert = Marktwert × Note × Seltenheit der Note × Markenfaktor des Graders. Je weniger 10er es von einer Karte gibt, desto mehr ist jede wert.',
+    value: 'Wert',
+    raw: 'Roh',
+    times: (x: string) => `×${x}`,
+    pop: (n: number, higher: number) => `Pop ${n} · ${higher} höher`,
+    where: { vitrine: 'In der Vitrine', listed: 'Im Angebot' } as Record<string, string>,
+    sell: 'Verkaufen',
+    crack: 'Knacken',
+    crackTitle: 'Slab knacken?',
+    crackText:
+      'Die Karte kommt raus und ist wieder roh: Etikett und Note sind weg, der Pop Report zählt den Slab trotzdem weiter. Mit etwas Pech leidet dabei eine Ecke. Danach kannst du sie woanders einschicken.',
+    crackConfirm: 'Ja, knacken',
+    cracked: 'Geknackt. Die Karte ist wieder roh.',
+    crackedDamaged: 'Geknackt. Und knack: Eine Ecke hat was abbekommen.',
+    popTitle: 'Pop Report',
+    popTip: 'Der Pop Report zählt jeden Slab, der je gemacht wurde, auch geknackte. Je weniger 10er es von einer Karte gibt, desto mehr ist jede wert.',
+    popSearch: 'Karte suchen …',
+    popPick: 'Wähl eine Karte, um ihre Population zu sehen.',
+    popNone: 'Von dieser Karte gibt es noch keinen einzigen Slab. Sei der Erste.',
+    popCols: { grade: 'Note', count: 'Anzahl', value: 'Wert je Slab' },
+    popMine: (n: number) => `Davon deine: ${n}`,
+    popRaw: (money: string) => `Roh: ${money}`,
+    blackLabel: 'Black Label',
+    /** words printed on the slab label per grader and grade */
+    words: {
+      psa: { 10: 'GEM MT', 9: 'MINT', 8: 'NM-MT', 7: 'NM', 6: 'EX-MT', 5: 'EX', 4: 'VG-EX', 3: 'VG', 2: 'GOOD', 1: 'PR' },
+      bgs: { 10: 'PRISTINE', 9.5: 'GEM MINT', 9: 'MINT', 8.5: 'NM-MT+', 8: 'NM-MT', 7.5: 'NM+', 7: 'NM', 6: 'EX-MT', 5: 'EX', 4: 'VG-EX', 3: 'VG', 2: 'GOOD', 1: 'POOR' },
+      cgc: { 10: 'GEM MINT', 9: 'MINT', 8: 'NM/MINT', 7: 'NEAR MINT', 6: 'FINE', 5: 'VG/FINE', 4: 'VG', 3: 'GOOD/VG', 2: 'GOOD', 1: 'POOR' },
+    } as Record<string, Record<number, string>>,
+    /** BGS sub-grade letters on the label: Zentrierung, Ecken, Kanten, Oberfläche */
+    subLetters: ['Z', 'E', 'K', 'O'],
+    locked: (level: number) => `Grading gibt es ab Level ${level}.`,
   },
 
   jobs: {
@@ -944,7 +1071,7 @@ export const texts = {
     title: 'Upgrades',
     subtitle: 'Bessere Version von dir. Kostet Geld. Wie Selbstoptimierung, nur ehrlicher.',
     tip: 'Upgrades sind dauerhaft. Jede Stufe kostet mehr als die vorige und manche brauchen ein Mindestlevel.',
-    groups: { bunker: 'Geldbunker', jobs: 'Arbeit', oeffnen: 'Öffnen', handel: 'Handel', fortschritt: 'Fortschritt' } as Record<string, string>,
+    groups: { bunker: 'Geldbunker', jobs: 'Arbeit', oeffnen: 'Öffnen', handel: 'Handel', grading: 'Grading', fortschritt: 'Fortschritt' } as Record<string, string>,
     level: (n: number, max: number) => `Stufe ${n}/${max}`,
     buy: 'Kaufen',
     max: 'Maximum',
@@ -1054,6 +1181,7 @@ export const texts = {
   common: {
     info: 'Was ist das?',
     close: 'Schließen',
+    cancel: 'Abbrechen',
     retry: 'Nochmal versuchen',
     errorTitle: 'Das ging schief',
     loading: 'Lädt …',
@@ -1111,6 +1239,7 @@ export const texts = {
     tutorial_not_skippable: 'Erst die ersten Schritte, dann darfst du Mama ignorieren.',
     not_enough_energy: 'Keine Energie mehr. Iss was oder warte.',
     too_early: 'Zu schnell fertig. Schummeln ist Mamas Job.',
+    not_ready: 'Das Paket ist noch unterwegs. Geduld, das kennst du doch von DHL.',
   },
 } as const
 

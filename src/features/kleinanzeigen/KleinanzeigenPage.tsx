@@ -1,6 +1,8 @@
 import clsx from 'clsx'
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
+import { slabName } from '@/components/cards/Slab.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Field } from '@/components/ui/Field.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -112,6 +114,11 @@ function AdCard({ a }: { a: Ads['board'][number] }) {
         <ItemArt id={a.item_id} scale={1} />
         <div className="min-w-0 flex-1">
           <p className="eyebrow">{T.styles[a.style]}</p>
+          {a.suspicious && (
+            <p className="mt-1 inline-flex items-center gap-1 rounded-md bg-loss/15 px-2 py-0.5 text-xs font-bold text-loss" title={T.suspiciousTip}>
+              <PixelIcon name="skull" /> {T.suspicious}
+            </p>
+          )}
           <p className="mt-1 leading-snug font-semibold">{title}</p>
           <p className="mt-1 text-sm text-fg-2">
             {a.qty > 1 && `${a.qty}× `}
@@ -209,7 +216,14 @@ function PostForm({ d }: { d: Ads }) {
   const run = useAdsAct()
   const choices: Choice[] = [
     ...d.owned.stacks.map((s) => ({ key: `s:${s.item_id}`, kind: 'card' as const, item: s.item_id, copy: null, max: s.qty, label: `${s.qty}× ${itemName(s.item_id)}` })),
-    ...d.owned.copies.map((c) => ({ key: `c:${c.copy_id}`, kind: 'copy' as const, item: c.item_id, copy: c.copy_id, max: 1, label: itemName(c.item_id) })),
+    ...d.owned.copies.map((c) => ({
+      key: `c:${c.copy_id}`,
+      kind: 'copy' as const,
+      item: c.item_id,
+      copy: c.copy_id,
+      max: 1,
+      label: c.slab ? `${itemName(c.item_id)} · ${slabName(c.slab)}` : itemName(c.item_id),
+    })),
     ...d.owned.sealed.map((s) => ({ key: `p:${s.item_id}`, kind: 'sealed' as const, item: s.item_id, copy: null, max: s.qty, label: `${s.qty}× ${itemName(s.item_id)}` })),
   ]
   const [key, setKey] = useState('')

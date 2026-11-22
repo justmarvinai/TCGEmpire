@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
+import { slabName } from '@/components/cards/Slab.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Field } from '@/components/ui/Field.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -64,6 +65,7 @@ export function CardmarketItemPage() {
 
 function Detail({ d }: { d: CardmarketItem }) {
   const { busy, run } = useMarketAct(d.item_id)
+  // Slabs never fill a raw buy order; they are only listed on purpose.
   const owned = d.owned.qty + d.owned.copies.length
   return (
     <div className="grid gap-4 lg:grid-cols-12">
@@ -102,7 +104,7 @@ function Detail({ d }: { d: CardmarketItem }) {
         )}
       </Panel>
 
-      <ListForm d={d} owned={owned} busy={busy} run={run} />
+      <ListForm key={d.owned.copies.length + d.owned.slabs.length} d={d} busy={busy} run={run} />
       <OrderForm d={d} busy={busy} run={run} />
 
       <Panel title={T.sales} className="lg:col-span-12">
@@ -135,7 +137,13 @@ function OfferRow({ l, busy, run }: { l: CardmarketItem['listings'][number]; bus
       <Link to={`/cardmarket/seller/${l.seller.id}`} className="min-w-28 flex-1 text-sm font-semibold hover:underline">
         <TraderName name={l.seller.name} kind={l.seller.kind} />
       </Link>
-      <span className="nums text-sm text-fg-2">{l.qty}×</span>
+      {l.slab ? (
+        <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-bold" title={T.slabValue(formatMoney(l.value_cents))}>
+          {slabName(l.slab)}
+        </span>
+      ) : (
+        <span className="nums text-sm text-fg-2">{l.qty}×</span>
+      )}
       <span className="nums font-bold">{formatMoney(l.price_cents)}</span>
       {l.mine ? (
         <Button size="sm" loading={busy === `c${l.id}`} onClick={() => run(`c${l.id}`, 'listing_cancel', { p_listing: l.id }, T.cancelled)}>
@@ -184,18 +192,26 @@ function OrderRow({ o, owned, busy, run }: { o: CardmarketItem['orders'][number]
   )
 }
 
-function ListForm({ d, owned, busy, run }: { d: CardmarketItem; owned: number; busy: string | null; run: Run }) {
+function ListForm({ d, busy, run }: { d: CardmarketItem; busy: string | null; run: Run }) {
   const hit = HIT.has(cardById.get(d.item_id)?.tier ?? '')
+  // A hit is listed as one exemplar: a raw copy or one of the player's slabs.
+  const choices = [
+    ...(d.owned.copies.length > 0 ? [{ id: d.owned.copies[0]!, label: T.rawCopy(d.owned.copies.length), value: d.value_cents }] : []),
+    ...d.owned.slabs.map((s) => ({ id: s.copy_id, label: `${slabName(s.slab)} · ${s.slab.cert_no}`, value: s.value_cents })),
+  ]
+  const [pick, setPick] = useState(choices[0]?.id ?? '')
+  const choice = choices.find((c) => c.id === pick) ?? choices[0]
+  const owned = d.owned.qty + d.owned.copies.length + d.owned.slabs.length
   const [qty, setQty] = useState('1')
-  const [price, setPrice] = useState(centsToEuros(d.value_cents))
+  const [price, setPrice] = useState(centsToEuros(choice?.value ?? d.value_cents))
   const cents = eurosToCents(price)
   const n = hit ? 1 : Math.floor(Number(qty))
-  const valid = owned > 0 && cents > 0 && n >= 1 && n <= (hit ? d.owned.copies.length : d.owned.qty)
+  const valid = owned > 0 && cents > 0 && n >= 1 && (hit ? !!choice : n <= d.owned.qty)
   const submit = () =>
     run('list', 'listing_create', {
       p_kind: hit ? 'copy' : d.kind === 'sealed' ? 'sealed' : 'card',
       p_item: d.item_id,
-      p_copy: hit ? d.owned.copies[0] : null,
+      p_copy: hit ? choice?.id : null,
       p_qty: n,
       p_price: cents,
     }, T.listed)
@@ -203,6 +219,26 @@ function ListForm({ d, owned, busy, run }: { d: CardmarketItem; owned: number; b
     <Panel title={T.listTitle} tip={T.listTip} className="lg:col-span-6">
       <p className="mb-3 text-sm text-fg-2">{owned > 0 ? T.owned(owned) : T.ownedNone}</p>
       <div className="flex flex-wrap items-end gap-3">
+        {hit && choices.length > 1 && (
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-fg-3">{T.which}</span>
+            <select
+              value={choice?.id}
+              onChange={(e) => {
+                setPick(e.target.value)
+                const c = choices.find((x) => x.id === e.target.value)
+                if (c) setPrice(centsToEuros(c.value))
+              }}
+              className="panel-inset h-10 bg-transparent px-2 text-sm"
+            >
+              {choices.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         {!hit && <Field label={T.qty} type="number" min={1} value={qty} onChange={(e) => setQty(e.target.value)} className="w-24" />}
         <Field label={T.pricePer} inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} className="w-40" />
         <Button variant="primary" disabled={!valid} loading={busy === 'list'} onClick={submit}>
@@ -244,6 +280,7 @@ function Sales({ d }: { d: CardmarketItem }) {
       {d.sales.map((s, i) => (
         <li key={i} className="rounded-xl bg-surface-2 px-3 py-2 text-sm">
           <b className="nums">{formatMoney(s.price_cents)}</b>
+          {s.slab && <span className="ml-1.5 rounded-md bg-surface-3 px-1.5 text-xs font-bold">{s.slab}</span>}
           <span className="text-fg-3">
             {' '}
             · {s.qty}× · {now > 0 ? formatAgo(s.at, now + offset) : ''}

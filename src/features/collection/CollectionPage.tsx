@@ -1,6 +1,9 @@
 import clsx from 'clsx'
 import { useMemo, useState } from 'react'
+import { Link, useNavigate } from 'react-router'
 import { Card, TiltCard } from '@/components/cards/Card.tsx'
+import { SlabOf, slabName } from '@/components/cards/Slab.tsx'
+import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
@@ -11,11 +14,12 @@ import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { useAct, useBinder } from '@/lib/actions.ts'
 import { SetGoals } from './Goals.tsx'
-import { cardById, HIT_TIERS, SETS, TIER_LABEL, TIER_TEXT, TIERS, type Tier } from '@/lib/catalog.ts'
+import { cardById, HIT_TIERS, SETS, TIER_LABEL, TIER_TEXT, TIERS, UNLOCKS, type Tier } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { errorText } from '@/lib/rpc.ts'
 import type { BinderCard } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
+import { useMe } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { PriceChart } from '@/features/market/PriceChart.tsx'
 import { duplicateStacks } from './sellDupes.ts'
@@ -36,7 +40,8 @@ export function CollectionPage() {
 
   const cards = binder.data?.cards ?? NONE
   const owned = cards.filter((c) => c.qty > 0)
-  const value = owned.reduce((s, c) => s + c.value_cents * c.qty, 0)
+  // Slabs count with their own value, everything else at Marktwert.
+  const value = owned.reduce((s, c) => s + c.value_cents * (c.qty - c.slabs.length) + c.slabs.reduce((t, x) => t + x.value_cents, 0), 0)
   const shown = useMemo(
     () =>
       cards.filter(
@@ -182,9 +187,23 @@ function Slot({ card, onOpen }: { card: BinderCard; onOpen: () => void }) {
 
 function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }) {
   const act = useAct()
+  const navigate = useNavigate()
+  const level = useMe().data?.player?.level ?? 0
   const data = cardById.get(card.card_id)!
   const [busy, setBusy] = useState(false)
   const hit = HIT_TIERS.has(data.tier)
+  // What the Kartenladen can buy: raw copies of a hit, the whole stack otherwise (slabs never).
+  const sellable = hit ? card.copies.length : card.qty
+
+  const inspectBulk = async () => {
+    setBusy(true)
+    const res = await act('grading_inspect', { p_copy: null, p_card: card.card_id }, ['binder', 'grading'])
+    setBusy(false)
+    if (res) {
+      toast('success', texts.grading.bulkDone)
+      void navigate('/grading')
+    }
+  }
 
   const sell = async (all: boolean) => {
     setBusy(true)
@@ -225,20 +244,50 @@ function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }
           <div>
             <dd className="text-fg-2">{card.qty > 0 ? T.owned(card.qty) : card.discovered ? T.seen : T.never}</dd>
           </div>
-          {card.qty > 0 && (
+          {sellable > 0 && (
             <div className="mt-auto flex flex-wrap gap-2">
               <Button onClick={() => sell(false)} loading={busy}>
                 {T.sellOne}
               </Button>
-              {card.qty > 1 && (
+              {sellable > 1 && (
                 <Button variant="danger" onClick={() => sell(true)} disabled={busy}>
                   {T.sellAll}
                 </Button>
               )}
             </div>
           )}
+          {level >= UNLOCKS.grading && sellable > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              {hit ? (
+                <Link to="/grading" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline">
+                  <PixelIcon name="loupe" /> {T.toGrading}
+                </Link>
+              ) : (
+                <>
+                  <Button size="sm" onClick={() => void inspectBulk()} disabled={busy}>
+                    <PixelIcon name="loupe" /> {texts.grading.bulkInspect}
+                  </Button>
+                  <InfoTip>{texts.grading.bulkInspectTip}</InfoTip>
+                </>
+              )}
+            </div>
+          )}
         </dl>
       </div>
+      {card.slabs.length > 0 && (
+        <div className="mt-5">
+          <p className="eyebrow mb-2">{T.slabs}</p>
+          <ul className="flex flex-wrap gap-3">
+            {card.slabs.map((s) => (
+              <li key={s.copy_id} className="flex flex-col items-center gap-1">
+                <SlabOf cardId={card.card_id} slab={s.slab} scale={1} />
+                <span className="text-xs font-bold">{slabName(s.slab)}</span>
+                <span className="nums text-xs font-semibold text-gold">{formatMoney(s.value_cents)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="mt-5">
         <PriceChart itemId={card.card_id} />
       </div>

@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { useEffect, useMemo, useState } from 'react'
 import { ItemTier, centsToEuros, eurosToCents } from '@/features/cardmarket/common.tsx'
+import { slabName } from '@/components/cards/Slab.tsx'
 import { itemName } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import type { Goods, GoodsItem, TradeDoc, TradeInventory } from '@/lib/schemas.ts'
@@ -69,7 +70,10 @@ export function GoodsPicker({ items, value, onChange }: { items: TradeInventory[
             return (
               <li key={key(i)} className={clsx('flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm', n > 0 ? 'bg-surface-3' : 'bg-surface-2')}>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate font-semibold">{itemName(i.item_id)}</span>
+                  <span className="block truncate font-semibold">
+                    {itemName(i.item_id)}
+                    {i.slab && <span className="ml-1.5 rounded-md bg-surface-2 px-1.5 text-xs">{slabName(i.slab)}</span>}
+                  </span>
                   <span className="text-xs">
                     {i.kind === 'sealed' ? <span className="text-fg-3">{T.sealed}</span> : <ItemTier id={i.item_id} />}
                     {i.kind === 'copy' && <span className="text-fg-3"> · {T.hit}</span>}
@@ -117,7 +121,10 @@ export function GoodsList({ goods }: { goods: TradeDoc['give'] }) {
       {goods.items.map((i) => (
         <li key={key(i)} className="flex items-baseline gap-2">
           <span className="nums text-fg-3">{i.qty}×</span>
-          <span className="min-w-0 flex-1">{itemName(i.item_id)}</span>
+          <span className="min-w-0 flex-1">
+            {itemName(i.item_id)}
+            {i.slab && <span className="ml-1.5 rounded-md bg-surface-3 px-1.5 text-xs">{slabName(i.slab)}</span>}
+          </span>
           <span className="nums text-xs text-fg-3">{formatMoney(i.value_cents * i.qty)}</span>
         </li>
       ))}
