@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_09` (Firma) delivered as `0.0.1-alpha_09` — waiting for the owner's go for `alpha_10` (Risiko).**
+> **Current phase: `alpha_10` (Risiko) in progress — owner go on 22 Nov 2026.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
