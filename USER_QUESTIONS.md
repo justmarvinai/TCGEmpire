@@ -40,6 +40,8 @@ New questions are appended at the bottom with a recommended default.
 3. **Pixel art only where it counts**: card and product artwork gets the full effort; elsewhere little
    pixel art, but what there is must be excellent. Keep usage low.
 4. **Build lean**: no over-engineering; efficient on development time and tokens.
+5. **Card art detail (22 Nov 2026):** only the two rarest tiers (Ultra, Grail) get detailed artwork;
+   Common to Alternative are deliberately simpler.
 
 ## How to answer later
 

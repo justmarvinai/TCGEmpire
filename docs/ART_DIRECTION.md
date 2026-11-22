@@ -170,16 +170,17 @@ never bundled into the main app.
 | Priority | What | When |
 |----------|------|------|
 | P0 | Toolkit, card frames for all four games, card backs, pack and display art for the first set, slab frames, the small icon set | alpha_01–02 |
-| P1 | **Hero art** for every Holo, Alternative, Ultra and Grail card plus fan-favourite commons (Pikachu, Kuriboh-class) — about 25–30 per set, each individually crafted and reviewed | With each set's alpha |
-| P2 | Template-based art for Rares, Uncommons, Commons — every card individually recognisable, less polish | With each set's alpha |
-| P3 | Polish passes: upgrade P2 art, add alternative pack artworks, animated Grails | alpha_12 and after |
+| P1 | **Hero art only for the two rarest tiers: Ultra and Grail** (4–5 cards per set). Individually crafted, full-art, up to four review rounds each. | With each set's alpha |
+| P2 | **Everything else (Common, Uncommon, Rare, Holo, Alternative): simple and cheap.** Built from shared templates and material presets with few shapes, a plain background and a small palette; recognisable and clean, not elaborate. Produced in batches, **one contact-sheet review per batch**, fixes only for clear flaws. Holo and Alternative get their value from the frame treatment and foil, not from extra art detail. | With each set's alpha |
+| P3 | Optional later polish: upgrade favourite P2 cards, alternative pack artworks, animated Grails | after 0.0.1 |
 
-Effort is dominated by P1/P2 card art. To keep it affordable: templates and material presets are built
-once and reused; P2 cards are produced in batches per template with one contact-sheet review per batch;
-only P1 hero cards get individual refinement rounds; art batches are well suited to parallel subagents
-with a precise brief.
-Quality bar before volume: the first ten cards of the Basis-Set (incl. Glurak, Pikachu, a trainer and an
-energy) are taken to final quality and shown to the owner before the rest is produced.
+Owner rule (22 Nov 2026): **only Ultra and Grail cards get the detailed treatment; all lower tiers are
+deliberately simpler to save development time and tokens.** Guide values per P2 card: 30–60 lines of draw
+code, one subject built from a template, at most ~16 colours, no bespoke background scene. Templates and
+material presets are built once and reused; art batches are well suited to parallel subagents with a
+precise brief and a hard cap on review rounds.
+Quality sample shown to the owner before volume production (alpha_01): Glurak (Grail) and Turtok (Ultra)
+at full detail, Pikachu, Professor Eich and Feuer-Energie as lower-tier cards, a booster and a slab.
 
 ## 8. Motion and feedback
 

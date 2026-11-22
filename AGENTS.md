@@ -106,8 +106,10 @@ New RPC checklist: SQL function in a migration → `select private.expose(...)` 
 - Art is code under `art/`, built into atlases. No binary art files are committed.
 - **Pixel-art budget** (`docs/ART_DIRECTION.md` §0): full effort for cards and products only; elsewhere
   the small fixed icon set. Do not add avatars, scenes, portraits or decorative sprites.
-- Card and product art goes through the review loop: build the contact sheet, look at it, compare with
-  the art brief and checklist, refine. Produce template-based cards in batches with one review each.
+- **Detail only where it pays (owner rule):** Ultra and Grail cards are individually crafted (up to four
+  review rounds). Every lower tier is simple: template-based, few shapes, small palette, produced in
+  batches with ONE contact-sheet review per batch. Do not polish lower-tier cards beyond clean and
+  recognisable.
 
 ### Language
 

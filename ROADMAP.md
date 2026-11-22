@@ -36,7 +36,7 @@ Goal: a friend can register with an invite code on the live site and see an empt
 | ☑ | Painter toolkit v1 + atlas build + contact sheets; the small icon set (56 icons); bitmap fonts | M |
 | ☑ | Audio synth v1 with a handful of presets; settings (sound, reduced motion) | M |
 | ☑ | Deploy pipeline: Vercel config, migration runner from CI, keep-alive, owner guide `docs/SETUP.md` (the owner's one-time setup is still to do) | M |
-| ◐ | **Art quality gate:** Pokémon card frame + 10 Basis-Set cards (incl. Glurak, Pikachu, a trainer, an energy), booster and slab mock-up at final quality, shown to the owner | M |
+| ◐ | **Art quality sample** for the owner: Pokémon card frame; Glurak (Grail) and Turtok (Ultra) at full detail; Pikachu, Professor Eich, Feuer-Energie as lower-tier cards; a booster and a slab. (Reduced from ten detailed cards by the owner's rule of 22 Nov: detail only for Ultra and Grail.) | M |
 
 ### alpha_02 — Rip
 
@@ -44,7 +44,7 @@ Goal: the core loop is fun on its own — earn a little, buy boosters, open them
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Content pipeline (TypeScript → seed) and the complete **Pokémon Basis-Set** (data + art P1/P2) | M |
+| ☐ | Content pipeline (TypeScript → seed) and the complete **Pokémon Basis-Set**: data; hero art for the remaining Ultras; simple template art in batches for all lower tiers | M |
 | ☐ | Kiosk: buy boosters ×1/×5/×10; inventory for sealed, stacks and copies; quality values on hits | M |
 | ☐ | **Pack opening**: tear, reveal, hit suspense by tier, summary, multi-rip ×5/×10, **Sofort aufdecken** (instant reveal, also as default setting), keyboard, fake chat | M |
 | ☐ | Foil system and card inspect view | M |
@@ -93,7 +93,7 @@ Goal: all four games are in, each with its own look.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | **Yu-Gi-Oh! LOB**, **One Piece OP-01**, **Riftbound Origins**: data, frames, card backs, packs, displays, art P1/P2 | M |
+| ☐ | **Yu-Gi-Oh! LOB**, **One Piece OP-01**, **Riftbound Origins**: data, frames, card backs, packs, displays; hero art for Ultra and Grail, simple template art for the rest | M |
 | ☐ | Starter choice and Händlerlizenzen | M |
 | ☐ | Themed collection goals (Exodia, Strohhut crew, starters) and set bonuses | M |
 | ☐ | Hobby lore worked into events, achievements and feed lines for all four games | M |
@@ -182,7 +182,7 @@ Goal: it feels finished.
 |---|-------|---|
 | ☐ | Onboarding pass: every unlock has a tour; "i" on every panel; TCG-Lexikon; rules page | M |
 | ☐ | Balance pass with the simulation over levels 1–100 and two prestiges; admin economy dashboard | M |
-| ☐ | Art pass (cards and products only): all P1 hero art reviewed again; alternative pack artworks; animated Grails | M |
+| ☐ | Art pass (cards and products only): Ultra and Grail hero art reviewed once more; animated Grails | M |
 | ☐ | Sound pass; performance pass (bundle, atlas loading, tick duration); database size report | M |
 | ☐ | Full playtest by the group; bug bash; final data policy decision (wipe or keep) | M |
 | ☐ | Release `0.0.1` | M |
