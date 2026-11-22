@@ -55,6 +55,11 @@ changes.
 
 ## Open questions
 
-None besides the go for `alpha_01`. For the go, Claude additionally needs (see Q-2): the Supabase project,
-the Vercel project and three GitHub secrets — exact steps are given when alpha_01 reaches deployment;
-coding and local testing can start without them.
+- **Q-24 Riftbound hero art (alpha_05).** The five Riftbound Ultra/Grail cards (Ahri, Jinx, Lee Sin, Miss Fortune,
+  Kai'Sa) were painted as our own archetypes that fit the card titles — a nine-tailed shrine fox, a blindfolded
+  monk, a punk riding a cannon, a pirate captain, a winged void huntress — instead of on-model champion portraits;
+  the painter declined to reproduce Riot's character designs. Every other card follows the art direction (our own
+  pixel interpretation, recognisable in colours and silhouette). **Default: keep them**; on request they are
+  redrawn closer to the champions.
+- Deployment still needs (see Q-2) the Supabase project, the Vercel project and three GitHub secrets — exact steps
+  are given when deployment is wanted; coding and local testing work without them.
