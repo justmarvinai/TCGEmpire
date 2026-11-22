@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_03` is finished and waits for the owner's review. `alpha_04` starts only with the owner's go.**
+> **Current phase: new site layout (mockups → owner's pick → build), then `alpha_04` (owner's go on 22 Nov 2026; alpha_03 accepted).**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -76,6 +76,15 @@ Goal: there is always something to do and something running while away.
 Measured pace (simulation, 150 active minutes a day): level 10 after 12 minutes, 20 on day 2, 30 on
 day 3, 45 on day 5. Level 30 is a day later than the design's curve: day 1 has idle waiting that the
 market (alpha_04) is meant to fill; the simulation will tell after alpha_04.
+
+### Redesign — own site layout (owner request, 22 Nov 2026)
+
+Goal: the site gets its own, unmistakable layout. Icons and pixel art (cards, products) stay as they are.
+
+| | Scope | |
+|---|-------|---|
+| ◐ | 2–3 mockups of layout directions, same screen each; owner picks one | M |
+| ☐ | Build the chosen direction: shell, navigation, HUD, feed, panels, buttons, dialogs, overlays; 1440 px and 390 px | M |
 
 ### alpha_04 — Flip
 

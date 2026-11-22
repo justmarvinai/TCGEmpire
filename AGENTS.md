@@ -5,10 +5,14 @@ trading-card hobby. Private game for one friend group. Must run on **Vercel Hobb
 
 ## 0. Gate: are you allowed to code?
 
-**No milestone is approved right now.** `alpha_03` (Grind) is finished and reported (22 Nov 2026).
+**Approved milestone: `alpha_04` (Flip).** The owner gave the go on 22 Nov 2026 (`alpha_03` is accepted),
+with one condition: **first a new site layout.**
 
-- Do not start `alpha_04` (or any other code) until the owner says go. Fixes the owner asks for in
-  `alpha_03` are allowed.
+1. Redesign step (owner request 22 Nov 2026): show the owner 2–3 mockups of new layout directions. The
+   icons and the pixel art (cards, products) stay; the site layout changes. **Wait for the owner's pick.**
+2. Implement the chosen direction across shell and components, then build `alpha_04` (scope:
+   `ROADMAP.md`). When it is done: changelog, version, report — then **stop and wait** for the owner's go
+   for `alpha_05`.
 - When the owner approves the next milestone, update this section to name it.
 - Never deploy or change platform settings without the owner's go.
 
