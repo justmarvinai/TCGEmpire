@@ -180,6 +180,17 @@ insert into game.achievement_defs (key, event, tiers, titles) values
   ('doener', 'doener_eaten', '[5,50,500]'::jsonb, '[null,"Dönerprinz","Spießkönig"]'::jsonb),
   ('levels', 'level_up', '[9,24,49,99]'::jsonb, '[null,"Aufsteiger","Großkopferter","Endgegner"]'::jsonb)
 on conflict (key) do update set event = excluded.event, tiers = excluded.tiers, titles = excluded.titles;
+insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, params) values
+  ('sabine', 'Sammler-Sabine', 'collector', 900, 300000, 40, '{"buyBelowPct":95,"buysPerTick":2,"orders":3,"orderPct":80}'::jsonb),
+  ('kalle', 'Kartenhändler Kalle', 'dealer', 700, 0, 50, '{"stock":14,"markupMinPct":110,"markupMaxPct":135,"maxAgeH":48,"hitChancePct":12}'::jsonb),
+  ('bernd', 'Bulk-Bernd', 'bulk', 600, 150000, 30, '{"orders":4,"orderPct":70,"qty":20}'::jsonb),
+  ('sven', 'Scalper-Sven', 'scalper', 350, 500000, 40, '{"markupMinPct":120,"markupMaxPct":145,"buyBelowPct":92}'::jsonb),
+  ('ingo', 'Investor-Ingo', 'investor', 800, 800000, 25, '{"buyHypeBelowPct":97,"sellHypeAbovePct":108,"buyBelowPct":100,"sellMarkupPct":112}'::jsonb),
+  ('kevin', 'Kevin (12)', 'kid', 300, 150000, 20, '{}'::jsonb),
+  ('lars', 'Letzter-Preis-Lars', 'lowballer', 450, 200000, 40, '{}'::jsonb),
+  ('doris', 'Dachboden-Doris', 'attic', 550, 0, 30, '{}'::jsonb)
+on conflict (id) do update set name = excluded.name, archetype = excluded.archetype, ruf = excluded.ruf,
+  budget_base_cents = excluded.budget_base_cents, activity = excluded.activity, params = excluded.params;
 insert into game.tutorial_steps (step, event, reward_booster, reward_base_cents, reward_ep) values
   (0, 'tutorial_ack', 1, 0, 0),
   (1, 'pack_opened', 0, 0, 10),

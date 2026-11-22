@@ -11,6 +11,7 @@ import { JOBS } from '../content/jobs.ts'
 import { CONSUMABLES } from '../content/consumables.ts'
 import { ACHIEVEMENTS } from '../content/achievements.ts'
 import { TUTORIAL } from '../content/tutorial.ts'
+import { NPCS } from '../content/npcs.ts'
 
 const q = (v: string | null | undefined) => (v == null ? 'null' : `'${v.replace(/'/g, "''")}'`)
 const rows = (list: string[]) => list.map((r) => `  (${r})`).join(',\n')
@@ -97,6 +98,10 @@ export function buildCatalogSql(): string {
       ),
     ),
     'on conflict (key) do update set event = excluded.event, tiers = excluded.tiers, titles = excluded.titles;',
+    'insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, params) values',
+    rows(NPCS.map((n) => `${q(n.id)}, ${q(n.name)}, ${q(n.archetype)}, ${n.ruf}, ${n.budgetBaseCents}, ${n.activity}, ${q(JSON.stringify(n.params))}::jsonb`)),
+    'on conflict (id) do update set name = excluded.name, archetype = excluded.archetype, ruf = excluded.ruf,',
+    '  budget_base_cents = excluded.budget_base_cents, activity = excluded.activity, params = excluded.params;',
     'insert into game.tutorial_steps (step, event, reward_booster, reward_base_cents, reward_ep) values',
     rows(TUTORIAL.map((s, i) => `${i}, ${q(s.event)}, ${s.reward.booster ?? 0}, ${s.reward.cents ?? 0}, ${s.reward.ep ?? 0}`)),
     'on conflict (step) do update set event = excluded.event, reward_booster = excluded.reward_booster,',
