@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import type { CSSProperties } from 'react'
 
 /**
  * A company emblem: 8×8 pixels in two colours from 16 hex digits (one byte per row, the highest bit on the left),
@@ -10,12 +11,14 @@ export function Emblem({
   bg,
   scale = 2,
   className,
+  style,
 }: {
   bits: string
   fg: string
   bg: string
   scale?: number
   className?: string
+  style?: CSSProperties
 }) {
   const rects: string[] = []
   for (let y = 0; y < 8; y++) {
@@ -29,6 +32,7 @@ export function Emblem({
       viewBox="0 0 8 8"
       shapeRendering="crispEdges"
       className={clsx('shrink-0', className)}
+      style={style}
       aria-hidden
     >
       <rect width="8" height="8" fill={bg} />

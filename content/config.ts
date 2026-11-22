@@ -315,6 +315,19 @@ export const config = {
   'company.payout_tax_pct': 25,
   'company.value_profit_days': 30,
   'company.invest_bps': 5_000,
+  // Orders from players: at least the service's own time, longer if the queue is longer. VIP orders (graded by the
+  // owner): chance per hour, minutes until they leave, fee as a multiple of the fair Express price, the width of the
+  // shown ranges by Prüfung equipment level, the total error at which the fee drops to 0, Ruf for exact, close
+  // (error ≤ 2) and bad (error ≥ 6) judgements.
+  'company.service_minutes': { economy: 360, standard: 120, express: 20 },
+  'company.vip_per_hour': 0.25,
+  'company.vip_minutes': 180,
+  'company.vip_fee_mult': 3,
+  'company.vip_widths': [4, 3, 3, 2, 1, 1],
+  'company.vip_error_zero': 8,
+  'company.vip_ruf_exact': 5,
+  'company.vip_ruf_close': 2,
+  'company.vip_ruf_bad': -3,
 
   // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,

@@ -121,14 +121,18 @@ export const zShop = z.object({
 export type Shop = z.infer<typeof zShop>
 
 // Grading: the label of a slab (null for a raw copy)
+/** psa, bgs, cgc or a player company as 'co:<id>' */
+export const zGrader = z.union([z.enum(['psa', 'bgs', 'cgc']), z.templateLiteral(['co:', z.number()])])
+export type GraderKey = z.infer<typeof zGrader>
 export const zSlab = z.object({
-  grader: z.enum(['psa', 'bgs', 'cgc']),
+  grader: zGrader,
   grade: z.number(),
   subgrades: z.array(z.number()).nullable(),
   black_label: z.boolean(),
   cert_no: z.string(),
   pop: z.number(),
   pop_higher: z.number(),
+  company: z.object({ id: z.number(), name: z.string(), label: z.object({ bg: z.string(), fg: z.string(), emblem: z.string() }) }).nullable().optional(),
 })
 export type SlabLabel = z.infer<typeof zSlab>
 const zSlabCopy = z.object({ copy_id: z.string(), slab: zSlab, value_cents: z.number() })
@@ -628,7 +632,7 @@ export const zGrading = z.object({
       id: z.number(),
       copy_id: z.string(),
       card_id: z.string(),
-      grader: z.enum(['psa', 'bgs', 'cgc']),
+      grader: zGrader,
       service: z.enum(['economy', 'standard', 'express']),
       fee_cents: z.number(),
       submitted_at: z.string(),
@@ -674,7 +678,7 @@ export type Profile = z.infer<typeof zProfile>
 export const zPopReport = z.object({
   card_id: z.string(),
   value_cents: z.number(),
-  rows: z.array(z.object({ grader: z.enum(['psa', 'bgs', 'cgc']), grade: z.number(), black_label: z.boolean(), n: z.number(), value_cents: z.number() })),
+  rows: z.array(z.object({ grader: zGrader, grade: z.number(), black_label: z.boolean(), n: z.number(), value_cents: z.number() })),
   mine: z.number(),
 })
 export type PopReport = z.infer<typeof zPopReport>
@@ -780,6 +784,7 @@ export const COMPANY_STATIONS = ['annahme', 'pruefung', 'slabbing', 'versand'] a
 export type CompanyStation = (typeof COMPANY_STATIONS)[number]
 export const COMPANY_SERVICES = ['economy', 'standard', 'express'] as const
 export type CompanyServiceKey = (typeof COMPANY_SERVICES)[number]
+const zRangePair = z.tuple([z.number(), z.number()])
 const zStationNumbers = z.object({ annahme: z.number(), pruefung: z.number(), slabbing: z.number(), versand: z.number() })
 export const zCompanyLabel = z.object({ bg: z.string(), fg: z.string(), emblem: z.string() })
 export type CompanyLabel = z.infer<typeof zCompanyLabel>
@@ -863,10 +868,38 @@ export const zCompany = z.object({
       hakt: z.array(zHakt),
       payout_tax_pct: z.number(),
       value_cents: z.number(),
+      player_orders: z.array(
+        z.object({ id: z.number(), card_id: z.string(), customer: z.string(), service: z.enum(COMPANY_SERVICES), fee_cents: z.number(), due_at: z.string(), bumped: z.boolean() }),
+      ),
+      vip: z
+        .object({
+          id: z.string(),
+          card_id: z.string(),
+          fee_cents: z.number(),
+          expires_at: z.string(),
+          width: z.number(),
+          ranges: z.object({ centering: zRangePair, corners: zRangePair, edges: zRangePair, surface: zRangePair }),
+        })
+        .nullable(),
     })
     .nullable(),
 })
 export type CompanyDoc = z.infer<typeof zCompany>
+export const zCompanies = z.array(
+  z.object({
+    id: z.number(),
+    name: z.string(),
+    slogan: z.string(),
+    label: zCompanyLabel,
+    owner: z.string(),
+    stage: z.number(),
+    ruf: z.number(),
+    brand_bps: z.number(),
+    stars_avg: z.number().nullable(),
+    services: z.array(z.object({ service: z.enum(COMPANY_SERVICES), fee_cents: z.number(), minutes: z.number() })),
+  }),
+)
+export type Companies = z.infer<typeof zCompanies>
 export type Company = NonNullable<CompanyDoc['company']>
 
 // Privatkredit and Ehre (alpha_08)
@@ -1092,6 +1125,11 @@ export const RPC_SCHEMAS = {
   company_staff_act: zCompany,
   company_equipment_buy: zCompany,
   company_stage_up: zCompany,
+  companies_list: zCompanies,
+  company_order_submit: z.object({ fee_cents: z.number(), grading: zGrading, ...withPlayer }),
+  company_vip_grade: zCompany.extend({
+    result: z.object({ truth: z.array(z.number()), guess: z.array(z.number()), error: z.number(), paid_cents: z.number(), ruf: z.number() }),
+  }),
   loan_offer: z.object({ loans: zLoans }),
   loan_respond: z.object({ loans: zLoans, ...withPlayer }),
   loan_cancel: z.object({ loans: zLoans }),

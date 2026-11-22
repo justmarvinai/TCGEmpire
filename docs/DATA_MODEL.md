@@ -109,6 +109,7 @@ RLS enabled on every table with no policies.
 | `game.company_research` | Research (planned; equipment is `companies.equipment`). |
 | `game.company_days` | alpha_09 · Orders, revenue and costs per company and German day (14 days kept). Cycles run in the tick `company` and on every `company_get`. |
 | `game.company_decisions` | Pending decision cards. |
+| `game.company_vip`, `grading_orders.bumped`, grader `co:<id>` | alpha_09 · VIP orders (card, hidden quality values, shown range width, fee, expiry) graded by the owner; player orders to a company are grading orders with the grader `co:<company id>` (constraint widened on `card_copies` and `grading_orders`), `bumped` marks a Gefälligkeitsgutachten. Company slabs carry the company's label in `slab_doc` and its brand from the owner's Ruf. |
 | `game.company_reviews` | alpha_09 · Generated customer reviews (stars, text index into the content pool); the newest 50 are kept. |
 | `game.shares` | Stille Teilhaberschaft. |
 

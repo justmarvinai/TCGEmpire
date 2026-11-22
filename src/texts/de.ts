@@ -465,6 +465,23 @@ export const texts = {
     reviewsTip: 'Was Kunden über dich schreiben. Gute Noten und schnelle Bearbeitung machen sie glücklich. Fast.',
     reviewsEmpty: 'Noch keine Bewertungen. Die Kunden müssen erst mal was zurückbekommen.',
     starsAvg: (x: string) => `${x} von 5 Sternen`,
+    // Orders from players and VIP
+    playerOrders: 'Aufträge von Spielern',
+    playerOrdersTip: 'Karten deiner Freunde. Sie haben schon bezahlt und warten. Deine Genauigkeit entscheidet, wie streng die Note wird.',
+    playerOrdersEmpty: 'Keine Aufträge von Freunden. Erzähl ihnen von deiner Firma. Laut.',
+    customer: (name: string, service: string) => `von ${name} · ${service}`,
+    readyIn: (time: string) => `fertig in ${time}`,
+    vip: 'VIP-Auftrag',
+    vipTip: 'Ein wichtiger Kunde will, dass der Chef persönlich gradet. Schätz die vier Werte. Je näher du an der Wahrheit bist, desto mehr zahlt er und desto besser dein Ruf. Besseres Werkzeug an der Prüfung zeigt engere Spannen.',
+    vipLeaves: (time: string) => `geht in ${time}`,
+    vipFee: (money: string) => `zahlt bis zu ${money}`,
+    aspects: { centering: 'Zentrierung', corners: 'Ecken', edges: 'Kanten', surface: 'Oberfläche' } as Record<string, string>,
+    vipSubmit: 'Gutachten abgeben',
+    vipResult: (error: number, money: string) =>
+      error === 0 ? `Punktlandung! Der Kunde zahlt ${money} und erzählt es allen.` : `${error} daneben. Der Kunde zahlt ${money}.`,
+    vipRuf: (n: number) => (n > 0 ? `Ruf +${n}` : n < 0 ? `Ruf ${n}` : 'Ruf unverändert'),
+    vipTruth: 'Wahrheit',
+    vipGuess: 'Dein Tipp',
   },
 
   loans: {
@@ -989,6 +1006,8 @@ export const texts = {
     group_order_done: (d: Record<string, unknown>, name: string) =>
       `Sammelbestellung voll: ${String(d.qty)}× ${name} sind unterwegs. Der Großhändler hat gegrinst.`,
     group_order_cancelled: (name: string) => `Sammelbestellung für ${name} geplatzt. Dein Geld ist zurück.`,
+    company_order: (d: Record<string, unknown>) =>
+      `${String(d.name)} schickt deiner Firma ${Number(d.n) === 1 ? 'eine Karte' : `${String(d.n)} Karten`}. Bezahlt ist schon. Jetzt nicht verkacken.`,
     company_stage: (name: string) => `Glückwunsch, ihr seid jetzt ${name}. Der Notar schickt die Rechnung nach.`,
     company_broke: 'Firmenkonto leer! Die Leute bleiben zu Hause, bis wieder Lohn da ist. Und sie reden über dich.',
     staff_quit: (name: string) => `${name} hat gekündigt. Der Kaktus ist auch weg.`,
@@ -1532,6 +1551,10 @@ export const texts = {
     popMine: (n: number) => `Davon deine: ${n}`,
     popRaw: (money: string) => `Roh: ${money}`,
     blackLabel: 'Black Label',
+    companySlab: 'Firmen-Slab',
+    companies: 'Firmen deiner Freunde',
+    companiesTip: 'Freunde mit eigener Firma graden auch. Wie streng sie sind, hängt von ihren Leuten ab, wie viel der Slab wert ist, von ihrem Ruf. Das Geld geht an ihre Firma.',
+    companyBy: (name: string) => `Chef: ${name}`,
     /** words printed on the slab label per grader and grade */
     words: {
       psa: { 10: 'GEM MT', 9: 'MINT', 8: 'NM-MT', 7: 'NM', 6: 'EX-MT', 5: 'EX', 4: 'VG-EX', 3: 'VG', 2: 'GOOD', 1: 'PR' },

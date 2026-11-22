@@ -30,6 +30,7 @@ import { texts } from '@/texts/de.ts'
 import { EQUIPMENT, REVIEWS, STAGES, STATION_DEFS } from '../../../content/company.ts'
 import { LabelDesigner, LabelPreview } from './LabelDesigner.tsx'
 import { personCv, personName } from './people.ts'
+import { PlayerOrders, VipOrder } from './Orders.tsx'
 
 const T = texts.company
 const TABS = ['overview', 'team', 'build', 'reviews'] as const
@@ -88,10 +89,14 @@ export function Dashboard({ d, player }: { d: CompanyDoc; player: Player }) {
       {tab === 'overview' && (
         <div className="grid items-start gap-4 xl:grid-cols-[1fr_24rem]">
           <div className="flex min-w-0 flex-col gap-4">
+            <VipOrder co={co} />
             <HaktPanel co={co} onTab={setTab} />
             <Pipeline co={co} />
           </div>
-          <Finances co={co} />
+          <div className="flex flex-col gap-4">
+            <Finances co={co} />
+            <PlayerOrders co={co} />
+          </div>
         </div>
       )}
       {tab === 'team' && <Team co={co} />}

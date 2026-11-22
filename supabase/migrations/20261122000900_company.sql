@@ -176,6 +176,18 @@ language sql stable set search_path = '' as $$
     'material', private.eur(private.cfg_num('company.material_base_cents')))
 $$;
 
+-- Extension points for the later parts of the company (player orders, VIP orders, decisions, shady business):
+-- extra fields of the company document, extra work in every cycle.
+create function private.company_extra(c game.companies) returns jsonb
+language sql stable set search_path = '' as $$
+  select '{}'::jsonb
+$$;
+
+create function private.company_cycle_extra(c game.companies, p_hours numeric, p_orders numeric) returns void
+language sql set search_path = '' as $$
+  select null::void
+$$;
+
 -- Marketing multiplier (campaigns come with the decisions; 1 until then).
 create function private.company_marketing(c game.companies) returns numeric
 language sql stable set search_path = '' as $$
@@ -376,6 +388,7 @@ begin
     last_cycle_at = v_now
   where id = c.id;
   perform private.company_book(c.id, v_proc, v_rev, v_cost);
+  perform private.company_cycle_extra((select x from game.companies x where x.id = c.id), v_dt, v_proc);
   delete from game.company_days where company_id = c.id and day < private.today() - 14;
   delete from game.company_reviews where company_id = c.id and id < (select min(id) from (
     select id from game.company_reviews where company_id = c.id order by id desc limit 50) x);
@@ -580,7 +593,7 @@ begin
       'hakt', private.company_hakt(c, v_caps, v_cap, v_dem, v_acc, v_costs),
       'payout_tax_pct', private.cfg_num('company.payout_tax_pct')::int,
       'value_cents', private.company_value(p_player)
-    )
+    ) || private.company_extra(c)
   );
 end $$;
 

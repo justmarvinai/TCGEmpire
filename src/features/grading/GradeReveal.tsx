@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Card } from '@/components/cards/Card.tsx'
-import { SlabOf } from '@/components/cards/Slab.tsx'
+import { graderName, SlabOf } from '@/components/cards/Slab.tsx'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
@@ -71,7 +71,7 @@ export function GradeReveal({ results, onClose }: { results: GradeResult[]; onCl
               <Card id={r.card_id} scale={1} className="opacity-40 blur-[1px]" />
               <PixelIcon name="gift" className="absolute size-16 text-accent" />
             </div>
-            <p className="font-semibold">{T.parcel(r.slab.grader.toUpperCase())}</p>
+            <p className="font-semibold">{T.parcel(graderName(r.slab.grader, r.slab.company?.name))}</p>
             <Button variant="primary" autoFocus onClick={() => setPhase('drum')}>
               {T.open}
             </Button>

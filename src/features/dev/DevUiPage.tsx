@@ -5,7 +5,7 @@ import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
 import { useCardAtlas, useSpriteAtlas } from '@/components/pixel/atlas.ts'
 import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
 import { Card, TiltCard } from '@/components/cards/Card.tsx'
-import { Slab, SlabOf } from '@/components/cards/Slab.tsx'
+import { SlabOf } from '@/components/cards/Slab.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { Field } from '@/components/ui/Field.tsx'
@@ -148,7 +148,14 @@ export default function DevUiPage() {
             <SlabOf cardId="pkm-base-087" slab={{ grader: 'bgs', grade: 8.5, subgrades: [9, 8.5, 9, 8], black_label: false, cert_no: '0001772030', pop: 1, pop_higher: 3 }} />
             <SlabOf cardId="pkm-base-089" slab={{ grader: 'bgs', grade: 10, subgrades: [10, 10, 10, 10], black_label: true, cert_no: '0000007919', pop: 1, pop_higher: 0 }} />
             <SlabOf cardId="pkm-base-028" slab={{ grader: 'cgc', grade: 9, subgrades: null, black_label: false, cert_no: '3038650127', pop: 4, pop_higher: 1 }} />
-            <Slab variant="company" cardId="pkm-base-084" title="Pikachu" subtitle="Basis-Set · 084" grade="8" gradeWord="NM-MT" cert="00000001" brand="KALLE" scale={2} />
+            <SlabOf
+              cardId="pkm-base-084"
+              slab={{ grader: 'co:1', grade: 8, subgrades: null, black_label: false, cert_no: '1-0007919', pop: 1, pop_higher: 0, company: { id: 1, name: 'Slabwerk', label: { bg: 'gruen', fg: 'weiss', emblem: '183c7effff7e3c18' } } }}
+            />
+            <SlabOf
+              cardId="pkm-base-058"
+              slab={{ grader: 'co:2', grade: 10, subgrades: null, black_label: false, cert_no: '2-0015838', pop: 1, pop_higher: 0, company: { id: 2, name: 'Glurak & Söhne', label: { bg: 'gold', fg: 'schwarz', emblem: 'a55a3cdbdb3c5aa5' } } }}
+            />
           </div>
         </Panel>
 

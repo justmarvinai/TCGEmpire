@@ -19,6 +19,7 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'set_phase')
     return texts.feed.set_phase(String(f.data.phase), Boolean(f.data.reprint), SETS.find((s) => s.id === f.data.set_id)?.name ?? String(f.data.set_id))
   if (f.kind === 'league') return texts.feed.league(f.data, texts.toplists.percent(Number(f.data.bps)))
+  if (f.kind === 'company_founded') return texts.feed.company_founded(f.data)
   if (f.kind === 'loan_defaulted') return texts.feed.loan_defaulted(f.data, formatMoney(Number(f.data.cents)))
   if (f.kind === 'battle')
     return texts.feed.battle(f.data, texts.battles.modes[f.data.mode as BattleMode]?.name ?? String(f.data.mode), formatMoney(Number(f.data.pot)))
