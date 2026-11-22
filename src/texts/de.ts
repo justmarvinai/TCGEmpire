@@ -786,12 +786,26 @@ export const texts = {
   jobs: {
     minijobs: 'Minijobs',
     minijobsTip: 'Kurze Spiele für sofortiges Geld. Kosten Energie. Wer gut spielt, bekommt einen Pfandbon dazu.',
-    minigameNames: { pfand: 'Pfandflaschen sammeln', regale: 'Regale einräumen', sortieren: 'Karten sortieren', pakete: 'Pakete ausliefern' } as Record<string, string>,
+    minigameNames: {
+      pfand: 'Pfandflaschen sammeln',
+      regale: 'Regale einräumen',
+      sortieren: 'Karten sortieren',
+      pakete: 'Pakete ausliefern',
+      fake: 'Echt oder Fake?',
+      praktikum: 'Grading-Praktikum',
+    } as Record<string, string>,
     minigameBodies: {
       pfand: 'Im Park liegen Flaschen. Klick sie weg, bevor es ein anderer tut. Glasscherben lieber liegen lassen.',
       regale: 'Bei Müller kommt Ware rein. Ab ins richtige Regal: Drogerie, Spielzeug oder Süßkram. Falsch einsortiert kostet.',
       sortieren: 'In der Würfelbude liegt ein Berg ungeordneter Karten. Sortier jede Karte nach ihrem Typ.',
       pakete: 'DHL-Tour. Drück genau im Zustellfenster, sonst landet das Paket beim Nachbarn. Du hast keinen Nachbarn.',
+      fake: 'Cardmarket-Prüfstelle. Karte für Karte: echt oder gefälscht? Wer Fälschungen durchwinkt, zahlt. Gute Runden schärfen den Blick für Fakes in den Kleinanzeigen.',
+      praktikum: 'Praktikum bei PSA. Schau dir Ecken, Kanten, Zentrierung und Oberfläche an und gib die Note. Gute Runden schärfen deine Lupe für die Vorprüfung.',
+    } as Record<string, string>,
+    /** shown after a round that earned the job's buff */
+    buff: {
+      fake: 'Geschärfter Blick: 3 Stunden lang siehst du Fakes in den Kleinanzeigen.',
+      praktikum: 'Geschulte Lupe: 3 Stunden lang zeigt die Vorprüfung engere Spannen.',
     } as Record<string, string>,
     employer: (name: string) => `bei ${name}`,
     shifts: 'Schichten',
