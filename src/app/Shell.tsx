@@ -16,7 +16,9 @@ import { useSettings } from '@/lib/settings.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { serverNow, useSetMe, useSync, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
+import { cardName } from '@/lib/catalog.ts'
 import { NAV, type NavItem } from './nav.ts'
+import { Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
 
 const DOENER_BASE_CENTS = 150_00
 
@@ -24,14 +26,16 @@ export function Shell({ me }: { me: Me & { player: Player } }) {
   useSync(true)
   return (
     <div className="app-bg grid h-dvh grid-cols-[15rem_1fr] grid-rows-[3.5rem_1fr] max-lg:grid-cols-[3.5rem_1fr] min-[1440px]:grid-cols-[15rem_1fr_18rem]">
-      <Sidebar level={me.player.level} />
+      <Sidebar player={me.player} />
       <TopBar me={me} />
       <main className="col-start-2 row-start-2 min-w-0 overflow-y-auto" id="scroll-root">
         <div className="mx-auto max-w-[75rem] p-6 max-lg:p-3">
+          <TutorialBanner player={me.player} />
           <Outlet />
         </div>
       </main>
       <FeedRail priceLevel={me.server.price_level} />
+      <Overlays />
     </div>
   )
 }
@@ -39,7 +43,9 @@ export function Shell({ me }: { me: Me & { player: Player } }) {
 // ----------------------------------------------------------------------------------------------
 // Sidebar
 // ----------------------------------------------------------------------------------------------
-function Sidebar({ level }: { level: number }) {
+function Sidebar({ player }: { player: Player }) {
+  const level = player.level
+  const badges: Partial<Record<NavItem['id'], number>> = { open: player.sealed_total, quests: player.quests_ready }
   return (
     <aside className="col-start-1 row-span-2 row-start-1 flex flex-col overflow-y-auto border-r-2 border-line bg-surface-1">
       <NavLink to="/" className="flex h-14 shrink-0 items-center gap-2 border-b-2 border-line px-4 max-lg:justify-center max-lg:px-0">
@@ -55,7 +61,7 @@ function Sidebar({ level }: { level: number }) {
               {texts.nav.groups[group.group]}
             </p>
             {group.items.map((item) => (
-              <SidebarItem key={item.id} item={item} level={level} />
+              <SidebarItem key={item.id} item={item} level={level} badge={badges[item.id]} />
             ))}
           </div>
         ))}
@@ -64,7 +70,7 @@ function Sidebar({ level }: { level: number }) {
   )
 }
 
-function SidebarItem({ item, level }: { item: NavItem; level: number }) {
+function SidebarItem({ item, level, badge }: { item: NavItem; level: number; badge?: number }) {
   const label = texts.nav.items[item.id]
   const locked = level < item.level
   const base = 'flex h-9 items-center gap-2.5 px-2 text-sm font-medium max-lg:justify-center'
@@ -95,6 +101,7 @@ function SidebarItem({ item, level }: { item: NavItem; level: number }) {
           {texts.nav.soon}
         </span>
       )}
+      {!!badge && <span className="nums min-w-5 bg-accent px-1 text-center text-xs font-bold text-accent-fg max-lg:hidden">{badge}</span>}
     </NavLink>
   )
 }
@@ -313,5 +320,7 @@ function FeedRail({ priceLevel }: { priceLevel: number }) {
 function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'player_joined') return texts.feed.player_joined(f.data)
   if (f.kind === 'inflation') return texts.feed.inflation(f.data, doener)
+  if (f.kind === 'pull_grail') return texts.feed.pull_grail(f.data, cardName(String(f.data.card_id)))
+  if (f.kind === 'pull_ultra') return texts.feed.pull_ultra(f.data, cardName(String(f.data.card_id)))
   return texts.feed.unknown
 }

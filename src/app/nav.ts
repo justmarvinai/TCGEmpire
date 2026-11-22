@@ -26,7 +26,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
   { group: 'start', items: [item('home', 'home', 1, true)] },
   {
     group: 'sammeln',
-    items: [item('shop', 'shop', 1), item('open', 'pack', 1), item('collection', 'binder', 1), item('grading', 'loupe', 13)],
+    items: [item('shop', 'shop', 1, true), item('open', 'pack', 1, true), item('collection', 'binder', 1, true), item('grading', 'loupe', 13)],
   },
   {
     group: 'handeln',
@@ -39,13 +39,13 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
   },
   {
     group: 'verdienen',
-    items: [item('jobs', 'briefcase', 1), item('bunker', 'vault', 3), item('company', 'building', 30), item('streaming', 'camera', 45)],
+    items: [item('jobs', 'briefcase', 1, true), item('bunker', 'vault', 3), item('company', 'building', 30), item('streaming', 'camera', 45)],
   },
   {
     group: 'aufsteigen',
     items: [
-      item('quests', 'scroll', 1),
-      item('path', 'path', 1),
+      item('quests', 'scroll', 1, true),
+      item('path', 'path', 1, true),
       item('upgrades', 'upgrade', 5),
       item('skills', 'skills', 5),
       item('prestige', 'crown', 100),

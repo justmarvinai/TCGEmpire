@@ -4,7 +4,9 @@ import { persist } from 'zustand/middleware'
 interface Settings {
   volume: number // 0..1
   reducedMotion: boolean
-  set: (patch: Partial<Pick<Settings, 'volume' | 'reducedMotion'>>) => void
+  /** skip the pack opening animation and show the result at once */
+  instantReveal: boolean
+  set: (patch: Partial<Pick<Settings, 'volume' | 'reducedMotion' | 'instantReveal'>>) => void
 }
 
 // Device settings stay on the device.
@@ -13,6 +15,7 @@ export const useSettings = create<Settings>()(
     (set) => ({
       volume: 0.5,
       reducedMotion: false,
+      instantReveal: false,
       set: (patch) => set(patch),
     }),
     { name: 'tcge.settings' },

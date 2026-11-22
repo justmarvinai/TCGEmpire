@@ -5,11 +5,11 @@ trading-card hobby. Private game for one friend group. Must run on **Vercel Hobb
 
 ## 0. Gate: are you allowed to code?
 
-**No milestone is approved right now.** `alpha_01` (Fundament) was finished on 22 Nov 2026 and is with the
-owner for review. **Do not start `alpha_02` or any other coding until the owner explicitly says go.**
+**Approved milestone: `alpha_02` (Rip).** The owner gave the go on 22 Nov 2026 (`alpha_01` is accepted).
 
-- When the owner approves the next milestone, update this section to name it, and work on that one only.
-- Small fixes the owner asks for on finished milestones are fine.
+- Work on `alpha_02` only (scope: `ROADMAP.md`). When it is done: changelog, version, report — then
+  **stop and wait** for the owner's go for `alpha_03`.
+- When the owner approves the next milestone, update this section to name it.
 - Never deploy or change platform settings without the owner's go.
 
 ## 1. Read first
@@ -110,6 +110,10 @@ New RPC checklist: SQL function in a migration → `select private.expose(...)` 
   review rounds). Every lower tier is simple: template-based, few shapes, small palette, produced in
   batches with ONE contact-sheet review per batch. Do not polish lower-tier cards beyond clean and
   recognisable.
+- **Reuse before drawing (owner rule):** every card below Ultra comes from the reusable card model in
+  `art/kit/` (data spec per card, no bespoke draw code). One card back for every card of every game
+  (`card-back`). One reusable slab frame per grading company; card art and label text (normal font) are
+  put on top at runtime, never baked into a slab image.
 
 ### Language
 

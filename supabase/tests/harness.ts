@@ -16,7 +16,9 @@ export async function createTestDb() {
   for (const file of readdirSync(new URL('migrations/', root)).sort()) {
     await db.exec(read(`migrations/${file}`))
   }
-  await db.exec(read('seed/config.sql'))
+  for (const file of readdirSync(new URL('seed/', root)).sort()) {
+    await db.exec(read(`seed/${file}`))
+  }
   // Cheap password hashing keeps the tests fast.
   await db.exec(`insert into game.config_overrides (key, value, updated_at) values ('auth.bcrypt_cost', '4', now())`)
 

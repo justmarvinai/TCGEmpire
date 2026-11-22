@@ -198,3 +198,173 @@
   background: var(--color-surface-2);
   animation: shimmer 1400ms infinite;
 }
+
+/* ------------------------------------------------------------------------------------------------
+   Cards: foil layers move with transform only; the foil atlas masks where a card shines.
+   ------------------------------------------------------------------------------------------------ */
+.card-foil {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: color-dodge;
+  opacity: var(--foil-o, 0.7);
+}
+.card-foil > i {
+  position: absolute;
+  inset: -100%;
+  background: var(--foil-grad);
+  transform: translate(var(--fx, -20%), var(--fy, -20%));
+  transition: transform 120ms linear;
+}
+.card-foil.sweep > i {
+  animation: foil-sweep 3.6s linear infinite;
+}
+@keyframes foil-sweep {
+  from { transform: translate(-35%, -35%); }
+  to { transform: translate(35%, 35%); }
+}
+[data-tier='holo'] {
+  --foil-grad: repeating-linear-gradient(115deg, transparent 0 6%, rgb(80 240 255 / 0.6) 10%, rgb(255 120 230 / 0.55) 14%, rgb(255 240 120 / 0.55) 18%, transparent 24% 32%);
+}
+[data-tier='alternative'] {
+  --foil-grad: repeating-linear-gradient(115deg, transparent 0 6%, rgb(190 130 255 / 0.65) 11%, rgb(255 140 220 / 0.6) 15%, transparent 22% 30%);
+}
+[data-tier='ultra'] {
+  --foil-grad: repeating-linear-gradient(115deg, transparent 0 5%, rgb(255 220 120 / 0.7) 9%, rgb(255 250 220 / 0.75) 12%, rgb(255 190 80 / 0.6) 15%, transparent 21% 28%);
+  --foil-o: 0.8;
+}
+[data-tier='grail'] {
+  --foil-grad: repeating-linear-gradient(115deg, rgb(255 80 80 / 0.55) 0%, rgb(255 210 80 / 0.6) 5%, rgb(120 255 140 / 0.55) 10%, rgb(80 200 255 / 0.6) 15%, rgb(200 120 255 / 0.6) 20%, rgb(255 80 80 / 0.55) 25%);
+  --foil-o: 0.85;
+}
+
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 140ms var(--ease-out);
+  will-change: transform;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Pack opening
+   ------------------------------------------------------------------------------------------------ */
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+.anim-bob { animation: bob 2.6s ease-in-out infinite; }
+
+@keyframes rattle {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  20% { transform: translate(calc(var(--amp, 3px) * -1), 1px) rotate(-1.5deg); }
+  40% { transform: translate(var(--amp, 3px), -1px) rotate(1.5deg); }
+  60% { transform: translate(calc(var(--amp, 3px) * -0.7), 0) rotate(-1deg); }
+  80% { transform: translate(calc(var(--amp, 3px) * 0.7), 1px) rotate(1deg); }
+}
+.anim-rattle { animation: rattle 140ms linear infinite; }
+
+@keyframes strip-off {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(140px, -180px) rotate(38deg); opacity: 0; }
+}
+.anim-strip-off { animation: strip-off 520ms var(--ease-out) forwards; }
+
+@keyframes flip-in {
+  0% { transform: scaleX(0) translateY(6px); }
+  60% { transform: scaleX(1.06) translateY(-2px); }
+  100% { transform: scaleX(1) translateY(0); }
+}
+.anim-flip-in { animation: flip-in 260ms var(--ease-out); }
+
+@keyframes deal {
+  0% { transform: translate(var(--from-x, 0), var(--from-y, -40px)) scale(0.6); opacity: 0; }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+.anim-deal { animation: deal 320ms var(--ease-out) both; }
+
+@keyframes glow-pulse {
+  0%, 100% { transform: scale(0.9); opacity: 0.55; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+.glow {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow, #ffffff) 0%, transparent 65%);
+  animation: glow-pulse 900ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes flash-out {
+  0% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+.anim-flash { animation: flash-out 700ms var(--ease-out) forwards; }
+
+@keyframes particle {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.4); opacity: 0; }
+}
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  animation: particle var(--t, 900ms) var(--ease-out) forwards;
+}
+
+@keyframes rays-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.rays {
+  position: absolute;
+  inset: -60%;
+  background: repeating-conic-gradient(from 0deg, rgb(255 255 255 / 0.13) 0deg 8deg, transparent 8deg 24deg);
+  animation: rays-spin 14s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.06); }
+  30% { transform: scale(0.98); }
+  45% { transform: scale(1.04); }
+}
+.anim-heartbeat { animation: heartbeat 900ms ease-in-out infinite; }
+
+@keyframes rise {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-36px); opacity: 0; }
+}
+.anim-rise { animation: rise 800ms var(--ease-out) forwards; }
+
+@keyframes stamp {
+  0% { transform: scale(2.2) rotate(-12deg); opacity: 0; }
+  60% { transform: scale(0.92) rotate(-6deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-6deg); opacity: 1; }
+}
+.anim-stamp { animation: stamp 380ms var(--ease-out) both; }
+
+@keyframes bottle-pop {
+  0% { transform: scale(0) translateY(10px); }
+  70% { transform: scale(1.15) translateY(-2px); }
+  100% { transform: scale(1) translateY(0); }
+}
+.anim-bottle { animation: bottle-pop 220ms var(--ease-out); }
+
+/* A pulsing ring points at the next thing to click (the element itself stays still). */
+@keyframes nudge-ring {
+  0% { transform: scale(0.96); opacity: 0.9; }
+  100% { transform: scale(1.12); opacity: 0; }
+}
+.anim-nudge {
+  position: relative;
+}
+.anim-nudge::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border: 2px solid var(--color-accent);
+  pointer-events: none;
+  animation: nudge-ring 1.4s var(--ease-out) infinite;
+}

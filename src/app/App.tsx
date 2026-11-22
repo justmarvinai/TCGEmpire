@@ -6,6 +6,12 @@ import { ToastViewport } from '@/components/ui/toast.tsx'
 import { AuthPage } from '@/features/auth/AuthPage.tsx'
 import { ComingSoonPage } from '@/features/common/ComingSoonPage.tsx'
 import { HomePage } from '@/features/home/HomePage.tsx'
+import { CollectionPage } from '@/features/collection/CollectionPage.tsx'
+import { JobsPage } from '@/features/jobs/JobsPage.tsx'
+import { OpenPage } from '@/features/open/OpenPage.tsx'
+import { PathPage } from '@/features/path/PathPage.tsx'
+import { QuestsPage } from '@/features/quests/QuestsPage.tsx'
+import { ShopPage } from '@/features/shop/ShopPage.tsx'
 import { errorText } from '@/lib/rpc.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { useMe } from '@/lib/world.ts'
@@ -49,6 +55,12 @@ function Game() {
       <Routes>
         <Route element={<Shell me={signedIn} />}>
           <Route index element={<HomePage me={signedIn} />} />
+          <Route path="shop" element={<ShopPage />} />
+          <Route path="open" element={<OpenPage />} />
+          <Route path="collection" element={<CollectionPage />} />
+          <Route path="jobs" element={<JobsPage />} />
+          <Route path="quests" element={<QuestsPage />} />
+          <Route path="path" element={<PathPage />} />
           <Route
             path="dev/ui"
             element={

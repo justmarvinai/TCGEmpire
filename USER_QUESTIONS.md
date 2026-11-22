@@ -42,6 +42,11 @@ New questions are appended at the bottom with a recommended default.
 4. **Build lean**: no over-engineering; efficient on development time and tokens.
 5. **Card art detail (22 Nov 2026):** only the two rarest tiers (Ultra, Grail) get detailed artwork;
    Common to Alternative are deliberately simpler.
+6. **Art approved (22 Nov 2026):** Glurak/Turtok quality is the bar for top-tier cards; booster and card back
+   are fine. One card back for every card in the game. Slabs: one reusable model per grading company with
+   card name and grade in normal font. A reusable card model for everything below Ultra. Reuse wherever
+   possible to save tokens.
+7. **Go for alpha_02** given on 22 Nov 2026.
 
 ## How to answer later
 

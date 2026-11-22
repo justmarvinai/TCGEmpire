@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import { ICONS } from '@/components/pixel/icon-data.ts'
 import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
 import { useCardAtlas, useSpriteAtlas } from '@/components/pixel/atlas.ts'
-import { PixelCard, PixelProduct } from '@/components/pixel/PixelSprite.tsx'
+import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
+import { Card, TiltCard } from '@/components/cards/Card.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { Field } from '@/components/ui/Field.tsx'
@@ -160,8 +161,8 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
 function ArtGallery() {
   const cards = useCardAtlas('pokemon-base')
   const products = useSpriteAtlas('products')
-  const cardIds = Object.keys(cards.data?.items ?? {}).sort()
-  const productIds = Object.keys(products.data?.items ?? {}).sort()
+  const cardIds = [...(cards.data?.ids ?? [])].sort()
+  const productIds = [...(products.data?.ids ?? [])].sort()
   return (
     <Panel title="Karten und Produkte" className="lg:col-span-2" tip="Alle Grafiken werden per Code erzeugt (pnpm art:build).">
       {cardIds.length === 0 && productIds.length === 0 ? (
@@ -170,12 +171,14 @@ function ArtGallery() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap gap-3">
             {cardIds.map((id) => (
-              <PixelCard key={id} set="pokemon-base" id={id} scale={2} />
+              <Card key={id} id={id} scale={1} foil="sweep" />
             ))}
           </div>
           <div className="flex flex-wrap items-end gap-4">
-            {cardIds.slice(-2).map((id) => (
-              <PixelCard key={id} set="pokemon-base" id={id} scale={4} />
+            {cardIds.filter((id) => ['pkm-base-088', 'pkm-base-090'].includes(id)).map((id) => (
+              <TiltCard key={id}>
+                <Card id={id} scale={3} foil="sweep" />
+              </TiltCard>
             ))}
             {productIds.map((id) => (
               <PixelProduct key={id} id={id} scale={3} />
