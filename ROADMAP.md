@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_10` (Risiko) delivered as `0.0.1-alpha_10` — waiting for the owner's go for `alpha_11` (Mogul).**
+> **Current phase: `alpha_11` (Mogul) in progress — owner go on 22 Nov 2026.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -179,7 +179,7 @@ Goal: the world happens to you.
 | ☑ | Event engine with at least 25 events; **Tagesereignis** at 00:00, random events, 2–3 announced **Highlight-Events** per week | M |
 | ☑ | Schattenwirtschaft: Bunker knacken, Finanzamt, 1-Stern, Gerücht, Abwerben, resealed/gewogen, Kredit platzen lassen (Q-25), Rache; **attack roll with Abwehr upgrades and Angriff skills, blocked outcomes**; daily loss cap | M |
 | ☑ | Sonntags-Flohmarkt (Flohmarkt-Horst's Sunday ads in the Kleinanzeigen, decision 095) | S |
-| → | eBay-Auktionen: moved to alpha_11 (decision 095) | S |
+| → | eBay-Auktionen: moved to the backlog after 0.0.1 (decisions 095, 097) | S |
 | ☑ | Bares für Rares | S |
 | ☑ | Calendar event framework + first calendar event (Adventskalender) | S |
 
@@ -194,7 +194,6 @@ Goal: the endgame and the reason to start again.
 | ☐ | Luxus, Megaprojekte, Museum auctions | S |
 | ☐ | Streaming with Followers and sponsors | S |
 | ☐ | Höhle der Löwen | S |
-| ☐ | eBay-Auktionen (from alpha_10, decision 095) | S |
 
 ### alpha_12 — Feinschliff → **0.0.1**
 
@@ -215,7 +214,7 @@ More sets (admin-released), further business units (Kartenladen, Automaten, Aukt
 scenes and avatars, tournaments, Vereine (guilds), music, more calendar events, phone polish.
 
 Moved here from alpha milestones: Stille Teilhaberschaft (alpha_09, decision 091); Box Break spots by card type
-(alpha_08, decision 084).
+(alpha_08, decision 084); eBay-Auktionen (alpha_10, owner decision Q-27 / 097).
 
 ## Working agreement
 

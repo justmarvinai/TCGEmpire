@@ -35,6 +35,8 @@ New questions are appended at the bottom with a recommended default.
 | Q-24 | Riftbound hero art | Keep our own archetypes ("your current take on the art is fine"). | owner |
 | Q-25 | Kredit platzen lassen | An explicit button comes with the dark side in alpha_10; until then a loan bursts only when the money is missing on the due date. | owner |
 | Q-26 | Pack Battles against bots | Keep: bots pay nothing, what they win is gone. | owner |
+| Q-27 | eBay-Auktionen | Backlog for after 0.0.1. | owner |
+| Q-28 | Anfängerschutz | Keep: players below level 35 can neither attack nor be attacked. | owner |
 
 ## Additional owner requirements (21 Nov 2026)
 
@@ -63,8 +65,3 @@ changes.
 
 - Deployment still needs (see Q-2) the Supabase project, the Vercel project and three GitHub secrets — exact steps
   are given when deployment is wanted; coding and local testing work without them.
-- **Q-27 (alpha_10): eBay-Auktionen.** They moved to alpha_11, because timed auctions with NPC bidders need a bidding
-  flow of their own and Cardmarket plus Bares für Rares already cover selling. *Recommended:* build them in alpha_11
-  as planned; alternative: drop them for 0.0.1.
-- **Q-28 (alpha_10): Anfängerschutz.** Players below level 35 cannot be attacked (they cannot attack either).
-  *Recommended:* keep it; alternative: everyone from level 10 can be a target.
