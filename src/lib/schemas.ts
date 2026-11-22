@@ -489,6 +489,22 @@ export const zLicenses = z.object({
 export type Licenses = z.infer<typeof zLicenses>
 const zLicensesWrite = z.object({ licenses: zLicenses, player: zPlayer })
 
+export const zGoals = z.object({
+  goals: z.array(
+    z.object({
+      key: z.string(),
+      set_id: z.string(),
+      total: z.number(),
+      have: z.number(),
+      done_at: z.string().nullable(),
+      stat: z.string(),
+      op: z.enum(['flat', 'pct']),
+      value: z.number(),
+    }),
+  ),
+})
+export type Goals = z.infer<typeof zGoals>
+
 export const TOPLISTS = ['worth', 'level', 'cash', 'collection'] as const
 export type ToplistId = (typeof TOPLISTS)[number]
 export const zToplist = z.object({
@@ -543,6 +559,7 @@ export const RPC_SCHEMAS = {
   players_get: zPlayers,
   chat_get: zChat,
   licenses_get: zLicenses,
+  goals_get: zGoals,
   starter_pick: zLicensesWrite,
   license_buy: zLicensesWrite,
   admin_get: zAdmin,

@@ -14,6 +14,7 @@ import { TUTORIAL } from '../content/tutorial.ts'
 import { NPCS } from '../content/npcs.ts'
 import { STORES } from '../content/stores.ts'
 import { RIVALS } from '../content/rivals.ts'
+import { GOALS } from '../content/goals.ts'
 
 const q = (v: string | null | undefined) => (v == null ? 'null' : `'${v.replace(/'/g, "''")}'`)
 const rows = (list: string[]) => list.map((r) => `  (${r})`).join(',\n')
@@ -115,6 +116,9 @@ export function buildCatalogSql(): string {
     rows(RIVALS.map((r) => `${q(r.id)}, ${q(r.name)}, ${r.startBaseCents}, ${r.growthPct}, ${r.startLevel}, ${r.levelPerDay}, ${r.startCollectionPct}`)),
     'on conflict (id) do update set name = excluded.name, start_base_cents = excluded.start_base_cents, growth_pct = excluded.growth_pct,',
     '  start_level = excluded.start_level, level_per_day = excluded.level_per_day, start_collection_pct = excluded.start_collection_pct;',
+    'insert into game.goal_defs (key, set_id, groups, stat, op, value) values',
+    rows(GOALS.map((g) => `${q(g.key)}, ${q(g.set)}, ${q(JSON.stringify(g.groups))}::jsonb, ${q(g.bonus.stat)}, ${q(g.bonus.op)}, ${g.bonus.value}`)),
+    'on conflict (key) do update set set_id = excluded.set_id, groups = excluded.groups, stat = excluded.stat, op = excluded.op, value = excluded.value;',
     'insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, params) values',
     rows(NPCS.map((n) => `${q(n.id)}, ${q(n.name)}, ${q(n.archetype)}, ${n.ruf}, ${n.budgetBaseCents}, ${n.activity}, ${q(JSON.stringify(n.params))}::jsonb`)),
     'on conflict (id) do update set name = excluded.name, archetype = excluded.archetype, ruf = excluded.ruf,',

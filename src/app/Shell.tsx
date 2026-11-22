@@ -16,7 +16,7 @@ import { useSettings } from '@/lib/settings.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { serverNow, useSetMe, useSync, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
-import { ACHIEVEMENTS, CONSUMABLES, itemName } from '@/lib/catalog.ts'
+import { ACHIEVEMENTS, CONSUMABLES, GOALS, itemName } from '@/lib/catalog.ts'
 import { FeedList } from '@/features/feed/Feed.tsx'
 import { SNACK_ICON } from '@/features/shop/icons.ts'
 import { FeatureTour, Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
@@ -318,6 +318,10 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'chargeback') return texts.notifications.chargeback(formatMoney(Number(n.data.cents)))
   if (n.kind === 'daily_bonus') return texts.notifications.daily_bonus
   if (n.kind === 'weekly_chest') return texts.notifications.weekly_chest
+  if (n.kind === 'goal_done') {
+    const goal = GOALS.find((g) => g.key === n.data.goal)
+    return texts.notifications.goal_done(goal?.name ?? String(n.data.goal), goal?.joke ?? '')
+  }
   if (n.kind === 'admin_grant') return texts.notifications.admin_grant(formatMoney(Number(n.data.cents)))
   if (n.kind === 'gift_received') return texts.notifications.gift_received(String(n.data.name), formatMoney(Number(n.data.cents)))
   if (n.kind === 'trade_offer') return texts.notifications.trade_offer(String(n.data.name))

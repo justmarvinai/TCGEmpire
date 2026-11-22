@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/Progress.tsx'
 import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { useAct, useBinder } from '@/lib/actions.ts'
+import { SetGoals } from './Goals.tsx'
 import { cardById, HIT_TIERS, SETS, TIER_LABEL, TIER_TEXT, TIERS, type Tier } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { errorText } from '@/lib/rpc.ts'
@@ -24,7 +25,8 @@ type Filter = 'all' | 'owned' | 'missing'
 const NONE: BinderCard[] = []
 
 export function CollectionPage() {
-  const set = SETS[0]!
+  const [setId, setSetId] = useState(SETS[0]!.id)
+  const set = SETS.find((s) => s.id === setId) ?? SETS[0]!
   const binder = useBinder(set.id)
   const act = useAct()
   const [filter, setFilter] = useState<Filter>('all')
@@ -59,6 +61,24 @@ export function CollectionPage() {
 
   return (
     <Page icon="binder" title={T.title} subtitle={T.subtitle}>
+      <div className="mb-4 flex flex-wrap gap-1 rounded-xl bg-surface-2 p-1" role="tablist" aria-label={T.sets}>
+        {SETS.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            role="tab"
+            aria-selected={s.id === set.id}
+            onClick={() => {
+              setSetId(s.id)
+              setTier(null)
+            }}
+            className={clsx('rounded-lg px-4 py-2 text-sm font-semibold', s.id === set.id ? 'bg-grad text-white' : 'text-fg-2 hover:text-fg')}
+          >
+            {texts.games[s.game]}
+            <span className="ml-1.5 font-normal opacity-80">{s.name}</span>
+          </button>
+        ))}
+      </div>
       <Panel className="mb-4">
         <div className="flex flex-wrap items-center gap-6">
           <div className="min-w-56">
@@ -113,6 +133,8 @@ export function CollectionPage() {
           ))}
         </div>
       )}
+
+      <SetGoals setId={set.id} />
 
       {selected && <CardDialog card={selected} onClose={() => setOpen(null)} />}
     </Page>

@@ -424,6 +424,7 @@ export const texts = {
       pct > 0
         ? `KURSRAKETE: ${item} heute +${pct} %. Wer gestern verkauft hat, beißt jetzt in die Tischkante.`
         : `KURSSTURZ: ${item} heute ${pct} %. Sammler weinen in ihre Schutzhüllen.`,
+    goal: (d: Record<string, unknown>, goal: string) => `SAMMELWUT: ${String(d.name)} schafft „${goal}“. Die Freundin ist ausgezogen.`,
     license: (d: Record<string, unknown>, game: string) => `EXPANSION: ${String(d.name)} steigt bei ${game} ein. Der Markt zittert. Nicht.`,
     set_phase: (phase: string, reprint: boolean, set: string) => {
       if (reprint) return `REPRINT: ${set} wird nachgedruckt. Investoren weinen, Kinder jubeln.`
@@ -593,6 +594,7 @@ export const texts = {
     daily_bonus: 'Alle Tagesquests geschafft. Bonus ist da. Morgen wieder, du Sklave des Systems.',
     weekly_chest: 'Wochentruhe geöffnet: Booster liegen bereit.',
     gift_received: (name: string, money: string) => `${name} schenkt dir Sachen im Wert von ${money}. Einfach so. Verdächtig.`,
+    goal_done: (name: string, joke: string) => `Sammelziel „${name}“ geschafft! ${joke}`,
     admin_grant: (money: string) => `Der Admin hat dir ${money} gutgeschrieben. Entschädigung. Oder Bestechung.`,
     trade_offer: (name: string) => `${name} hat dir ein Tauschangebot gemacht. Schau unter Tausch.`,
     trade_accepted: (name: string) => `${name} hat deinen Tausch angenommen. Deal!`,
@@ -730,6 +732,18 @@ export const texts = {
     close: 'Zurück',
     seen: 'Schon mal gezogen, aber verkauft.',
     never: 'Noch nie gezogen.',
+    sets: 'Sets',
+    goals: 'Sammelziele',
+    goalsTip: 'Wer eine Gruppe von Karten zusammen hat, bekommt einen kleinen Bonus für immer. Es zählt jede Karte, die du schon mal besessen hast, auch wenn du sie später verkaufst.',
+    goalDone: 'geschafft',
+    goalProgress: (have: number, total: number) => `${have} / ${total}`,
+    bonus: {
+      pack_luck: (v: number) => `+${v} % Pack-Glück`,
+      ep: (v: number) => `+${v} % EP`,
+      energy_max: (v: number) => `+${v} max. Energie`,
+      listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
+      lager_units: (v: number) => `+${v} Lagerplätze`,
+    } as Record<string, (v: number) => string>,
   },
 
   jobs: {
