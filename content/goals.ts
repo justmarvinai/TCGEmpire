@@ -1,9 +1,10 @@
 // Sammelziele (docs/GAME_DESIGN.md §6): small permanent bonuses for collecting (pack_luck counts percent points). A goal is a list of card groups;
-// a group counts as soon as you have ever owned one card of it (pulled, bought, traded). Per set: all Holos and the
+// a group counts as soon as you have ever owned one card of it (pulled, bought, traded); with minGrade only a slab of that grade counts. Per set: all Holos and the
 // complete set; plus themed goals with a joke. Bonuses go through the modifier engine and stay after selling.
 import { SETS } from './catalog.ts'
+import { COPY_TIERS } from './types.ts'
 
-export type GoalStat = 'pack_luck' | 'ep' | 'energy_max' | 'listing_slots' | 'lager_units'
+export type GoalStat = 'pack_luck' | 'ep' | 'energy_max' | 'listing_slots' | 'lager_units' | 'grading_slots'
 
 export interface GoalDef {
   key: string
@@ -12,6 +13,8 @@ export interface GoalDef {
   /** shown when the goal is reached */
   joke: string
   groups: readonly (readonly string[])[]
+  /** a group only counts with a slab of at least this grade (Master Set) */
+  minGrade?: number
   bonus: { stat: GoalStat; op: 'flat' | 'pct'; value: number }
 }
 
@@ -77,6 +80,15 @@ const SET_GOALS: readonly GoalDef[] = SETS.flatMap((s) => [
     joke: 'Jede Karte einmal. Deine Familie macht sich Sorgen.',
     groups: s.cards.map((c) => [c.id]),
     bonus: { stat: 'ep', op: 'pct', value: 5 },
+  },
+  {
+    key: `master-${s.id}`,
+    set: s.id,
+    name: `Master Set: ${s.name}`,
+    joke: 'Jede Holo und besser im Slab, alles 9 oder höher. Dein Konto weint, dein Regal glänzt.',
+    groups: s.cards.filter((c) => COPY_TIERS.includes(c.tier)).map((c) => [c.id]),
+    minGrade: 9,
+    bonus: { stat: 'grading_slots', op: 'flat', value: 2 },
   },
 ])
 

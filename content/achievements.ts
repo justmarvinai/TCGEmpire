@@ -34,6 +34,10 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { key: 'riftbound', event: 'collect_riftbound', name: 'Beschwörer', text: 'Besitze {n} verschiedene Riftbound-Karten.', tiers: [10, 45, 89], titles: [null, null, 'Herausforderer'] },
   { key: 'licenses', event: 'license_bought', name: 'Expansion', text: 'Kauf {n} [Händlerlizenz|Händlerlizenzen].', tiers: [1, 3], titles: [null, 'Vier-Spiele-Mogul'] },
   { key: 'goals', event: 'goal_done', name: 'Vollständigkeitswahn', text: 'Schaff {n} [Sammelziel|Sammelziele].', tiers: [1, 5, 12], titles: [null, 'Zwangssammler', 'Archivar des Wahnsinns'] },
+  { key: 'graded', event: 'graded', name: 'Plastikfetischist', text: 'Lass {n} [Karte|Karten] graden.', tiers: [1, 25, 250, 1000], titles: [null, 'Slab-Sammler', 'Grading-Junkie', 'Plastikgott'] },
+  { key: 'gem', event: 'graded_10', name: 'Gem Mint', text: 'Bekomm {n}× eine 10.', tiers: [1, 10, 100], titles: [null, 'Zehnerjäger', 'Mr. Gem Mint'] },
+  { key: 'black', event: 'black_label', name: 'Black Label', text: 'Bekomm {n} Black [Label|Labels] von BGS.', tiers: [1, 5], titles: ['Schwarzer Ritter', 'Darth Label'] },
+  { key: 'crack', event: 'slab_cracked', name: 'Knackwurst', text: 'Knack {n} [Slab|Slabs].', tiers: [1, 25], titles: [null, 'Panzerknacker'] },
   { key: 'levels', event: 'level_up', name: 'Aufsteiger', text: 'Steig {n} Level auf.', tiers: [9, 24, 49, 99], titles: [null, 'Aufsteiger', 'Großkopferter', 'Endgegner'] },
 ]
 
@@ -48,6 +52,11 @@ export const STAT_LABELS: Record<string, string> = {
   collect_riftbound: 'Riftbound-Karten gesammelt',
   license_bought: 'Lizenzen gekauft',
   goal_done: 'Sammelziele geschafft',
+  pregrade: 'Karten vorgeprüft',
+  graded: 'Karten gegradet',
+  graded_10: 'Zehner bekommen',
+  black_label: 'Black Labels',
+  slab_cracked: 'Slabs geknackt',
   hit_pulled: 'Holo oder besser gezogen',
   pulled_ultra: 'Ultra gezogen',
   pulled_grail: 'Grails gezogen',

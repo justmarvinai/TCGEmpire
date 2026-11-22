@@ -492,6 +492,14 @@ export const texts = {
           'Früher Feierabend geht auch. Dann gibt es eben nur Geld für die Zeit, die du wirklich da warst.',
         ],
       },
+      grading: {
+        name: 'Grading',
+        steps: [
+          'Hier kommen deine Karten in Plastik. Erst mit der Lupe prüfen: Du siehst für Zentrierung, Ecken, Kanten und Oberfläche eine Spanne. Die schlechteste zählt.',
+          'Dann einschicken: PSA ist teuer und streng, BGS vergibt halbe Noten und mit Glück das Black Label, CGC ist billig und schnell. Gebühr und Wartezeit sind weg, egal was rauskommt.',
+          'Eine 10 vervielfacht den Wert, unter 7 bist du ärmer als vorher. Slabs kannst du verkaufen, in die Vitrine stellen oder knacken und neu einschicken. Viel Glück, du wirst es brauchen.',
+        ],
+      },
       cardmarket: {
         name: 'Cardmarket',
         steps: [

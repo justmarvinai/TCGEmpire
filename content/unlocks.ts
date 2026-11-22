@@ -15,5 +15,6 @@ export const UNLOCKS = {
   trade: 10,
   licenses: 10,
   weekly_quests: 13,
+  grading: 13,
   lager: 18,
 } as const

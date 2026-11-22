@@ -3,7 +3,7 @@
 // `stat` + `per` become a modifier (value = per * level); bunker yield has its own formula (docs/ECONOMY.md §6).
 export interface UpgradeDef {
   key: string
-  group: 'bunker' | 'jobs' | 'oeffnen' | 'handel' | 'fortschritt'
+  group: 'bunker' | 'jobs' | 'oeffnen' | 'handel' | 'grading' | 'fortschritt'
   name: string
   text: string
   max: number
@@ -29,5 +29,7 @@ export const UPGRADES: readonly UpgradeDef[] = [
   { key: 'pack_glueck', group: 'oeffnen', name: 'Pack-Glück', text: 'Höhere Chance auf Alternative, Ultra und Grail. +5 % pro Stufe, höchstens +50 % insgesamt.', max: 10, costBaseCents: 3_000_00, growth: 1.6, minLevel: 5, levelStep: 3, stat: 'pack_luck', op: 'flat', per: 5, unit: 'pct' },
   { key: 'verkaufsflaeche', group: 'handel', name: 'Verkaufsfläche', text: 'Mehr Plätze für Angebote und Gesuche am Cardmarket. +5 pro Stufe.', max: 10, costBaseCents: 2_500_00, growth: 1.5, minLevel: 10, levelStep: 2, stat: 'listing_slots', op: 'flat', per: 5, unit: 'pts' },
   { key: 'lagerregal', group: 'handel', name: 'Lagerregal', text: 'Mehr Platz für Sealed im Lager. +30 Booster oder Displays pro Stufe.', max: 10, costBaseCents: 3_000_00, growth: 1.5, minLevel: 18, levelStep: 2, stat: 'lager_units', op: 'flat', per: 30, unit: 'pts' },
+  { key: 'pruefwerkzeug', group: 'grading', name: 'Prüfwerkzeug', text: 'Juwelierlupe, dann Mikroskop: Die Vorprüfung zeigt engere Spannen. Eine Note weniger Spannweite pro Stufe.', max: 2, costBaseCents: 2_500_00, growth: 4, minLevel: 13, levelStep: 8, stat: 'pregrade_skill', op: 'flat', per: 1, unit: 'pts' },
+  { key: 'einsendeslots', group: 'grading', name: 'Einsende-Slots', text: 'Mehr Karten gleichzeitig beim Grading. +1 pro Stufe.', max: 17, costBaseCents: 1_500_00, growth: 1.3, minLevel: 13, levelStep: 2, stat: 'grading_slots', op: 'flat', per: 1, unit: 'pts' },
   { key: 'schnelllerner', group: 'fortschritt', name: 'Schnelllerner', text: 'Mehr EP aus allem. +3 % pro Stufe.', max: 20, costBaseCents: 2_000_00, growth: 1.4, minLevel: 5, levelStep: 2, stat: 'ep', op: 'pct', per: 3, unit: 'pct' },
 ]

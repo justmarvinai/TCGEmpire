@@ -87,6 +87,7 @@ const FEATURE_PAGE: Record<Feature, string> = {
   kleinanzeigen: '/kleinanzeigen',
   lager: '/shop',
   weekly_quests: '/quests',
+  grading: '/grading',
 }
 
 export const FEATURES = (Object.keys(FEATURE_PAGE) as Feature[])

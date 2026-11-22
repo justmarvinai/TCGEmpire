@@ -7,7 +7,7 @@ export interface JobDef {
   minLevel: number
   /** shift wage relative to the base shift wage */
   wage: number
-  minigame?: 'pfand' | 'regale' | 'sortieren' | 'pakete'
+  minigame?: 'pfand' | 'regale' | 'sortieren' | 'pakete' | 'fake' | 'praktikum'
   /** whether the job offers idle shifts */
   shifts: boolean
 }
@@ -17,6 +17,8 @@ export const JOBS: readonly JobDef[] = [
   { key: 'mueller', name: 'Regale einräumen', employer: 'Müller', minLevel: 3, wage: 1.0, minigame: 'regale', shifts: true },
   { key: 'wuerfelbude', name: 'Karten sortieren', employer: 'Würfelbude', minLevel: 6, wage: 1.1, minigame: 'sortieren', shifts: true },
   { key: 'dhl', name: 'Pakete ausliefern', employer: 'DHL', minLevel: 10, wage: 1.25, minigame: 'pakete', shifts: true },
+  { key: 'cardmarket', name: 'Echt oder Fake?', employer: 'Cardmarket', minLevel: 18, wage: 1.4, minigame: 'fake', shifts: true },
+  { key: 'psa', name: 'Grading-Praktikum', employer: 'PSA', minLevel: 24, wage: 1.6, minigame: 'praktikum', shifts: true },
 ]
 
 /** Shift ranks per job: hours worked needed, wage bonus. */

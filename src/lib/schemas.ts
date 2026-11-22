@@ -108,6 +108,19 @@ export const zShop = z.object({
 })
 export type Shop = z.infer<typeof zShop>
 
+// Grading: the label of a slab (null for a raw copy)
+export const zSlab = z.object({
+  grader: z.enum(['psa', 'bgs', 'cgc']),
+  grade: z.number(),
+  subgrades: z.array(z.number()).nullable(),
+  black_label: z.boolean(),
+  cert_no: z.string(),
+  pop: z.number(),
+  pop_higher: z.number(),
+})
+export type SlabLabel = z.infer<typeof zSlab>
+const zSlabCopy = z.object({ copy_id: z.string(), slab: zSlab, value_cents: z.number() })
+
 export const zBinder = z.object({
   set_id: z.string(),
   cards: z.array(
@@ -118,6 +131,7 @@ export const zBinder = z.object({
       ankauf_cents: z.number(),
       discovered: z.boolean(),
       copies: z.array(z.string()),
+      slabs: z.array(zSlabCopy.extend({ location: z.string() })),
     }),
   ),
 })
@@ -245,7 +259,9 @@ export type MarketOverview = z.infer<typeof zMarketOverview>
 
 const zTrader = z.object({ id: z.string(), kind: z.enum(['player', 'npc']), name: z.string(), ruf: z.number() })
 const zMyMarket = z.object({
-  listings: z.array(z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number() })),
+  listings: z.array(
+    z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number(), slab: zSlab.nullable() }),
+  ),
   orders: z.array(z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number() })),
   parcels: z.array(
     z.object({ id: z.number(), item_id: z.string(), qty: z.number(), total_cents: z.number(), payout_cents: z.number(), arrives_at: z.string(), incoming: z.boolean() }),
@@ -274,16 +290,29 @@ export const zCardmarketItem = z.object({
   item_id: z.string(),
   kind: z.enum(['card', 'sealed']),
   value_cents: z.number(),
-  listings: z.array(z.object({ id: z.number(), item_kind: z.string(), qty: z.number(), price_cents: z.number(), seller: zTrader, mine: z.boolean() })),
+  listings: z.array(
+    z.object({
+      id: z.number(),
+      item_kind: z.string(),
+      qty: z.number(),
+      price_cents: z.number(),
+      seller: zTrader,
+      mine: z.boolean(),
+      slab: zSlab.nullable(),
+      value_cents: z.number(),
+    }),
+  ),
   orders: z.array(z.object({ id: z.number(), qty: z.number(), price_cents: z.number(), buyer: zTrader, mine: z.boolean() })),
-  sales: z.array(z.object({ qty: z.number(), price_cents: z.number(), at: z.string() })),
-  owned: z.object({ qty: z.number(), copies: z.array(z.string()) }),
+  sales: z.array(z.object({ qty: z.number(), price_cents: z.number(), at: z.string(), slab: z.string().nullable() })),
+  owned: z.object({ qty: z.number(), copies: z.array(z.string()), slabs: z.array(zSlabCopy) }),
 })
 export type CardmarketItem = z.infer<typeof zCardmarketItem>
 const zMarketWrite = z.object({ item: zCardmarketItem, mine: zMyMarket, player: zPlayer })
 export const zSeller = z.object({
   seller: zTrader,
-  listings: z.array(z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number() })),
+  listings: z.array(
+    z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number(), slab: zSlab.nullable() }),
+  ),
 })
 
 export const zAds = z.object({
@@ -305,6 +334,7 @@ export const zAds = z.object({
       value_cents: z.number(),
       created_at: z.string(),
       expires_at: z.string(),
+      suspicious: z.boolean(),
       mine: z
         .object({
           price_cents: z.number(),
@@ -324,6 +354,7 @@ export const zAds = z.object({
       qty: z.number(),
       ask_cents: z.number(),
       value_cents: z.number(),
+      slab: zSlab.nullable(),
       expires_at: z.string(),
       offers: z.array(
         z.object({ id: z.number(), name: z.string(), archetype: z.string(), price_cents: z.number(), reply_kind: z.string().nullable(), reply_idx: z.number().nullable() }),
@@ -332,7 +363,7 @@ export const zAds = z.object({
   ),
   owned: z.object({
     stacks: z.array(z.object({ item_id: z.string(), qty: z.number() })),
-    copies: z.array(z.object({ copy_id: z.string(), item_id: z.string() })),
+    copies: z.array(z.object({ copy_id: z.string(), item_id: z.string(), slab: zSlab.nullable(), value_cents: z.number() })),
     sealed: z.array(z.object({ item_id: z.string(), qty: z.number() })),
   }),
 })
@@ -364,7 +395,7 @@ export interface Goods {
 }
 const zGoodsDoc = z.object({
   money_cents: z.number(),
-  items: z.array(zGoodsItem.extend({ value_cents: z.number() })),
+  items: z.array(zGoodsItem.extend({ value_cents: z.number(), slab: zSlab.nullable() })),
   value_cents: z.number(),
 })
 export const zTrades = z.object({
@@ -407,7 +438,7 @@ export const zPlayers = z.object({
 })
 export type Players = z.infer<typeof zPlayers>
 export const zTradeInventory = z.object({
-  items: z.array(zGoodsItem.extend({ value_cents: z.number() })),
+  items: z.array(zGoodsItem.extend({ value_cents: z.number(), slab: zSlab.nullable().optional() })),
   cash_cents: z.number().nullable(),
 })
 export type TradeInventory = z.infer<typeof zTradeInventory>
@@ -538,6 +569,82 @@ export const zLevelPath = z.object({
   levels: z.array(z.object({ level: z.number(), ep: z.number(), reward_cents: z.number(), booster: z.boolean() })),
 })
 
+// Grading (alpha_06)
+const zRange = z.tuple([z.number(), z.number()])
+export const zGrading = z.object({
+  unlock_level: z.number(),
+  slots: z.number(),
+  used: z.number(),
+  width: z.number(),
+  upcharge_from_cents: z.number(),
+  graders: z.record(
+    z.enum(['psa', 'bgs', 'cgc']),
+    z.object({
+      brand_bps: z.number(),
+      upcharge_bps: z.number(),
+      fees_cents: z.record(z.enum(['economy', 'standard', 'express']), z.number()),
+      minutes: z.record(z.enum(['economy', 'standard', 'express']), z.number()),
+    }),
+  ),
+  copies: z.array(
+    z.object({
+      copy_id: z.string(),
+      card_id: z.string(),
+      value_cents: z.number(),
+      ranges: z.object({ width: z.number(), centering: zRange, corners: zRange, edges: zRange, surface: zRange }).nullable(),
+      upcharge_cents: z.record(z.enum(['psa', 'bgs', 'cgc']), z.number()),
+    }),
+  ),
+  orders: z.array(
+    z.object({
+      id: z.number(),
+      copy_id: z.string(),
+      card_id: z.string(),
+      grader: z.enum(['psa', 'bgs', 'cgc']),
+      service: z.enum(['economy', 'standard', 'express']),
+      fee_cents: z.number(),
+      submitted_at: z.string(),
+      due_at: z.string(),
+    }),
+  ),
+  slabs: z.array(zSlabCopy.extend({ card_id: z.string(), location: z.string(), raw_cents: z.number() })),
+})
+export type Grading = z.infer<typeof zGrading>
+export type GraderId = keyof Grading['graders']
+export type ServiceId = 'economy' | 'standard' | 'express'
+export const zGradeResult = z.object({
+  order_id: z.number(),
+  copy_id: z.string(),
+  card_id: z.string(),
+  slab: zSlab,
+  fee_cents: z.number(),
+  raw_cents: z.number(),
+  value_cents: z.number(),
+})
+export type GradeResult = z.infer<typeof zGradeResult>
+const zVitrine = z.array(z.object({ copy_id: z.string(), card_id: z.string(), slab: zSlab.nullable(), value_cents: z.number() }))
+export const zProfile = z.object({
+  id: z.string(),
+  name: z.string(),
+  title: z.string().nullable(),
+  level: z.number(),
+  net_worth_cents: z.number(),
+  created_at: z.string(),
+  me: z.boolean(),
+  vitrine: zVitrine,
+  slots: z.number(),
+  unlocked: z.boolean(),
+  stats: z.object({ pack_opened: z.number(), graded: z.number(), graded_10: z.number(), collection: z.number() }),
+})
+export type Profile = z.infer<typeof zProfile>
+export const zPopReport = z.object({
+  card_id: z.string(),
+  value_cents: z.number(),
+  rows: z.array(z.object({ grader: z.enum(['psa', 'bgs', 'cgc']), grade: z.number(), black_label: z.boolean(), n: z.number(), value_cents: z.number() })),
+  mine: z.number(),
+})
+export type PopReport = z.infer<typeof zPopReport>
+
 export const RPC_SCHEMAS = {
   me_get: zMe,
   join: zMe,
@@ -622,8 +729,17 @@ export const RPC_SCHEMAS = {
     payout_cents: z.number(),
     ep_gained: z.number(),
     pfandbons: z.number(),
+    buff: z.boolean(),
     ...withPlayer,
   }),
   level_path_get: zLevelPath,
+  grading_get: zGrading,
+  grading_inspect: z.object({ copy_id: z.string(), card_id: z.string(), ranges: zGrading.shape.copies.element.shape.ranges, grading: zGrading, ...withPlayer }),
+  grading_submit: z.object({ fee_cents: z.number(), grading: zGrading, ...withPlayer }),
+  grading_reveal: z.object({ results: z.array(zGradeResult), grading: zGrading, ...withPlayer }),
+  slab_crack: z.object({ copy_id: z.string(), card_id: z.string(), damaged: z.boolean(), grading: zGrading, ...withPlayer }),
+  pop_report_get: zPopReport,
+  vitrine_set: z.object({ vitrine: zVitrine, slots: z.number(), ...withPlayer }),
+  profile_get: zProfile,
 } as const
 export type RpcName = keyof typeof RPC_SCHEMAS

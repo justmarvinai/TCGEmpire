@@ -146,6 +146,70 @@ export const config = {
   'minigame.regale': { energy: 10, duration_s: 45, cap_base_cents: 450_00, pfandbon_at_base_cents: 200_00 },
   'minigame.sortieren': { energy: 12, duration_s: 45, cap_base_cents: 600_00, pfandbon_at_base_cents: 260_00 },
   'minigame.pakete': { energy: 15, duration_s: 40, cap_base_cents: 900_00, pfandbon_at_base_cents: 400_00 },
+  // Grading minijobs: a good round (score >= buff.at_base_cents) grants a timed buff (stat, op, value, minutes)
+  'minigame.fake': {
+    energy: 15,
+    duration_s: 45,
+    cap_base_cents: 1_100_00,
+    pfandbon_at_base_cents: 500_00,
+    buff: { stat: 'fake_sense', op: 'flat', value: 1, minutes: 180, at_base_cents: 600_00 },
+  },
+  'minigame.praktikum': {
+    energy: 18,
+    duration_s: 45,
+    cap_base_cents: 1_300_00,
+    pfandbon_at_base_cents: 600_00,
+    buff: { stat: 'pregrade_skill', op: 'flat', value: 1, minutes: 180, at_base_cents: 700_00 },
+  },
+
+  // Grading (docs/GAME_DESIGN.md §8, docs/ECONOMY.md §5.3). Fees per card in Basis-€ cents, waiting time in
+  // minutes, both per service level. PSA and CGC: grade = worst quality value, then the grader is one off now and
+  // then (down_pct, up_pct). BGS: every quality value becomes a half-point sub-grade (half_down_pct: 0.5 lower,
+  // half_up_pct: 0.5 higher); overall = their average rounded to a half, at most one above the worst sub-grade;
+  // four sub-grades of 10 are the Black Label. Upcharge: share of the card value above upcharge_from_base_cents.
+  'grading.graders': {
+    psa: {
+      brand_bps: 10_000,
+      fees_base_cents: { economy: 360_00, standard: 700_00, express: 1_600_00 },
+      minutes: { economy: 360, standard: 120, express: 20 },
+      upcharge_bps: 300,
+      down_pct: 12,
+      up_pct: 3,
+    },
+    bgs: {
+      brand_bps: 9_500,
+      fees_base_cents: { economy: 280_00, standard: 550_00, express: 1_300_00 },
+      minutes: { economy: 240, standard: 80, express: 15 },
+      upcharge_bps: 200,
+      half_down_pct: 45,
+      half_up_pct: 15,
+    },
+    cgc: {
+      brand_bps: 8_500,
+      fees_base_cents: { economy: 150_00, standard: 300_00, express: 700_00 },
+      minutes: { economy: 120, standard: 45, express: 10 },
+      upcharge_bps: 100,
+      down_pct: 8,
+      up_pct: 8,
+    },
+  },
+  'grading.upcharge_from_base_cents': 10_000_00,
+  // cards at the graders at the same time (more from the Einsende-Slots upgrade and the Master Sets)
+  'grading.slots': 3,
+  // value factor per grade 1..10 in basis points, BGS 9.5 (Gem Mint) and the Black Label
+  'grading.grade_factor_bps': [4_000, 4_500, 5_000, 5_500, 6_000, 8_000, 10_000, 13_000, 22_000, 80_000],
+  'grading.gem_mint_bps': 40_000,
+  'grading.black_label_bps': 200_000,
+  // 10s are worth more while few exist: × (1 + bonus × ref / (ref + 10s of the card at that grader))
+  'grading.pop_ref': 5,
+  'grading.pop_bonus_bps': 15_000,
+  // Vorprüfung: width of the shown range per quality value (3 = e.g. "7–10"); tools and buffs narrow it
+  'grading.inspect_width': 3,
+  // chance that cracking a slab nicks a corner (corners −1)
+  'grading.crack_damage_pct': 10,
+  'ep.grading': 60,
+  // Vitrine: display places on the profile (housing adds more later)
+  'vitrine.slots': 3,
 
   // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,
@@ -202,6 +266,7 @@ export const config = {
   'rate.market': 60,
   'rate.trade': 20,
   'rate.chat': 12,
+  'rate.grading': 30,
 } as const satisfies Record<string, Json>
 
 export type ConfigKey = keyof typeof config
