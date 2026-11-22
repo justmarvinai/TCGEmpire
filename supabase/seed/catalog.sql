@@ -602,6 +602,7 @@ insert into game.achievement_defs (key, event, tiers, titles) values
   ('gem', 'graded_10', '[1,10,100]'::jsonb, '[null,"Zehnerjäger","Mr. Gem Mint"]'::jsonb),
   ('black', 'black_label', '[1,5]'::jsonb, '["Schwarzer Ritter","Darth Label"]'::jsonb),
   ('crack', 'slab_cracked', '[1,25]'::jsonb, '[null,"Panzerknacker"]'::jsonb),
+  ('league', 'league_won', '[1,5,20]'::jsonb, '["Wochensieger",null,"Dauerbrenner"]'::jsonb),
   ('levels', 'level_up', '[9,24,49,99]'::jsonb, '[null,"Aufsteiger","Großkopferter","Endgegner"]'::jsonb)
 on conflict (key) do update set event = excluded.event, tiers = excluded.tiers, titles = excluded.titles;
 insert into game.store_defs (key, min_level, markup_bps, closed_sunday, restocks, stock_per_player, lim, lim_per_ruf100, products) values

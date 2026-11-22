@@ -346,13 +346,22 @@ export const texts = {
     title: 'Toplisten',
     subtitle: 'Wer hat, der hat. Wer nicht hat, steht hier unten.',
     tip: 'Die Bestenlisten des Servers. Mit dabei: 40 erfundene Tycoons (NPC), die jeden Tag ein bisschen reicher werden. Du kannst sie ausblenden. Reicher als du sind sie trotzdem.',
-    tabs: { worth: 'Vermögen', level: 'Level', cash: 'Bargeld', collection: 'Sammlung' },
+    tabs: { worth: 'Vermögen', level: 'Level', cash: 'Bargeld', collection: 'Sammlung', ruf: 'Ruf', best_pull: 'Bester Pull', league: 'Wochenwertung', pechvogel: 'Pechvogel' },
     tips: {
       worth: 'Bargeld, Bunker, Karten und Sealed zum Marktwert. Auch was gerade angeboten wird oder per Paket unterwegs ist.',
       level: 'Das Karrierelevel. Bei gleichem Level steht vorne, wer mehr EP hat.',
       cash: 'Nur das Bargeld. Für Leute, die gern auf ihrem Geld sitzen.',
       collection: 'Wie viele verschiedene Karten du gerade besitzt. Verkaufte zählen nicht mehr.',
+      ruf: 'Dein Ruf als Händler, in Sternen. Ehrliche Geschäfte heben ihn, Skandale drücken ihn.',
+      best_pull: 'Die wertvollste Karte, die du je selbst aus einem Booster gezogen hast, zum Wert von damals.',
+      league: 'Wie viel Prozent dein Vermögen seit Montag 00:00 gewachsen ist. Geschenke und Tausch unter Spielern zählen nicht. Die besten drei bekommen Booster und einen Pokal fürs Profil.',
+      pechvogel: 'Wie oft du 20 Booster am Stück ohne Holo aufgerissen hast. Ein Platz, auf den niemand stolz ist.',
     },
+    stars: (ruf: string) => `${ruf} ★`,
+    percent: (bps: number) => `${bps >= 0 ? '+' : ''}${(bps / 100).toFixed(1).replace('.', ',')} %`,
+    times: (n: number) => `${n}×`,
+    weekEnds: (time: string) => `Die Woche endet in ${time}.`,
+    noPull: 'Noch nichts gezogen',
     npcs: 'NPCs zeigen',
     npc: 'NPC',
     you: 'Du',
@@ -412,6 +421,7 @@ export const texts = {
   },
 
   feed: {
+    league: (d: Record<string, unknown>, pct: string) => `WOCHENSIEGER: ${String(d.name)} wächst um ${pct}. Die Konkurrenz prüft die Bücher.`,
     home: (d: Record<string, unknown>, home: string, article: 'das' | 'die') =>
       `UMZUG: ${String(d.name)} zieht ${article === 'die' ? 'in die' : 'ins'} ${home}. Die Nachbarn wurden nicht gefragt.`,
     bailout: (d: Record<string, unknown>, money: string) =>
@@ -664,6 +674,8 @@ export const texts = {
     trade_accepted: (name: string) => `${name} hat deinen Tausch angenommen. Deal!`,
     trade_declined: (name: string) => `${name} hat deinen Tausch abgelehnt. Nimm es nicht persönlich. Oder doch.`,
     nebenkosten: (money: string) => `Nebenkosten: ${money} sind weg. Der Vermieter dankt.`,
+    league_done: (rank: number, pct: string, boosters: number) =>
+      `Wochenwertung: Platz ${rank} mit ${pct}. ${boosters} ${boosters === 1 ? 'Booster liegt' : 'Booster liegen'} bereit. Der Pokal steht auf deinem Profil.`,
     guestbook: (name: string) => `${name} hat in dein Gästebuch geschrieben. Lies es lieber nicht vor Publikum.`,
     grading_back: (n: number) => `${n === 1 ? 'Ein Slab ist' : `${n} Slabs sind`} vom Grader zurück. Trommelwirbel bereit.`,
     unknown: 'Du hast Post. Was drin steht, weiß keiner.',
@@ -1297,6 +1309,11 @@ export const texts = {
     since: (date: string) => `Dabei seit ${date}`,
     numbers: { pack_opened: 'Booster geöffnet', graded: 'Karten gegradet', graded_10: 'Zehner', collection: 'Karten in der Sammlung' },
     numbersTip: 'Ein paar Zahlen zum Angeben.',
+    trophies: 'Pokale',
+    trophiesTip: 'Treppchenplätze in der Wochenwertung und die wertvollste Karte, die je selbst gezogen wurde.',
+    medal: { gold: 'Wochensiege', silver: 'Zweite Plätze', bronze: 'Dritte Plätze' },
+    bestPull: 'Bester Pull',
+    noPull: 'Noch kein großer Pull. Das Leben ist ungerecht.',
   },
 
   home: {

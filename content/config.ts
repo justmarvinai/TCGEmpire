@@ -219,6 +219,10 @@ export const config = {
   // Gästebuch: entries per visitor and host per day, longest entry
   'guestbook.per_day': 1,
   'guestbook.max_len': 200,
+  // Wochenwertung: growth is measured against at least this base (Basis-€ cents); the best three of a week get
+  // this many reward boosters
+  'league.min_base_base_cents': 1_000_00,
+  'league.rewards': [3, 2, 1],
   // Vitrine: display places on the profile (housing adds more later)
   'vitrine.slots': 3,
 

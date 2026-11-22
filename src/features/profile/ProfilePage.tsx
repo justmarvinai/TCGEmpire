@@ -19,6 +19,7 @@ import { sfx } from '@/lib/sfx.ts'
 import { useMe, useSetMe, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { Guestbook, HomeCard } from './HomeAndGuestbook.tsx'
+import { Trophies } from './PlayerProfilePage.tsx'
 import { useProfile, VitrinePanel } from './Vitrine.tsx'
 
 const T = texts.profile
@@ -76,6 +77,7 @@ export function ProfilePage() {
             </label>
           </Panel>
 
+          {profile.data && <Trophies p={profile.data} />}
           {profile.data && <HomeCard p={profile.data} />}
           {profile.data && <VitrinePanel profile={profile.data} />}
           {profile.data && <Guestbook p={profile.data} />}

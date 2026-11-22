@@ -1,6 +1,9 @@
 import { Link, useParams } from 'react-router'
 import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
+import { Card } from '@/components/cards/Card.tsx'
+import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Page } from '@/components/ui/Page.tsx'
+import { cardName } from '@/lib/catalog.ts'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { formatDate, formatMoney, formatNumber } from '@/lib/format.ts'
@@ -29,6 +32,7 @@ export function PlayerProfilePage() {
         <div className="grid gap-4 xl:grid-cols-2">
           <ProfileHeader p={q.data} />
           <ProfileNumbers p={q.data} />
+          <Trophies p={q.data} />
           <HomeCard p={q.data} />
           <VitrinePanel profile={q.data} />
           <Guestbook p={q.data} />
@@ -53,6 +57,43 @@ export function ProfileHeader({ p }: { p: Profile }) {
           </p>
           <p className="text-xs text-fg-3">{T.since(formatDate(p.created_at))}</p>
         </div>
+      </div>
+    </Panel>
+  )
+}
+
+/** Podium places in the Wochenwertung and the best pull ever. */
+export function Trophies({ p }: { p: Profile }) {
+  const t = p.trophies
+  return (
+    <Panel title={T.trophies} tip={T.trophiesTip}>
+      <div className="flex flex-wrap items-center gap-5">
+        {(
+          [
+            ['gold', 'text-gold'],
+            ['silver', 'text-fg-2'],
+            ['bronze', 'text-warn'],
+          ] as const
+        ).map(([k, tone]) => (
+          <span key={k} className="flex items-center gap-1.5" title={T.medal[k]}>
+            <PixelIcon name="trophy" scale={2} className={tone} />
+            <b className="nums text-xl">{t[k]}</b>
+          </span>
+        ))}
+        <span className="flex min-w-48 flex-1 items-center gap-3">
+          {t.best_pull_card ? (
+            <>
+              <Card id={t.best_pull_card} scale={1} />
+              <span className="text-sm">
+                <span className="block text-fg-3">{T.bestPull}</span>
+                <b className="block">{cardName(t.best_pull_card)}</b>
+                <span className="nums text-gold">{formatMoney(t.best_pull_cents)}</span>
+              </span>
+            </>
+          ) : (
+            <span className="text-sm text-fg-3">{T.noPull}</span>
+          )}
+        </span>
       </div>
     </Panel>
   )

@@ -544,7 +544,7 @@ export const zGoals = z.object({
 })
 export type Goals = z.infer<typeof zGoals>
 
-export const TOPLISTS = ['worth', 'level', 'cash', 'collection'] as const
+export const TOPLISTS = ['worth', 'level', 'cash', 'collection', 'ruf', 'best_pull', 'league', 'pechvogel'] as const
 export type ToplistId = (typeof TOPLISTS)[number]
 export const zToplist = z.object({
   list: z.enum(TOPLISTS),
@@ -560,8 +560,12 @@ export const zToplist = z.object({
       level: z.number(),
       value: z.number(),
       me: z.boolean(),
+      look: zLook.nullable(),
+      /** best_pull: the card */
+      card_id: z.string().nullable(),
     }),
   ),
+  week_ends_at: z.string(),
 })
 export type Toplist = z.infer<typeof zToplist>
 
@@ -640,6 +644,7 @@ export const zProfile = z.object({
   created_at: z.string(),
   me: z.boolean(),
   look: zLook,
+  trophies: z.object({ gold: z.number(), silver: z.number(), bronze: z.number(), best_pull_card: z.string().nullable(), best_pull_cents: z.number() }),
   vitrine: zVitrine,
   slots: z.number(),
   unlocked: z.boolean(),

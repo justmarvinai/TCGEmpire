@@ -18,6 +18,7 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'overtake') return texts.feed.overtake(f.data)
   if (f.kind === 'set_phase')
     return texts.feed.set_phase(String(f.data.phase), Boolean(f.data.reprint), SETS.find((s) => s.id === f.data.set_id)?.name ?? String(f.data.set_id))
+  if (f.kind === 'league') return texts.feed.league(f.data, texts.toplists.percent(Number(f.data.bps)))
   if (f.kind === 'home') {
     const home = HOMES.find((h) => h.key === f.data.home)
     return texts.feed.home(f.data, home?.name ?? String(f.data.home), home?.article ?? 'das')

@@ -122,6 +122,8 @@ insert into game.config (key, value) values
   ('housing.nebenkosten_bps', '50'::jsonb),
   ('guestbook.per_day', '1'::jsonb),
   ('guestbook.max_len', '200'::jsonb),
+  ('league.min_base_base_cents', '100000'::jsonb),
+  ('league.rewards', '[3,2,1]'::jsonb),
   ('vitrine.slots', '3'::jsonb),
   ('quest.mini_slots', '3'::jsonb),
   ('quest.mini_reward_minutes', '1'::jsonb),

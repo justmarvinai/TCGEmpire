@@ -38,6 +38,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { key: 'gem', event: 'graded_10', name: 'Gem Mint', text: 'Bekomm {n}× eine 10.', tiers: [1, 10, 100], titles: [null, 'Zehnerjäger', 'Mr. Gem Mint'] },
   { key: 'black', event: 'black_label', name: 'Black Label', text: 'Bekomm {n} Black [Label|Labels] von BGS.', tiers: [1, 5], titles: ['Schwarzer Ritter', 'Darth Label'] },
   { key: 'crack', event: 'slab_cracked', name: 'Knackwurst', text: 'Knack {n} [Slab|Slabs].', tiers: [1, 25], titles: [null, 'Panzerknacker'] },
+  { key: 'league', event: 'league_won', name: 'Wochensieger', text: 'Gewinn {n}× die Wochenwertung.', tiers: [1, 5, 20], titles: ['Wochensieger', null, 'Dauerbrenner'] },
   { key: 'levels', event: 'level_up', name: 'Aufsteiger', text: 'Steig {n} Level auf.', tiers: [9, 24, 49, 99], titles: [null, 'Aufsteiger', 'Großkopferter', 'Endgegner'] },
 ]
 
@@ -54,6 +55,8 @@ export const STAT_LABELS: Record<string, string> = {
   goal_done: 'Sammelziele geschafft',
   pregrade: 'Karten vorgeprüft',
   graded: 'Karten gegradet',
+  league_won: 'Wochenwertungen gewonnen',
+  league_podium: 'Treppchen in der Wochenwertung',
   graded_10: 'Zehner bekommen',
   black_label: 'Black Labels',
   slab_cracked: 'Slabs geknackt',

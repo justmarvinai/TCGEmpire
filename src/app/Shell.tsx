@@ -330,6 +330,7 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'trade_accepted') return texts.notifications.trade_accepted(String(n.data.name))
   if (n.kind === 'trade_declined') return texts.notifications.trade_declined(String(n.data.name))
   if (n.kind === 'grading_back') return texts.notifications.grading_back(Number(n.data.n))
+  if (n.kind === 'league_done') return texts.notifications.league_done(Number(n.data.rank), texts.toplists.percent(Number(n.data.bps)), Number(n.data.boosters))
   if (n.kind === 'nebenkosten') return texts.notifications.nebenkosten(formatMoney(Number(n.data.cents)))
   if (n.kind === 'guestbook') return texts.notifications.guestbook(String(n.data.name))
   return texts.notifications.unknown
