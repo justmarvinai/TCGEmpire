@@ -114,10 +114,10 @@ Goal: all four games are in, each with its own look.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | **Yu-Gi-Oh! LOB**, **One Piece OP-01**, **Riftbound Origins**: data, frames, card backs, packs, displays; hero art for Ultra and Grail, simple template art for the rest | M |
-| ☐ | Starter choice and Händlerlizenzen | M |
-| ☐ | Themed collection goals (Exodia, Strohhut crew, starters) and set bonuses | M |
-| ☐ | Hobby lore worked into events, achievements and feed lines for all four games | M |
+| ◐ | **Yu-Gi-Oh! LOB**, **One Piece OP-01**, **Riftbound Origins**: data, frames, card backs, packs, displays; hero art for Ultra and Grail, simple template art for the rest (data, packs and displays done; one shared card back by owner rule; art in production) | M |
+| ☑ | Starter choice and Händlerlizenzen | M |
+| ☑ | Themed collection goals (Exodia, Strohhut crew, starters) and set bonuses | M |
+| ☑ | Hobby lore worked into events, achievements and feed lines for all four games (events follow with the event engine in alpha_10) | M |
 
 ### alpha_06 — Grading
 

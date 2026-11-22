@@ -1,6 +1,7 @@
 # TCGEmpire — Sets, Tiers and Pack Odds
 
-> Status: **approved plan.** Odds and values are starting points; the calibration script fixes each set's
+> Status: **approved plan; all four sets are in the game data since alpha_05** (`content/sets/*.ts`, products in
+> `content/catalog.ts`; displays of the three new sets hold 24 boosters). Odds and values are starting points; the calibration script fixes each set's
 > numbers so that an average booster is worth 72 % ± 3 % of its price (`ECONOMY.md` §5.1). Prices are
 > Basis-€ and rise with the Preisniveau (`ECONOMY.md` §4).
 
