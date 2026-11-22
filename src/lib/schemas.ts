@@ -281,6 +281,59 @@ export const zSeller = z.object({
   listings: z.array(z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number() })),
 })
 
+export const zAds = z.object({
+  unlocked: z.boolean(),
+  unlock_level: z.number(),
+  slots: z.number(),
+  board: z.array(
+    z.object({
+      id: z.number(),
+      seller: z.string().nullable(),
+      seller_idx: z.number(),
+      npc: z.boolean(),
+      style: z.enum(['attic', 'normal', 'dreamer']),
+      title_idx: z.number(),
+      item_kind: z.enum(['card', 'copy', 'sealed']),
+      item_id: z.string(),
+      qty: z.number(),
+      ask_cents: z.number(),
+      value_cents: z.number(),
+      created_at: z.string(),
+      expires_at: z.string(),
+      mine: z
+        .object({
+          price_cents: z.number(),
+          state: z.string(),
+          counter_cents: z.number().nullable(),
+          reply_kind: z.string().nullable(),
+          reply_idx: z.number().nullable(),
+        })
+        .nullable(),
+    }),
+  ),
+  mine: z.array(
+    z.object({
+      id: z.number(),
+      item_kind: z.string(),
+      item_id: z.string(),
+      qty: z.number(),
+      ask_cents: z.number(),
+      value_cents: z.number(),
+      expires_at: z.string(),
+      offers: z.array(
+        z.object({ id: z.number(), name: z.string(), archetype: z.string(), price_cents: z.number(), reply_kind: z.string().nullable(), reply_idx: z.number().nullable() }),
+      ),
+    }),
+  ),
+  owned: z.object({
+    stacks: z.array(z.object({ item_id: z.string(), qty: z.number() })),
+    copies: z.array(z.object({ copy_id: z.string(), item_id: z.string() })),
+    sealed: z.array(z.object({ item_id: z.string(), qty: z.number() })),
+  }),
+})
+export type Ads = z.infer<typeof zAds>
+const zAdsWrite = z.object({ ads: zAds, player: zPlayer })
+
 export const zHome = z.object({
   last_hit: z.object({ card_id: z.string(), tier: z.string(), value_cents: z.number(), pulled_at: z.string() }).nullable(),
 })
@@ -319,6 +372,15 @@ export const RPC_SCHEMAS = {
   market_overview: zMarketOverview,
   retail_buy: z.object({ bought: z.number(), paid_cents: z.number(), player: zPlayer }),
   display_unbox: z.object({ boosters: z.number(), player: zPlayer }),
+  ads_get: zAds,
+  ad_offer: z.object({
+    result: z.object({ state: z.enum(['accepted', 'countered', 'blocked']), outcome: z.enum(['ok', 'ghost', 'fake', 'knick']), counter_cents: z.number().nullable(), price_cents: z.number() }),
+    ads: zAds,
+    player: zPlayer,
+  }),
+  ad_post: zAdsWrite,
+  ad_remove: zAdsWrite,
+  ad_answer: zAdsWrite,
   cardmarket_get: zCardmarket,
   cardmarket_item: zCardmarketItem,
   seller_get: zSeller,

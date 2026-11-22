@@ -78,6 +78,19 @@ export const config = {
   // Scalpers buy a share of every restock shortly after it lands
   'stores.scalper_share_pct': 30,
   'stores.scalper_window_minutes': 20,
+  // Kleinanzeigen: NPC ads on the board, how long ads live, risks of attic and normal ads, NPC buyers
+  'ads.npc_count': 10,
+  'ads.npc_hours': 24,
+  'ads.player_days': 3,
+  'ads.player_slots': 5,
+  'ads.hit_pct': 15,
+  'ads.sealed_pct': 10,
+  'ads.attic_fake_pct': 15,
+  'ads.attic_knick_pct': 10,
+  'ads.ghost_pct': 4,
+  'ads.offer_chance_pct': 35,
+  'ads.max_offers': 3,
+  'ads.chargeback_pct': 25,
   // Cardmarket: seller fee, shipping time, places for listings and buy orders together
   'market.fee_bps': 500,
   'market.ship_min_minutes': 5,

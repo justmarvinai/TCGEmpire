@@ -7,6 +7,7 @@ export const UNLOCKS = {
   upgrades: 5,
   shifts: 7,
   stores: 4,
+  kleinanzeigen: 4,
   cardmarket: 10,
   weekly_quests: 13,
   lager: 18,

@@ -138,7 +138,7 @@ function LevelUpOverlay() {
   const reward = queue.reduce((s, l) => s + l.reward_cents, 0)
   const boosters = queue.filter((l) => l.booster).length
   const reached = (level: number) => queue.some((l) => l.level === level)
-  const pages = top ? ALL_ITEMS.filter((i) => reached(i.level)) : []
+  const pages = top ? ALL_ITEMS.filter((i) => i.built && reached(i.level)) : []
   // Features inside an older page (Tagesquests, Schichten …) are listed too, with that page's icon.
   const inside = (top ? FEATURES.filter((f) => reached(f.level) && !pages.some((i) => i.path === f.path)) : []).map((f) => ({
     id: f.key,

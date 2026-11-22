@@ -9,6 +9,7 @@ import { CONSUMABLES } from '../../content/consumables.ts'
 import { ACHIEVEMENTS, STAT_LABELS } from '../../content/achievements.ts'
 import { UNLOCKS } from '../../content/unlocks.ts'
 import { STORES } from '../../content/stores.ts'
+export { AD_REPLIES, AD_SELLERS, AD_TITLES } from '../../content/kleinanzeigen.ts'
 
 export { ACHIEVEMENTS, ALL_QUESTS, cardById, CONSUMABLES, JOBS, PRODUCTS, productById, RANKS, SETS, SHIFT_HOURS }
 export { STAT_LABELS, STORES, TIERS, TUTORIAL, UNLOCKS, UPGRADES }
