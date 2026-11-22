@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect } from 'react'
 import { rpc } from './rpc.ts'
+import { useSettings } from './settings.ts'
 import { sfx } from './sfx.ts'
 import type { FeedEntry, Me, Player } from './schemas.ts'
 
@@ -16,6 +17,8 @@ interface World {
   feed: FeedEntry[]
   notifications: FeedEntry[]
   unread: number
+  /** Stammtisch messages by others since this device last read the chat */
+  chatUnread: number
   /** server time minus device time, in ms: countdowns never trust the device clock */
   clockOffsetMs: number
   /** level-ups waiting for their celebration */
@@ -31,7 +34,7 @@ interface World {
   reset: () => void
 }
 
-const EMPTY = { feed: [], notifications: [], unread: 0, clockOffsetMs: 0, levelUps: [], bigPulls: [], stageOpen: false, paletteOpen: false, navOpen: false }
+const EMPTY = { feed: [], notifications: [], unread: 0, chatUnread: 0, clockOffsetMs: 0, levelUps: [], bigPulls: [], stageOpen: false, paletteOpen: false, navOpen: false }
 
 export const useWorld = create<World>((set) => ({
   ...EMPTY,
@@ -92,6 +95,7 @@ export function useSync(enabled: boolean) {
         const res = await rpc('sync', {
           p_after_notification: w.notifications.at(-1)?.id ?? 0,
           p_after_feed: w.feed.at(-1)?.id ?? 0,
+          p_after_chat: useSettings.getState().chatSeen,
         })
         if (stopped) return
         setMe({ player: res.player, server: res.server, away_s: res.away_s })
@@ -111,6 +115,7 @@ export function useSync(enabled: boolean) {
           feed: [...w.feed, ...res.feed].slice(-60),
           notifications: [...w.notifications, ...res.notifications].slice(-60),
           unread: firstLoad ? 0 : w.unread + fresh.length,
+          chatUnread: res.chat_unread,
           levelUps: [...w.levelUps, ...levelUps],
           bigPulls: [...w.bigPulls, ...bigPulls],
         })

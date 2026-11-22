@@ -11,6 +11,7 @@ import { SellerPage } from '@/features/cardmarket/SellerPage.tsx'
 import { KleinanzeigenPage } from '@/features/kleinanzeigen/KleinanzeigenPage.tsx'
 import { ToplistsPage } from '@/features/toplists/ToplistsPage.tsx'
 import { PlayersPage } from '@/features/players/PlayersPage.tsx'
+import { StammtischPage } from '@/features/stammtisch/StammtischPage.tsx'
 import { TradePage } from '@/features/trade/TradePage.tsx'
 import { HomePage } from '@/features/home/HomePage.tsx'
 import { CollectionPage } from '@/features/collection/CollectionPage.tsx'
@@ -78,6 +79,7 @@ function Game() {
           <Route path="kleinanzeigen" element={<KleinanzeigenPage />} />
           <Route path="toplists" element={<ToplistsPage />} />
           <Route path="players" element={<PlayersPage />} />
+          <Route path="stammtisch" element={<StammtischPage />} />
           <Route path="trade" element={<TradePage />} />
           <Route path="cardmarket/seller/:id" element={<SellerPage />} />
           <Route path="cardmarket/:item" element={<CardmarketItemPage />} />

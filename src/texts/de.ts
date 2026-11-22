@@ -57,6 +57,7 @@ export const texts = {
       battles: 'Pack Battles',
       toplists: 'Toplisten',
       players: 'Spieler',
+      stammtisch: 'Stammtisch',
       darkside: 'Schattenwirtschaft',
       megaprojects: 'Megaprojekte',
       profile: 'Profil',
@@ -166,6 +167,25 @@ export const texts = {
     back: 'Zum Markt',
     value: 'Marktwert',
     ruf: 'Ruf',
+  },
+
+  stammtisch: {
+    title: 'Stammtisch',
+    subtitle: 'Der Chat für alle. Angeben, lästern, Deals einfädeln.',
+    tip: 'Alle Nachrichten sieht jeder auf dem Server. Du kannst eine Karte oder ein Produkt anhängen, dann führt ein Klick zum Marktpreis. Die letzten 5.000 Nachrichten bleiben.',
+    chat: 'Chat',
+    placeholder: 'Schreib was. Oder lass es.',
+    send: 'Senden',
+    attach: 'Karte anhängen',
+    attachPlaceholder: 'Karten- oder Produktname …',
+    attached: (name: string) => `Angehängt: ${name}`,
+    detach: 'Entfernen',
+    emotes: 'Emotes',
+    empty: 'Noch keiner hat was gesagt. Trau dich.',
+    deleted: 'Gelöschter Spieler',
+    online: 'Gerade da',
+    onlineTip: 'Wer in den letzten zwei Minuten etwas gemacht hat.',
+    feed: 'KARTEN-BILD',
   },
 
   players: {
@@ -312,6 +332,12 @@ export const texts = {
       `${String(d.name)} räumt bei ${store} ${String(d.qty)} Booster ab. Die Rentner in der Schlange sind fassungslos.`,
     overtake: (d: Record<string, unknown>) =>
       `MACHTWECHSEL: ${String(d.name)} überholt ${String(d.other)} und ist jetzt Platz ${String(d.rank)} der Vermögensliste. ${String(d.other)} weint ins Sammelalbum.`,
+    big_deal: (d: Record<string, unknown>, item: string, money: string) =>
+      `DEAL DES TAGES: ${String(d.buyer)} kauft ${Number(d.qty) > 1 ? `${String(d.qty)}× ` : ''}${item} von ${String(d.seller)} für ${money}. Einer von beiden hat sich verzockt.`,
+    price_move: (pct: number, item: string) =>
+      pct > 0
+        ? `KURSRAKETE: ${item} heute +${pct} %. Wer gestern verkauft hat, beißt jetzt in die Tischkante.`
+        : `KURSSTURZ: ${item} heute ${pct} %. Sammler weinen in ihre Schutzhüllen.`,
     unknown: 'Irgendwas ist passiert. Die Redaktion schläft noch.',
   },
 
@@ -381,6 +407,13 @@ export const texts = {
           'Private Anzeigen: Dachbodenfunde, normale Leute und Träumer, die ihren Kram für Gold halten. Keine Gebühren.',
           'Du kannst feilschen. Wer zu frech bietet, wird blockiert. Kein Käuferschutz: Fakes, Knicke und Abtaucher gibt es gratis dazu.',
           'Eigene Anzeigen kosten nichts. Lars will alles für die Hälfte, Kevin (12) zahlt zu viel. Mit Mamas Karte. Rate mal, wie das endet.',
+        ],
+      },
+      stammtisch: {
+        name: 'Stammtisch',
+        steps: [
+          'Der Chat für alle auf dem Server. Angeben ist ausdrücklich erlaubt.',
+          'Hänge eine Karte an, wenn du protzen willst. Daneben siehst du, wer gerade da ist, und die neuesten Schlagzeilen.',
         ],
       },
       players: {

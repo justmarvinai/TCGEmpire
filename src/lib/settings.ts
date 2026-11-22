@@ -10,7 +10,9 @@ interface Settings {
   seenTours: string[]
   /** version whose patch notes were marked as read */
   notesSeen: string
-  set: (patch: Partial<Pick<Settings, 'volume' | 'reducedMotion' | 'instantReveal' | 'notesSeen'>>) => void
+  /** newest Stammtisch message seen on this device */
+  chatSeen: number
+  set: (patch: Partial<Pick<Settings, 'volume' | 'reducedMotion' | 'instantReveal' | 'notesSeen' | 'chatSeen'>>) => void
   seeTour: (key: string) => void
 }
 
@@ -23,6 +25,7 @@ export const useSettings = create<Settings>()(
       instantReveal: false,
       seenTours: [],
       notesSeen: '',
+      chatSeen: 0,
       set: (patch) => set(patch),
       seeTour: (key) => set((s) => (s.seenTours.includes(key) ? s : { seenTours: [...s.seenTours, key] })),
     }),

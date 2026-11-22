@@ -99,6 +99,12 @@ export const config = {
   'trade.max_open': 10,
   'trade.max_items': 20,
   'trade.expiry_hours': 48,
+  // Stammtisch: messages kept; KARTEN-BILD market headlines: Cardmarket deals from this value (Basis-€),
+  // the day's biggest price move from this change (percent) on items worth at least this much (Basis-€)
+  'chat.keep': 5000,
+  'feed.big_deal_base_cents': 200_00,
+  'feed.price_move_pct': 12,
+  'feed.price_move_min_base_cents': 5_00,
   // Presence: seen within this many seconds counts as online
   'presence.online_seconds': 120,
   // Toplists: rows shown; net worth snapshots stay hourly this long, then daily
@@ -189,6 +195,7 @@ export const config = {
   'rate.minigame': 6,
   'rate.market': 60,
   'rate.trade': 20,
+  'rate.chat': 12,
 } as const satisfies Record<string, Json>
 
 export type ConfigKey = keyof typeof config

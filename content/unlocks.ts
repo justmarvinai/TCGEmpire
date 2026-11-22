@@ -3,6 +3,7 @@
 export const UNLOCKS = {
   toplists: 1,
   players: 1,
+  stammtisch: 1,
   daily_quests: 2,
   stamps: 2,
   bunker: 3,

@@ -119,8 +119,8 @@ RLS enabled on every table with no policies.
 | `game.homes`, `game.furnishing`, `game.vitrine` | Housing tier, furnishing item per slot, displayed copies. |
 | `game.cosmetics_owned`, `game.titles_owned` | Cosmetics, titles; the profile picture is a card id on the player row. |
 | `game.guestbook`, `game.visits` | Visits. |
-| `game.chat_messages` | Stammtisch (capped). |
-| `game.feed` | KARTEN-BILD entries: template key + params (text is rendered on the client). |
+| `game.chat` | alpha_04 · Stammtisch: body (≤ 280), optional linked card/product, author set null on account deletion; the newest `chat.keep` stay. |
+| `game.feed` | KARTEN-BILD entries: template key + params (text is rendered on the client). alpha_04 adds `overtake`, `big_deal` (trigger on `game.shipments`), `price_move` (tick `headlines`, once per day and direction). |
 | `game.notifications` | Personal messages. |
 | `game.battles`, `game.battle_seats`, `game.battle_timeline` | Pack battles. |
 | `game.breaks`, `game.break_spots` | Box breaks. |
@@ -194,6 +194,8 @@ RLS enabled on every table with no policies.
 | `toplist_get(list, npcs)` | read | alpha_04 · `worth`, `level`, `cash`, `collection`; top `toplist.size` rows plus the caller and the row directly ahead; rivals optional |
 | `players_get`, `trade_inventory(player)`, `trade_quote(to, give, take)` | read | alpha_04 · players with presence and trade lock; tradeable goods of any player; values and Schenkungssteuer of a planned gift or trade |
 | `gift_send`, `trade_offer`, `trade_answer(trade, accept)` | write | alpha_04 · gifts move at once; trades on acceptance (both sides re-checked, players locked by id); the side giving more value books the difference against its allowance and pays 20 % above it; the offerer withdraws with `accept = false` |
+| `chat_get`, `chat_send(body, item)` | read/write | alpha_04 · last 100 messages plus who is online; the chat page polls every 5 s until Realtime |
+| `sync(after_notification, after_feed, after_chat)` | read | alpha_04 adds `chat_unread` (messages by others after the device's last seen id; 0 before the first visit) and `chat_last_id` |
 
 
 

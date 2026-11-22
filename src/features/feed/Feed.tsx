@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { CONSUMABLES, cardName, STORES } from '@/lib/catalog.ts'
+import { CONSUMABLES, cardName, itemName, STORES } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
 import type { FeedEntry } from '@/lib/schemas.ts'
 import { serverNow, useWorld } from '@/lib/world.ts'
@@ -14,6 +14,8 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'pull_ultra') return texts.feed.pull_ultra(f.data, cardName(String(f.data.card_id)))
   if (f.kind === 'player_reset') return texts.feed.player_reset(f.data)
   if (f.kind === 'overtake') return texts.feed.overtake(f.data)
+  if (f.kind === 'big_deal') return texts.feed.big_deal(f.data, itemName(String(f.data.item_id)), formatMoney(Number(f.data.cents)))
+  if (f.kind === 'price_move') return texts.feed.price_move(Number(f.data.pct), itemName(String(f.data.item_id)))
   const store = STORES.find((s) => s.key === f.data.store)?.name ?? String(f.data.store)
   if (f.kind === 'restock') return texts.feed.restock(store)
   if (f.kind === 'scalper_raid') return texts.feed.scalper_raid(f.data, store)

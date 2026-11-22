@@ -42,7 +42,12 @@ export type Me = z.infer<typeof zMe>
 const zEntry = z.object({ id: z.number(), kind: z.string(), data: z.record(z.string(), z.unknown()), at: z.string() })
 export type FeedEntry = z.infer<typeof zEntry>
 
-export const zSync = zMe.extend({ notifications: z.array(zEntry), feed: z.array(zEntry) })
+export const zSync = zMe.extend({
+  notifications: z.array(zEntry),
+  feed: z.array(zEntry),
+  chat_unread: z.number(),
+  chat_last_id: z.number(),
+})
 export type Sync = z.infer<typeof zSync>
 
 // One schema per RPC. A test fails if an RPC has no entry here.
@@ -415,6 +420,23 @@ export const zTradeQuote = z.object({
 })
 const zTradeWrite = z.object({ trades: zTrades, player: zPlayer })
 
+export const zChat = z.object({
+  messages: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string().nullable(),
+      level: z.number().nullable(),
+      title: z.string().nullable(),
+      me: z.boolean(),
+      body: z.string(),
+      item_id: z.string().nullable(),
+      at: z.string(),
+    }),
+  ),
+  online: z.array(z.object({ id: z.string(), name: z.string(), level: z.number() })),
+})
+export type Chat = z.infer<typeof zChat>
+
 export const TOPLISTS = ['worth', 'level', 'cash', 'collection'] as const
 export type ToplistId = (typeof TOPLISTS)[number]
 export const zToplist = z.object({
@@ -467,6 +489,8 @@ export const RPC_SCHEMAS = {
   home_get: zHome,
   toplist_get: zToplist,
   players_get: zPlayers,
+  chat_get: zChat,
+  chat_send: zChat.extend({ player: zPlayer }),
   trade_inventory: zTradeInventory,
   trade_quote: zTradeQuote,
   gift_send: zTradeWrite.extend({ value_cents: z.number(), tax_cents: z.number() }),

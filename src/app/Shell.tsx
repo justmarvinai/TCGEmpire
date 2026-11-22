@@ -50,7 +50,8 @@ export function Shell({ me }: { me: SignedIn }) {
 function Sidebar({ player }: { player: Player }) {
   const open = useWorld((s) => s.navOpen)
   const apply = useWorld((s) => s.apply)
-  const badges: Partial<Record<NavItem['id'], number>> = { open: player.sealed_total, quests: player.quests_ready }
+  const chatUnread = useWorld((w) => w.chatUnread)
+  const badges: Partial<Record<NavItem['id'], number>> = { open: player.sealed_total, quests: player.quests_ready, stammtisch: chatUnread }
   const fresh = unseenFeatures(player, useSettings((s) => s.seenTours))
   const close = () => apply({ navOpen: false })
   return (
