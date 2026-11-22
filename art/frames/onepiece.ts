@@ -207,7 +207,10 @@ function nameLines(name: string, maxWidth: number, maxLines: number): NameLines 
   return undefined
 }
 
-/** Type line: the whole line if it fits, else its longest part between slashes that fits, else nothing. */
+/**
+ * Type line: the whole line if it fits, else its last part between slashes that fits (the most
+ * specific one, usually the crew: 'Supernovae/Strohhutbande' → 'Strohhutbande'), else nothing.
+ */
 function typeLine(def: CardDef, maxWidth: number): string | undefined {
   const type = printed(def, 'type')
   if (type === undefined || measure(type, MICRO) <= maxWidth) return type
@@ -215,7 +218,7 @@ function typeLine(def: CardDef, maxWidth: number): string | undefined {
     .split('/')
     .map((s) => s.trim())
     .filter((s) => measure(s, MICRO) <= maxWidth)
-    .sort((a, b) => b.length - a.length)[0]
+    .pop()
 }
 
 /** Rules text with [keywords] drawn as dark tags: three lines of 7 pixels, 66 pixels wide. */
