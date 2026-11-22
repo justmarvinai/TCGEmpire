@@ -123,7 +123,7 @@ logos pixel for pixel:
 - **Foil:** per-card foil mask (which pixels shine) plus animated, pixel-stepped gradient layers that
   follow the pointer. A recipe per tier (strength, pattern: cosmos dots, linear rainbow, cracked ice,
   gold sweep). Cheap: transforms and blend modes only.
-- **Card back** per game, own design in the spirit of the original.
+- **One card back** for every card of every game (owner rule, 22 Nov 2026), our own design.
 - **Artwork** is an original pixel-art interpretation of the character described by the art brief in the
   set file — recognisable, on-model in colours and silhouette, in a new pose and scene.
 
@@ -155,7 +155,7 @@ client           loads one atlas per set on demand; composes slabs and dynamic l
 | Palette management: ramps, hue shift, max-colour check | Cohesion. |
 | Cleanup pass: remove orphan pixels, fix double lines | Quality. |
 | Bitmap fonts and text layout | Card text, labels. |
-| Templates: quadruped, biped, serpent, bird, humanoid, item, spell scene | Faster production of non-hero cards. |
+| Templates (`art/kit`): creatures (quadruped, biped, serpent, bird, …), a parametric figure for people and champions, objects for spells, traps, gear and events, runes, landscapes; scenes per type, attribute, colour and domain; any art window size | Every non-hero card of every game is a data spec. |
 
 **Review loop (mandatory for every artwork):** write draw code → build contact sheet → *look at the
 image* → compare against the art brief and the checklist → refine. An artwork is done only when it passes
