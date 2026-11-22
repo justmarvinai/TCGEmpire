@@ -36,6 +36,7 @@ export const DAILY_QUESTS: readonly QuestTemplate[] = [
   { key: 'd_shift', event: 'shift_done', min: 1, max: 2, text: 'Beende heute {n} [Schicht|Schichten].', path: '/jobs', minLevel: 7 },
   { key: 'd_snack', event: 'snack_eaten', min: 1, max: 2, text: 'Gönn dir heute {n} [Snack|Snacks].', path: '/shop' },
   { key: 'd_graded', event: 'graded', min: 1, max: 2, text: 'Lass heute {n} [Karte|Karten] graden.', path: '/grading', minLevel: 13 },
+  { key: 'd_battle', event: 'battle_played', min: 1, max: 1, text: 'Spiel heute ein Pack Battle.', path: '/battles', minLevel: 16 },
 ]
 
 export const WEEKLY_QUESTS: readonly QuestTemplate[] = [
@@ -47,6 +48,7 @@ export const WEEKLY_QUESTS: readonly QuestTemplate[] = [
   { key: 'w_bunker', event: 'bunker_collected', min: 10, max: 20, text: 'Leer den Geldbunker {n}× diese Woche.', path: '/bunker' },
   { key: 'w_upgrade', event: 'upgrade_bought', min: 5, max: 10, text: 'Kauf diese Woche {n} Upgrades.', path: '/upgrades' },
   { key: 'w_graded', event: 'graded', min: 4, max: 8, text: 'Lass diese Woche {n} Karten graden.', path: '/grading', minLevel: 13 },
+  { key: 'w_battles', event: 'battle_played', min: 2, max: 4, text: 'Spiel diese Woche {n} Pack Battles.', path: '/battles', minLevel: 16 },
   { key: 'w_stamps', event: 'stamp_claimed', min: 5, max: 6, text: 'Stempel diese Woche {n}× die Stempelkarte.', path: '/quests' },
 ]
 

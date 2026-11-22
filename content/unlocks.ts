@@ -19,6 +19,7 @@ export const UNLOCKS = {
   licenses: 10,
   weekly_quests: 13,
   grading: 13,
+  battles: 16,
   lager: 18,
   housing: 20,
 } as const

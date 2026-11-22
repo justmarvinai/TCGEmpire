@@ -403,6 +403,7 @@ insert into game.quest_templates (key, event, min_target, max_target, kind, min_
   ('d_shift', 'shift_done', 1, 2, 'daily', 7),
   ('d_snack', 'snack_eaten', 1, 2, 'daily', 1),
   ('d_graded', 'graded', 1, 2, 'daily', 13),
+  ('d_battle', 'battle_played', 1, 1, 'daily', 16),
   ('w_open', 'pack_opened', 60, 100, 'weekly', 1),
   ('w_new', 'card_new', 10, 20, 'weekly', 1),
   ('w_hits', 'hit_pulled', 15, 25, 'weekly', 1),
@@ -411,6 +412,7 @@ insert into game.quest_templates (key, event, min_target, max_target, kind, min_
   ('w_bunker', 'bunker_collected', 10, 20, 'weekly', 1),
   ('w_upgrade', 'upgrade_bought', 5, 10, 'weekly', 1),
   ('w_graded', 'graded', 4, 8, 'weekly', 13),
+  ('w_battles', 'battle_played', 2, 4, 'weekly', 16),
   ('w_stamps', 'stamp_claimed', 5, 6, 'weekly', 1)
 on conflict (key) do update set event = excluded.event, min_target = excluded.min_target, max_target = excluded.max_target,
   kind = excluded.kind, min_level = excluded.min_level;
@@ -599,6 +601,7 @@ insert into game.achievement_defs (key, event, tiers, titles) values
   ('licenses', 'license_bought', '[1,3]'::jsonb, '[null,"Vier-Spiele-Mogul"]'::jsonb),
   ('goals', 'goal_done', '[1,5,12]'::jsonb, '[null,"Zwangssammler","Archivar des Wahnsinns"]'::jsonb),
   ('graded', 'graded', '[1,25,250,1000]'::jsonb, '[null,"Slab-Sammler","Grading-Junkie","Plastikgott"]'::jsonb),
+  ('battles', 'battle_won', '[1,10,100]'::jsonb, '[null,"Pappgladiator","Battle-Bonze"]'::jsonb),
   ('gem', 'graded_10', '[1,10,100]'::jsonb, '[null,"Zehnerjäger","Mr. Gem Mint"]'::jsonb),
   ('black', 'black_label', '[1,5]'::jsonb, '["Schwarzer Ritter","Darth Label"]'::jsonb),
   ('crack', 'slab_cracked', '[1,25]'::jsonb, '[null,"Panzerknacker"]'::jsonb),

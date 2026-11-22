@@ -422,6 +422,8 @@ export const texts = {
   },
 
   feed: {
+    battle: (d: Record<string, unknown>, mode: string, money: string) =>
+      `BATTLE! ${String(d.name)} gewinnt ein ${mode} und kassiert Karten für ${money}. Die anderen fahren schwarz nach Hause.`,
     league: (d: Record<string, unknown>, pct: string) => `WOCHENSIEGER: ${String(d.name)} wächst um ${pct}. Die Konkurrenz prüft die Bücher.`,
     home: (d: Record<string, unknown>, home: string, article: 'das' | 'die') =>
       `UMZUG: ${String(d.name)} zieht ${article === 'die' ? 'in die' : 'ins'} ${home}. Die Nachbarn wurden nicht gefragt.`,
@@ -523,6 +525,14 @@ export const texts = {
           'Schichten laufen nebenbei, von 15 Minuten bis 8 Stunden. Du musst nicht mal hingucken.',
           'Schau zwischendurch rein und check ein, das gibt mehr Lohn. Wer viele Stunden schuftet, steigt im Rang auf.',
           'Früher Feierabend geht auch. Dann gibt es eben nur Geld für die Zeit, die du wirklich da warst.',
+        ],
+      },
+      battles: {
+        name: 'Pack Battles',
+        steps: [
+          'Im Pack Battle zahlt jeder denselben Einsatz. Der Server öffnet alle Booster, ihr seht sie Runde für Runde gleichzeitig.',
+          'Der Modus entscheidet, wer gewinnt: höchster Wert, niedrigster Wert, beste Karte oder pures Glück. Der Gewinner bekommt die Karten.',
+          'Keiner da? Starte mit Bots. Gewinnt ein Bot, sind die Karten futsch. Und du bist der Depp.',
         ],
       },
       insurance: {
@@ -663,6 +673,7 @@ export const texts = {
         skills: 'Mama: Jetzt hast du Fähigkeiten? Seit wann? Na gut, verteil sie halt.',
         housing: 'Mama: Wann ziehst du endlich aus? Ich frag nur. Dein Zimmer wird ein Fitnessraum.',
         style: 'Mama: Du kaufst dir jetzt einen goldenen Namen? Für das Geld hätte ich dir Socken gekauft.',
+        battles: 'Mama: Glücksspiel mit Pappkarten? Dein Onkel hat so angefangen. Jetzt wohnt er im Wohnwagen.',
         insurance: 'Mama: Du verschickst jetzt Pakete? Versicher die bloß. Dein Onkel hat mal einen Toaster verloren. Die Familie redet nicht drüber.',
       }
       return lines[f] ?? `Neu freigeschaltet: ${name}`
@@ -695,6 +706,12 @@ export const texts = {
     league_done: (rank: number, pct: string, boosters: number) =>
       `Wochenwertung: Platz ${rank} mit ${pct}. ${boosters} ${boosters === 1 ? 'Booster liegt' : 'Booster liegen'} bereit. Der Pokal steht auf deinem Profil.`,
     guestbook: (name: string) => `${name} hat in dein Gästebuch geschrieben. Lies es lieber nicht vor Publikum.`,
+    battle_done: (d: Record<string, unknown>, pot: string) =>
+      d.mode === 'freundschaft'
+        ? 'Freundschaftsspiel vorbei. Deine Karten liegen in der Sammlung. Freundschaft gerettet. Vorerst.'
+        : d.won
+          ? `Pack Battle gewonnen! Der Pot von ${pot} gehört dir.`
+          : `Pack Battle verloren. ${pot} wechseln den Besitzer. Nicht zu dir.`,
     grading_back: (n: number) => `${n === 1 ? 'Ein Slab ist' : `${n} Slabs sind`} vom Grader zurück. Trommelwirbel bereit.`,
     unknown: 'Du hast Post. Was drin steht, weiß keiner.',
   },
@@ -894,6 +911,76 @@ export const texts = {
     needsHome: 'Braucht eine eigene Wohnung. Bei Mutti zahlt Mutti.',
     bulkValue: (money: string) => `Versicherter Wert deiner Bulk-Karten: ${money}`,
     locked: (level: number) => `Versicherungen gibt es ab Level ${level}.`,
+  },
+
+  battles: {
+    title: 'Pack Battles',
+    subtitle: 'Gleicher Einsatz, gleiche Booster. Am Ende weint einer.',
+    tip: 'Alle zahlen denselben Einsatz: den Marktwert der Booster. Der Server öffnet alle Packs auf einmal, ihr seht sie Runde für Runde gleichzeitig. Wer nach den Regeln des Modus gewinnt, bekommt die Karten. Leere Plätze füllen Bots; was ein Bot gewinnt, ist weg.',
+    locked: (level: number) => `Pack Battles gibt es ab Level ${level}.`,
+    modes: {
+      klassisch: { name: 'Klassisch', text: 'Der höchste Gesamtwert nimmt alle Karten.' },
+      krepel: { name: 'Krepel-Battle', text: 'Der niedrigste Gesamtwert gewinnt. Pech ist hier ein Talent.' },
+      top: { name: 'Top-Karte', text: 'Die beste Einzelkarte gewinnt alles.' },
+      jackpot: { name: 'Jackpot', text: 'Ein Zufallsgewinner, die Chance wächst mit dem gezogenen Wert.' },
+      team: { name: 'Team 2v2', text: 'Plätze 1 und 3 gegen 2 und 4. Die Summe zählt; jeder Gewinner kriegt die Karten eines Gegners.' },
+      freundschaft: { name: 'Freundschaftsspiel', text: 'Jeder behält seine Karten. Nur für die Show und das Gelaber.' },
+    },
+    create: 'Neues Battle',
+    createTip: 'Wähle Modus, Booster, Packs und Plätze. Du zahlst sofort; solange es nicht läuft, gibt es beim Verlassen alles zurück.',
+    mode: 'Modus',
+    booster: 'Booster',
+    packs: 'Packs pro Platz',
+    seats: 'Plätze',
+    stake: 'Einsatz pro Platz',
+    stakeTip: 'Jeder zahlt den Marktwert der Booster. Die Packs öffnet der Server, Lager brauchst du keins. Pech-Schutz und Glücks-Skills zählen hier nicht: alle haben dieselben Chancen.',
+    open: 'Eröffnen',
+    opened: 'Battle eröffnet. Jetzt brauchst du Opfer.',
+    lobby: 'Offene Lobbys',
+    lobbyTip: 'Hier warten Battles auf Mitspieler. Ist der Tisch voll, geht es sofort los. Der Gastgeber kann früher starten, dann übernehmen Bots. Nach einem Tag ohne Start wird abgesagt und erstattet.',
+    lobbyEmpty: 'Keine offenen Battles. Mach eins auf, du Feigling.',
+    running: 'Läuft gerade',
+    runningEmpty: 'Gerade läuft nichts.',
+    done: 'Zuletzt gespielt',
+    doneEmpty: 'Noch kein Battle gespielt.',
+    join: 'Beitreten',
+    joined: 'Du bist drin. Zurück geht nur noch feige.',
+    leave: 'Verlassen',
+    left: 'Einsatz zurück. Feigling.',
+    dissolve: 'Auflösen',
+    dissolved: 'Battle aufgelöst. Alle kriegen ihr Geld zurück.',
+    start: 'Mit Bots starten',
+    startTip: 'Leere Plätze bekommen Bots. Bots zahlen nichts; gewinnt ein Bot, sind die Karten weg.',
+    started: 'Los geht’s!',
+    watch: 'Zuschauen',
+    view: 'Ansehen',
+    bot: 'Bot',
+    free: 'frei',
+    seatsOf: (n: number, max: number) => `${n}/${max} Plätze`,
+    packsOf: (n: number, name: string) => `${n}× ${name}`,
+    round: (r: number, max: number) => `Runde ${r} von ${max}`,
+    startsIn: (s: string) => `Start in ${s}`,
+    nextIn: (s: string) => `Nächste Runde in ${s}`,
+    resultIn: (s: string) => `Ergebnis in ${s}`,
+    waiting: 'Wartet auf Mitspieler …',
+    pot: 'Pot',
+    potTip: 'Wert aller bisher gezeigten Karten zum aktuellen Marktwert.',
+    total: 'Wert',
+    totalTip: 'Wert der bisher gezeigten Karten dieses Platzes zum aktuellen Marktwert.',
+    team: (n: number) => `Team ${n}`,
+    winner: (name: string) => `${name} gewinnt und nimmt alles mit.`,
+    winnerBot: (name: string) => `Bot ${name} gewinnt. Die Karten verschwinden im Nirgendwo. Peinlich für alle.`,
+    winnerTeam: (names: string) => `${names} gewinnen. Jeder schnappt sich die Karten eines Gegners.`,
+    friendly: 'Freundschaftsspiel: Jeder behält seine Karten. Wie langweilig.',
+    youWon: 'Gewonnen! Die Karten liegen in deiner Sammlung.',
+    youLost: 'Verloren. Deine Karten gehören jetzt jemand anderem.',
+    emotes: 'Emotes',
+    emotesTip: 'Wirf Emotes in die Runde. Auch Zuschauer dürfen pöbeln.',
+    host: 'Gastgeber',
+    spectating: 'Du schaust nur zu.',
+    back: 'Zur Lobby',
+    cancelled: 'Dieses Battle wurde abgesagt. Die Einsätze sind zurück.',
+    more: (n: number, money: string) => `+${n} weitere · ${money}`,
   },
 
   style: {

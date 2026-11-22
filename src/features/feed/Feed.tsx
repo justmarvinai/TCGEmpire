@@ -3,7 +3,7 @@ import { slabName } from '@/components/cards/Slab.tsx'
 import { HOMES } from '@/lib/catalog.ts'
 import { CONSUMABLES, cardName, gameOf, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
-import type { FeedEntry } from '@/lib/schemas.ts'
+import type { BattleMode, FeedEntry } from '@/lib/schemas.ts'
 import { serverNow, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 
@@ -19,6 +19,8 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'set_phase')
     return texts.feed.set_phase(String(f.data.phase), Boolean(f.data.reprint), SETS.find((s) => s.id === f.data.set_id)?.name ?? String(f.data.set_id))
   if (f.kind === 'league') return texts.feed.league(f.data, texts.toplists.percent(Number(f.data.bps)))
+  if (f.kind === 'battle')
+    return texts.feed.battle(f.data, texts.battles.modes[f.data.mode as BattleMode]?.name ?? String(f.data.mode), formatMoney(Number(f.data.pot)))
   if (f.kind === 'home') {
     const home = HOMES.find((h) => h.key === f.data.home)
     return texts.feed.home(f.data, home?.name ?? String(f.data.home), home?.article ?? 'das')

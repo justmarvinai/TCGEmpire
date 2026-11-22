@@ -332,6 +332,7 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'trade_accepted') return texts.notifications.trade_accepted(String(n.data.name))
   if (n.kind === 'trade_declined') return texts.notifications.trade_declined(String(n.data.name))
   if (n.kind === 'grading_back') return texts.notifications.grading_back(Number(n.data.n))
+  if (n.kind === 'battle_done') return texts.notifications.battle_done(n.data, formatMoney(Number(n.data.pot)))
   if (n.kind === 'league_done') return texts.notifications.league_done(Number(n.data.rank), texts.toplists.percent(Number(n.data.bps)), Number(n.data.boosters))
   if (n.kind === 'parcel_lost') return texts.notifications.parcel_lost(n.data, itemName(String(n.data.item_id)), formatMoney(Number(n.data.cents)))
   if (n.kind === 'water_damage') return texts.notifications.water_damage(n.data, formatMoney(Number(n.data.cents)))

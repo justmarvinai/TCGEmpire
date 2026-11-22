@@ -149,8 +149,8 @@ Goal: playing together, live.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | **Pack Battles**: lobby, modes, synced replay, spectators, emotes, bots | M |
-| ☐ | Realtime layer in full (world, player, battle channels) | M |
+| ☑ | **Pack Battles**: lobby, modes, synced replay, spectators, emotes, bots | M |
+| ☑ | Realtime layer in full (world, player, battle channels) | M |
 | ☐ | Aushelfen, Kaffee und Kuchen, Sammelbestellung | M |
 | ☐ | Box Breaks | S |
 | ☐ | Privatkredit, Ehre record | S |

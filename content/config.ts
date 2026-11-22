@@ -232,6 +232,13 @@ export const config = {
   'insurance.water_damage_share_pct': 10,
   // Vitrine: display places on the profile (housing adds more later)
   'vitrine.slots': 3,
+  // Pack Battles: seconds per revealed round, lead before the first, packs per seat; a won pot of at least this much
+  // (Basis-€ cents) makes the headlines; emotes everybody can throw
+  'battle.round_seconds': 6,
+  'battle.lead_seconds': 4,
+  'battle.max_packs': 10,
+  'battle.headline_base_cents': 300_00,
+  'battle.emotes': ['🔥', '💀', '😂', '🤡', '💸', '😭', '👀', '🙏'],
 
   // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,
@@ -289,6 +296,8 @@ export const config = {
   'rate.trade': 20,
   'rate.chat': 12,
   'rate.grading': 30,
+  'rate.battle': 6,
+  'rate.emote': 20,
 } as const satisfies Record<string, Json>
 
 export type ConfigKey = keyof typeof config

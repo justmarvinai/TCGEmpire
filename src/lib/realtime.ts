@@ -38,6 +38,8 @@ export function useRealtimeSync() {
     timer.current = setTimeout(syncNow, 250)
   }
   useTopic(topics.data?.world, (_event, payload) => {
+    // A lobby change only concerns the battle pages.
+    if (payload.area === 'battles') return void client.invalidateQueries({ queryKey: ['battles'] })
     if (payload.area === 'chat') void client.invalidateQueries({ queryKey: ['chat'] })
     poke()
   })

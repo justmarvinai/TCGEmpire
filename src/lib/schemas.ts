@@ -712,6 +712,52 @@ export const zSkills = z.object({
 })
 export type Skills = z.infer<typeof zSkills>
 
+// Pack Battles (alpha_08)
+export const BATTLE_MODES = ['klassisch', 'krepel', 'top', 'jackpot', 'team', 'freundschaft'] as const
+export type BattleMode = (typeof BATTLE_MODES)[number]
+const zBattleSummary = z.object({
+  id: z.number(),
+  mode: z.enum(BATTLE_MODES),
+  product_id: z.string(),
+  packs: z.number(),
+  seats: z.number(),
+  stake_cents: z.number(),
+  state: z.enum(['open', 'running', 'done', 'cancelled']),
+  host_id: z.string().nullable(),
+  started_at: z.string().nullable(),
+  ends_at: z.string().nullable(),
+  round_seconds: z.number().nullable(),
+  mine: z.boolean(),
+  players: z.array(
+    z.object({
+      seat: z.number(),
+      player_id: z.string().nullable(),
+      name: z.string(),
+      bot: z.boolean(),
+      look: zLook.nullable(),
+      shown_cents: z.number(),
+    }),
+  ),
+})
+export type BattleSummary = z.infer<typeof zBattleSummary>
+export const zBattle = zBattleSummary.extend({
+  round: z.number(),
+  server_now: z.string(),
+  pulls: z.array(z.object({ seat: z.number(), round: z.number(), card_id: z.string(), value_cents: z.number() })),
+  result: z.object({ winners: z.array(z.number()), totals: z.record(z.string(), z.number()) }).nullable(),
+  emotes: z.array(z.object({ id: z.number(), name: z.string(), emote: z.string(), at: z.string() })),
+})
+export type Battle = z.infer<typeof zBattle>
+export const zBattles = z.object({
+  unlock_level: z.number(),
+  round_seconds: z.number(),
+  boosters: z.array(z.object({ product_id: z.string(), price_cents: z.number() })),
+  open: z.array(zBattleSummary),
+  running: z.array(zBattleSummary),
+  done: z.array(zBattleSummary),
+})
+export type Battles = z.infer<typeof zBattles>
+
 export const RPC_SCHEMAS = {
   me_get: zMe,
   join: zMe,
@@ -824,5 +870,12 @@ export const RPC_SCHEMAS = {
   pop_report_get: zPopReport,
   vitrine_set: z.object({ vitrine: zVitrine, slots: z.number(), ...withPlayer }),
   profile_get: zProfile,
+  battles_get: zBattles,
+  battle_get: zBattle,
+  battle_create: z.object({ battle: zBattle, ...withPlayer }),
+  battle_join: z.object({ battle: zBattle, ...withPlayer }),
+  battle_start: z.object({ battle: zBattle, ...withPlayer }),
+  battle_leave: z.object(withPlayer),
+  emote_send: z.object({ ok: z.boolean() }),
 } as const
 export type RpcName = keyof typeof RPC_SCHEMAS

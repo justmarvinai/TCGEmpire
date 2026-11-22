@@ -122,7 +122,7 @@ RLS enabled on every table with no policies.
 | `game.chat` | alpha_04 · Stammtisch: body (≤ 280), optional linked card/product, author set null on account deletion; the newest `chat.keep` stay. |
 | `game.feed` | KARTEN-BILD entries: template key + params (text is rendered on the client). alpha_04 adds `overtake`, `big_deal` (trigger on `game.shipments`), `price_move` (tick `headlines`, once per day and direction). |
 | `game.notifications` | Personal messages. |
-| `game.battles`, `game.battle_seats`, `game.battle_timeline` | Pack battles. |
+| `game.battles`, `game.battle_seats`, `game.battle_pulls`, `game.battle_emotes` | alpha_08 · Pack Battles: lobby (mode, booster, packs, seats, stake per seat = Marktwert × packs, state open/running/done/cancelled, `started_at`, `round_seconds`, `ends_at`, `result` with winning seats and totals); seats (player or NPC bot, paid stake, total); every card rolled at the start (seat, round, value then, quality of hits); emotes. Clients only get rounds whose time has come. Settled by the tick `battles` or the first `battle_get` after `ends_at`. |
 | `game.breaks`, `game.break_spots` | Box breaks. |
 | `game.loans`, `game.gifts`, `game.honor` | Loans, gift allowance, kept/broken deals. |
 | `game.attacks` | Every attack: kind, attacker, target, roll, outcome (success / blocked), loot, cooldown. |
@@ -147,6 +147,7 @@ RLS enabled on every table with no policies.
 | `game.cosmetic_defs`, `game.cosmetics_owned`, `players.style`, `players.avatar_card` | alpha_07 · Stil from `content/cosmetics.ts`; equipped look per kind (jsonb) and the card used as profile picture. |
 | `players.best_pull_card`, `players.best_pull_cents`, `game.league` | alpha_07 · the most valuable card ever pulled (value then); Wochenwertung per week and player: start net worth, value moved to/from other players (`adjust_cents`), final growth and rank. |
 | `game.insurance` | alpha_07 · policies (versand, hausrat) with the day the premium was paid. |
+| `players.rt_topic` | alpha_08 · random id of the player's private Realtime channel (`player:<rt_topic>`); triggers on notifications, feed, chat and battles send pokes (`private.rt_send`). |
 | `game.worth_snapshots` | alpha_04 · net worth per player, hourly for `snapshots.hourly_days`, then the last one per Berlin day; deleted on reset. |
 | `game.rivals` | alpha_04 · 40 NPC tycoons (seeded from `content/rivals.ts`); their numbers are pure functions of the days since `game.server.started_at`. `game.server.worth_ranking` remembers the last Vermögen order for overtake headlines. |
 | `game.leagues` | Wochenwertung. |

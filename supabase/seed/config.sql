@@ -129,6 +129,11 @@ insert into game.config (key, value) values
   ('insurance.water_damage_pct', '2'::jsonb),
   ('insurance.water_damage_share_pct', '10'::jsonb),
   ('vitrine.slots', '3'::jsonb),
+  ('battle.round_seconds', '6'::jsonb),
+  ('battle.lead_seconds', '4'::jsonb),
+  ('battle.max_packs', '10'::jsonb),
+  ('battle.headline_base_cents', '30000'::jsonb),
+  ('battle.emotes', '["🔥","💀","😂","🤡","💸","😭","👀","🙏"]'::jsonb),
   ('quest.mini_slots', '3'::jsonb),
   ('quest.mini_reward_minutes', '1'::jsonb),
   ('quest.mini_pfandbons', '1'::jsonb),
@@ -171,6 +176,8 @@ insert into game.config (key, value) values
   ('rate.trade', '20'::jsonb),
   ('rate.chat', '12'::jsonb),
   ('rate.grading', '30'::jsonb),
+  ('rate.battle', '6'::jsonb),
+  ('rate.emote', '20'::jsonb),
   ('unlock.toplists', '1'::jsonb),
   ('unlock.players', '1'::jsonb),
   ('unlock.stammtisch', '1'::jsonb),
@@ -189,6 +196,7 @@ insert into game.config (key, value) values
   ('unlock.licenses', '10'::jsonb),
   ('unlock.weekly_quests', '13'::jsonb),
   ('unlock.grading', '13'::jsonb),
+  ('unlock.battles', '16'::jsonb),
   ('unlock.lager', '18'::jsonb),
   ('unlock.housing', '20'::jsonb)
 on conflict (key) do update set value = excluded.value;
