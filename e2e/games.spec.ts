@@ -37,5 +37,9 @@ test('four games: starter pick, Opa’s Yu-Gi-Oh! booster, licences and the bind
   await page.getByRole('link', { name: /^Sammlung/ }).click()
   await page.getByRole('tab', { name: /Yu-Gi-Oh!/ }).click()
   await expect(page.getByText('Exodia, komplett')).toBeVisible()
-  await page.screenshot({ path: shot('ygo-binder'), fullPage: true, animations: 'disabled' })
+  await expect(page.locator('[data-tier]').first()).toBeVisible() // card art from the set's atlas
+  await page.screenshot({ path: shot('ygo-binder'), animations: 'disabled' })
+  // Phone width, once per milestone.
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.screenshot({ path: shot('ygo-binder-390'), animations: 'disabled' })
 })

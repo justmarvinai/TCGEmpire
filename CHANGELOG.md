@@ -3,6 +3,26 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_05] — Vier Spiele (22 Nov 2026)
+
+All four games are in, each with its own look.
+
+### Added
+
+- **Yu-Gi-Oh! Legend of Blue Eyes White Dragon** (86 cards), **One Piece OP-01 Romance Dawn** (89) and
+  **Riftbound Origins** (89): their own card frames, boosters (9, 12 and 14 cards) and displays of 24 boosters.
+  Every card is drawn; the Ultra and Grail cards are full-art heroes (Grails: Blauäugiger w. Drache,
+  the black-and-white manga Shanks, Ahri).
+- **Starter choice:** Mama's first message asks for your favourite game; its licence is free and Opa's booster
+  and every reward booster come from it.
+- **Händlerlizenzen:** the other games open at levels 10, 20 and 28 for a small fee. Kiosk and stores only sell
+  licensed games; the markets, Kleinanzeigen and trades are open to every game.
+- **Sammelziele:** all Holos of a set, the complete set, and themed goals (all five Exodia pieces, the three
+  Basis-Set starters, the whole Strohhut crew, all six runes). Each pays a small permanent bonus.
+- **Sammlung** with a tab per game and the goals of each set.
+- New achievements and titles per game (Herz der Karten, König der Spiele, Piratenkönig, Herausforderer …),
+  Grail headlines and live-chat lines that fit the game being opened.
+
 ## [0.0.1-alpha_04] — Flip (22 Nov 2026)
 
 The market is alive: prices move, NPC traders compete with you, stores run out, and your friends can

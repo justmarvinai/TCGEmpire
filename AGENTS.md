@@ -5,9 +5,8 @@ trading-card hobby. Private game for one friend group. Must run on **Vercel Hobb
 
 ## 0. Gate: are you allowed to code?
 
-**Approved milestone: `alpha_05` (Vier Spiele).** The owner gave the go on 22 Nov 2026 (`alpha_04` is
-accepted). Build it (scope: `ROADMAP.md`); when it is done: changelog, version, report — then **stop and wait**
-for the owner's go for `alpha_06`.
+**Approved milestone: none.** `alpha_05` (Vier Spiele) was delivered on 22 Nov 2026. **Write no code until the
+owner gives the go for `alpha_06`** (scope: `ROADMAP.md`).
 - When the owner approves the next milestone, update this section to name it.
 - Never deploy or change platform settings without the owner's go.
 

@@ -1,6 +1,19 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1-alpha_05',
+    title: 'Vier Spiele',
+    items: [
+      'Drei neue Spiele: Yu-Gi-Oh! Legend of Blue Eyes, One Piece OP-01 Romance Dawn und Riftbound Origins. Jedes mit eigenen Kartenrahmen, Boostern und Displays.',
+      'Alle 354 Karten sind gezeichnet. Die Grails: Blauäugiger w. Drache, Manga-Shanks und Ahri. Zieh sie. Oder heul.',
+      'Am Anfang wählst du dein Lieblingsspiel. Opas Booster und alle Belohnungs-Booster kommen ab jetzt von dort.',
+      'Händlerlizenzen: Die anderen Spiele schaltest du ab Level 10, 20 und 28 gegen eine kleine Gebühr frei. Im Laden gibt es nur Spiele, für die du eine Lizenz hast. Handeln geht immer.',
+      'Sammelziele: Alle Holos eines Sets, das ganze Set, Exodia, die Strohhut-Bande, die drei Starter, alle Runen. Jedes Ziel gibt einen kleinen Bonus für immer.',
+      'Die Sammlung hat jetzt einen Reiter pro Spiel.',
+      'Neue Erfolge und Titel pro Spiel (Herz der Karten, Piratenkönig, Herausforderer …), Schlagzeilen und Live-Chat passen sich dem Spiel an.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_04',
     title: 'Flip',
     items: [

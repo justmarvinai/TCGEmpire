@@ -199,7 +199,7 @@ RLS enabled on every table with no policies.
 | `chat_get`, `chat_send(body, item)` | read/write | alpha_04 · last 100 messages plus who is online; the chat page polls every 5 s until Realtime |
 | `admin_get`, `admin_set_phase`, `admin_restock`, `admin_invite_set`, `admin_config_set`, `admin_grant`, `admin_announce` | read/write | alpha_04 · admin only (`forbidden`); every write returns the console document. Out of Print stores `oop_at` and `sealed_at_oop`; a step back from OOP/Vintage is a reprint and clears both |
 | `licenses_get`, `starter_pick(game)`, `license_buy(game)` | read/write | alpha_05 · the first pick is free and completes tutorial step 0; further licences at `license.levels` for `license.fees_base_cents`. `sealed_add` resolves the product alias `reward-booster` to the favourite game's booster |
-| `goals_get` | read | alpha_05 · every goal with groups owned (`have` / `total`), `done_at` and the bonus |
+| `goals_get` | read | alpha_05 · every goal with groups owned (`have` / `total`), `done_at` and the bonus. The `game.collection` trigger also emits `collect_<game>` for the collector achievements |
 | `sync(after_notification, after_feed, after_chat)` | read | alpha_04 adds `chat_unread` (messages by others after the device's last seen id; 0 before the first visit) and `chat_last_id` |
 
 
