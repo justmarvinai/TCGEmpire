@@ -53,6 +53,7 @@ export const texts = {
       prestige: 'Prestige',
       housing: 'Wohnen',
       style: 'Stil',
+      insurance: 'Versicherungen',
       luxury: 'Luxus',
       battles: 'Pack Battles',
       toplists: 'Toplisten',
@@ -524,6 +525,13 @@ export const texts = {
           'Früher Feierabend geht auch. Dann gibt es eben nur Geld für die Zeit, die du wirklich da warst.',
         ],
       },
+      insurance: {
+        name: 'Versicherungen',
+        steps: [
+          'Ab jetzt kann was schiefgehen: Pakete gehen verloren, und wer eine eigene Wohnung hat, kriegt mal Wasser im Keller.',
+          'Versicherungen kosten jeden Tag ein bisschen und zahlen, wenn es passiert. Fehlt das Geld für den Beitrag, ist der Schutz weg.',
+        ],
+      },
       style: {
         name: 'Stil',
         steps: [
@@ -655,6 +663,7 @@ export const texts = {
         skills: 'Mama: Jetzt hast du Fähigkeiten? Seit wann? Na gut, verteil sie halt.',
         housing: 'Mama: Wann ziehst du endlich aus? Ich frag nur. Dein Zimmer wird ein Fitnessraum.',
         style: 'Mama: Du kaufst dir jetzt einen goldenen Namen? Für das Geld hätte ich dir Socken gekauft.',
+        insurance: 'Mama: Du verschickst jetzt Pakete? Versicher die bloß. Dein Onkel hat mal einen Toaster verloren. Die Familie redet nicht drüber.',
       }
       return lines[f] ?? `Neu freigeschaltet: ${name}`
     },
@@ -673,6 +682,15 @@ export const texts = {
     trade_offer: (name: string) => `${name} hat dir ein Tauschangebot gemacht. Schau unter Tausch.`,
     trade_accepted: (name: string) => `${name} hat deinen Tausch angenommen. Deal!`,
     trade_declined: (name: string) => `${name} hat deinen Tausch abgelehnt. Nimm es nicht persönlich. Oder doch.`,
+    parcel_lost: (d: Record<string, unknown>, name: string, money: string) =>
+      d.insured
+        ? `Paket verloren: ${String(d.qty)}× ${name}. Die Versandversicherung zahlt ${money} zurück. Glück im Unglück.`
+        : `Paket verloren: ${String(d.qty)}× ${name}. Ohne Versicherung ist das Geld weg. Der Paketbote hat es „beim Nachbarn“ abgegeben.`,
+    water_damage: (d: Record<string, unknown>, money: string) =>
+      d.insured
+        ? `Wasserschaden im Keller: ${String(d.cards)} Karten aufgeweicht. Die Hausrat zahlt ${money}.`
+        : `Wasserschaden im Keller: ${String(d.cards)} Karten im Wert von ${money} sind Pappmaché. Hausrat hätte geholfen.`,
+    insurance_ended: (name: string) => `${name} gekündigt: Für den Beitrag war kein Geld da.`,
     nebenkosten: (money: string) => `Nebenkosten: ${money} sind weg. Der Vermieter dankt.`,
     league_done: (rank: number, pct: string, boosters: number) =>
       `Wochenwertung: Platz ${rank} mit ${pct}. ${boosters} ${boosters === 1 ? 'Booster liegt' : 'Booster liegen'} bereit. Der Pokal steht auf deinem Profil.`,
@@ -848,6 +866,34 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  insurance: {
+    title: 'Versicherungen',
+    subtitle: 'Für alles, was schiefgehen kann. Also für alles.',
+    tip: 'Jede Versicherung kostet einen Beitrag pro Tag und zahlt, wenn das Unglück passiert. Ohne Geld für den Beitrag endet sie. Kündigen geht jederzeit.',
+    policies: {
+      versand: {
+        name: 'Versandversicherung',
+        text: 'Geht ein gekauftes Paket verloren, bekommst du den Kaufpreis zurück.',
+        risk: (pct: string) => `Risiko: ${pct} % der Pakete an dich gehen verloren.`,
+      },
+      hausrat: {
+        name: 'Hausrat',
+        text: 'Zahlt, wenn ein Wasserschaden deine Bulk-Karten ruiniert. Der Beitrag richtet sich nach ihrem Wert.',
+        risk: (pct: string) => `Risiko: ${pct} % Wasserschaden pro Tag in der eigenen Wohnung.`,
+      },
+    },
+    perDay: (money: string) => `${money} pro Tag`,
+    active: 'Versichert',
+    since: (date: string) => `seit ${date}`,
+    sign: 'Abschließen',
+    cancel: 'Kündigen',
+    signed: (name: string) => `${name} abgeschlossen. Der erste Tag ist bezahlt.`,
+    cancelled: (name: string) => `${name} gekündigt. Ab jetzt auf eigenes Risiko.`,
+    needsHome: 'Braucht eine eigene Wohnung. Bei Mutti zahlt Mutti.',
+    bulkValue: (money: string) => `Versicherter Wert deiner Bulk-Karten: ${money}`,
+    locked: (level: number) => `Versicherungen gibt es ab Level ${level}.`,
   },
 
   style: {

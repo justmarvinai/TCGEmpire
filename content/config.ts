@@ -223,6 +223,13 @@ export const config = {
   // this many reward boosters
   'league.min_base_base_cents': 1_000_00,
   'league.rewards': [3, 2, 1],
+  // Versicherungen: premiums per German day; the risks they cover: lost parcels (basis points of parcels to players
+  // from the unlock level on) and Wasserschaden (chance per day for players with a home of their own, share of every
+  // bulk stack that is ruined)
+  'insurance.policies': { versand: { premium_base_cents: 20_00 }, hausrat: { premium_bps: 30, min_base_cents: 5_00 } },
+  'insurance.lost_parcel_bps': 150,
+  'insurance.water_damage_pct': 2,
+  'insurance.water_damage_share_pct': 10,
   // Vitrine: display places on the profile (housing adds more later)
   'vitrine.slots': 3,
 

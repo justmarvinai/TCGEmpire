@@ -20,6 +20,7 @@ import { GradingPage } from '@/features/grading/GradingPage.tsx'
 import { SkillsPage } from '@/features/skills/SkillsPage.tsx'
 import { HousingPage } from '@/features/housing/HousingPage.tsx'
 import { StylePage } from '@/features/style/StylePage.tsx'
+import { InsurancePage } from '@/features/insurance/InsurancePage.tsx'
 import { PlayerProfilePage } from '@/features/profile/PlayerProfilePage.tsx'
 import { JobsPage } from '@/features/jobs/JobsPage.tsx'
 import { OpenPage } from '@/features/open/OpenPage.tsx'
@@ -84,6 +85,7 @@ function Game() {
           <Route path="skills" element={<SkillsPage />} />
           <Route path="housing" element={<HousingPage />} />
           <Route path="style" element={<StylePage />} />
+          <Route path="insurance" element={<InsurancePage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="cardmarket" element={<CardmarketPage />} />
           <Route path="kleinanzeigen" element={<KleinanzeigenPage />} />

@@ -14,6 +14,7 @@ export const UNLOCKS = {
   stores: 4,
   kleinanzeigen: 4,
   cardmarket: 10,
+  insurance: 10,
   trade: 10,
   licenses: 10,
   weekly_quests: 13,

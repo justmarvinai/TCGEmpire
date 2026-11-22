@@ -52,7 +52,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
       item('prestige', 'crown', 100),
     ],
   },
-  { group: 'leben', items: [item('housing', 'house', UNLOCKS.housing, true), item('style', 'sparkle', UNLOCKS.style, true), item('luxury', 'diamond', 55)] },
+  { group: 'leben', items: [item('housing', 'house', UNLOCKS.housing, true), item('style', 'sparkle', UNLOCKS.style, true), item('insurance', 'shield', UNLOCKS.insurance, true), item('luxury', 'diamond', 55)] },
   {
     group: 'freunde',
     items: [
@@ -84,6 +84,7 @@ const FEATURE_PAGE: Record<Feature, string> = {
   skills: '/skills',
   housing: '/housing',
   style: '/style',
+  insurance: '/insurance',
   shifts: '/jobs',
   cardmarket: '/cardmarket',
   stores: '/shop',

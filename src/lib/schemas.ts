@@ -690,6 +690,17 @@ export const zHousing = z.object({
 })
 export type Housing = z.infer<typeof zHousing>
 
+// Versicherungen (alpha_07)
+export const zInsurance = z.object({
+  unlock_level: z.number(),
+  has_home: z.boolean(),
+  lost_parcel_bps: z.number(),
+  water_damage_pct: z.number(),
+  bulk_cents: z.number(),
+  policies: z.array(z.object({ kind: z.enum(['versand', 'hausrat']), active: z.boolean(), since: z.string().nullable(), premium_cents: z.number() })),
+})
+export type Insurance = z.infer<typeof zInsurance>
+
 // Skillbaum (alpha_07)
 export const zSkills = z.object({
   unlock_level: z.number(),
@@ -791,6 +802,8 @@ export const RPC_SCHEMAS = {
   level_path_get: zLevelPath,
   grading_get: zGrading,
   skills_get: zSkills,
+  insurance_get: zInsurance,
+  insurance_set: zInsurance.extend(withPlayer),
   cosmetics_get: zCosmetics,
   cosmetic_buy: zCosmetics.extend(withPlayer),
   cosmetic_equip: zCosmetics,
