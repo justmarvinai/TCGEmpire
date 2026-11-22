@@ -26,4 +26,5 @@ export const UNLOCKS = {
   group_orders: 18,
   breaks: 18,
   housing: 20,
+  company: 30,
 } as const

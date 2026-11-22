@@ -170,6 +170,7 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
     <Panel title="Lokale Dev-Tools" className="lg:col-span-2" tip="Nur im lokalen Modus: greift direkt in die Datenbank im Browser.">
       <div className="flex flex-wrap gap-2">
         <Button size="sm" onClick={() => run(`select private.money_add($1, 100000, 'dev')`, [id])}>+1.000 €</Button>
+        <Button size="sm" onClick={() => run(`select private.money_add($1, 10000000, 'dev')`, [id])}>+100.000 €</Button>
         <Button size="sm" onClick={() => run(`select private.ep_grant($1, 50)`, [id])}>+EP</Button>
         <Button size="sm" onClick={() => run(`select private.ep_grant($1, 5000)`, [id])}>+viel EP</Button>
         <Button size="sm" onClick={() => run(`update game.server set clock_offset = clock_offset + interval '1 day' where id; select private.tick()`)}>+1 Tag</Button>

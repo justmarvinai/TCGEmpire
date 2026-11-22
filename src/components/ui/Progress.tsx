@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-const TONES = { accent: 'bg-grad', gain: 'bg-gain', gold: 'bg-gold', info: 'bg-info' }
+const TONES = { accent: 'bg-grad', gain: 'bg-gain', gold: 'bg-gold', info: 'bg-info', loss: 'bg-loss' }
 
 /** Rounded progress bar. `value` 0..1; the fill moves by transform only. */
 export function Progress({ value, className, tone = 'accent', label }: { value: number; className?: string; tone?: keyof typeof TONES; label?: string }) {

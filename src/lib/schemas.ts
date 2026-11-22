@@ -775,6 +775,100 @@ export const zBattles = z.object({
 })
 export type Battles = z.infer<typeof zBattles>
 
+// Firma (alpha_09)
+export const COMPANY_STATIONS = ['annahme', 'pruefung', 'slabbing', 'versand'] as const
+export type CompanyStation = (typeof COMPANY_STATIONS)[number]
+export const COMPANY_SERVICES = ['economy', 'standard', 'express'] as const
+export type CompanyServiceKey = (typeof COMPANY_SERVICES)[number]
+const zStationNumbers = z.object({ annahme: z.number(), pruefung: z.number(), slabbing: z.number(), versand: z.number() })
+export const zCompanyLabel = z.object({ bg: z.string(), fg: z.string(), emblem: z.string() })
+export type CompanyLabel = z.infer<typeof zCompanyLabel>
+const zCompanyPerson = z.object({
+  id: z.number(),
+  archetype: z.string(),
+  first: z.number(),
+  last: z.number(),
+  tempo: z.number(),
+  accuracy: z.number(),
+  loyalty: z.number(),
+  wage_cents: z.number(),
+})
+export type CompanyPerson = z.infer<typeof zCompanyPerson>
+const zHakt = z.object({
+  key: z.enum(['kasse', 'tempo', 'bekanntheit', 'genauigkeit', 'preis', 'team']),
+  cents_h: z.number(),
+  action: z.string(),
+  station: z.enum(COMPANY_STATIONS).optional(),
+  service: z.enum(COMPANY_SERVICES).optional(),
+  staff: z.number().optional(),
+  level: z.number().optional(),
+  cost_cents: z.number().nullable().optional(),
+  gain_cents_h: z.number().nullable().optional(),
+  fair_cents: z.number().optional(),
+  need_cents: z.number().optional(),
+  ruf_h: z.number().optional(),
+})
+export type Hakt = z.infer<typeof zHakt>
+export const zCompany = z.object({
+  unlock_level: z.number(),
+  found_fee_cents: z.number(),
+  found_cost_cents: z.number(),
+  founding: z.object({ step: z.number(), ready_at: z.string() }).nullable(),
+  company: z
+    .object({
+      id: z.number(),
+      name: z.string(),
+      slogan: z.string(),
+      label: zCompanyLabel,
+      stage: z.number(),
+      stage_pending: z.number().nullable(),
+      stage_ready_at: z.string().nullable(),
+      cash_cents: z.number(),
+      prices: z.record(z.string(), z.number()),
+      equipment: zStationNumbers,
+      backlog: z.number(),
+      orders_total: z.number(),
+      founded_at: z.string(),
+      staff_cap: z.number(),
+      services: z.array(z.enum(COMPANY_SERVICES)),
+      equipment_max: z.number(),
+      caps: zStationNumbers,
+      capacity: z.number(),
+      demand: z.object({
+        total: z.number(),
+        avg_price_cents: z.number(),
+        services: z.record(z.string(), z.object({ demand: z.number(), price_factor: z.number(), fair_cents: z.number(), price_cents: z.number() })),
+        ruf_factor: z.number(),
+        hype: z.number(),
+        speed: z.number(),
+        marketing: z.number(),
+        backlog_hours: z.number(),
+      }),
+      accuracy: z.number(),
+      paid: z.boolean(),
+      ruf: z.number(),
+      brand_bps: z.number(),
+      costs: z.object({ wages: z.number(), rent: z.number(), power: z.number(), material: z.number() }),
+      profit_h: z.number(),
+      equipment_next: z.record(z.string(), z.object({ level: z.number(), cost_cents: z.number() }).nullable()),
+      next_stage: z.object({ stage: z.number(), cost_cents: z.number(), wait_minutes: z.number() }).nullable(),
+      staff: z.array(zCompanyPerson.extend({ station: z.enum(COMPANY_STATIONS), trainings: z.number() })),
+      applicants: z.array(zCompanyPerson),
+      train_cost_hours: z.number(),
+      train_max: z.number(),
+      fire_cost_hours: z.number(),
+      days: z.array(z.object({ day: z.string(), orders: z.number(), revenue_cents: z.number(), costs_cents: z.number() })),
+      reviews: z.array(z.object({ id: z.number(), stars: z.number(), text: z.number(), at: z.string() })),
+      stars_avg: z.number().nullable(),
+      hakt: z.array(zHakt),
+      payout_tax_pct: z.number(),
+      value_cents: z.number(),
+    })
+    .nullable(),
+})
+export type CompanyDoc = z.infer<typeof zCompany>
+export type Company = NonNullable<CompanyDoc['company']>
+
 // Privatkredit and Ehre (alpha_08)
 const zLoan = z.object({
   id: z.number(),
@@ -988,6 +1082,16 @@ export const RPC_SCHEMAS = {
   break_cancel: z.object(withPlayer),
   break_emote_send: z.object({ ok: z.boolean() }),
   loans_get: zLoans,
+  company_get: zCompany,
+  company_found_step: zCompany.extend(withPlayer),
+  company_found: zCompany.extend(withPlayer),
+  company_label_set: zCompany,
+  company_money: zCompany.extend(withPlayer),
+  company_prices_set: zCompany,
+  company_hire: zCompany,
+  company_staff_act: zCompany,
+  company_equipment_buy: zCompany,
+  company_stage_up: zCompany,
   loan_offer: z.object({ loans: zLoans }),
   loan_respond: z.object({ loans: zLoans, ...withPlayer }),
   loan_cancel: z.object({ loans: zLoans }),

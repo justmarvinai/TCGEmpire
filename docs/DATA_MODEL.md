@@ -104,12 +104,12 @@ RLS enabled on every table with no policies.
 | Table | Purpose |
 |-------|---------|
 | `game.grading_orders` | Player submissions to NPC graders or companies: copy, service, fee, due_at, result. |
-| `game.companies` | Owner, name, label design, stage, cash, ruf snapshot, prices, settings, last_cycle_at. |
-| `game.company_staff`, `game.company_applicants` | Staff with stats, salary, loyalty; daily applicant pool. |
-| `game.company_equipment`, `game.company_research` | Owned equipment and research. |
-| `game.company_cycles` | Per-cycle results (7 days) and daily summaries. |
+| `game.company_founding`, `game.companies` | alpha_09 · Gewerbeanmeldung progress (step, ready_at). The company: owner, name (unique among open ones), slogan, label (`bg`, `fg` colour keys, 8×8 `emblem` as 16 hex digits), stage and a pending stage with its ready time, own account `cash_cents`, prices per service, equipment level per station (jsonb), backlog, fractional Ruf drift, invested money (stages and equipment), lifetime orders, `last_cycle_at`, `closed_at` (a reset closes it; its slabs keep the label). |
+| `game.company_staff`, `game.company_applicants` | alpha_09 · Staff (archetype, name indexes into the content pools, station, Tempo, Genauigkeit, Treue, wage per hour in Basis-€, trainings) and the applicants of the German day. |
+| `game.company_research` | Research (planned; equipment is `companies.equipment`). |
+| `game.company_days` | alpha_09 · Orders, revenue and costs per company and German day (14 days kept). Cycles run in the tick `company` and on every `company_get`. |
 | `game.company_decisions` | Pending decision cards. |
-| `game.reviews` | Generated and player reviews. |
+| `game.company_reviews` | alpha_09 · Generated customer reviews (stars, text index into the content pool); the newest 50 are kept. |
 | `game.shares` | Stille Teilhaberschaft. |
 
 ### Life and social

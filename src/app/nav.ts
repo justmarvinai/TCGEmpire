@@ -40,7 +40,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
   },
   {
     group: 'verdienen',
-    items: [item('jobs', 'briefcase', 1, true), item('bunker', 'vault', UNLOCKS.bunker, true), item('company', 'building', 30), item('streaming', 'camera', 45)],
+    items: [item('jobs', 'briefcase', 1, true), item('bunker', 'vault', UNLOCKS.bunker, true), item('company', 'building', UNLOCKS.company, true), item('streaming', 'camera', 45)],
   },
   {
     group: 'aufsteigen',
@@ -90,6 +90,7 @@ const FEATURE_PAGE: Record<Feature, string> = {
   group_orders: '/players',
   breaks: '/battles',
   loans: '/players',
+  company: '/company',
   shifts: '/jobs',
   cardmarket: '/cardmarket',
   stores: '/shop',

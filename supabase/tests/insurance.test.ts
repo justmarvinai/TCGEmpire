@@ -53,11 +53,11 @@ describe('Versicherungen', () => {
     expect(await t.sql(`select 1 from game.notifications where player_id = $1 and kind = 'sale_paid'`, [seller])).toHaveLength(1) // the seller is paid anyway
 
     await sign('versand')
-    const mid = await cash()
     await ship()
     await t.advance('1 hour')
     await t.tick()
-    expect((await cash()) - mid).toBe(5000)
+    // the claim pays the price back (a new premium day may be charged in the same hour)
+    expect(await t.sql(`select delta_cents::int as d from game.ledger where player_id = $1 and reason = 'insurance_claim'`, [id])).toEqual([{ d: 5000 }])
     await t.assertLedgerMatches()
   })
 
