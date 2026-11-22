@@ -141,7 +141,40 @@ RLS enabled on every table with no policies.
 | `game.admin_audit` | Admin actions. |
 | `game.versions` | State-area version counters per player for `sync`. |
 
-## 3. RPC catalog (planned)
+## 2a. Implemented so far (alpha_01–02)
+
+| Table | Purpose |
+|-------|---------|
+| `game.server` | single row: invite code hash, Preisniveau, clock offset (tests) |
+| `game.players`, `game.credentials`, `game.sessions` | player, bcrypt login, anonymous session → player |
+| `game.config`, `game.config_overrides` | seeded balance values, live admin overrides |
+| `game.ledger`, `game.ledger_daily` | every money change (14 days), daily sums per reason |
+| `game.requests`, `game.rate_limits` | idempotency journal, rate limits |
+| `game.modifiers`, `game.counters` | stat bonuses; lifetime event counters |
+| `game.notifications`, `game.feed` | personal messages; server feed (kind + data) |
+| `game.tick_systems`, `game.job_runs` | tick dispatcher and its log |
+| `game.set_defs`, `game.card_defs`, `game.product_defs` | catalog from `content/` (phase is admin-owned) |
+| `game.sealed`, `game.card_stacks`, `game.card_copies`, `game.collection` | sealed boosters; Common–Rare stacks; Holo+ copies with four hidden quality values; ever-pulled cards |
+| `game.pity`, `game.store_purchases` | dry streak per set; Kiosk daily limit |
+| `game.quest_templates`, `game.quests` | mini-quest templates (seeded) and active/claimed quests |
+| `game.tutorial_steps` | seeded steps; progress in `players.tutorial_step` (-1 = done) |
+| `game.minigame_runs` | started/finished minijob rounds |
+
+| RPC | Kind | Notes |
+|-----|------|-------|
+| `me_get`, `sync` | read | player doc incl. energy, sealed count, ready quests, net worth |
+| `join`, `login`, `logout` | write | own login on anonymous sessions |
+| `shop_get` | read | Kiosk offers, own sealed products |
+| `store_buy(qty 1/5/10)` | write | Kiosk price = list × markup × P; daily limit |
+| `pack_open(qty 1..10)` | write | rolls and books everything; returns all packs |
+| `binder_get(set)` | read | all cards of a set with holdings and values |
+| `ankauf_sell(stacks, copies)` | write | 60 % of value |
+| `quests_get`, `quest_claim` | read/write | endless mini-quests, bonus booster every 10th |
+| `tutorial_ack`, `tutorial_skip` | write | steps complete through `private.emit` |
+| `minigame_start`, `minigame_finish` | write | energy cost, time check, score cap |
+| `level_path_get` | read | EP and rewards per level |
+
+
 
 Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one jsonb document for a page; writes take
 `p_request_id` first and return the changed state.
