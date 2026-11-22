@@ -278,7 +278,7 @@ export const config = {
   // work at offline_factor. Payouts to the owner pay Kapitalertragsteuer.
   'company.found_fee_base_cents': 50_00,
   'company.found_wait_minutes': 10,
-  'company.owner_help': 0.5,
+  'company.owner_help': 1,
   'company.material_base_cents': 15_00,
   'company.brand_base_bps': 3_000,
   'company.brand_per_ruf_bps': 8,

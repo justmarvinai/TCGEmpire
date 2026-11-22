@@ -112,13 +112,13 @@ describe('Sammelbestellung', () => {
     expect(done.orders.recent[0]).toMatchObject({ state: 'done', taken: 6, mine: 2 })
     expect(cashB - (await cash(idB))).toBe(2 * order.unit_cents)
     expect(await sealed(idA, product)).toBe(0) // still on the way
+    // six shares per week at most (checked before the clock moves: an hour later it may be a new week)
+    expect((await t.rpc(a, 'group_orders_get')).shares_left).toBe(2)
+    await expect(t.rpc(a, 'group_order_create', { p_request_id: rid(), p_product: product, p_shares: 3 })).rejects.toThrow('group_week_limit')
     await t.advance('61 minutes')
     await t.tick()
     expect(await sealed(idA, product)).toBe(4)
     expect(await sealed(idB, product)).toBe(2)
-    // six shares per week at most
-    expect((await t.rpc(a, 'group_orders_get')).shares_left).toBe(2)
-    await expect(t.rpc(a, 'group_order_create', { p_request_id: rid(), p_product: product, p_shares: 3 })).rejects.toThrow('group_week_limit')
     await t.assertLedgerMatches()
   })
 

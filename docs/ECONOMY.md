@@ -223,7 +223,7 @@ P2P trades, gifts and loans move money between players and are not sources.
 | Upgrades (incl. Abwehr) | Geometric ladders, factor 1.15–1.6 per level |
 | Skill respec | 500 € × level (decision 073) |
 | Housing | 5.000 € → 5 Mrd. € over 11 tiers (decision 074); furnishing 400 € → 500 Mio. € per item; Nebenkosten 0,5 % of the home price per day |
-| Company | Stage costs 500.000 € → 10 Mrd. €; wages, rent, equipment, research, marketing |
+| Company | Founding 25.000 €, stages 150.000 € → 6 Mrd. €; wages, rent, power, material, equipment, research, marketing, late fees, fines |
 | Taxes | Kapitalertragsteuer 25 % on company payouts; Schenkungssteuer 20 % above the daily gift allowance; late fees |
 | Insurance, Nebenkosten | Versand 20 € per day; Hausrat 0,3 % of the bulk value per day (at least 5 €) |
 | Consumables | Döner 150 €, Club-Mate 50 €, Kaffee 35 € |
@@ -267,6 +267,14 @@ accuracy   = weighted staff Genauigkeit × equipment → share of correct grades
 - Wages are never paid from negative cash: a broke company cuts output, it does not spiral.
 - Target: a well-run company provides 50–70 % of reference income from level 35 on; a neglected one about
   breaks even; a badly mis-priced one loses money visibly, with the reason shown.
+- **Calibrated in alpha_09** (`content/company.ts`, `company.*` config): customers per hour by stage 70 / 140 / 330 /
+  800 / 2.000 / 5.000 / 13.000; staff 2 / 4 / 8 / 16 / 30 / 60 / 120; stage costs 25.000 € / 150.000 € / 1,2 Mio. € /
+  12 Mio. € / 100 Mio. € / 800 Mio. € / 6 Mrd. € (stage 2 on paid from the company account); per worker and hour
+  (Tempo 50) Annahme 40, Prüfung 16, Einschweißen 24, Versand 40, the owner counts as one worker everywhere;
+  equipment ×1 → ×4,8 per station; fair price = big graders' average × brand (30 % + Ruf × 0,08 %); material 15 €
+  per card. Simulation (bot founds at level 30 on day 2): the company earns 25–30 % of the day's income on stage 1,
+  60 % once it is a GbR (day 7, level ~55); levelling pace unchanged. A full pass over levels 1–100 follows in the
+  balance milestone.
 
 ## 10. Attacks, defence and other risks
 

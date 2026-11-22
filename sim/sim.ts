@@ -3,6 +3,7 @@
 import { createTestDb, type TestDb } from '../supabase/tests/harness.ts'
 import { HOMES } from '../content/housing.ts'
 import { SKILL_COST, SKILLS } from '../content/skills.ts'
+import { DECISIONS, type DecisionEffect } from '../content/company.ts'
 
 const B = 'booster-pkm-base'
 const rid = () => crypto.randomUUID()
@@ -20,6 +21,24 @@ export interface SimResult {
   income: Record<string, number>
   /** grader and grade of every slab at the end */
   slabs: string[]
+  /** failed tick jobs (system: error) */
+  jobErrors: string[]
+  /** notifications the bot got, by kind */
+  notes: Record<string, number>
+  /** the company at the end (if founded): stage, value, and per German day its profit and the player's other income */
+  company: {
+    stage: number
+    valueCents: number
+    staff: number
+    /** what limits it at the end */
+    capacity: number
+    demand: number
+    accuracy: number
+    ruf: number
+    cashCents: number
+    equipment: Record<string, number>
+    days: { day: string; profit: number; other: number }[]
+  } | null
 }
 
 export async function simulate(opts: { days: number; activeMinPerDay: number; seed?: number }): Promise<SimResult> {
@@ -60,7 +79,34 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
     income[r.reason] = Number(r.sum)
   const p = (await t.rpc(me, 'me_get')).player!
   const slabs = await t.sql<{ grader: string; grade: string }>(`select grader, grade from game.card_copies where owner_id = $1 and grader is not null`, [id])
-  return { levels, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`) }
+  const co = (await t.rpc(me, 'company_get')).company
+  let company: SimResult['company'] = null
+  if (co) {
+    const days = await t.sql<{ day: string; profit: string; other: string }>(
+      `select d.day::text as day, (d.revenue_cents - d.costs_cents) as profit,
+              coalesce((select sum(sum_cents) from game.ledger_daily l where l.player_id = $1 and l.day = d.day and l.sum_cents > 0
+                        and l.reason not in ('company_payout', 'company_deposit', 'admin_grant')), 0) as other
+       from game.company_days d where d.company_id = $2 order by d.day`,
+      [id, co.id],
+    )
+    company = {
+      stage: co.stage,
+      valueCents: co.value_cents,
+      staff: co.staff.length,
+      capacity: co.capacity,
+      demand: co.demand.total,
+      accuracy: co.accuracy,
+      ruf: co.ruf,
+      cashCents: co.cash_cents,
+      equipment: co.equipment,
+      days: days.map((d) => ({ day: d.day, profit: Number(d.profit), other: Number(d.other) })),
+    }
+  }
+  const jobErrors = (await t.sql<{ e: string }>(`select distinct name || ': ' || error as e from game.job_runs where not ok`)).map((x) => x.e)
+  const notes = Object.fromEntries(
+    (await t.sql<{ kind: string; n: string }>(`select kind, count(*) as n from game.notifications where player_id = $1 group by kind`, [id])).map((x) => [x.kind, Number(x.n)]),
+  )
+  return { levels, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`), company, jobErrors, notes }
 }
 
 /** Seconds the current step already moved the clock (a minijob round has to really last). */
@@ -109,6 +155,11 @@ async function step(t: TestDb, me: string): Promise<number> {
   if (bunker.unlocked && (bunker.content_cents ?? 0) > (bunker.rate_cents ?? 0) * (bunker.capacity_h ?? 0) * 0.5) {
     await quietly(t, me, 'bunker_collect', {})
     return 5
+  }
+  // 2a. the company (level 30): founding, staff, tools, prices, stages, decisions, VIP, taxes, payouts
+  if (p.level >= 30) {
+    const spent = await companyStep(t, me, p)
+    if (spent) return spent
   }
   // 3. sealed boosters are opened at once
   if (p.sealed_total > 0) {
@@ -197,4 +248,114 @@ async function openAll(t: TestDb, me: string) {
   const binder = await t.rpc(me, 'binder_get', { p_set: 'pokemon-base' })
   const stacks = binder.cards.filter((c) => c.copies.length === 0 && c.qty > 1).map((c) => ({ card_id: c.card_id, qty: c.qty - 1 }))
   if (stacks.length) await quietly(t, me, 'ankauf_sell', { p_stacks: JSON.stringify(stacks), p_copies: [] })
+}
+
+const STATIONS = ['annahme', 'pruefung', 'slabbing', 'versand'] as const
+
+/** One company decision of a sensible owner. Returns the seconds it took, or 0 when there was nothing to do. */
+let lastRuf = -1
+async function companyStep(t: TestDb, me: string, p: { cash_cents: number }): Promise<number> {
+  const before = (await t.rpc(me, 'me_get')).player!.ruf
+  const d = await t.rpc(me, 'company_get')
+  const co = d.company
+  if (process.env.SIM_DEBUG && co && (co.ruf !== lastRuf)) {
+    const now = (await t.sql<{ n: string }>(`select private.now() as n`))[0]!.n
+    console.log(`${now} ruf ${before} -> ${co.ruf} acc ${co.accuracy} cap ${co.capacity} dem ${co.demand.total} backlog ${co.backlog} h ${co.demand.backlog_hours} paid ${co.paid}`)
+    lastRuf = co.ruf
+  }
+  if (!co) {
+    if (!d.founding) return (await quietly(t, me, 'company_found_step', { p_step: 'antrag' })) ? 10 : 0
+    if (d.founding.step === 1) return (await quietly(t, me, 'company_found_step', { p_step: 'a38' })) ? 30 : 0
+    if (p.cash_cents < d.found_cost_cents * 2) return 0
+    return (await quietly(t, me, 'company_found', { p_name: 'Bot GmbH', p_slogan: '', p_label: { bg: 'blau', fg: 'weiss', emblem: '183c7effff7e3c18' } })) ? 30 : 0
+  }
+  const fixedPerHour = co.costs.wages + co.costs.rent + co.costs.power
+  // keep a day of running costs in the company account
+  if (co.cash_cents < fixedPerHour * 24 && p.cash_cents > fixedPerHour * 48) {
+    await quietly(t, me, 'company_money', { p_cents: Math.round(fixedPerHour * 24), p_payout: false })
+    return 5
+  }
+  if (co.decision) {
+    // an honest owner: no bribes, Ruf first, then money
+    const def = DECISIONS.find((x) => x.key === co.decision!.key)
+    const score = (e: DecisionEffect) => (e.ruf ?? 0) * 10 + (e.rufAccuracy ?? 0) * 5 + (e.cash ?? 0) / 10_000 - (e.bump ?? 0) * 100 - (e.downgrade ? 50 : 0) + (e.loyalty ?? 0)
+    const choice = def ? def.choices.map((c, i) => [score(c.effect), i] as const).sort((a, b) => b[0] - a[0])[0]![1] : 0
+    await quietly(t, me, 'company_decide', { p_decision: co.decision.id, p_choice: choice })
+    return 10
+  }
+  if (co.vip) {
+    const r = co.vip.ranges
+    const mid = (a: [number, number]) => Math.round((a[0] + a[1]) / 2)
+    await quietly(t, me, 'company_vip_grade', { p_vip: co.vip.id, p_values: [mid(r.centering), mid(r.corners), mid(r.edges), mid(r.surface)] })
+    return 20
+  }
+  if (!co.tax.advisor) {
+    if (co.cash_cents >= co.tax.advisor_cost_cents * 3) {
+      await quietly(t, me, 'company_tax_advisor', {})
+      return 5
+    }
+    const now = Date.parse((await t.sql<{ n: string }>(`select private.now() as n`))[0]!.n)
+    if (Date.parse(co.tax.due_at) - now < 86400_000) {
+      const today = (await t.sql<{ d: string }>(`select private.today()::text as d`))[0]!.d
+      const week = co.days.filter((x) => x.day < today).reduce((sum, x) => sum + x.revenue_cents, 0)
+      if (co.tax.options.includes(week)) {
+        await quietly(t, me, 'company_tax_file', { p_amount: week })
+        return 20
+      }
+    }
+  }
+  // fair prices
+  const off = co.services.find((s) => {
+    const x = co.demand.services[s]
+    return x && Math.abs(x.price_cents - x.fair_cents) > x.fair_cents * 0.05
+  })
+  if (off) {
+    await quietly(t, me, 'company_prices_set', { p_prices: Object.fromEntries(co.services.map((s) => [s, co.demand.services[s]!.fair_cents])) })
+    return 10
+  }
+  // people for the slowest station, accurate ones for the Prüfung
+  const neck = STATIONS.reduce((a, b) => (co.caps[b] < co.caps[a] ? b : a))
+  if (co.staff.length < co.staff_cap && co.applicants.length) {
+    const station = co.accuracy < 88 ? 'pruefung' : neck
+    const best = [...co.applicants].sort((a, b) => (station === 'pruefung' ? b.accuracy - a.accuracy : b.tempo - a.tempo))[0]!
+    await quietly(t, me, 'company_hire', { p_applicant: best.id, p_station: station })
+    return 10
+  }
+  // a full team: someone moves from the station with the most room to the bottleneck
+  if (co.staff.length >= co.staff_cap && !co.staff.some((x) => x.station === neck)) {
+    const roomy = STATIONS.filter((s) => s !== neck && co.staff.some((x) => x.station === s)).sort((a, b) => co.caps[b] - co.caps[a])[0]
+    const mover = roomy && co.staff.find((x) => x.station === roomy)
+    if (mover && co.caps[roomy!] > co.caps[neck] * 1.5) {
+      await quietly(t, me, 'company_staff_act', { p_staff: mover.id, p_action: 'move', p_arg: neck })
+      return 5
+    }
+  }
+  // tools for the bottleneck, then stages, research, marketing
+  const next = co.equipment_next[neck]
+  // tools only help while customers wait; with too few customers the money goes into growth
+  if (next && co.capacity < co.demand.total * 1.1 && co.cash_cents >= next.cost_cents * 1.5) {
+    await quietly(t, me, 'company_equipment_buy', { p_station: neck })
+    return 5
+  }
+  if (co.next_stage && !co.stage_pending && co.cash_cents >= co.next_stage.cost_cents * 1.3) {
+    await quietly(t, me, 'company_stage_up', {})
+    return 10
+  }
+  const research = Object.entries(co.research.costs).find(([k, c]) => !co.research.owned.includes(k) && co.stage >= co.research.stage && co.cash_cents >= c * 3)
+  if (research) {
+    await quietly(t, me, 'company_research', { p_key: research[0] })
+    return 5
+  }
+  const campaign = Object.entries(co.campaigns).filter(([, c]) => c.open && co.cash_cents >= c.cost_cents * 5).sort((a, b) => b[1].cost_cents - a[1].cost_cents)[0]
+  if (!co.marketing && campaign && co.demand.total < co.capacity * 0.8) {
+    await quietly(t, me, 'company_marketing', { p_key: campaign[0] })
+    return 5
+  }
+  // pay out what is beyond two days of costs and the next stage
+  const keep = fixedPerHour * 48 + (co.next_stage?.cost_cents ?? 0) * 1.3
+  if (co.cash_cents > keep * 1.5 && co.cash_cents - keep > 100_000) {
+    await quietly(t, me, 'company_money', { p_cents: Math.round((co.cash_cents - keep) / 2), p_payout: true })
+    return 5
+  }
+  return 0
 }

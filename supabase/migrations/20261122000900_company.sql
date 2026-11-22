@@ -305,6 +305,8 @@ declare
   v_acc numeric;
   v_drift numeric;
   v_step int;
+  v_full numeric;
+  v_off numeric;
   v_reviews int;
   v_stars int;
   s record;
@@ -338,9 +340,11 @@ begin
   v_costs := private.company_costs(c);
   v_fixed := ((v_costs ->> 'wages')::numeric + (v_costs ->> 'rent')::numeric + (v_costs ->> 'power')::numeric) * v_dt;
   v_paid := c.cash_cents >= v_fixed;
-  v_cap := private.company_capacity(c, v_paid)
-    * case when (select last_seen_at from game.players where id = c.owner_id) < v_now - make_interval(hours => private.cfg_num('company.offline_hours')::int)
-           then private.cfg_num('company.offline_factor') else 1 end;
+  -- the part of the window after the owner had been away for offline_hours runs at offline_factor
+  v_full := private.company_capacity(c, v_paid);
+  v_off := least(v_dt, greatest(0, extract(epoch from v_now - greatest(c.last_cycle_at,
+    (select last_seen_at from game.players where id = c.owner_id) + make_interval(hours => private.cfg_num('company.offline_hours')::int))) / 3600));
+  v_cap := v_full * (v_dt - v_off * (1 - private.cfg_num('company.offline_factor'))) / v_dt;
   v_dem := private.company_demand(c, v_cap);
   v_demand := (v_dem ->> 'total')::numeric;
   v_backlog := least(c.backlog + v_demand * v_dt, v_demand * private.cfg_num('company.backlog_max_hours'));
@@ -362,8 +366,9 @@ begin
   -- Ruf: accurate grades and short queues raise it, the opposite lowers it
   if v_proc > 0 then
     v_acc := private.company_accuracy(c, v_paid);
+    -- the queue over the window: the average of start and end, in hours of full speed
     v_drift := ((v_acc - private.cfg_num('company.ruf_neutral_accuracy')) * private.cfg_num('company.ruf_per_accuracy')
-      + case when v_backlog / greatest(v_cap, 0.01) <= private.cfg_num('company.speed_hours') then private.cfg_num('company.ruf_fast')
+      + case when (c.backlog + v_backlog) / 2 / greatest(v_full, 0.01) <= private.cfg_num('company.speed_hours') then private.cfg_num('company.ruf_fast')
              else -private.cfg_num('company.ruf_slow') end) * v_dt;
     v_step := trunc(c.ruf_frac + v_drift)::int;
     update game.players set ruf = least(1000, greatest(0, ruf + v_step)) where id = c.owner_id;
@@ -373,7 +378,7 @@ begin
       + case when private.rand() < mod(v_proc / private.cfg_num('company.review_per_orders'), 1) then 1 else 0 end);
     for i in 1 .. v_reviews loop
       v_stars := least(5, greatest(1, round(3 + (v_acc - private.cfg_num('company.ruf_neutral_accuracy')) / 4
-        + case when v_backlog / greatest(v_cap, 0.01) <= private.cfg_num('company.speed_hours') then 0.5 else -1 end
+        + case when (c.backlog + v_backlog) / 2 / greatest(v_full, 0.01) <= private.cfg_num('company.speed_hours') then 0.5 else -1 end
         + (private.rand() * 3 - 1.5))::int));
       insert into game.company_reviews (company_id, stars, text_idx, at)
       values (c.id, v_stars, floor(private.rand() * (private.cfg('company.review_counts') ->> (v_stars - 1))::int)::int, v_now);
