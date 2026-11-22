@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { PlayerName } from '@/components/ui/Avatar.tsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -92,7 +93,7 @@ function Messages({ messages }: { messages: Chat['messages'] }) {
         return (
           <li key={m.id} className={clsx('max-w-[85%] rounded-2xl px-3 py-2', m.me ? 'self-end bg-accent-lo/30' : mention ? 'bg-warn/15 ring-1 ring-warn' : 'bg-surface-2')}>
             <p className="flex items-baseline gap-2 text-xs">
-              <b className={m.name ? 'text-fg' : 'text-fg-3'}>{m.name ?? T.deleted}</b>
+              <b className={m.name ? 'text-fg' : 'text-fg-3'}>{m.name ? <PlayerName name={m.name} look={m.look} /> : T.deleted}</b>
               {m.level !== null && <span className="nums text-fg-3">Lv {m.level}</span>}
               {m.title && <span className="text-accent">{m.title}</span>}
               <span className="text-fg-3">{formatAgo(m.at, now + offset)}</span>

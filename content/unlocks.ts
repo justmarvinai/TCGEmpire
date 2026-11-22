@@ -8,6 +8,7 @@ export const UNLOCKS = {
   stamps: 2,
   bunker: 3,
   upgrades: 5,
+  style: 5,
   skills: 5,
   shifts: 7,
   stores: 4,

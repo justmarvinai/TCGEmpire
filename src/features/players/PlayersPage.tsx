@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -42,8 +43,8 @@ export function PlayersPage() {
                 const lockedMin = Math.ceil((Date.parse(p.locked_until) - (now + offset)) / 60_000)
                 return (
                   <li key={p.id} className={clsx('flex flex-wrap items-center gap-3 rounded-xl px-3 py-2.5', p.me ? 'bg-surface-3' : 'bg-surface-2')}>
-                    <span className="relative grid size-10 shrink-0 place-items-center rounded-full bg-grad font-bold text-white">
-                      {p.name.slice(0, 1).toUpperCase()}
+                    <span className="relative shrink-0">
+                      <Avatar name={p.name} look={p.look} size={40} />
                       <i
                         className={clsx('absolute -right-0.5 -bottom-0.5 size-3.5 rounded-full ring-2 ring-surface-1', p.online ? 'bg-gain' : 'bg-fg-3')}
                         aria-hidden
@@ -52,7 +53,7 @@ export function PlayersPage() {
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-2">
                         <Link to={p.me ? '/profile' : `/players/${p.id}`} className="truncate font-bold hover:underline">
-                          {p.name}
+                          <PlayerName name={p.name} look={p.look} />
                         </Link>
                         {p.me && <span className="rounded-md bg-grad px-1.5 py-0.5 text-[0.65rem] font-bold text-white">{T.you}</span>}
                         {p.is_admin && <span className="rounded-md bg-surface-3 px-1.5 py-0.5 text-[0.65rem] font-bold text-fg-3">{T.admin}</span>}

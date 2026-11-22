@@ -172,6 +172,7 @@ insert into game.config (key, value) values
   ('unlock.stamps', '2'::jsonb),
   ('unlock.bunker', '3'::jsonb),
   ('unlock.upgrades', '5'::jsonb),
+  ('unlock.style', '5'::jsonb),
   ('unlock.skills', '5'::jsonb),
   ('unlock.shifts', '7'::jsonb),
   ('unlock.stores', '4'::jsonb),

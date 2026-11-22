@@ -59,6 +59,10 @@ export const zLogin = z.union([
 
 const withPlayer = { player: zPlayer }
 
+/** Stil (alpha_07): what friends see of a player. */
+export const zLook = z.object({ name_color: z.string().nullable(), frame: z.string().nullable(), avatar_card: z.string().nullable() })
+export type Look = z.infer<typeof zLook>
+
 export const zPulledCard = z.object({
   card_id: z.string(),
   tier: z.string(),
@@ -434,6 +438,7 @@ export const zPlayers = z.object({
       me: z.boolean(),
       locked_until: z.string(),
       is_admin: z.boolean(),
+      look: zLook,
     }),
   ),
   trades: zTrades,
@@ -464,6 +469,7 @@ export const zChat = z.object({
       body: z.string(),
       item_id: z.string().nullable(),
       at: z.string(),
+      look: zLook.nullable(),
     }),
   ),
   online: z.array(z.object({ id: z.string(), name: z.string(), level: z.number() })),
@@ -633,6 +639,7 @@ export const zProfile = z.object({
   net_worth_cents: z.number(),
   created_at: z.string(),
   me: z.boolean(),
+  look: zLook,
   vitrine: zVitrine,
   slots: z.number(),
   unlocked: z.boolean(),
@@ -649,6 +656,18 @@ export const zPopReport = z.object({
   mine: z.number(),
 })
 export type PopReport = z.infer<typeof zPopReport>
+
+export const zCosmetics = z.object({
+  unlock_level: z.number(),
+  owned: z.array(z.string()),
+  style: z.record(z.string(), z.string()),
+  avatar_card: z.string().nullable(),
+  title: z.string().nullable(),
+  /** cards the player owns right now (for the profile picture) */
+  cards: z.array(z.string()),
+  items: z.array(z.object({ key: z.string(), price_cents: z.number() })),
+})
+export type Cosmetics = z.infer<typeof zCosmetics>
 
 // Wohnen (alpha_07)
 const zGuestbook = z.array(z.object({ id: z.number(), author_id: z.string().nullable(), name: z.string().nullable(), body: z.string(), at: z.string() }))
@@ -767,6 +786,10 @@ export const RPC_SCHEMAS = {
   level_path_get: zLevelPath,
   grading_get: zGrading,
   skills_get: zSkills,
+  cosmetics_get: zCosmetics,
+  cosmetic_buy: zCosmetics.extend(withPlayer),
+  cosmetic_equip: zCosmetics,
+  avatar_set: zCosmetics,
   housing_get: zHousing,
   home_buy: zHousing.extend(withPlayer),
   furniture_buy: zHousing.extend(withPlayer),

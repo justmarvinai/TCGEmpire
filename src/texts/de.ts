@@ -514,6 +514,14 @@ export const texts = {
           'Früher Feierabend geht auch. Dann gibt es eben nur Geld für die Zeit, die du wirklich da warst.',
         ],
       },
+      style: {
+        name: 'Stil',
+        steps: [
+          'Hier kaufst du Angeberei: Namensfarben, Profilrahmen, Kartenhüllen, Ordner-Skins, Effekte beim Aufreißen und Titel.',
+          'Dein Profilbild ist die Grafik einer Karte, die du besitzt. Glurak ist beliebt. Eine Energiekarte ist ehrlicher.',
+          'Bringt nichts außer Neid. Deine Freunde sehen alles im Stammtisch, in den Listen und auf deinem Profil.',
+        ],
+      },
       housing: {
         name: 'Wohnen',
         steps: [
@@ -636,6 +644,7 @@ export const texts = {
         grading: 'Mama: Du bezahlst Leute dafür, dass sie deine Karten in Plastik schweißen? Dein Vater hat für so was nicht studiert.',
         skills: 'Mama: Jetzt hast du Fähigkeiten? Seit wann? Na gut, verteil sie halt.',
         housing: 'Mama: Wann ziehst du endlich aus? Ich frag nur. Dein Zimmer wird ein Fitnessraum.',
+        style: 'Mama: Du kaufst dir jetzt einen goldenen Namen? Für das Geld hätte ich dir Socken gekauft.',
       }
       return lines[f] ?? `Neu freigeschaltet: ${name}`
     },
@@ -827,6 +836,44 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  style: {
+    title: 'Stil',
+    subtitle: 'Geld gegen Aufmerksamkeit. Ein fairer Tausch.',
+    tip: 'Kosmetik bringt keine Boni, nur Neid. Einmal kaufen, beliebig wechseln. Freunde sehen Namensfarbe, Rahmen und Profilbild überall, den Rest bei dir.',
+    kinds: {
+      name_color: 'Namensfarbe',
+      frame: 'Profilrahmen',
+      sleeve: 'Kartenhüllen',
+      binder: 'Ordner-Skin',
+      pack_fx: 'Aufreiß-Effekt',
+      title: 'Titel',
+    } as Record<string, string>,
+    kindTips: {
+      name_color: 'So steht dein Name im Stammtisch, in den Listen und auf deinem Profil.',
+      frame: 'Der Ring um dein Profilbild.',
+      sleeve: 'Die Hüllen um deine Karten in der Sammlung.',
+      binder: 'Der Hintergrund deines Ordners in der Sammlung.',
+      pack_fx: 'Die Farben der Explosion, wenn ein Hit aus dem Booster kommt.',
+      title: 'Gekaufte Titel stehen in der Auswahl auf deinem Profil, neben denen aus Erfolgen.',
+    } as Record<string, string>,
+    buy: (money: string) => `Kaufen · ${money}`,
+    bought: (name: string) => `${name} gehört dir. Neid inklusive.`,
+    equip: 'Anlegen',
+    worn: 'Angelegt',
+    takeOff: 'Ablegen',
+    titleHint: 'Wähl ihn auf deinem Profil aus.',
+    fromLevel: (level: number) => `ab Level ${level}`,
+    avatar: 'Profilbild',
+    avatarTip: 'Die Grafik einer Karte, die du gerade besitzt. Verkaufst du sie, bleibt das Bild trotzdem. Großzügig, oder?',
+    avatarSearch: 'Eigene Karte suchen …',
+    avatarNone: 'Kein Bild, nur dein Anfangsbuchstabe.',
+    avatarSet: 'Profilbild gesetzt.',
+    avatarClear: 'Bild entfernen',
+    avatarNothing: 'Keine passende Karte im Besitz.',
+    locked: (level: number) => `Stil gibt es ab Level ${level}.`,
+    preview: 'Vorschau',
   },
 
   housing: {

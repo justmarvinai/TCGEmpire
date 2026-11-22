@@ -17,6 +17,7 @@ import { RIVALS } from '../content/rivals.ts'
 import { GOALS } from '../content/goals.ts'
 import { SKILL_COST, SKILLS } from '../content/skills.ts'
 import { FURNISHING_SLOTS, FURNITURE, HOMES } from '../content/housing.ts'
+import { COSMETICS } from '../content/cosmetics.ts'
 
 const q = (v: string | null | undefined) => (v == null ? 'null' : `'${v.replace(/'/g, "''")}'`)
 const rows = (list: string[]) => list.map((r) => `  (${r})`).join(',\n')
@@ -108,6 +109,10 @@ export function buildCatalogSql(): string {
     ),
     'on conflict (key) do update set slot = excluded.slot, slot_index = excluded.slot_index, rank = excluded.rank, min_level = excluded.min_level,',
     '  price_base_cents = excluded.price_base_cents, wohnwert = excluded.wohnwert, stat = excluded.stat, op = excluded.op, value = excluded.value;',
+    'insert into game.cosmetic_defs (key, kind, min_level, price_base_cents, title) values',
+    rows(COSMETICS.map((c) => `${q(c.key)}, ${q(c.kind)}, ${c.minLevel}, ${c.priceBaseCents}, ${q(c.title)}`)),
+    'on conflict (key) do update set kind = excluded.kind, min_level = excluded.min_level, price_base_cents = excluded.price_base_cents,',
+    '  title = excluded.title;',
     'insert into game.job_defs (key, min_level, wage, minigame, shifts) values',
     rows(JOBS.map((j) => `${q(j.key)}, ${j.minLevel}, ${j.wage}, ${q(j.minigame)}, ${j.shifts}`)),
     'on conflict (key) do update set min_level = excluded.min_level, wage = excluded.wage, minigame = excluded.minigame, shifts = excluded.shifts;',

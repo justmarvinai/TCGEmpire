@@ -4,12 +4,14 @@ import type { CSSProperties } from 'react'
 import { Link, NavLink, Outlet } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
+import { Avatar } from '@/components/ui/Avatar.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { formatAgo, formatClock, formatFactor, formatMoney, formatNumber, formatStars } from '@/lib/format.ts'
+import { useCosmetics } from '@/lib/actions.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
 import type { FeedEntry, Me, Player } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
@@ -336,6 +338,8 @@ function notificationText(n: FeedEntry) {
 /** The avatar with its EP ring: level, EP, profile link, settings, version and sign-out. */
 function YouMenu({ me }: { me: SignedIn }) {
   const p = me.player
+  const style = useCosmetics().data
+  const look = style ? { name_color: style.style.name_color ?? null, frame: style.style.frame ?? null, avatar_card: style.avatar_card } : null
   const { volume, reducedMotion, set } = useSettings()
   const setMe = useSetMe()
   const client = useQueryClient()
@@ -358,13 +362,13 @@ function YouMenu({ me }: { me: SignedIn }) {
   return (
     <Popover.Root>
       <Popover.Trigger className="relative grid size-12 shrink-0 place-items-center rounded-full" style={ring} aria-label={texts.hud.settings}>
-        <span className="grid size-10 place-items-center rounded-full bg-surface-1 font-pixel text-xl">{p.username.slice(0, 1).toUpperCase()}</span>
+        <Avatar name={p.username} look={look} size={40} className="bg-surface-1 font-pixel" />
         <span className="nums absolute -right-1.5 -bottom-1 rounded-lg bg-fg px-1.5 text-[0.6875rem] leading-4 font-bold text-ink">{p.level}</span>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content align="end" sideOffset={8} collisionPadding={12} className="panel-float z-50 w-80 p-4 animate-fade-up">
           <div className="flex items-center gap-3">
-            <span className="grid size-11 place-items-center rounded-full bg-grad font-pixel text-xl text-white">{p.username.slice(0, 1).toUpperCase()}</span>
+            <Avatar name={p.username} look={look} size={44} className="font-pixel" />
             <div className="min-w-0 flex-1">
               <p className="flex items-center gap-1.5 truncate font-bold">
                 {p.username}

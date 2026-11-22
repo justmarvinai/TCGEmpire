@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router'
+import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
@@ -41,9 +42,11 @@ export function ProfileHeader({ p }: { p: Profile }) {
   return (
     <Panel>
       <div className="flex flex-wrap items-center gap-4">
-        <div className="grid size-16 place-items-center rounded-full bg-grad font-pixel text-4xl text-white">{p.name.slice(0, 1).toUpperCase()}</div>
+        <Avatar name={p.name} look={p.look} size={64} className="m-1" />
         <div className="min-w-0 flex-1">
-          <p className="text-3xl leading-none font-bold tracking-tight">{p.name}</p>
+          <p className="text-3xl leading-none font-bold tracking-tight">
+            <PlayerName name={p.name} look={p.look} />
+          </p>
           {p.title && <p className="font-semibold text-accent">{p.title}</p>}
           <p className="mt-1 text-sm text-fg-2">
             Level {p.level} · <span className="nums text-gold">{formatMoney(p.net_worth_cents)}</span>

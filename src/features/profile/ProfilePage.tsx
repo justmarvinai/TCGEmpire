@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
+import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
 import { Field } from '@/components/ui/Field.tsx'
 import { HoldButton } from '@/components/ui/HoldButton.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -45,11 +46,11 @@ export function ProfilePage() {
         <div className="grid gap-4 xl:grid-cols-2">
           <Panel>
             <div className="flex flex-wrap items-center gap-4">
-              <div className="grid size-16 place-items-center rounded-full bg-grad font-pixel text-4xl text-white">
-                {player.username.slice(0, 1).toUpperCase()}
-              </div>
+              <Avatar name={player.username} look={profile.data?.look} size={64} className="m-1" />
               <div className="min-w-0 flex-1">
-                <p className="text-3xl leading-none font-bold tracking-tight">{player.username}</p>
+                <p className="text-3xl leading-none font-bold tracking-tight">
+                  <PlayerName name={player.username} look={profile.data?.look} />
+                </p>
                 {player.title && <p className="font-semibold text-accent">{player.title}</p>}
                 <p className="mt-1 text-sm text-fg-2">
                   Level {player.level} · <span className="nums text-gold">{formatMoney(player.net_worth_cents)}</span>

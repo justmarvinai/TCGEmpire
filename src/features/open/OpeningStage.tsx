@@ -9,8 +9,8 @@ import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { useAct } from '@/lib/actions.ts'
-import { cardName, gameOf, HIT_TIERS, productById, TIER_LABEL, TIER_TEXT, tierRank, type Tier } from '@/lib/catalog.ts'
+import { useAct, useCosmetics } from '@/lib/actions.ts'
+import { cardName, COSMETICS, gameOf, HIT_TIERS, productById, TIER_LABEL, TIER_TEXT, tierRank, type Tier } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { hash01 } from '@/lib/pure.ts'
 import type { PackOpen, PulledCard } from '@/lib/schemas.ts'
@@ -44,6 +44,8 @@ export function OpeningStage({
   onAgain: () => void
   canAgain: boolean
 }) {
+  const fx = useCosmetics().data?.style.pack_fx
+  const fxHues = COSMETICS.find((c) => c.key === fx)?.hues
   const instant = useSettings((s) => s.instantReveal)
   const multi = result.packs.length > 1
   const [packIdx, setPackIdx] = useState(0)
@@ -184,7 +186,7 @@ export function OpeningStage({
           <Summary result={result} productId={productId} onClose={onClose} onAgain={onAgain} canAgain={canAgain} />
         ) : (
           <div className="relative flex flex-1 cursor-pointer flex-col items-center justify-center gap-6 select-none" onClick={advance}>
-            {burst && <Burst key={burst.key} tier={burst.tier} />}
+            {burst && <Burst key={burst.key} tier={burst.tier} hues={fxHues} />}
             {(phase === 'sealed' || phase === 'tearing') && <Pack productId={productId} index={packIdx} tearing={phase === 'tearing'} />}
 
             {phase === 'cards' && (
@@ -298,7 +300,7 @@ function NewBadge({ small }: { small?: boolean }) {
 }
 
 /** Flash, rays and particles for a hit. Bigger tiers get more. */
-function Burst({ tier }: { tier: Tier }) {
+function Burst({ tier, hues }: { tier: Tier; hues?: readonly [number, number] }) {
   const big = tierRank(tier) >= tierRank('ultra')
   const count = { holo: 14, alternative: 24, ultra: 40, grail: 70 }[tier as 'holo'] ?? 10
   const parts = useMemo(
@@ -324,7 +326,11 @@ function Burst({ tier }: { tier: Tier }) {
                 '--dx': `${p.dx}px`,
                 '--dy': `${p.dy}px`,
                 '--t': `${p.t}ms`,
-                background: tier === 'grail' ? `hsl(${p.hue} 90% 65%)` : GLOW[tier],
+                background: hues
+                  ? `hsl(${hues[0] + ((hues[1] - hues[0]) * p.hue) / 360} 90% 62%)`
+                  : tier === 'grail'
+                    ? `hsl(${p.hue} 90% 65%)`
+                    : GLOW[tier],
               } as React.CSSProperties
             }
           />

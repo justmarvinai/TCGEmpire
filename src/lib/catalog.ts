@@ -13,6 +13,7 @@ export { AD_REPLIES, AD_SELLERS, AD_TITLES } from '../../content/kleinanzeigen.t
 export { GOALS } from '../../content/goals.ts'
 export { SKILL_BRANCHES, SKILL_COST, SKILLS, type SkillDef } from '../../content/skills.ts'
 export { FURNISHING_SLOTS, FURNITURE, HOMES, type FurnitureDef, type HomeDef } from '../../content/housing.ts'
+export { COSMETIC_KINDS, COSMETICS, type CosmeticDef, type CosmeticKind } from '../../content/cosmetics.ts'
 
 export { ACHIEVEMENTS, ALL_QUESTS, cardById, CONSUMABLES, JOBS, PRODUCTS, productById, RANKS, SETS, SHIFT_HOURS }
 export { GAMES, STAT_LABELS, STORES, TIERS, TUTORIAL, UNLOCKS, UPGRADES }

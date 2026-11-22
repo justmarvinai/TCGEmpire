@@ -12,7 +12,7 @@ import { Panel } from '@/components/ui/Panel.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
 import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { useAct, useBinder } from '@/lib/actions.ts'
+import { useAct, useBinder, useCosmetics } from '@/lib/actions.ts'
 import { SetGoals } from './Goals.tsx'
 import { cardById, HIT_TIERS, SETS, TIER_LABEL, TIER_TEXT, TIERS, UNLOCKS, type Tier } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
@@ -32,6 +32,7 @@ export function CollectionPage() {
   const [setId, setSetId] = useState(SETS[0]!.id)
   const set = SETS.find((s) => s.id === setId) ?? SETS[0]!
   const binder = useBinder(set.id)
+  const look = useCosmetics().data?.style
   const act = useAct()
   const [filter, setFilter] = useState<Filter>('all')
   const [tier, setTier] = useState<Tier | null>(null)
@@ -132,9 +133,9 @@ export function CollectionPage() {
       ) : binder.isError ? (
         <ErrorState message={errorText(binder.error)} onRetry={() => void binder.refetch()} />
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(10.5rem,1fr))] gap-x-3 gap-y-5">
+        <div className={clsx('grid grid-cols-[repeat(auto-fill,minmax(10.5rem,1fr))] gap-x-3 gap-y-5', look?.binder)}>
           {shown.map((c) => (
-            <Slot key={c.card_id} card={c} onOpen={() => setOpen(c.card_id)} />
+            <Slot key={c.card_id} card={c} sleeve={look?.sleeve} onOpen={() => setOpen(c.card_id)} />
           ))}
         </div>
       )}
@@ -165,13 +166,15 @@ function Chip({ active, onClick, className, children }: { active: boolean; onCli
   )
 }
 
-function Slot({ card, onOpen }: { card: BinderCard; onOpen: () => void }) {
+function Slot({ card, sleeve, onOpen }: { card: BinderCard; sleeve?: string; onOpen: () => void }) {
   const data = cardById.get(card.card_id)
   const has = card.qty > 0
   return (
     <button type="button" onClick={onOpen} className="group flex flex-col items-center gap-1 text-left">
       <div className="relative transition-transform duration-150 group-hover:-translate-y-1">
-        <Card id={card.card_id} scale={2} dim={!has} foil={has ? 'auto' : 'none'} />
+        <span className={clsx('block', has && sleeve)}>
+          <Card id={card.card_id} scale={2} dim={!has} foil={has ? 'auto' : 'none'} />
+        </span>
         {!has && (
           <span className="absolute inset-0 grid place-items-center font-pixel text-2xl text-fg-3">
             #{String(data?.no ?? 0).padStart(3, '0')}

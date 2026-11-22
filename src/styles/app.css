@@ -40,6 +40,14 @@
   --color-tier-ultra: #ffcf5a;
   --color-tier-grail: #ff6ad5;
 
+  /* Binder skins (Stil, content/cosmetics.ts) */
+  --color-skin-leather: #4a2e1c;
+  --color-skin-leather-hi: #7a5236;
+  --color-skin-denim: #253f68;
+  --color-skin-denim-hi: #34558a;
+  --color-skin-velvet: #2e0e33;
+  --color-skin-velvet-hi: #5e1d66;
+
   --font-sans: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --font-pixel: 'Pixelify Sans Variable', ui-monospace, monospace;
 
@@ -377,3 +385,53 @@
   pointer-events: none;
   animation: nudge-ring 1.4s var(--ease-out) infinite;
 }
+
+/* Stil (content/cosmetics.ts): the CSS class of a look is its key. Name colours, avatar frames (rings around the
+   picture), card sleeves (a mat behind each binder card) and binder skins (the background of the binder grid). */
+.nc-mint { color: var(--color-gain); }
+.nc-cyan { color: var(--color-info); }
+.nc-pink { color: var(--color-accent-hi); }
+.nc-fire { color: var(--color-loss); }
+.nc-gold { color: var(--color-gold); }
+.nc-rainbow,
+.nc-holo {
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.nc-rainbow { background-image: linear-gradient(90deg, var(--color-loss), var(--color-warn), var(--color-gold), var(--color-gain), var(--color-info), var(--color-accent)); }
+.nc-holo { background-image: linear-gradient(110deg, var(--color-tier-holo), var(--color-tier-alternative) 40%, var(--color-tier-grail) 70%, var(--color-tier-ultra)); }
+
+.fr-simple { box-shadow: 0 0 0 2px var(--color-fg-2); }
+.fr-double { box-shadow: 0 0 0 2px var(--color-ink), 0 0 0 4px var(--color-accent); }
+.fr-gold { box-shadow: 0 0 0 3px var(--color-gold), 0 0 14px 2px var(--color-gold); }
+.fr-holo { box-shadow: 0 0 0 2px var(--color-tier-holo), 0 0 0 4px var(--color-tier-alternative), 0 0 0 6px var(--color-tier-grail); }
+.fr-crown { box-shadow: 0 0 0 3px var(--color-gold), 0 0 0 6px var(--color-accent-hi), 0 0 18px 4px var(--color-gold); }
+
+.sl-black,
+.sl-stripes,
+.sl-dots,
+.sl-holo,
+.sl-gold {
+  padding: 4px;
+  border-radius: 10px;
+}
+.sl-black { background: var(--color-ink); }
+.sl-stripes { background: repeating-linear-gradient(45deg, var(--color-accent-lo) 0 6px, var(--color-ink) 6px 12px); }
+.sl-dots { background: radial-gradient(circle, var(--color-accent-hi) 1.5px, transparent 2px) 0 0 / 8px 8px, var(--color-ink); }
+.sl-holo { background: linear-gradient(135deg, var(--color-tier-holo), var(--color-tier-alternative), var(--color-tier-grail), var(--color-tier-ultra)); }
+.sl-gold { background: linear-gradient(135deg, var(--color-gold), var(--color-warn), var(--color-gold)); }
+
+.bi-leather,
+.bi-denim,
+.bi-neon,
+.bi-velvet,
+.bi-gold {
+  padding: 16px;
+  border-radius: 16px;
+}
+.bi-leather { background: radial-gradient(circle at 30% 20%, var(--color-skin-leather-hi), var(--color-skin-leather)); }
+.bi-denim { background: repeating-linear-gradient(135deg, var(--color-skin-denim) 0 3px, var(--color-skin-denim-hi) 3px 6px); }
+.bi-neon { background: var(--color-ink); box-shadow: inset 0 0 0 2px var(--color-accent-hi), inset 0 0 28px var(--color-info); }
+.bi-velvet { background: radial-gradient(circle at 50% 0%, var(--color-skin-velvet-hi), var(--color-skin-velvet)); }
+.bi-gold { background: linear-gradient(135deg, var(--color-gold), var(--color-warn) 50%, var(--color-gold)); }

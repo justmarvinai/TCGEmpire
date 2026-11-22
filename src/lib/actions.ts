@@ -43,5 +43,7 @@ export const useHome = () => useQuery({ queryKey: ['home'], queryFn: () => rpc('
 export const usePlayers = () => useQuery({ queryKey: ['players'], queryFn: () => rpc('players_get') })
 export const useLicenses = () => useQuery({ queryKey: ['licenses'], queryFn: () => rpc('licenses_get') })
 export const useGrading = () => useQuery({ queryKey: ['grading'], queryFn: () => rpc('grading_get') })
+/** The own cosmetics and look (cached: the top bar, binder and pack opening read it). */
+export const useCosmetics = () => useQuery({ queryKey: ['cosmetics'], queryFn: () => rpc('cosmetics_get'), staleTime: 60_000 })
 export const useLevelPath = () =>
   useQuery({ queryKey: ['levelpath'], queryFn: () => rpc('level_path_get'), staleTime: 5 * 60_000 })
