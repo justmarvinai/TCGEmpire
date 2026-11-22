@@ -7,7 +7,7 @@ import { MICRO, REGULAR, drawText } from '../fonts.ts'
 import { artArea } from '../frames/riftbound.ts'
 import type { Mask, Painter, Pt, Ramp } from '../toolkit/index.ts'
 import { colors, hex, rays } from '../toolkit/index.ts'
-import { pick } from './booster-pokemon-base.ts'
+import { crimp as crimpWith, pick, thick } from './booster-pokemon-base.ts'
 import type { ProductDef } from './index.ts'
 
 /**
@@ -68,24 +68,8 @@ function wordmark(p: Painter, text: string, y: number): Mask {
   return m
 }
 
-/** Copy of a mask grown by one pixel in all eight directions. */
-const thick = (m: Mask): Mask => m.grown(1).or(m.moved(1, 1).grown(1)).or(m.moved(-1, -1).grown(1))
-
-/** A crimped seal: fine vertical ridges in silver foil and a zig-zag cut on the outer edge. */
-function crimp(p: Painter, top: boolean): void {
-  const y0 = top ? 0 : H - CRIMP
-  for (let j = 0; j < CRIMP; j++) {
-    const fromEdge = top ? j : CRIMP - 1 - j
-    for (let x = 0; x < W; x++) {
-      const ridge = x % 3 === 0 ? 1 : 2
-      const tone = fromEdge === CRIMP - 1 ? 0 : fromEdge === 4 ? ridge - 1 : fromEdge === 1 ? ridge + 1 : ridge
-      p.set(x, y0 + j, SILVER[tone] ?? SILVER[1])
-    }
-  }
-  const teeth = p.m()
-  for (let x = 0; x < W; x++) for (let k = 0; k < ([0, 1, 2, 1][x % 4] ?? 0); k++) teeth.add(x, top ? k : H - 1 - k)
-  p.erase(teeth)
-}
+/** The shared crimped seal in Riftbound's silver. */
+const crimp = (p: Painter, top: boolean): void => crimpWith(p, top, SILVER)
 
 /** Regular polygon with `n` corners around (cx, cy), turned by `turn` of a full circle. */
 function polygon(p: Painter, cx: number, cy: number, r: number, n: number, turn = 0): Mask {

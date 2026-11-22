@@ -126,11 +126,11 @@ function wordmark(p: Painter, x: number, y: number): Mask {
   return m
 }
 
-/** Copy of a mask grown by one pixel in all eight directions. */
-const thick = (m: Mask): Mask => m.grown(1).or(m.moved(1, 1).grown(1)).or(m.moved(-1, -1).grown(1))
+/** Copy of a mask grown by one pixel in all eight directions (shared by every booster wrapper). */
+export const thick = (m: Mask): Mask => m.grown(1).or(m.moved(1, 1).grown(1)).or(m.moved(-1, -1).grown(1))
 
-/** A crimped seal: fine vertical ridges in silver foil and a zig-zag cut on the outer edge. */
-function crimp(p: Painter, top: boolean): void {
+/** A crimped seal: fine vertical ridges in silver foil and a zig-zag cut on the outer edge (any 84×132 wrapper). */
+export function crimp(p: Painter, top: boolean, silver: Ramp = SILVER): void {
   const y0 = top ? 0 : H - CRIMP
   for (let j = 0; j < CRIMP; j++) {
     const fromEdge = top ? j : CRIMP - 1 - j
@@ -138,7 +138,7 @@ function crimp(p: Painter, top: boolean): void {
       const ridge = x % 3 === 0 ? 1 : 2
       const tone =
         fromEdge === CRIMP - 1 ? 0 : fromEdge === 4 ? ridge - 1 : fromEdge === 1 ? ridge + 1 : ridge
-      p.set(x, y0 + j, SILVER[tone] ?? SILVER[1])
+      p.set(x, y0 + j, silver[tone] ?? silver[1] ?? SILVER[1])
     }
   }
   const teeth = p.m()
