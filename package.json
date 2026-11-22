@@ -15,7 +15,8 @@
     "test:e2e": "playwright test --trace off",
     "art:build": "tsx scripts/art-build.ts",
     "art:sheet": "tsx scripts/art-sheet.ts",
-    "seed": "tsx scripts/gen-seed.ts"
+    "seed": "tsx scripts/gen-seed.ts",
+    "sim": "tsx sim/run.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.17",

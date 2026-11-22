@@ -5,7 +5,8 @@ import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { Skeleton } from '@/components/ui/States.tsx'
 import { QuestList } from '@/features/quests/QuestsPage.tsx'
-import { useQuests, useShop } from '@/lib/actions.ts'
+import { useBunker, useJobs, useQuests, useShop } from '@/lib/actions.ts'
+import { useBunkerContent } from '@/features/bunker/BunkerPage.tsx'
 import { formatFactor, formatMoney } from '@/lib/format.ts'
 import type { Me, Player } from '@/lib/schemas.ts'
 import { texts } from '@/texts/de.ts'
@@ -14,9 +15,16 @@ import { config } from '../../../content/config.ts'
 const T = texts.home
 
 /** Exactly one recommendation: the most useful next action. */
-function nextStep(p: Player, kioskPrice: number | undefined): { key: keyof typeof T.cta; text: string; to: string; icon: IconName } {
+function nextStep(
+  p: Player,
+  kioskPrice: number | undefined,
+  s: { bunkerFull: boolean; shiftDone: boolean; stamp: boolean },
+): { key: keyof typeof T.cta; text: string; to: string; icon: IconName } {
   if (p.sealed_total > 0) return { key: 'sealed', text: T.next.sealed(p.sealed_total), to: '/open', icon: 'pack' }
   if (p.quests_ready > 0) return { key: 'quests', text: T.next.quests(p.quests_ready), to: '/quests', icon: 'scroll' }
+  if (s.shiftDone) return { key: 'shiftDone', text: T.next.shiftDone, to: '/jobs', icon: 'briefcase' }
+  if (s.bunkerFull) return { key: 'bunkerFull', text: T.next.bunkerFull, to: '/bunker', icon: 'vault' }
+  if (s.stamp) return { key: 'stamp', text: T.next.stamp, to: '/quests', icon: 'check' }
   if (kioskPrice !== undefined && p.cash_cents >= kioskPrice) return { key: 'kiosk', text: T.next.kiosk, to: '/shop', icon: 'shop' }
   if (p.energy >= config['minigame.pfand'].energy) return { key: 'pfand', text: T.next.pfand, to: '/jobs', icon: 'bottle' }
   return { key: 'broke', text: T.next.broke, to: '/collection', icon: 'binder' }
@@ -26,7 +34,14 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
   const p = me.player
   const quests = useQuests()
   const shop = useShop()
-  const next = nextStep(p, shop.data?.kiosk[0]?.price_cents)
+  const bunker = useBunker()
+  const jobs = useJobs()
+  const live = useBunkerContent(bunker.data)
+  const next = nextStep(p, shop.data?.kiosk[0]?.price_cents, {
+    bunkerFull: !!live && live.fill >= 1,
+    shiftDone: !!jobs.data?.shift?.done,
+    stamp: !!quests.data?.stamps.unlocked && !quests.data.stamps.today_done,
+  })
   return (
     <Page icon="home" title={T.greeting(p.username)} subtitle={T.subtitle}>
       <div className="grid gap-4 lg:grid-cols-3">
@@ -48,7 +63,7 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
         </Panel>
 
         <Panel title={T.questsTitle} tip={texts.quests.miniTip} className="lg:col-span-2">
-          {quests.data ? <QuestList quests={quests.data} compact /> : <Skeleton className="h-32 w-full" />}
+          {quests.data ? <QuestList quests={quests.data} list={quests.data.mini} compact /> : <Skeleton className="h-32 w-full" />}
         </Panel>
 
         <Panel title={T.serverTitle} tip={texts.hud.priceTip}>

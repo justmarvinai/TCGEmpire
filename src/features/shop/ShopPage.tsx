@@ -14,6 +14,8 @@ import { formatMoney } from '@/lib/format.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { texts } from '@/texts/de.ts'
+import { useMe } from '@/lib/world.ts'
+import { Snacks } from './Snacks.tsx'
 import { config } from '../../../content/config.ts'
 
 const T = texts.shop
@@ -30,6 +32,7 @@ export function ShopPage() {
   const act = useAct()
   const [busy, setBusy] = useState<string | null>(null)
   const [justBought, setJustBought] = useState(false)
+  const player = useMe().data?.player
 
   const buy = async (productId: string, qty: number) => {
     setBusy(`${productId}:${qty}`)
@@ -93,9 +96,13 @@ export function ShopPage() {
           )}
         </Panel>
 
-        <Panel title={T.ankauf} tip={T.ankaufTip}>
-          <SellDuplicates />
-        </Panel>
+        <div className="flex flex-col gap-4">
+          <Panel title={T.ankauf} tip={T.ankaufTip}>
+            <SellDuplicates />
+          </Panel>
+          {shop.data && player && <Snacks shop={shop.data} player={player} where="kiosk" />}
+          {shop.data && player && <Snacks shop={shop.data} player={player} where="pfandautomat" />}
+        </div>
       </div>
     </Page>
   )

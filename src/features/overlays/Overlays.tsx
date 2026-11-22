@@ -3,24 +3,92 @@ import clsx from 'clsx'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { ALL_ITEMS } from '@/app/nav.ts'
-import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
+import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
+import { Dialog } from '@/components/ui/Dialog.tsx'
+import { useQuery } from '@tanstack/react-query'
+import { rpc } from '@/lib/rpc.ts'
 import { Button } from '@/components/ui/Button.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { useAct } from '@/lib/actions.ts'
-import { cardName, TUTORIAL } from '@/lib/catalog.ts'
-import { formatMoney } from '@/lib/format.ts'
-import { hash01 } from '@/lib/pure.ts'
+import { cardName, JOBS, TUTORIAL } from '@/lib/catalog.ts'
+import { formatDuration, formatMoney } from '@/lib/format.ts'
+import { hash01, useNow } from '@/lib/pure.ts'
 import type { Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 
-export function Overlays() {
+export function Overlays({ awayS, player }: { awayS: number; player: Player }) {
+  // Only what the first answer of this visit said counts: later syncs reset the away time.
+  const [away] = useState(awayS)
   return (
     <>
+      {away >= RECAP_MIN_S && player.tutorial_step < 0 && <RecapSheet away={away} player={player} />}
       <LevelUpOverlay />
       <BigPulls />
     </>
+  )
+}
+
+const RECAP_MIN_S = 600
+
+/** "Willkommen zurück": what happened while the player was away, collected with one click. */
+function RecapSheet({ away, player }: { away: number; player: Player }) {
+  const [open, setOpen] = useState(true)
+  const [busy, setBusy] = useState(false)
+  const act = useAct()
+  const recap = useQuery({ queryKey: ['recap'], queryFn: () => rpc('recap_get'), staleTime: Infinity })
+  const now = useNow()
+  const offset = useWorld((w) => w.clockOffsetMs)
+  if (!open || !recap.data) return null
+  const b = recap.data.bunker
+  const s = recap.data.shift
+  const lines: { icon: IconName; text: string; money?: number }[] = []
+  if (b.unlocked && (b.content_cents ?? 0) > 0) lines.push({ icon: 'vault', text: texts.recap.bunker, money: b.content_cents })
+  if (s) {
+    const job = JOBS.find((j) => j.key === s.job)?.employer ?? s.job
+    lines.push(
+      s.done
+        ? { icon: 'briefcase', text: texts.recap.shiftDone(job), money: s.wage_cents }
+        : { icon: 'clock', text: texts.recap.shiftRunning(job, formatDuration((Date.parse(s.ends_at) - (now + offset)) / 1000)) },
+    )
+  }
+  if (player.sealed_total > 0) lines.push({ icon: 'pack', text: texts.recap.sealed(player.sealed_total) })
+  if (player.quests_ready > 0) lines.push({ icon: 'scroll', text: texts.recap.quests(player.quests_ready) })
+  if (lines.length === 0) return null
+  const collectable = lines.some((l) => l.money)
+
+  const collect = async () => {
+    setBusy(true)
+    const res = await act('recap_collect', {}, ['bunker', 'jobs', 'quests'])
+    setBusy(false)
+    if (res) {
+      sfx('coin')
+      toast('success', texts.recap.collected(formatMoney(res.bunker_cents + res.shift_cents)))
+      setOpen(false)
+    }
+  }
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && setOpen(false)} title={texts.recap.title} description={texts.recap.away(formatDuration(away))}>
+      <ul className="flex flex-col gap-2">
+        {lines.map((l, i) => (
+          <li key={i} className="flex items-center gap-3 bg-surface-2 p-2 anim-deal" style={{ animationDelay: `${i * 80}ms` }}>
+            <PixelIcon name={l.icon} className="text-accent" />
+            <span className="flex-1 text-sm">{l.text}</span>
+            {l.money !== undefined && <span className="nums font-semibold text-gold">+{formatMoney(l.money)}</span>}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-4 flex justify-end gap-2">
+        <Button onClick={() => setOpen(false)}>{texts.recap.later}</Button>
+        {collectable && (
+          <Button variant="primary" loading={busy} onClick={collect}>
+            {texts.recap.collect}
+          </Button>
+        )}
+      </div>
+    </Dialog>
   )
 }
 

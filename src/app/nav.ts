@@ -1,5 +1,6 @@
 import type { IconName } from '@/components/pixel/PixelIcon.tsx'
 import type { texts } from '@/texts/de.ts'
+import { UNLOCKS } from '@/lib/catalog.ts'
 
 type ItemId = keyof typeof texts.nav.items
 type GroupId = keyof typeof texts.nav.groups
@@ -23,7 +24,7 @@ const item = (id: ItemId, icon: IconName, level: number, built = false): NavItem
 })
 
 export const NAV: { group: GroupId; items: NavItem[] }[] = [
-  { group: 'start', items: [item('home', 'home', 1, true)] },
+  { group: 'start', items: [item('home', 'home', 1, true), item('profile', 'star', 1, true)] },
   {
     group: 'sammeln',
     items: [item('shop', 'shop', 1, true), item('open', 'pack', 1, true), item('collection', 'binder', 1, true), item('grading', 'loupe', 13)],
@@ -39,14 +40,14 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
   },
   {
     group: 'verdienen',
-    items: [item('jobs', 'briefcase', 1, true), item('bunker', 'vault', 3), item('company', 'building', 30), item('streaming', 'camera', 45)],
+    items: [item('jobs', 'briefcase', 1, true), item('bunker', 'vault', UNLOCKS.bunker, true), item('company', 'building', 30), item('streaming', 'camera', 45)],
   },
   {
     group: 'aufsteigen',
     items: [
       item('quests', 'scroll', 1, true),
       item('path', 'path', 1, true),
-      item('upgrades', 'upgrade', 5),
+      item('upgrades', 'upgrade', UNLOCKS.upgrades, true),
       item('skills', 'skills', 5),
       item('prestige', 'crown', 100),
     ],

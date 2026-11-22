@@ -99,16 +99,86 @@ insert into game.product_defs (id, set_id, kind, name, price_base_cents, slots) 
   ('booster-pkm-base', 'pokemon-base', 'booster', 'Basis-Set Booster', 10000, '[{"pool":"energy","n":2},{"pool":"common","n":5},{"pool":"uncommon","n":3},{"pool":"hit","n":1}]'::jsonb)
 on conflict (id) do update set set_id = excluded.set_id, kind = excluded.kind, name = excluded.name,
   price_base_cents = excluded.price_base_cents, slots = excluded.slots;
-insert into game.quest_templates (key, event, min_target, max_target) values
-  ('open', 'pack_opened', 2, 5),
-  ('buy', 'packs_bought', 2, 5),
-  ('new', 'card_new', 2, 6),
-  ('sell', 'cards_sold', 5, 20),
-  ('bottles', 'bottles', 15, 40),
-  ('rounds', 'minigame_round', 1, 2),
-  ('hit', 'hit_pulled', 1, 1),
-  ('energy', 'energy_pulled', 4, 10)
-on conflict (key) do update set event = excluded.event, min_target = excluded.min_target, max_target = excluded.max_target;
+insert into game.quest_templates (key, event, min_target, max_target, kind, min_level) values
+  ('open', 'pack_opened', 2, 5, 'mini', 1),
+  ('buy', 'packs_bought', 2, 5, 'mini', 1),
+  ('new', 'card_new', 2, 6, 'mini', 1),
+  ('sell', 'cards_sold', 5, 20, 'mini', 1),
+  ('bottles', 'bottles', 15, 40, 'mini', 1),
+  ('rounds', 'minigame_round', 1, 2, 'mini', 1),
+  ('hit', 'hit_pulled', 1, 1, 'mini', 1),
+  ('energy', 'energy_pulled', 4, 10, 'mini', 1),
+  ('bunker', 'bunker_collected', 1, 1, 'mini', 3),
+  ('d_open', 'pack_opened', 8, 15, 'daily', 1),
+  ('d_new', 'card_new', 3, 8, 'daily', 1),
+  ('d_sell', 'cards_sold', 20, 50, 'daily', 1),
+  ('d_rounds', 'minigame_round', 3, 6, 'daily', 1),
+  ('d_hits', 'hit_pulled', 2, 4, 'daily', 1),
+  ('d_quests', 'quest_claimed', 4, 8, 'daily', 1),
+  ('d_bunker', 'bunker_collected', 2, 4, 'daily', 3),
+  ('d_upgrade', 'upgrade_bought', 1, 3, 'daily', 5),
+  ('d_shift', 'shift_done', 1, 2, 'daily', 7),
+  ('d_snack', 'snack_eaten', 1, 2, 'daily', 1),
+  ('w_open', 'pack_opened', 60, 100, 'weekly', 1),
+  ('w_new', 'card_new', 10, 20, 'weekly', 1),
+  ('w_hits', 'hit_pulled', 15, 25, 'weekly', 1),
+  ('w_rounds', 'minigame_round', 20, 35, 'weekly', 1),
+  ('w_shift', 'shift_hours', 20, 40, 'weekly', 1),
+  ('w_bunker', 'bunker_collected', 10, 20, 'weekly', 1),
+  ('w_upgrade', 'upgrade_bought', 5, 10, 'weekly', 1),
+  ('w_stamps', 'stamp_claimed', 5, 6, 'weekly', 1)
+on conflict (key) do update set event = excluded.event, min_target = excluded.min_target, max_target = excluded.max_target,
+  kind = excluded.kind, min_level = excluded.min_level;
+insert into game.upgrade_defs (key, grp, max_level, cost_base_cents, growth, min_level, level_step, stat, op, per_level) values
+  ('bunker_ertrag', 'bunker', 60, 50000, 1.17, 3, 0.5, null, null, null),
+  ('bunker_kapazitaet', 'bunker', 10, 100000, 1.6, 3, 2, 'bunker_capacity_h', 'flat', 2),
+  ('bunker_zinsen', 'bunker', 10, 250000, 1.5, 6, 2, 'bunker_interest_pct', 'flat', 3),
+  ('bunker_sicherheit', 'bunker', 10, 200000, 1.5, 8, 2, 'def_bunker', 'flat', 5),
+  ('energie_tank', 'jobs', 10, 80000, 1.45, 5, 2, 'energy_max', 'flat', 10),
+  ('ausdauer', 'jobs', 10, 120000, 1.45, 6, 2, 'energy_regen_pct', 'flat', 10),
+  ('fleiss', 'jobs', 20, 150000, 1.35, 7, 1, 'wage_pct', 'flat', 5),
+  ('pack_glueck', 'oeffnen', 10, 300000, 1.6, 5, 3, 'pack_luck', 'flat', 5),
+  ('schnelllerner', 'fortschritt', 20, 200000, 1.4, 5, 2, 'ep', 'pct', 3)
+on conflict (key) do update set grp = excluded.grp, max_level = excluded.max_level, cost_base_cents = excluded.cost_base_cents,
+  growth = excluded.growth, min_level = excluded.min_level, level_step = excluded.level_step, stat = excluded.stat,
+  op = excluded.op, per_level = excluded.per_level;
+insert into game.job_defs (key, min_level, wage, minigame, shifts) values
+  ('pfand', 1, 0, 'pfand', false),
+  ('mueller', 3, 1, 'regale', true),
+  ('wuerfelbude', 6, 1.1, 'sortieren', true),
+  ('dhl', 10, 1.25, 'pakete', true)
+on conflict (key) do update set min_level = excluded.min_level, wage = excluded.wage, minigame = excluded.minigame, shifts = excluded.shifts;
+insert into game.consumable_defs (key, price_base_cents, pfandbons, energy, booster, buff_stat, buff_op, buff_value, buff_minutes) values
+  ('doener', 15000, null, 50, 0, 'fettfinger', 'flat', 1, 10),
+  ('mate', 5000, null, 20, 0, null, null, null, null),
+  ('kaffee', 3500, null, 12, 0, null, null, null, null),
+  ('energiebon', null, 3, 30, 0, null, null, null, null),
+  ('lernbon', null, 4, 0, 0, 'ep', 'pct', 25, 30),
+  ('gluecksbon', null, 5, 0, 0, 'pack_luck', 'flat', 10, 30),
+  ('kioskbon', null, 8, 0, 1, null, null, null, null)
+on conflict (key) do update set price_base_cents = excluded.price_base_cents, pfandbons = excluded.pfandbons, energy = excluded.energy,
+  booster = excluded.booster, buff_stat = excluded.buff_stat, buff_op = excluded.buff_op, buff_value = excluded.buff_value,
+  buff_minutes = excluded.buff_minutes;
+insert into game.achievement_defs (key, event, tiers, titles) values
+  ('packs', 'pack_opened', '[10,100,1000,10000]'::jsonb, '[null,null,"Folienschänder","Der Aufreißer"]'::jsonb),
+  ('buyer', 'packs_bought', '[10,100,1000]'::jsonb, '[null,null,"Kiosk-Legende"]'::jsonb),
+  ('collector', 'card_new', '[30,60,90]'::jsonb, '[null,null,"Komplettist"]'::jsonb),
+  ('hits', 'hit_pulled', '[10,100,1000]'::jsonb, '[null,"Glückspilz","Glücksritter"]'::jsonb),
+  ('ultra', 'pulled_ultra', '[1,10,50]'::jsonb, '[null,null,"Ultra-Bonze"]'::jsonb),
+  ('grail', 'pulled_grail', '[1,5,25]'::jsonb, '["Gralsritter",null,"Der Auserwählte"]'::jsonb),
+  ('energy', 'energy_pulled', '[100,1000,10000]'::jsonb, '[null,"Energiewende","Kraftwerk"]'::jsonb),
+  ('pech', 'pechvogel', '[1,5]'::jsonb, '["Pechvogel","Schwarze Katze"]'::jsonb),
+  ('sold', 'cards_sold', '[100,1000,10000]'::jsonb, '[null,"Ramschkönig","Großhändler"]'::jsonb),
+  ('bottles', 'bottles', '[100,1000,10000]'::jsonb, '[null,"Pfandbaron","Flaschenkönig"]'::jsonb),
+  ('rounds', 'minigame_round', '[10,100,1000]'::jsonb, '[null,"Malocher","Arbeitstier"]'::jsonb),
+  ('shifts', 'shift_hours', '[10,100,1000]'::jsonb, '[null,"Werktätiger","Held der Arbeit"]'::jsonb),
+  ('bunker', 'bunker_collected', '[10,100,1000]'::jsonb, '[null,"Dagobert","Fort Knox"]'::jsonb),
+  ('upgrades', 'upgrade_bought', '[10,50,200]'::jsonb, '[null,null,"Optimierer"]'::jsonb),
+  ('quests', 'quest_claimed', '[10,100,1000]'::jsonb, '[null,"Pflichtbewusst","Streber"]'::jsonb),
+  ('stamps', 'stamp_claimed', '[7,30,100]'::jsonb, '[null,"Stammgast","Inventar"]'::jsonb),
+  ('doener', 'doener_eaten', '[5,50,500]'::jsonb, '[null,"Dönerprinz","Spießkönig"]'::jsonb),
+  ('levels', 'level_up', '[9,24,49,99]'::jsonb, '[null,"Aufsteiger","Großkopferter","Endgegner"]'::jsonb)
+on conflict (key) do update set event = excluded.event, tiers = excluded.tiers, titles = excluded.titles;
 insert into game.tutorial_steps (step, event, reward_booster, reward_base_cents, reward_ep) values
   (0, 'tutorial_ack', 1, 0, 0),
   (1, 'pack_opened', 0, 0, 10),

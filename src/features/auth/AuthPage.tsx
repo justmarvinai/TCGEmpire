@@ -31,7 +31,7 @@ export function AuthPage({ me, localMode }: { me: Me; localMode: boolean }) {
       } else {
         const res = await rpc('login', { p_username: username, p_password: password })
         if (res.error !== null) throw new RpcError(res.error)
-        setMe({ player: res.player, server: res.server })
+        setMe({ player: res.player, server: res.server, away_s: res.away_s })
       }
       sfx('success')
     } catch (err) {

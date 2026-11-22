@@ -12,6 +12,9 @@ import { OpenPage } from '@/features/open/OpenPage.tsx'
 import { PathPage } from '@/features/path/PathPage.tsx'
 import { QuestsPage } from '@/features/quests/QuestsPage.tsx'
 import { ShopPage } from '@/features/shop/ShopPage.tsx'
+import { BunkerPage } from '@/features/bunker/BunkerPage.tsx'
+import { UpgradesPage } from '@/features/upgrades/UpgradesPage.tsx'
+import { ProfilePage } from '@/features/profile/ProfilePage.tsx'
 import { errorText } from '@/lib/rpc.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { useMe } from '@/lib/world.ts'
@@ -49,7 +52,7 @@ function Game() {
   const { player, server } = me.data
   if (!player) return <AuthPage me={me.data} localMode={LOCAL_MODE} />
 
-  const signedIn = { player, server }
+  const signedIn = { ...me.data, player, server }
   return (
     <BrowserRouter>
       <Routes>
@@ -61,6 +64,9 @@ function Game() {
           <Route path="jobs" element={<JobsPage />} />
           <Route path="quests" element={<QuestsPage />} />
           <Route path="path" element={<PathPage />} />
+          <Route path="bunker" element={<BunkerPage />} />
+          <Route path="upgrades" element={<UpgradesPage />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route
             path="dev/ui"
             element={

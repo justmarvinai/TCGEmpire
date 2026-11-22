@@ -35,5 +35,9 @@ export const useShop = () => useQuery({ queryKey: ['shop'], queryFn: () => rpc('
 export const useBinder = (set: string) =>
   useQuery({ queryKey: ['binder', set], queryFn: () => rpc('binder_get', { p_set: set }) })
 export const useQuests = () => useQuery({ queryKey: ['quests'], queryFn: () => rpc('quests_get') })
+export const useBunker = () => useQuery({ queryKey: ['bunker'], queryFn: () => rpc('bunker_get') })
+export const useUpgrades = () => useQuery({ queryKey: ['upgrades'], queryFn: () => rpc('upgrades_get') })
+export const useJobs = () => useQuery({ queryKey: ['jobs'], queryFn: () => rpc('jobs_get') })
+export const useStats = () => useQuery({ queryKey: ['stats'], queryFn: () => rpc('stats_get') })
 export const useLevelPath = () =>
   useQuery({ queryKey: ['levelpath'], queryFn: () => rpc('level_path_get'), staleTime: 5 * 60_000 })

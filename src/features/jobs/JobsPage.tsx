@@ -1,230 +1,252 @@
 import clsx from 'clsx'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
+import { useCallback, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Button } from '@/components/ui/Button.tsx'
+import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
-import { useAct } from '@/lib/actions.ts'
-import { formatDuration, formatMoney } from '@/lib/format.ts'
-import type { Player } from '@/lib/schemas.ts'
+import { Progress } from '@/components/ui/Progress.tsx'
+import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
+import { toast } from '@/components/ui/toast.tsx'
+import { useAct, useJobs } from '@/lib/actions.ts'
+import { JOBS, RANKS, SHIFT_HOURS } from '@/lib/catalog.ts'
+import { formatDuration, formatMoney, formatNumber } from '@/lib/format.ts'
+import { useNow } from '@/lib/pure.ts'
+import { errorText } from '@/lib/rpc.ts'
+import type { Jobs, Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useMe, useWorld } from '@/lib/world.ts'
-import { useNow } from '@/lib/pure.ts'
 import { texts } from '@/texts/de.ts'
-import { config } from '../../../content/config.ts'
+import { Game, type GameKey } from './games.tsx'
 
 const T = texts.jobs
-const PFAND = config['minigame.pfand']
+const jobDef = (key: string) => JOBS.find((j) => j.key === key)
 
-// Deposit per item in Basis-€ cents. The server caps the score; the payout it returns is what counts.
-const ITEMS = {
-  einweg: { cents: 500, weight: 20, icon: 'bottle', tone: 'text-info' },
-  mehrweg: { cents: 300, weight: 28, icon: 'bottle', tone: 'text-gain' },
-  bier: { cents: 160, weight: 45, icon: 'bottle', tone: 'text-warn' },
-  scherbe: { cents: -200, weight: 7, icon: 'sparkle', tone: 'text-fg-2' },
-} satisfies Record<string, { cents: number; weight: number; icon: IconName; tone: string }>
-type Kind = keyof typeof ITEMS
-
-interface Item {
-  id: number
-  kind: Kind
-  x: number
-  y: number
-  until: number
-}
-
-function pickKind(): Kind {
-  const total = Object.values(ITEMS).reduce((s, i) => s + i.weight, 0)
-  let r = Math.random() * total
-  for (const [k, i] of Object.entries(ITEMS)) {
-    r -= i.weight
-    if (r < 0) return k as Kind
-  }
-  return 'bier'
+/** Server time in ms, refreshed every second (0 before the first tick). */
+function useServerNow() {
+  const now = useNow()
+  const offset = useWorld((s) => s.clockOffsetMs)
+  return now > 0 ? now + offset : 0
 }
 
 export function JobsPage() {
-  const me = useMe()
-  const player = me.data?.player
-  const [run, setRun] = useState<{ id: string; duration: number } | null>(null)
-  const [result, setResult] = useState<{ payout: number; ep: number; bons: number } | null>(null)
-  const act = useAct()
-  const [busy, setBusy] = useState(false)
-  const now = useNow()
-  const offset = useWorld((s) => s.clockOffsetMs)
+  const jobs = useJobs()
+  const player = useMe().data?.player
+  return (
+    <Page icon="briefcase" title={T.title} subtitle={T.subtitle}>
+      {jobs.isPending || !player ? (
+        <Skeleton className="h-96 w-full" />
+      ) : jobs.isError ? (
+        <ErrorState message={errorText(jobs.error)} onRetry={() => void jobs.refetch()} />
+      ) : (
+        <div className="flex flex-col gap-4">
+          <Minijobs jobs={jobs.data} player={player} />
+          <Shifts jobs={jobs.data} player={player} />
+        </div>
+      )}
+    </Page>
+  )
+}
 
-  const start = async () => {
-    setBusy(true)
+// ----------------------------------------------------------------------------------------------
+function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
+  const act = useAct()
+  const now = useServerNow()
+  const [run, setRun] = useState<{ id: string; game: GameKey; duration: number } | null>(null)
+  const [result, setResult] = useState<{ game: string; payout: number; ep: number; bons: number } | null>(null)
+  const [busy, setBusy] = useState<string | null>(null)
+
+  const start = async (game: GameKey) => {
+    setBusy(game)
     setResult(null)
-    const res = await act('minigame_start', { p_game: 'pfand' })
-    setBusy(false)
-    if (res) setRun({ id: res.run_id, duration: res.duration_s })
+    const res = await act('minigame_start', { p_game: game })
+    setBusy(null)
+    if (res) setRun({ id: res.run_id, game, duration: res.duration_s })
   }
 
   const finish = useCallback(
-    async (score: number, bottles: number) => {
+    async (score: number, count: number) => {
       if (!run) return
-      const res = await act('minigame_finish', { p_run: run.id, p_score: score, p_bottles: bottles }, ['quests'])
+      const res = await act('minigame_finish', { p_run: run.id, p_score: score, p_bottles: count }, ['quests'])
       setRun(null)
       if (res) {
-        setResult({ payout: res.payout_cents, ep: res.ep_gained, bons: res.pfandbons })
+        setResult({ game: run.game, payout: res.payout_cents, ep: res.ep_gained, bons: res.pfandbons })
         sfx('coin')
       }
     },
     [act, run],
   )
 
+  const games = jobs.jobs.filter((j) => j.minigame)
   return (
-    <Page icon="briefcase" title={T.title} subtitle={T.subtitle}>
-      <Panel title={T.pfand} tip={T.pfandTip}>
-        {run ? (
-          <PfandGame duration={run.duration} onDone={finish} />
-        ) : (
-          <div className="flex flex-wrap items-center gap-6" data-tour="pfand">
-            <div className="grid size-24 place-items-center bg-surface-2 text-warn outline-2 outline-line">
-              <PixelIcon name="bottle" scale={4} />
+    <Panel title={T.minijobs} tip={T.minijobsTip}>
+      {run ? (
+        <Game game={run.game} duration={run.duration} onDone={finish} />
+      ) : (
+        <>
+          {result && (
+            <div className="mb-3 flex flex-wrap items-center gap-4 bg-surface-2 p-3 anim-stamp">
+              <span className="font-pixel text-xl">{T.resultTitle}</span>
+              <span className="nums font-pixel text-2xl text-gold">+{formatMoney(result.payout)}</span>
+              <span className="nums text-sm text-fg-2">
+                +{result.ep} {T.epGained}
+              </span>
+              {result.bons > 0 && <span className="text-sm text-gain">{T.pfandbon}</span>}
             </div>
-            <div className="flex max-w-lg flex-col gap-3">
-              <p className="text-fg-2">{T.pfandBody}</p>
-              {result && (
-                <div className="flex flex-wrap items-center gap-4 bg-surface-2 p-3 anim-stamp">
-                  <span className="font-pixel text-xl">{T.resultTitle}</span>
-                  <span className="nums font-pixel text-2xl text-gold">+{formatMoney(result.payout)}</span>
-                  <span className="nums text-sm text-fg-2">
-                    +{result.ep} {T.epGained}
-                  </span>
-                  {result.bons > 0 && <span className="text-sm text-gain">{T.pfandbon}</span>}
+          )}
+          <div className="grid gap-3 md:grid-cols-2">
+            {games.map((j) => {
+              const def = jobDef(j.key)
+              const locked = player.level < j.min_level
+              const energy = j.energy ?? 0
+              return (
+                <div key={j.key} className={clsx('flex flex-col gap-2 bg-surface-2 p-3', locked && 'opacity-50')} data-tour={j.minigame === 'pfand' ? 'pfand' : undefined}>
+                  <p className="flex items-center gap-2 font-semibold">
+                    <PixelIcon name={locked ? 'lock' : 'briefcase'} className="text-accent" />
+                    {T.minigameNames[j.minigame!]}
+                    <span className="text-xs font-normal text-fg-3">{T.employer(def?.employer ?? '')}</span>
+                  </p>
+                  <p className="text-sm text-fg-2">{T.minigameBodies[j.minigame!]}</p>
+                  <div className="mt-auto flex items-center gap-3">
+                    <Button variant="primary" loading={busy === j.minigame} disabled={locked || player.energy < energy || busy !== null} onClick={() => start(j.minigame as GameKey)}>
+                      {locked ? texts.nav.lockedLevel(j.min_level) : T.start}
+                    </Button>
+                    <span className="flex items-center gap-1 text-sm text-info">
+                      <PixelIcon name="bolt" /> {T.energyCost(energy)}
+                    </span>
+                  </div>
+                  {!locked && player.energy < energy && now > 0 && (
+                    <p className="text-xs text-fg-3">{T.noEnergy(formatDuration(energyWait(player, energy, now)))}</p>
+                  )}
                 </div>
-              )}
-              <div className="flex items-center gap-3">
-                <Button variant="primary" size="lg" onClick={start} loading={busy} disabled={!player || player.energy < PFAND.energy}>
-                  {result ? T.again : T.start}
-                </Button>
-                <span className="flex items-center gap-1 text-sm text-info">
-                  <PixelIcon name="bolt" /> {T.energyCost(PFAND.energy)}
-                </span>
-              </div>
-              {player && player.energy < PFAND.energy && now > 0 && (
-                <p className="text-sm text-fg-3">{T.noEnergy(formatDuration(energyWait(player, now + offset)))}</p>
-              )}
-            </div>
+              )
+            })}
           </div>
-        )}
-      </Panel>
-    </Page>
+        </>
+      )}
+    </Panel>
   )
 }
 
-/** Seconds until there is enough energy for a round (interpolated from the server's rate). */
-function energyWait(p: Player, serverMs: number) {
+/** Seconds until there is enough energy (interpolated from the server's rate). */
+function energyWait(p: Player, need: number, serverMs: number) {
   const since = (serverMs - Date.parse(p.energy_at)) / 1000
-  return Math.max(0, (PFAND.energy - p.energy) * p.energy_regen_s - (since % p.energy_regen_s))
+  return Math.max(0, (need - p.energy) * p.energy_regen_s - (since % p.energy_regen_s))
 }
 
-function PfandGame({ duration, onDone }: { duration: number; onDone: (score: number, bottles: number) => void }) {
-  const [items, setItems] = useState<Item[]>([])
-  const [pops, setPops] = useState<{ id: number; x: number; y: number; text: string; good: boolean }[]>([])
-  const [score, setScore] = useState(0)
-  const [bottles, setBottles] = useState(0)
-  const [left, setLeft] = useState(duration)
-  const state = useRef({ score: 0, bottles: 0, id: 0, start: 0, done: false })
+// ----------------------------------------------------------------------------------------------
+function Shifts({ jobs, player }: { jobs: Jobs; player: Player }) {
+  const act = useAct()
+  const client = useQueryClient()
+  const now = useServerNow()
+  const shiftJobs = jobs.jobs.filter((j) => j.shifts)
+  const [job, setJob] = useState(shiftJobs.find((j) => player.level >= j.min_level)?.key ?? '')
+  const [busy, setBusy] = useState<string | null>(null)
 
-  useEffect(() => {
-    const s = state.current
-    s.start = performance.now()
-    let nextSpawn = 0
-    let frame = 0
-    const loop = (now: number) => {
-      const t = (now - s.start) / 1000
-      setLeft(Math.max(0, duration - t))
-      if (t >= duration) {
-        if (!s.done) {
-          s.done = true
-          onDone(Math.max(0, s.score), s.bottles)
-        }
-        return
-      }
-      // Faster and shorter-lived items as the round goes on.
-      const pace = 1 - (t / duration) * 0.4
-      if (now >= nextSpawn) {
-        const n = Math.random() < 0.3 ? 2 : 1
-        const fresh = Array.from({ length: n }, () => ({
-          id: s.id++,
-          kind: pickKind(),
-          x: 4 + Math.random() * 88,
-          y: 10 + Math.random() * 76,
-          until: now + 1900 * pace,
-        }))
-        setItems((list) => [...list.filter((i) => i.until > now), ...fresh])
-        nextSpawn = now + (650 + Math.random() * 700) * pace
-      } else {
-        setItems((list) => (list.some((i) => i.until <= now) ? list.filter((i) => i.until > now) : list))
-      }
-      frame = requestAnimationFrame(loop)
-    }
-    frame = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(frame)
-  }, [duration, onDone])
+  const run = async (fn: 'shift_start' | 'shift_checkin' | 'shift_claim', args: Record<string, unknown> = {}) => {
+    setBusy(fn)
+    const res = await act(fn, args, ['quests'])
+    setBusy(null)
+    if (!res) return
+    client.setQueryData(['jobs'], { unlock_shifts: res.unlock_shifts, checkin_bonus_pct: res.checkin_bonus_pct, jobs: res.jobs, shift: res.shift })
+    if (fn === 'shift_claim' && 'result' in res) {
+      sfx('coin')
+      toast('success', T.earned(formatMoney(res.result.wage_cents)))
+    } else sfx(fn === 'shift_checkin' ? 'stamp' : 'toggle')
+  }
 
-  const grab = (item: Item) => {
-    const s = state.current
-    const def = ITEMS[item.kind]
-    setItems((list) => list.filter((i) => i.id !== item.id))
-    s.score += def.cents
-    if (def.cents > 0) s.bottles += 1
-    setScore(s.score)
-    setBottles(s.bottles)
-    sfx(def.cents > 0 ? 'bottle' : 'shard')
-    const text = def.cents > 0 ? `+${formatMoney(def.cents)}` : T.ouch
-    setPops((p) => [...p.slice(-8), { id: item.id, x: item.x, y: item.y, text, good: def.cents > 0 }])
+  if (player.level < jobs.unlock_shifts) {
+    return (
+      <Panel title={T.shifts} tip={T.shiftsTip}>
+        <EmptyState icon="lock" title={T.shiftsLocked(jobs.unlock_shifts)} />
+      </Panel>
+    )
+  }
+
+  const s = jobs.shift
+  if (s) {
+    const total = Date.parse(s.ends_at) - Date.parse(s.started_at)
+    const elapsed = now > 0 ? Math.min(total, now - Date.parse(s.started_at)) : 0
+    const done = s.done || (now > 0 && now >= Date.parse(s.ends_at))
+    const canCheckin = !done && s.checkins < s.checkin_max && now >= Date.parse(s.next_checkin_at)
+    const def = jobDef(s.job)
+    return (
+      <Panel title={T.shifts} tip={T.shiftsTip}>
+        <div className="flex flex-col gap-3 bg-surface-2 p-4">
+          <p className="flex items-center gap-2 font-semibold">
+            <PixelIcon name="clock" className="text-accent" />
+            {def?.name} <span className="text-xs font-normal text-fg-3">{T.employer(def?.employer ?? '')}</span>
+            <span className="ml-auto font-pixel text-lg text-gold">{formatMoney(s.wage_cents)}</span>
+          </p>
+          <Progress value={total > 0 ? elapsed / total : 1} tone={done ? 'gain' : 'accent'} />
+          <p className="text-sm text-fg-2">{done ? T.done : T.endsIn(formatDuration((total - elapsed) / 1000))}</p>
+          <p className="text-xs text-fg-3">{T.checkins(s.checkins, s.checkin_max, jobs.checkin_bonus_pct)}</p>
+          <div className="flex flex-wrap items-center gap-2">
+            {done ? (
+              <Button variant="primary" className="anim-nudge" loading={busy === 'shift_claim'} onClick={() => run('shift_claim')}>
+                {T.claim}
+              </Button>
+            ) : (
+              <>
+                <Button variant="primary" disabled={!canCheckin} loading={busy === 'shift_checkin'} onClick={() => run('shift_checkin')} className={canCheckin ? 'anim-nudge' : undefined}>
+                  {canCheckin || s.checkins >= s.checkin_max ? T.checkin : T.checkinIn(formatDuration((Date.parse(s.next_checkin_at) - now) / 1000))}
+                </Button>
+                <Button loading={busy === 'shift_claim'} onClick={() => run('shift_claim')}>
+                  {T.stop}
+                </Button>
+                <InfoTip>{T.stopTip}</InfoTip>
+              </>
+            )}
+          </div>
+        </div>
+      </Panel>
+    )
   }
 
   return (
-    <div>
-      <div className="mb-2 flex items-center gap-6 font-pixel text-xl">
-        <span className="flex items-center gap-2">
-          <PixelIcon name="clock" /> <span className="nums">{Math.ceil(left)} s</span>
-        </span>
-        <span className="nums text-gold">
-          {T.score}: {formatMoney(Math.max(0, score))}
-        </span>
-        <span className="nums text-fg-2">
-          {T.bottles}: {bottles}
-        </span>
-      </div>
-      <div
-        className="relative h-[26rem] overflow-hidden outline-2 outline-line select-none"
-        style={{
-          background:
-            'radial-gradient(circle at 20% 30%, rgb(80 140 70 / 0.35), transparent 40%), radial-gradient(circle at 80% 70%, rgb(60 120 60 / 0.35), transparent 45%), linear-gradient(180deg, #1d3a24, #13261a)',
-        }}
-      >
-        {items.map((i) => {
-          const def = ITEMS[i.kind]
+    <Panel title={T.shifts} tip={T.shiftsTip}>
+      <div className="flex flex-col gap-2">
+        {shiftJobs.map((j) => {
+          const def = jobDef(j.key)
+          const locked = player.level < j.min_level
           return (
-            <button
-              key={i.id}
-              type="button"
-              aria-label={T.types[i.kind]}
-              onPointerDown={() => grab(i)}
-              className={clsx('absolute flex flex-col items-center anim-bottle', def.tone)}
-              style={{ left: `${i.x}%`, top: `${i.y}%`, transform: i.kind === 'scherbe' ? 'rotate(20deg)' : undefined }}
+            <label
+              key={j.key}
+              className={clsx(
+                'flex cursor-pointer items-center gap-3 bg-surface-2 p-3 outline-2 -outline-offset-2',
+                job === j.key ? 'outline-accent' : 'outline-transparent',
+                locked && 'cursor-not-allowed opacity-50',
+              )}
             >
-              <PixelIcon name={def.icon} scale={3} />
-              <span className="nums bg-ink/70 px-1 text-[0.625rem] font-semibold">{formatMoney(def.cents)}</span>
-            </button>
+              <input type="radio" name="job" className="accent-accent" disabled={locked} checked={job === j.key} onChange={() => setJob(j.key)} />
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold">
+                  {def?.name} <span className="text-xs font-normal text-fg-3">{T.employer(def?.employer ?? '')}</span>
+                </p>
+                <p className="text-xs text-fg-3">
+                  {T.rank}: {RANKS[j.rank]?.name} · {T.hoursWorked(formatNumber(Math.floor(j.hours)))}
+                </p>
+              </div>
+              {locked ? (
+                <span className="text-xs text-fg-3">{texts.nav.lockedLevel(j.min_level)}</span>
+              ) : (
+                <span className="nums text-right font-semibold text-gold">
+                  {formatMoney(j.wage_cents ?? 0)}
+                  <span className="block text-xs font-normal text-fg-3">{T.perHour}</span>
+                </span>
+              )}
+            </label>
           )
         })}
-        {pops.map((p) => (
-          <span
-            key={p.id}
-            className={clsx('pointer-events-none absolute font-pixel text-lg anim-rise', p.good ? 'text-gold' : 'text-loss')}
-            style={{ left: `${p.x}%`, top: `${p.y}%` }}
-          >
-            {p.text}
-          </span>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {SHIFT_HOURS.map((h) => (
+          <Button key={h} variant={h === 1 ? 'primary' : 'neutral'} disabled={!job || busy !== null} loading={busy === 'shift_start'} onClick={() => run('shift_start', { p_job: job, p_hours: h })}>
+            {T.lengths[String(h)]}
+          </Button>
         ))}
       </div>
-    </div>
+    </Panel>
   )
 }

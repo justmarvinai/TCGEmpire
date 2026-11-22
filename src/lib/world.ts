@@ -91,7 +91,7 @@ export function useSync(enabled: boolean) {
           p_after_feed: w.feed.at(-1)?.id ?? 0,
         })
         if (stopped) return
-        setMe({ player: res.player, server: res.server })
+        setMe({ player: res.player, server: res.server, away_s: res.away_s })
         const firstLoad = w.feed.length === 0 && w.notifications.length === 0
         const fresh = firstLoad ? [] : res.notifications
         const levelUps = fresh

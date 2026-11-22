@@ -67,6 +67,23 @@ ref_income(n) = 900 × 1.08^n   Basis-€ per hour
 **Catch-up:** a player more than 10 levels below the server median gets +25 % EP (shown as
 "Aufholbonus"), so friends who start later or play less stay in reach.
 
+### 3.1 Where EP comes from (tuned with the simulation, alpha_03)
+
+| Source | EP | Why |
+|--------|----|-----|
+| Minijob round | 40–120 level-1 units by score | Drives the first hour (energy-limited) |
+| Booster | 15 + 3 per new card | The core action; money-limited |
+| Mini / daily / weekly quest | 0.1 / 0.4 / 1.5 **of the current level** each; all five dailies +1 level | Proportional at every level, so quests never flood early levels and stay worth it late |
+| Stempel | 0.3 of a level | Daily return |
+| Achievement tier | 0.25 / 0.5 / 1 / 2 of a level | Milestones feel big |
+| Shift hour | 150 level-1 units | Idle progress |
+| Bunker collect, sale | 15, 5 | Small acknowledgement |
+
+Measured by `pnpm sim` (bot, 150 active minutes per day, 22 Nov 2026): level 10 after 12 min, level 20 at the start of
+day 2, level 30 on day 3, level 40 on day 4, level 45 on day 5. The early game is a firehose of playing; mid game is
+driven by quests and shifts. Remaining gap to the target (level 30 on day 2): idle waiting once energy and money run
+out on day 1 — the market features of alpha_04 add things to do there. `sim/pace.test.ts` guards the pace in CI.
+
 ## 4. Preisniveau (the game's own inflation)
 
 One server-wide number, **P**. Everything the game itself prices or pays is defined in Basis-€ and
@@ -183,7 +200,7 @@ print it follows `set_factor` for sealed; a display also carries its guaranteed-
 | Mini-quest | 1 + 1 Pfandbon | Endless, deliberately tiny |
 | Tagesquest | 20 each, +60 for all five | 5 per day |
 | Wochenquest | 180 each + weekly chest | 5 per week |
-| Level reward | 60 + item | Per level |
+| Level reward | 8 + booster every 5 levels | Per level |
 | Stempelkarte | 10 → 120 over 7 days | Daily |
 | Selling to NPCs | Marktwert × 60 % (Ankauf) up to ~100 % (NPC collectors) | NPC budgets, pressure |
 | Company | §9 | Capacity, demand, Ruf |

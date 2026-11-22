@@ -5,7 +5,7 @@
 type Json = string | number | boolean | readonly Json[] | { readonly [k: string]: Json }
 
 export const config = {
-  version: '0.0.1-alpha_02',
+  version: '0.0.1-alpha_03',
 
   // Login
   'auth.bcrypt_cost': 10,
@@ -23,19 +23,18 @@ export const config = {
   'ep.catchup_levels': 10,
   'ep.catchup_pct': 25,
   // EP rewards in level-1 units (scaled by growth^level)
-  'ep.pack': 8,
-  'ep.new_card': 2,
-  'ep.sale': 2,
-  'ep.quest': 15,
-  'ep.minigame_min': 10,
-  'ep.minigame_max': 30,
+  'ep.pack': 15,
+  'ep.new_card': 3,
+  'ep.sale': 5,
+  'ep.minigame_min': 40,
+  'ep.minigame_max': 120,
 
   // Reference income per hour: base * growth^level (docs/ECONOMY.md §3)
   'income.ref_base_cents': 900_00,
   'income.ref_growth': 1.08,
 
   // Level rewards: minutes of reference income, plus a booster every n levels
-  'level.reward_minutes': 15,
+  'level.reward_minutes': 8,
   'level.booster_every': 5,
   'level.reward_product': 'booster-pkm-base',
 
@@ -66,12 +65,56 @@ export const config = {
 
   // Minijob Pfandflaschen: score = collected deposit in Basis-€ cents
   'minigame.pfand': { energy: 10, duration_s: 45, cap_base_cents: 300_00, pfandbon_at_base_cents: 120_00 },
+  'minigame.regale': { energy: 10, duration_s: 45, cap_base_cents: 450_00, pfandbon_at_base_cents: 200_00 },
+  'minigame.sortieren': { energy: 12, duration_s: 45, cap_base_cents: 600_00, pfandbon_at_base_cents: 260_00 },
+  'minigame.pakete': { energy: 15, duration_s: 40, cap_base_cents: 900_00, pfandbon_at_base_cents: 400_00 },
 
-  // Mini-quests
+  // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,
   'quest.mini_reward_minutes': 1,
   'quest.mini_pfandbons': 1,
+  'quest.mini_ep_share': 0.1,
   'quest.bonus_every': 10,
+  'quest.daily_slots': 5,
+  'quest.daily_reward_minutes': 20,
+  'quest.daily_ep_share': 0.4,
+  'quest.daily_pfandbons': 2,
+  'quest.daily_bonus_minutes': 60,
+  'quest.daily_bonus_ep_share': 1,
+  'quest.weekly_slots': 5,
+  'quest.weekly_reward_minutes': 180,
+  'quest.weekly_ep_share': 1.5,
+  'quest.weekly_pfandbons': 5,
+  'quest.weekly_chest_boosters': 3,
+
+  // Stempelkarte: stamp n of the week pays minutes[n-1] of reference income; the 7th also a booster
+  'stamp.minutes': [10, 20, 30, 45, 60, 90, 120],
+  'stamp.ep_share': 0.3,
+
+  // Geldbunker: rate = base * growth^(Ertrag level) per hour, holds base capacity + upgrades hours
+  'bunker.base_rate_base_cents': 120_00,
+  'bunker.rate_growth': 1.12,
+  'bunker.base_capacity_h': 4,
+  'bunker.interest_fill': 0.9,
+  // visual stage by the sum of all bunker upgrade levels
+  'bunker.stages': [0, 3, 8, 15, 25, 40, 60],
+  'ep.bunker': 15,
+
+  // Shifts: wage per hour = reference income * share * job wage * rank bonus * (1 + Fleiß)
+  'shift.wage_share': 0.55,
+  'shift.rank_hours': [0, 10, 40, 120],
+  'shift.rank_bonus': [1, 1.15, 1.35, 1.6],
+  'shift.checkin_minutes': 30,
+  'shift.checkin_bonus_pct': 5,
+  'shift.checkin_max': 4,
+  'ep.shift_hour': 150,
+
+  // Achievements: EP per tier as a share of the current level (index = tier - 1)
+  'ep.achievement_share': [0.25, 0.5, 1, 2],
+
+  // Account
+  'account.reset_cooldown_h': 24,
+  'recap.min_away_s': 600,
 
   // Rate limits per minute
   'rate.buy': 30,

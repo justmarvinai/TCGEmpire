@@ -16,7 +16,7 @@ import { useSettings } from '@/lib/settings.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { serverNow, useSetMe, useSync, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
-import { cardName } from '@/lib/catalog.ts'
+import { ACHIEVEMENTS, cardName } from '@/lib/catalog.ts'
 import { NAV, type NavItem } from './nav.ts'
 import { Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
 
@@ -35,7 +35,7 @@ export function Shell({ me }: { me: Me & { player: Player } }) {
         </div>
       </main>
       <FeedRail priceLevel={me.server.price_level} />
-      <Overlays />
+      <Overlays awayS={me.away_s} player={me.player} />
     </div>
   )
 }
@@ -121,6 +121,7 @@ function TopBar({ me }: { me: Me & { player: Player } }) {
           <div className="flex items-center gap-2 leading-tight">
             <span className="truncate font-semibold">{p.username}</span>
             {p.is_admin && <PixelIcon name="crown" className="text-accent" title={texts.hud.admin} />}
+            {p.title && <span className="truncate text-xs font-semibold text-accent max-xl:hidden">{p.title}</span>}
             <span className="shrink-0 bg-surface-3 px-1.5 font-pixel text-sm whitespace-nowrap text-gold">
               {texts.hud.level} {p.level}
             </span>
@@ -156,6 +157,12 @@ function TopBar({ me }: { me: Me & { player: Player } }) {
             <span className="text-fg-3">/{p.energy_max}</span>
           </span>
         </Stat>
+        {p.buffs.map((b) => (
+          <span key={b.key} className="flex items-center gap-1 bg-surface-3 px-1.5 py-0.5 text-xs font-semibold max-xl:hidden" title={texts.hud.buffs[b.key] ?? b.key}>
+            <PixelIcon name={b.key === 'doener' ? 'doener' : b.key === 'gluecksbon' ? 'star' : 'scroll'} className="text-warn" />
+            {texts.hud.buffs[b.key] ?? b.key}
+          </span>
+        ))}
         <Stat icon="doener" tone="text-accent" label={texts.hud.price} tip={texts.hud.priceTip} className="max-lg:hidden">
           <span className="nums font-semibold">{formatFactor(me.server.price_level)}</span>
         </Stat>
@@ -229,6 +236,11 @@ function NotificationBell() {
 
 function notificationText(n: FeedEntry) {
   if (n.kind === 'level_up') return texts.notifications.level_up(n.data)
+  if (n.kind === 'unlock') return texts.notifications.unlock(n.data)
+  if (n.kind === 'achievement')
+    return texts.notifications.achievement(n.data, ACHIEVEMENTS.find((a) => a.key === n.data.key)?.name ?? String(n.data.key))
+  if (n.kind === 'daily_bonus') return texts.notifications.daily_bonus
+  if (n.kind === 'weekly_chest') return texts.notifications.weekly_chest
   return texts.notifications.unknown
 }
 
@@ -322,5 +334,6 @@ function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'inflation') return texts.feed.inflation(f.data, doener)
   if (f.kind === 'pull_grail') return texts.feed.pull_grail(f.data, cardName(String(f.data.card_id)))
   if (f.kind === 'pull_ultra') return texts.feed.pull_ultra(f.data, cardName(String(f.data.card_id)))
+  if (f.kind === 'player_reset') return texts.feed.player_reset(f.data)
   return texts.feed.unknown
 }
