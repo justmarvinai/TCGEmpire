@@ -543,6 +543,7 @@ export const texts = {
     lastHit: 'Letzter Hit',
     lastHitTip: 'Deine zuletzt gezogene Karte ab Holo aufwärts, mit ihrem aktuellen Wert.',
     value: 'Wert',
+    pulled: (ago: string) => `gezogen ${ago}`,
     toCollection: 'Im Binder ansehen',
     noHit: 'Noch kein Hit',
     noHitBody: 'Holo oder besser landet hier. Bis dahin: Bulk, Bulk, Bulk.',

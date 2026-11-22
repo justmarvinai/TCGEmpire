@@ -186,12 +186,9 @@ function LastHit({ hit, loading, className }: { hit: Home['last_hit'] | undefine
         <CardBack scale={3} className="relative shrink-0 opacity-60" />
       )}
       <div className="relative min-w-0">
-        <p className="eyebrow">
+        <p className="eyebrow flex items-center gap-1.5">
           {T.lastHit}
-          {hit && now > 0 && ` · ${formatAgo(hit.pulled_at, now + offset)}`}
-          <span className="ml-1.5 inline-flex align-middle">
-            <InfoTip>{T.lastHitTip}</InfoTip>
-          </span>
+          <InfoTip>{T.lastHitTip}</InfoTip>
         </p>
         {hit ? (
           <>
@@ -208,6 +205,7 @@ function LastHit({ hit, loading, className }: { hit: Home['last_hit'] | undefine
             </div>
             <p className="mt-6 eyebrow">{T.value}</p>
             <p className="nums mt-1 text-4xl font-bold tracking-tight">{formatMoney(hit.value_cents)}</p>
+            {now > 0 && <p className="mt-1 text-sm text-fg-3">{T.pulled(formatAgo(hit.pulled_at, now + offset))}</p>}
             <Link to="/collection" className="mt-6 inline-block text-sm font-semibold text-fg-2 hover:text-fg">
               {T.toCollection} →
             </Link>
