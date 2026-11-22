@@ -1,6 +1,6 @@
 {
   "name": "tcgempire",
-  "version": "0.0.1-alpha_01",
+  "version": "0.0.1-alpha_02",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.28.0",

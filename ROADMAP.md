@@ -1,6 +1,7 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: building `alpha_02` (owner's go on 22 Nov 2026; alpha_01 accepted).**
+> **Current phase: `alpha_02` is finished (22 Nov 2026) and waits for the owner's review. `alpha_03` needs the
+> owner's go.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -44,7 +45,7 @@ Goal: the core loop is fun on its own — earn a little, buy boosters, open them
 
 | | Scope | |
 |---|-------|---|
-| ◐ | Content pipeline (TypeScript → seed) and the complete **Pokémon Basis-Set**: data; hero art for the remaining Ultras; simple template art in batches for all lower tiers | M |
+| ☑ | Content pipeline (TypeScript → seed) and the complete **Pokémon Basis-Set**: data; hero art for the remaining Ultras; simple template art in batches for all lower tiers | M |
 | ☑ | Kiosk: buy boosters ×1/×5/×10; inventory for sealed, stacks and copies; quality values on hits | M |
 | ☑ | **Pack opening**: tear, reveal, hit suspense by tier, summary, multi-rip ×5/×10, **Sofort aufdecken** (instant reveal, also as default setting), keyboard, fake chat | M |
 | ☑ | Foil system and card inspect view | M |
