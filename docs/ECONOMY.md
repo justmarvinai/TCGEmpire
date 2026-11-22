@@ -170,12 +170,16 @@ slab_value = marktwert(card) × grade_factor(grade) × pop_factor × brand_facto
 | 8 | 1.3 | 30 % |
 | 7 | 1.0 | 13 % |
 | ≤ 6 | 0.8 → 0.4 | 7 % |
-| BGS Black Label 10 | 20 | ~1 % (all four quality values = 10) |
+| BGS 9.5 (Gem Mint) | 4 | BGS only; other half grades take the mean of their neighbours |
+| BGS Black Label 10 | 20 | ~1 % (all four sub-grades 10; decision 066) |
 
 - `pop_factor` for grade 10: `1 + 1.5 × pop_ref / (pop_ref + pop10)` — the fewer 10s exist, the more each
   is worth (up to ×2.5).
 - `brand_factor`: PSA 1.00, BGS 0.95, CGC 0.85, player companies 0.40–1.10 from their Ruf.
-- The lowest of the four hidden quality values dominates the grade; BGS shows all four.
+- The lowest of the four hidden quality values dominates the grade; BGS shows all four (decision 066).
+- Waiting times: PSA 6 h / 2 h / 20 min, BGS 4 h / 80 min / 15 min, CGC 2 h / 45 min / 10 min. Three cards at the
+  graders at once at the start; the Einsende-Slots upgrade and each Master Set add more.
+- The first 10s are worth the most: with `pop_ref` 5 the first 10 of a card at a grader gets ×2,25, the tenth ×1,5.
 
 ### 5.4 Sealed
 
@@ -215,7 +219,7 @@ P2P trades, gifts and loans move money between players and are not sources.
 |------|------|
 | Store purchases | Booster 80–100 € (the largest early sink) |
 | Market fees | Cardmarket 5 %, eBay 10 %, auction listing fee |
-| Grading fees | PSA 360 € Economy / 700 € Standard / 1.600 € Express, plus 3 % upcharge above 10.000 € card value; BGS and CGC cheaper |
+| Grading fees | Per card: PSA 360 / 700 / 1.600 €, BGS 280 / 550 / 1.300 €, CGC 150 / 300 / 700 € (Economy / Standard / Express), plus an upcharge on the card value above 10.000 € (PSA 3 %, BGS 2 %, CGC 1 %) |
 | Upgrades (incl. Abwehr) | Geometric ladders, factor 1.15–1.6 per level |
 | Skill respec | 10.000 € × level |
 | Housing | 100.000 € → 5 Mrd. € over 11 tiers; furnishing 400 € → 500 Mio. € per item |

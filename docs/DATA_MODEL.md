@@ -136,7 +136,11 @@ RLS enabled on every table with no policies.
 | `game.events_active` | Running global and personal events. |
 | `game.megaprojects`, `game.donations` | Server goals. |
 | `game.licenses` | alpha_05 · Händlerlizenzen per player and game; the first is the favourite (`game.players.fav_game`, free). Triggers on `store_purchases` and `store_buys` refuse unlicensed games (`no_license`). |
-| `game.goal_defs`, `game.goals_done` | alpha_05 · Sammelziele (card groups and a bonus, seeded from `content/goals.ts`) and reached goals; a trigger on `game.collection` checks them and books a permanent modifier `goal:<key>`. |
+| `game.goal_defs`, `game.goals_done` | alpha_05 · Sammelziele (card groups and a bonus, seeded from `content/goals.ts`) and reached goals; a trigger on `game.collection` checks them and books a permanent modifier `goal:<key>`. alpha_06 adds `goal_defs.min_grade` (Master Set: a group counts only with `collection.best_grade` at or above it). |
+| `game.card_copies` (alpha_06 columns) | `grader` (psa/bgs/cgc), `grade` numeric(3,1), `subgrades` (BGS: centering, corners, edges, surface), `black_label`, `cert_no` (unique), `graded_at`, `inspected_w` (width of the Vorprüfung ranges seen), `vitrine_pos`; `location` adds `grading` and `vitrine`. A slab is a copy with a grader; a trigger on owner or grade changes keeps `collection.best_grade` and runs the goal check. |
+| `game.grading_orders` | alpha_06 · one row per card at a grader: grader, service, fee, `submitted_at`, `due_at`, `notified`. Deleted at the reveal. |
+| `game.pop_report` | alpha_06 · slabs ever made per card, grader, grade and Black Label; never decremented (cracked slabs stay counted). |
+| `game.cert_seq`, `game.sales_log.slab` | alpha_06 · certificate numbers (scrambled per grader); slab sales are logged with their label and do not move the Marktwert. |
 | `game.worth_snapshots` | alpha_04 · net worth per player, hourly for `snapshots.hourly_days`, then the last one per Berlin day; deleted on reset. |
 | `game.rivals` | alpha_04 · 40 NPC tycoons (seeded from `content/rivals.ts`); their numbers are pure functions of the days since `game.server.started_at`. `game.server.worth_ranking` remembers the last Vermögen order for overtake headlines. |
 | `game.leagues` | Wochenwertung. |
@@ -200,6 +204,13 @@ RLS enabled on every table with no policies.
 | `admin_get`, `admin_set_phase`, `admin_restock`, `admin_invite_set`, `admin_config_set`, `admin_grant`, `admin_announce` | read/write | alpha_04 · admin only (`forbidden`); every write returns the console document. Out of Print stores `oop_at` and `sealed_at_oop`; a step back from OOP/Vintage is a reprint and clears both |
 | `licenses_get`, `starter_pick(game)`, `license_buy(game)` | read/write | alpha_05 · the first pick is free and completes tutorial step 0; further licences at `license.levels` for `license.fees_base_cents`. `sealed_add` resolves the product alias `reward-booster` to the favourite game's booster |
 | `goals_get` | read | alpha_05 · every goal with groups owned (`have` / `total`), `done_at` and the bonus. The `game.collection` trigger also emits `collect_<game>` for the collector achievements |
+| `grading_get` | read | alpha_06 · slots, Lupe width, graders with fees per service (real cents) and minutes, raw copies with their Vorprüfung ranges and upcharges, open orders, slabs with value and label |
+| `grading_inspect(copy, card)` | write | alpha_06 · Vorprüfung of a hit, or of one card of a bulk stack (it becomes a copy). Ranges are deterministic per copy, value and width (`private.q_range`) |
+| `grading_submit(copies, grader, service)` | write | alpha_06 · fee per card (`private.grading_fee`: service fee + upcharge above the threshold), slots checked, copies move to `grading` |
+| `grading_reveal(orders)` | write | alpha_06 · due orders only (`not_ready`); rolls the grade (`private.grade_roll`), certificate, Pop Report, EP, events `graded`/`graded_10`/`black_label`, headline for 10s and Ultra/Grail disasters |
+| `slab_crack(copy)`, `pop_report_get(card)` | write/read | alpha_06 · cracking makes the copy raw again (chance to lose a corner point); the Pop Report lists every grade with its slab value |
+| `vitrine_set(copies)`, `profile_get(player)` | write/read | alpha_06 · the Vitrine holds up to `vitrine.slots` hits or slabs in order; any player's profile: level, net worth, counters, Vitrine |
+| changed in alpha_06 | | `net_worth`, `goods_value`/`goods_doc`, `trade_inventory`, `binder_get` (raw `copies` + `slabs`), `cardmarket_item_doc` (owned `slabs`, listing labels), `my_market_doc`, `seller_get`, `ads_doc` (`suspicious` with the Echt-oder-Fake buff), `ad_npc_offer`, `npc_buy_cheap` and `sale_ship` value slabs by `private.slab_value`; `order_fill` never takes a slab; `minigame_finish` grants a job's buff (`buff:mj_<game>`) for a good round |
 | `sync(after_notification, after_feed, after_chat)` | read | alpha_04 adds `chat_unread` (messages by others after the device's last seen id; 0 before the first visit) and `chat_last_id` |
 
 

@@ -125,10 +125,10 @@ Goal: the gamble that multiplies value.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Vorprüfung with tools; submission to PSA / BGS / CGC; service levels; timers | M |
-| ☐ | Slab renderer (all label styles), grade reveal, Pop Report | M |
-| ☐ | Slab pricing, crack and re-submit, Black Label | M |
-| ☐ | Vitrine on the profile | M |
+| ☑ | Vorprüfung with tools; submission to PSA / BGS / CGC; service levels; timers | M |
+| ☑ | Slab renderer (all label styles), grade reveal, Pop Report | M |
+| ☑ | Slab pricing, crack and re-submit, Black Label | M |
+| ☑ | Vitrine on the profile | M |
 | ☐ | Minijobs "Echt oder Fake?" and "Grading-Praktikum" | M |
 
 ### alpha_07 — Leben

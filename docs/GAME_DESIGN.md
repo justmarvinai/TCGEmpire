@@ -325,6 +325,12 @@ Unlock: level 13. Grading turns a raw card into a slab and is the main value mul
 Service levels: Economy (hours), Standard, Express (minutes), each with its own fee. A random event can
 lengthen all queues ("PSA: Bearbeitungszeit aktuell 6–8 Monate" — in game time that means ×2).
 
+How the graders judge (decision 066): PSA and CGC give the worst of the four values, now and then one off;
+BGS gives half-point sub-grades and an overall grade near their average, so a card with one small flaw does
+better there, and four sub-grades of 10 make the Black Label. The Pop Report counts every slab ever made,
+cracked ones included. Bulk cards can be inspected too: the Lupe turns one card of the stack into a copy with
+its own quality values.
+
 ---
 
 ## 9. The company (Firma)
@@ -423,15 +429,15 @@ Two kinds of work, both themed with real employers.
 
 Cost energy, pay immediately by performance, give Pfandbons for great rounds.
 
-| Minijob | Unlock | Game | Perk while it is your main minijob |
+| Minijob | Unlock | Game | Perk (a timed buff after a good round, decision 069) |
 |---------|--------|------|-------------------------------------|
 | **Pfandflaschen sammeln** | 1 | Catch/click bottles; Einweg 5 €, Mehrweg 3 €, Bierflasche 1,60 € | — |
 | **Regale einräumen (Müller)** | 3 | Sort products to the right shelf under time pressure | You hear about Müller restocks 5 min early |
 | **Karten sortieren (Würfelbude)** | 6 | Sort cards by tier/set fast | Better Ankauf prices |
 | **Pakete ausliefern (DHL)** | 10 | Timing/route game; don't leave it "beim Nachbarn" | Faster shipping for your sales |
 | **Kasse (Smyths Toys)** | 14 | Change and barcode memory | Staff discount on sealed |
-| **Echt oder Fake?** (Cardmarket-Prüfer) | 18 | Spot the fake card | Fake warning on Kleinanzeigen |
-| **Grading-Praktikum (PSA)** | 24 | Judge card quality | Narrower Vorprüfung ranges; prepares for the Firma |
+| **Echt oder Fake?** (Cardmarket-Prüfer) | 18 | Spot the fake card | Fake warning on Kleinanzeigen (3 h after a good round) |
+| **Grading-Praktikum (PSA)** | 24 | Judge card quality | Narrower Vorprüfung ranges (3 h after a good round); prepares for the Firma |
 
 ### 10.2 Schichten (idle shifts)
 
