@@ -335,6 +335,8 @@ export const zAds = z.object({
       created_at: z.string(),
       expires_at: z.string(),
       suspicious: z.boolean(),
+      /** the seller's pain threshold, only with the keystone Der Pate */
+      min_cents: z.number().nullable(),
       mine: z
         .object({
           price_cents: z.number(),
@@ -645,6 +647,17 @@ export const zPopReport = z.object({
 })
 export type PopReport = z.infer<typeof zPopReport>
 
+// Skillbaum (alpha_07)
+export const zSkills = z.object({
+  unlock_level: z.number(),
+  points: z.number(),
+  spent: z.number(),
+  owned: z.array(z.string()),
+  respec_cents: z.number(),
+  bailout: z.object({ owned: z.boolean(), used: z.boolean(), ready: z.boolean(), cents: z.number() }),
+})
+export type Skills = z.infer<typeof zSkills>
+
 export const RPC_SCHEMAS = {
   me_get: zMe,
   join: zMe,
@@ -734,6 +747,10 @@ export const RPC_SCHEMAS = {
   }),
   level_path_get: zLevelPath,
   grading_get: zGrading,
+  skills_get: zSkills,
+  skill_learn: zSkills.extend(withPlayer),
+  skills_respec: zSkills.extend(withPlayer),
+  bailout_claim: zSkills.extend({ paid_cents: z.number(), ...withPlayer }),
   grading_inspect: z.object({ copy_id: z.string(), card_id: z.string(), ranges: zGrading.shape.copies.element.shape.ranges, grading: zGrading, ...withPlayer }),
   grading_submit: z.object({ fee_cents: z.number(), grading: zGrading, ...withPlayer }),
   grading_reveal: z.object({ results: z.array(zGradeResult), grading: zGrading, ...withPlayer }),

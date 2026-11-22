@@ -208,6 +208,10 @@ export const config = {
   // chance that cracking a slab nicks a corner (corners −1)
   'grading.crack_damage_pct': 10,
   'ep.grading': 60,
+  // Skill tree: a respec costs this many Basis-€ cents per player level. Too Big To Fail (once per run) pays
+  // share_bps of the net worth when the cash has fallen below below_bps of it.
+  'skills.respec_base_cents_per_level': 500_00,
+  'skills.bailout': { below_bps: 500, share_bps: 2_500 },
   // Vitrine: display places on the profile (housing adds more later)
   'vitrine.slots': 3,
 

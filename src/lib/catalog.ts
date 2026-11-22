@@ -11,6 +11,7 @@ import { UNLOCKS } from '../../content/unlocks.ts'
 import { STORES } from '../../content/stores.ts'
 export { AD_REPLIES, AD_SELLERS, AD_TITLES } from '../../content/kleinanzeigen.ts'
 export { GOALS } from '../../content/goals.ts'
+export { SKILL_BRANCHES, SKILL_COST, SKILLS, type SkillDef } from '../../content/skills.ts'
 
 export { ACHIEVEMENTS, ALL_QUESTS, cardById, CONSUMABLES, JOBS, PRODUCTS, productById, RANKS, SETS, SHIFT_HOURS }
 export { GAMES, STAT_LABELS, STORES, TIERS, TUTORIAL, UNLOCKS, UPGRADES }

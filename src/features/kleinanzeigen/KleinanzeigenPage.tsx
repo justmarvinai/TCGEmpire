@@ -130,6 +130,7 @@ function AdCard({ a }: { a: Ads['board'][number] }) {
           <p className="nums text-xs text-fg-3">
             {T.value} {formatMoney(a.value_cents)} · {now > 0 && left > 0 ? T.left(formatDuration(left)) : ''}
           </p>
+          {a.min_cents !== null && <p className="nums text-xs font-semibold text-accent">{T.painThreshold(formatMoney(a.min_cents))}</p>}
         </div>
       </div>
       {a.mine && (

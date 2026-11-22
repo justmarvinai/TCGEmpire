@@ -373,6 +373,7 @@ export const texts = {
     empty: 'Keine Anzeigen. Die Gegend ist leergekauft.',
     vb: 'VB',
     suspicious: 'Riecht nach Fake',
+    painThreshold: (money: string) => `Schmerzgrenze: ${money}. Weiß nur der Pate.`,
     suspiciousTip: 'Dein geschärfter Blick aus der Cardmarket-Prüfstelle sagt: Finger weg. Gilt, solange der Bonus aus „Echt oder Fake?“ läuft.',
     value: 'Marktwert',
     left: (t: string) => `noch ${t}`,
@@ -411,6 +412,8 @@ export const texts = {
   },
 
   feed: {
+    bailout: (d: Record<string, unknown>, money: string) =>
+      `STAATSHILFE! ${String(d.name)} ist too big to fail: ${money} aus Steuergeld. Der Bund der Steuerzahler schäumt.`,
     slab: (d: Record<string, unknown>, card: string, label: string) =>
       d.black_label
         ? `BLACK LABEL! ${String(d.name)} bekommt vier glatte 10er auf ${card}. Beckett prüft angeblich, ob die Maschine kaputt ist.`
@@ -507,6 +510,14 @@ export const texts = {
           'Schichten laufen nebenbei, von 15 Minuten bis 8 Stunden. Du musst nicht mal hingucken.',
           'Schau zwischendurch rein und check ein, das gibt mehr Lohn. Wer viele Stunden schuftet, steigt im Rang auf.',
           'Früher Feierabend geht auch. Dann gibt es eben nur Geld für die Zeit, die du wirklich da warst.',
+        ],
+      },
+      skills: {
+        name: 'Skillbaum',
+        steps: [
+          'Pro Level bekommst du einen Skillpunkt. Hier gibst du ihn aus: Sammler, Händler, Unternehmer oder Schlitzohr.',
+          'Jeder Zweig hat zwei Linien und unten einen Schlussstein, der beide braucht. Tiefer heißt teurer.',
+          'Alles geht nicht. Umlernen kostet Geld. Entscheide dich also. Ausnahmsweise mal.',
         ],
       },
       grading: {
@@ -613,6 +624,7 @@ export const texts = {
         licenses: 'Mama: Du darfst jetzt ein zweites Kartenspiel verkaufen. Noch mehr Pappe im Haus. Toll.',
         lager: 'Mama: Jetzt gibt es Displays. Und nein, die stellst du nicht in mein Wohnzimmer.',
         grading: 'Mama: Du bezahlst Leute dafür, dass sie deine Karten in Plastik schweißen? Dein Vater hat für so was nicht studiert.',
+        skills: 'Mama: Jetzt hast du Fähigkeiten? Seit wann? Na gut, verteil sie halt.',
       }
       return lines[f] ?? `Neu freigeschaltet: ${name}`
     },
@@ -802,6 +814,35 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  skills: {
+    title: 'Skillbaum',
+    subtitle: 'Wer alles kann, kann nichts richtig. Such dir was aus.',
+    tip: 'Pro Level gibt es einen Skillpunkt. Vier Zweige mit je zwei Linien und einem Schlussstein ganz unten. Tiefere Skills kosten mehr Punkte. Alles auf einmal geht nicht, umlernen kostet Geld.',
+    points: 'Skillpunkte',
+    pointsTip: 'Einer pro Level. Nicht ausgegebene Punkte verfallen nicht.',
+    spent: (n: number) => `${n} ausgegeben`,
+    respec: 'Umlernen',
+    respecTip: 'Vergisst alle Skills und gibt jeden Punkt zurück. Kostet 500 € pro Level, Preisniveau inklusive.',
+    respecTitle: 'Alles vergessen?',
+    respecText: (money: string) => `Alle Skills sind weg, alle Punkte kommen zurück. Kosten: ${money}. Dein Therapeut nennt das Neuanfang.`,
+    respecConfirm: 'Umlernen',
+    respecDone: 'Alles vergessen. Wie nach einer Klassenfahrt.',
+    learn: (n: number) => `Lernen · ${n} ${n === 1 ? 'Punkt' : 'Punkte'}`,
+    learned: (name: string) => `${name} gelernt.`,
+    owned: 'Gelernt',
+    needs: (names: string) => `Erst: ${names}`,
+    keystone: 'Schlussstein',
+    cost: (n: number) => `${n} ${n === 1 ? 'Punkt' : 'Punkte'}`,
+    bailoutTitle: 'Too Big To Fail',
+    bailoutTip: 'Einmal pro Durchgang: Fällt dein Bargeld unter 5 % deines Vermögens, zahlt der Staat ein Viertel deines Vermögens. Steuergeld, schön angelegt.',
+    bailoutReady: (money: string) => `Der Staat steht bereit: ${money}.`,
+    bailoutWaiting: 'Noch bist du zu reich für Staatshilfe. Gib erst dein Bargeld aus.',
+    bailoutUsed: 'Schon kassiert. Zweimal retten sie nicht mal Banken. Doch, eigentlich schon. Dich aber nicht.',
+    bailoutClaim: 'Staatshilfe beantragen',
+    bailoutPaid: (money: string) => `${money} Staatshilfe überwiesen. Die Steuerzahler danken.`,
+    locked: (level: number) => `Den Skillbaum gibt es ab Level ${level}.`,
   },
 
   grading: {
@@ -1258,7 +1299,10 @@ export const texts = {
     tutorial_not_skippable: 'Erst die ersten Schritte, dann darfst du Mama ignorieren.',
     not_enough_energy: 'Keine Energie mehr. Iss was oder warte.',
     too_early: 'Zu schnell fertig. Schummeln ist Mamas Job.',
-    not_ready: 'Das Paket ist noch unterwegs. Geduld, das kennst du doch von DHL.',
+    not_ready: 'Noch nicht so weit. Geduld, das kennst du doch von DHL.',
+    no_points: 'Nicht genug Skillpunkte. Steig erst ein paar Level auf.',
+    already_owned: 'Hast du schon. Doppelt hält nicht besser.',
+    skill_locked: 'Erst den Skill davor lernen. Auch Genies fangen klein an.',
   },
 } as const
 

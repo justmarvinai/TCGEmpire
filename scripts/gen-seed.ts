@@ -15,6 +15,7 @@ import { NPCS } from '../content/npcs.ts'
 import { STORES } from '../content/stores.ts'
 import { RIVALS } from '../content/rivals.ts'
 import { GOALS } from '../content/goals.ts'
+import { SKILL_COST, SKILLS } from '../content/skills.ts'
 
 const q = (v: string | null | undefined) => (v == null ? 'null' : `'${v.replace(/'/g, "''")}'`)
 const rows = (list: string[]) => list.map((r) => `  (${r})`).join(',\n')
@@ -82,6 +83,15 @@ export function buildCatalogSql(): string {
     'on conflict (key) do update set grp = excluded.grp, max_level = excluded.max_level, cost_base_cents = excluded.cost_base_cents,',
     '  growth = excluded.growth, min_level = excluded.min_level, level_step = excluded.level_step, stat = excluded.stat,',
     '  op = excluded.op, per_level = excluded.per_level;',
+    'insert into game.skill_defs (key, branch, tier, cost, requires, stat, op, value) values',
+    rows(
+      SKILLS.map(
+        (s) =>
+          `${q(s.key)}, ${q(s.branch)}, ${s.tier}, ${SKILL_COST[s.tier]}, array[${s.requires.map((r) => q(r)).join(', ')}]::text[], ${q(s.stat)}, ${q(s.op)}, ${s.value}`,
+      ),
+    ),
+    'on conflict (key) do update set branch = excluded.branch, tier = excluded.tier, cost = excluded.cost, requires = excluded.requires,',
+    '  stat = excluded.stat, op = excluded.op, value = excluded.value;',
     'insert into game.job_defs (key, min_level, wage, minigame, shifts) values',
     rows(JOBS.map((j) => `${q(j.key)}, ${j.minLevel}, ${j.wage}, ${q(j.minigame)}, ${j.shifts}`)),
     'on conflict (key) do update set min_level = excluded.min_level, wage = excluded.wage, minigame = excluded.minigame, shifts = excluded.shifts;',

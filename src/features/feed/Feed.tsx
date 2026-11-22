@@ -17,6 +17,7 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'overtake') return texts.feed.overtake(f.data)
   if (f.kind === 'set_phase')
     return texts.feed.set_phase(String(f.data.phase), Boolean(f.data.reprint), SETS.find((s) => s.id === f.data.set_id)?.name ?? String(f.data.set_id))
+  if (f.kind === 'bailout') return texts.feed.bailout(f.data, formatMoney(Number(f.data.cents)))
   if (f.kind === 'slab')
     return texts.feed.slab(
       f.data,

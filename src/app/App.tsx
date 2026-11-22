@@ -17,6 +17,7 @@ import { TradePage } from '@/features/trade/TradePage.tsx'
 import { HomePage } from '@/features/home/HomePage.tsx'
 import { CollectionPage } from '@/features/collection/CollectionPage.tsx'
 import { GradingPage } from '@/features/grading/GradingPage.tsx'
+import { SkillsPage } from '@/features/skills/SkillsPage.tsx'
 import { PlayerProfilePage } from '@/features/profile/PlayerProfilePage.tsx'
 import { JobsPage } from '@/features/jobs/JobsPage.tsx'
 import { OpenPage } from '@/features/open/OpenPage.tsx'
@@ -78,6 +79,7 @@ function Game() {
           <Route path="path" element={<PathPage />} />
           <Route path="bunker" element={<BunkerPage />} />
           <Route path="upgrades" element={<UpgradesPage />} />
+          <Route path="skills" element={<SkillsPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="cardmarket" element={<CardmarketPage />} />
           <Route path="kleinanzeigen" element={<KleinanzeigenPage />} />
