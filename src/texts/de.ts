@@ -351,7 +351,7 @@ export const texts = {
     saveLabel: 'Etikett speichern',
     labelSaved: 'Etikett gespeichert. Die neuen Slabs tragen es ab sofort.',
     // Dashboard
-    tabs: { overview: 'Übersicht', team: 'Team', build: 'Ausbau', reviews: 'Bewertungen' },
+    tabs: { overview: 'Übersicht', team: 'Team', build: 'Ausbau', office: 'Büro', reviews: 'Bewertungen' },
     stageName: (name: string) => name,
     account: 'Firmenkonto',
     accountTip: 'Hier landen Umsätze, von hier gehen Löhne, Miete, Strom und Material. Ist zu wenig da, bleiben die Leute zu Hause.',
@@ -387,7 +387,7 @@ export const texts = {
     haktGain: (money: string) => `bringt ~${money}/h`,
     fixEquipment: (name: string, money: string) => `${name} kaufen · ${money}`,
     fixHire: 'Leute einstellen',
-    fixMarketing: 'Werbung kommt mit dem nächsten Update',
+    fixMarketing: 'Werbung machen',
     fixPrice: (money: string) => `Auf ${money} setzen`,
     fixRaise: 'Gehalt erhöhen',
     fixDeposit: 'Geld einlegen',
@@ -482,6 +482,56 @@ export const texts = {
     vipRuf: (n: number) => (n > 0 ? `Ruf +${n}` : n < 0 ? `Ruf ${n}` : 'Ruf unverändert'),
     vipTruth: 'Wahrheit',
     vipGuess: 'Dein Tipp',
+    // Decisions
+    decision: 'Entscheidung',
+    decisionTip: 'Ab und zu musst du als Chef entscheiden. Wer zu lange wartet, dem nimmt das Leben die Entscheidung ab. Meistens schlecht.',
+    decisionLeaves: (time: string) => `Entscheide in ${time}, sonst entscheidet das Schicksal.`,
+    // Marketing
+    marketing: 'Werbung',
+    marketingTip: 'Werbung bringt für eine Weile mehr Kunden. Es läuft immer nur eine Kampagne. Bessere Kampagnen gibt es mit größeren Rechtsformen.',
+    campaignActive: (name: string, time: string) => `${name} läuft noch ${time}.`,
+    campaignInfo: (pct: number, hours: number) => `+${pct} % Kunden für ${hours} Stunden`,
+    campaignStart: (money: string) => `Starten · ${money}`,
+    campaignStarted: (name: string) => `${name} läuft. Die Kunden kommen. Hoffentlich.`,
+    campaignLocked: (stage: string) => `ab ${stage}`,
+    // Taxes
+    tax: 'Finanzamt',
+    taxTip: (late: number, advisor: number) =>
+      `Jede Woche ist die Umsatzsteuer-Voranmeldung fällig. Wer sie verpasst, zahlt ${late} % des Wochenumsatzes Säumniszuschlag. Ein Steuerberater erledigt das automatisch, will aber ${advisor} % des Umsatzes.`,
+    taxDue: (time: string) => `Nächste Voranmeldung fällig in ${time}.`,
+    taxOverdue: 'Die Voranmeldung ist überfällig. Das Finanzamt schickt gleich Post.',
+    taxFile: 'Formular ausfüllen',
+    taxFiled: 'Abgegeben. Das Finanzamt ist zufrieden. Für eine Woche.',
+    taxWrong: 'Falsche Zahl. Das Finanzamt schickt das Formular mit rotem Kringel zurück. Nochmal.',
+    taxAdvisor: (money: string) => `Steuerberater holen · ${money}`,
+    taxAdvisorActive: (pct: number) => `Dein Steuerberater erledigt die Voranmeldung. Für ${pct} % des Wochenumsatzes. Er nennt das Pauschale.`,
+    taxAdvisorHired: 'Der Steuerberater ist da. Er hat einen Tisch mitgebracht. Und einen Ordner. Viele Ordner.',
+    // Shady business
+    shady: 'Grauzone',
+    shadyTip: 'Abkürzungen mit echtem Risiko. Alles freiwillig. Eine ehrliche Firma kommt auch ans Ziel und kriegt die Auszeichnungen.',
+    schwarz: 'Schwarzarbeit',
+    schwarzTip: (pct: number) => `Löhne ohne Steuer und Abgaben: Du zahlst nur ${pct} %. Bis der Zoll klingelt. Dann gibt es Strafe, und alle lesen davon.`,
+    schwarzOn: 'Anfangen',
+    schwarzOff: 'Aufhören',
+    schwarzActive: 'Läuft. Schau dich nicht nach Männern mit Westen um.',
+    evade: 'Auszahlen am Finanzamt vorbei',
+    evadeTip: 'Du bekommst alles, ohne Kapitalertragsteuer. Die Steuer bleibt offen, bis eine Steuerprüfung sie findet. Dann mit Strafzuschlag.',
+    evaded: (money: string) => `Offene Steuer: ${money}`,
+    mystery: 'Mystery-Boxen',
+    mysteryTip: (x: string) => `Deine billigsten Bulk-Karten als „Mystery-Box, PSA 10 garantiert*“ verkaufen: ×${x} ihres Werts aufs Firmenkonto. Die Käufer öffnen sie und schreiben Bewertungen. Schlechte.`,
+    mysteryQty: 'Karten',
+    mysterySell: 'Boxen packen',
+    mysterySold: 'Verkauft. Das Sternchen steht ganz unten im Kleingedruckten.',
+    mysteryPending: (n: number) => `${n} Boxen noch ungeöffnet. Die Bewertungen kommen.`,
+    bump: 'Gefälligkeit (+1 Note)',
+    bumpTip: 'Eine Note besser für den Kunden. Jeder solche Slab ist eine Zeitbombe: Wird er geknackt oder fliegt es auf, gibt es einen Skandal.',
+    bumped: 'Erledigt. Unter uns.',
+    bumpedCount: (n: number) => `${n} geschönte Slabs unterwegs`,
+    scandal: (date: string) => `Skandal! Bis ${date} sind deine Slabs weniger wert.`,
+    shadyDone: 'Erledigt.',
+    // Awards
+    awards: 'Auszeichnungen',
+    awardsTip: 'Gibt es nur für ehrliche Firmen: keine geschönten Slabs, keine Schwarzarbeit, keine offene Steuer, kein Skandal. Jede bringt Ruf.',
   },
 
   loans: {
@@ -668,6 +718,11 @@ export const texts = {
   },
 
   feed: {
+    scandal: (d: Record<string, unknown>) =>
+      `SKANDAL BEI „${String(d.company)}“! Geschönte Noten aufgeflogen. ${String(d.name)} schweigt. Sammler zittern um ihre Slabs.`,
+    zoll: (d: Record<string, unknown>) => `RAZZIA! Der Zoll stürmt „${String(d.company)}“. Schwarzarbeit! ${String(d.name)} wird abgeführt. Fast.`,
+    audit: (d: Record<string, unknown>) => `STEUERPRÜFUNG bei „${String(d.company)}“: ${String(d.name)} hatte Geld am Finanzamt vorbeigeschleust. Jetzt nicht mehr.`,
+    award: (d: Record<string, unknown>, award: string) => `AUSGEZEICHNET: „${String(d.company)}“ von ${String(d.name)} erhält „${award}“. Die Konkurrenz schäumt.`,
     company_founded: (d: Record<string, unknown>) =>
       `GRÜNDERZEIT: ${String(d.name)} gründet „${String(d.company)}“. Die großen Grader lachen noch.`,
     loan_defaulted: (d: Record<string, unknown>, money: string) =>
@@ -1006,6 +1061,14 @@ export const texts = {
     group_order_done: (d: Record<string, unknown>, name: string) =>
       `Sammelbestellung voll: ${String(d.qty)}× ${name} sind unterwegs. Der Großhändler hat gegrinst.`,
     group_order_cancelled: (name: string) => `Sammelbestellung für ${name} geplatzt. Dein Geld ist zurück.`,
+    company_decision: (title: string) => `Entscheidung in der Firma: ${title}. Wer nicht entscheidet, verliert.`,
+    company_decision_ignored: (title: string) => `Du hast „${title}“ ausgesessen. Das Schicksal hat entschieden. Gegen dich.`,
+    company_tax_advisor: (money: string) => `Dein Steuerberater hat die Voranmeldung abgegeben. Rechnung: ${money}.`,
+    company_tax_late: (money: string) => `Voranmeldung verpasst. Säumniszuschlag: ${money}. Das Finanzamt vergisst nie.`,
+    company_zoll: (money: string) => `Der Zoll war da! Schwarzarbeit aufgeflogen, ${money} Strafe. Die Nachbarn haben alles gesehen.`,
+    company_audit: (money: string) => `Steuerprüfung! Die offene Steuer plus Zuschlag: ${money}. Der Prüfer hatte keinen Humor.`,
+    company_scandal: 'Skandal! Ein geschönter Slab ist aufgeflogen. Ruf weg, deine Slabs sind eine Woche weniger wert.',
+    company_award: (name: string) => `Auszeichnung: ${name}! Das Zertifikat hängt schon schief an der Wand.`,
     company_order: (d: Record<string, unknown>) =>
       `${String(d.name)} schickt deiner Firma ${Number(d.n) === 1 ? 'eine Karte' : `${String(d.n)} Karten`}. Bezahlt ist schon. Jetzt nicht verkacken.`,
     company_stage: (name: string) => `Glückwunsch, ihr seid jetzt ${name}. Der Notar schickt die Rechnung nach.`,
@@ -1876,6 +1939,7 @@ export const texts = {
     lender_broke: 'Der Geldgeber ist selbst pleite. Peinlich für ihn.',
     company_broke: 'Auf dem Firmenkonto ist nicht genug Geld. Leg was ein.',
     name_taken: 'Den Firmennamen gibt es schon. Markenrecht ist kein Spaß.',
+    not_enough_cards: 'So viele Bulk-Karten hast du nicht. Öffne mehr Booster.',
     group_alone: 'Die ganze Kiste allein? Das ist keine Sammelbestellung, das ist Großhandel. Lass den anderen was übrig.',
     group_week_limit: 'Diese Woche hast du genug Displays bestellt. Nächste Woche wieder.',
     store_closed: 'Heute zu. Sonntags gibt es nur den Flohmarkt.',

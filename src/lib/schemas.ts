@@ -881,6 +881,28 @@ export const zCompany = z.object({
           ranges: z.object({ centering: zRangePair, corners: zRangePair, edges: zRangePair, surface: zRangePair }),
         })
         .nullable(),
+      decision: z.object({ id: z.number(), key: z.string(), expires_at: z.string() }).nullable(),
+      marketing: z.object({ key: z.string().nullable(), boost: z.number(), until: z.string() }).nullable(),
+      campaigns: z.record(z.string(), z.object({ cost_cents: z.number(), open: z.boolean() })),
+      tax: z.object({
+        due_at: z.string(),
+        advisor: z.boolean(),
+        advisor_cost_cents: z.number(),
+        late_pct: z.number(),
+        advisor_pct: z.number(),
+        options: z.array(z.number()),
+      }),
+      shady: z.object({
+        schwarzarbeit: z.boolean(),
+        evaded_cents: z.number(),
+        bumped: z.number(),
+        scandal_until: z.string().nullable(),
+        mystery_sour: z.number(),
+        schwarz_wage_pct: z.number(),
+        mystery_markup: z.number(),
+        mystery_max: z.number(),
+      }),
+      awards: z.array(z.object({ key: z.string(), at: z.string() })),
     })
     .nullable(),
 })
@@ -1126,6 +1148,11 @@ export const RPC_SCHEMAS = {
   company_equipment_buy: zCompany,
   company_stage_up: zCompany,
   companies_list: zCompanies,
+  company_decide: zCompany.extend({ decided: z.object({ key: z.string(), choice: z.number() }) }),
+  company_marketing: zCompany,
+  company_tax_file: zCompany.extend({ filed: z.boolean() }),
+  company_tax_advisor: zCompany,
+  company_shady: zCompany.extend(withPlayer),
   company_order_submit: z.object({ fee_cents: z.number(), grading: zGrading, ...withPlayer }),
   company_vip_grade: zCompany.extend({
     result: z.object({ truth: z.array(z.number()), guess: z.array(z.number()), error: z.number(), paid_cents: z.number(), ruf: z.number() }),

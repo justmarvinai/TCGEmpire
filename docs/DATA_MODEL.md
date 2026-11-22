@@ -108,7 +108,7 @@ RLS enabled on every table with no policies.
 | `game.company_staff`, `game.company_applicants` | alpha_09 · Staff (archetype, name indexes into the content pools, station, Tempo, Genauigkeit, Treue, wage per hour in Basis-€, trainings) and the applicants of the German day. |
 | `game.company_research` | Research (planned; equipment is `companies.equipment`). |
 | `game.company_days` | alpha_09 · Orders, revenue and costs per company and German day (14 days kept). Cycles run in the tick `company` and on every `company_get`. |
-| `game.company_decisions` | Pending decision cards. |
+| `game.company_decisions`, `game.company_awards`, `companies` (marketing, tax, shady columns), `card_copies.bumped` | alpha_09 · The open decision card (key, expiry; the ignore choice happens after it); awards per company; on the company: running campaign (key, boost, until), next tax date and Steuerberater, Schwarzarbeit, Kapitalertragsteuer evaded, Gefälligkeitsgutachten in the world (`bumped`), scandal end, Mystery-Boxen still unopened. `card_copies.bumped` marks a slab one grade too good (set when its order is revealed); cracking it starts a scandal. |
 | `game.company_vip`, `grading_orders.bumped`, grader `co:<id>` | alpha_09 · VIP orders (card, hidden quality values, shown range width, fee, expiry) graded by the owner; player orders to a company are grading orders with the grader `co:<company id>` (constraint widened on `card_copies` and `grading_orders`), `bumped` marks a Gefälligkeitsgutachten. Company slabs carry the company's label in `slab_doc` and its brand from the owner's Ruf. |
 | `game.company_reviews` | alpha_09 · Generated customer reviews (stars, text index into the content pool); the newest 50 are kept. |
 | `game.shares` | Stille Teilhaberschaft. |

@@ -31,9 +31,10 @@ import { EQUIPMENT, REVIEWS, STAGES, STATION_DEFS } from '../../../content/compa
 import { LabelDesigner, LabelPreview } from './LabelDesigner.tsx'
 import { personCv, personName } from './people.ts'
 import { PlayerOrders, VipOrder } from './Orders.tsx'
+import { Awards, DecisionCard, Marketing, Shady, Taxes } from './Business.tsx'
 
 const T = texts.company
-const TABS = ['overview', 'team', 'build', 'reviews'] as const
+const TABS = ['overview', 'team', 'build', 'office', 'reviews'] as const
 type Tab = (typeof TABS)[number]
 const STATION_ICON: Record<CompanyStation, IconName> = {
   annahme: 'gift',
@@ -89,6 +90,7 @@ export function Dashboard({ d, player }: { d: CompanyDoc; player: Player }) {
       {tab === 'overview' && (
         <div className="grid items-start gap-4 xl:grid-cols-[1fr_24rem]">
           <div className="flex min-w-0 flex-col gap-4">
+            <DecisionCard co={co} />
             <VipOrder co={co} />
             <HaktPanel co={co} onTab={setTab} />
             <Pipeline co={co} />
@@ -106,6 +108,16 @@ export function Dashboard({ d, player }: { d: CompanyDoc; player: Player }) {
           <Stage co={co} />
           <Equipment co={co} />
           <LabelEdit co={co} />
+        </div>
+      )}
+      {tab === 'office' && (
+        <div className="grid items-start gap-4 xl:grid-cols-2">
+          <Marketing co={co} />
+          <div className="flex flex-col gap-4">
+            <Taxes co={co} />
+            <Awards co={co} />
+          </div>
+          <Shady co={co} />
         </div>
       )}
       {tab === 'reviews' && <Reviews co={co} />}
@@ -293,7 +305,11 @@ function HaktPanel({ co, onTab }: { co: Company; onTab: (t: Tab) => void }) {
           {T.fixHire}
         </Button>
       )
-    return <span className="text-xs text-fg-3">{T.fixMarketing}</span>
+    return (
+      <Button size="sm" onClick={() => onTab('office')}>
+        {T.fixMarketing}
+      </Button>
+    )
   }
   return (
     <Panel title={T.hakt} tip={T.haktTip}>

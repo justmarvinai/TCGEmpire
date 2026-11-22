@@ -161,12 +161,12 @@ Goal: the business sim.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Gewerbeanmeldung quest chain; founding; label designer | M |
-| ☐ | Pipeline simulation, demand, costs, cycles, "Wo es hakt" panel | M |
-| ☐ | Staff (applicants, hiring, training, loyalty), equipment, stages 1–4 | M |
-| ☐ | Player orders to companies; brand factor on slabs; reviews; Ruf system complete | M |
-| ☐ | Decisions, manual grading mini-game, marketing, taxes | M |
-| ☐ | Shady options and scandals | M |
+| ☑ | Gewerbeanmeldung quest chain; founding; label designer | M |
+| ☑ | Pipeline simulation, demand, costs, cycles, "Wo es hakt" panel | M |
+| ☑ | Staff (applicants, hiring, training, loyalty), equipment, stages 1–4 | M |
+| ☑ | Player orders to companies; brand factor on slabs; reviews; Ruf system complete | M |
+| ☑ | Decisions, manual grading mini-game, marketing, taxes | M |
+| ☑ | Shady options and scandals | M |
 | ☐ | Großhandel | M |
 | ☐ | Research, stages 5–7, Stille Teilhaberschaft | S |
 

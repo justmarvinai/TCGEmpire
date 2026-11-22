@@ -63,4 +63,13 @@ test('firma: Gewerbeanmeldung, Passierschein A38, founding, hiring and the pipel
   await page.getByRole('tab', { name: 'Übersicht' }).click()
   await expect(page.getByText('Fließband')).toBeVisible()
   await page.screenshot({ path: shot('company'), animations: 'disabled' })
+
+  // Büro: a flyer campaign, the tax office, the grey zone
+  await page.getByRole('tab', { name: 'Büro' }).click()
+  await page.getByRole('listitem').filter({ hasText: 'Flyer im Kiosk' }).getByRole('button', { name: /^Starten/ }).click()
+  await expect(page.getByText(/^Flyer im Kiosk läuft/).first()).toBeVisible()
+  await page.getByRole('button', { name: 'Formular ausfüllen' }).click()
+  await expect(page.getByRole('dialog', { name: 'Umsatzsteuer-Voranmeldung' })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await page.screenshot({ path: shot('company-office'), animations: 'disabled' })
 })

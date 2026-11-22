@@ -210,6 +210,147 @@ export const A38_ROOMS: readonly { text: string; doors: readonly string[]; right
   { text: 'Zimmer 2B. „Unterschrift? Gerne. Aber erst, wenn Sie den Passierschein A38 haben.“ Ein Formular liegt auf dem Tisch.', doors: ['Das Formular selbst ausfüllen', 'Nach dem Passierschein A38 fragen', 'Weinen'], right: 0 },
 ]
 
+export interface CampaignDef {
+  key: string
+  name: string
+  text: string
+  /** price at stage 1; bigger companies pay more (× the stage's wage level) */
+  costBaseCents: number
+  /** customers × (1 + boost) while it runs */
+  boost: number
+  hours: number
+  minStage: number
+}
+
+export const CAMPAIGNS: readonly CampaignDef[] = [
+  { key: 'flyer', name: 'Flyer im Kiosk', text: 'Copyshop, 500 Stück, Comic Sans. Der Kioskbesitzer legt sie neben die Lottoscheine.', costBaseCents: 500_00, boost: 0.2, hours: 24, minStage: 1 },
+  { key: 'instagram', name: 'Instagram-Kampagne', text: 'Ein Reel mit Slab-Unboxing und trendigem Sound. Die Kommentare: nur Bots und Mutti.', costBaseCents: 2_500_00, boost: 0.4, hours: 24, minStage: 2 },
+  { key: 'youtuber', name: 'YouTuber sponsern', text: '„Dieses Video wird gesponsert von …“ Er spricht deinen Namen falsch aus. Egal, 200.000 Aufrufe.', costBaseCents: 9_000_00, boost: 0.7, hours: 24, minStage: 2 },
+  { key: 'messe', name: 'Stand auf der Kartenmesse', text: 'Drei Tage Messehalle, Klapptisch, Bannerständer. Die Füße tun weh, die Kasse klingelt.', costBaseCents: 30_000_00, boost: 1.2, hours: 48, minStage: 3 },
+]
+
+/**
+ * Decision cards. Effects: cash (Basis-€ cents × the stage's wage level; negative costs), ruf, loyalty and wagePct for
+ * all staff, bump (Gefälligkeitsgutachten: a slab one grade too good is out there), downgrade (equipment of a station
+ * drops a level), boost/hours (more customers for a while), rufAccuracy (Ruf ± that much depending on accuracy ≥ 90 %).
+ * `ignore` is the choice that happens when nobody decides in time.
+ */
+export interface DecisionEffect {
+  cash?: number
+  ruf?: number
+  loyalty?: number
+  wagePct?: number
+  bump?: number
+  downgrade?: Station
+  boost?: number
+  hours?: number
+  rufAccuracy?: number
+}
+export interface DecisionDef {
+  key: string
+  title: string
+  text: string
+  weight: number
+  minStage: number
+  ignore: number
+  choices: readonly { label: string; result: string; effect: DecisionEffect }[]
+}
+
+export const DECISIONS: readonly DecisionDef[] = [
+  {
+    key: 'reklamation', title: 'Reklamation', weight: 4, minStage: 1, ignore: 2,
+    text: 'Ein Kunde schwört, seine Karte war eine 10. Er hat eine 8 bekommen. Er hat Fotos. Unscharfe Fotos.',
+    choices: [
+      { label: 'Kulanz: Geld zurück', result: 'Der Kunde ist besänftigt und schreibt „Service top“. Das Geld ist weg.', effect: { cash: -300_00, ruf: 4 } },
+      { label: 'Gutachten verteidigen', result: 'Du erklärst ihm Zentrierung. Er versteht es nicht. Er schreibt eine Bewertung.', effect: { ruf: -2 } },
+      { label: 'Ignorieren', result: 'Er postet es in drei Facebook-Gruppen. Mit Großbuchstaben.', effect: { ruf: -6 } },
+    ],
+  },
+  {
+    key: 'bestechung', title: 'Ein Umschlag', weight: 3, minStage: 1, ignore: 1,
+    text: 'Ein Händler schiebt dir einen Umschlag hin: „Für eine Note besser. Unter uns.“',
+    choices: [
+      { label: 'Nehmen', result: 'Das Geld ist auf dem Konto, der Slab in der Welt. Eine kleine Zeitbombe tickt.', effect: { cash: 1_500_00, bump: 1 } },
+      { label: 'Ablehnen', result: 'Der Händler geht beleidigt. Dein Gewissen schläft gut.', effect: { ruf: 2 } },
+    ],
+  },
+  {
+    key: 'journalistin', title: 'Presseanfrage', weight: 2, minStage: 1, ignore: 1,
+    text: 'Eine Journalistin der KARTEN-BILD will wissen, wie streng ihr wirklich prüft.',
+    choices: [
+      { label: 'Interview geben', result: 'Der Artikel erscheint. Ob er dir gefällt, hängt davon ab, wie gut du wirklich bist.', effect: { rufAccuracy: 8 } },
+      { label: 'Kein Kommentar', result: '„Die Firma wollte sich nicht äußern.“ Klingt nach Leiche im Keller.', effect: { ruf: -2 } },
+    ],
+  },
+  {
+    key: 'schweissgeraet', title: 'Es raucht', weight: 3, minStage: 1, ignore: 1,
+    text: 'Das Gerät zum Einschweißen macht komische Geräusche und riecht nach verbranntem Plastik.',
+    choices: [
+      { label: 'Reparieren lassen', result: 'Der Techniker kommt, schaut, seufzt und schreibt eine Rechnung.', effect: { cash: -800_00 } },
+      { label: 'Wird schon gehen', result: 'Es ging nicht. Das Gerät ist hinüber, ihr arbeitet wieder mit dem alten.', effect: { downgrade: 'slabbing' } },
+    ],
+  },
+  {
+    key: 'betriebsrat', title: 'Betriebsrat', weight: 2, minStage: 2, ignore: 0,
+    text: 'Die Belegschaft will einen Betriebsrat gründen. Es gibt Flyer. Und eine Liste mit Forderungen.',
+    choices: [
+      { label: 'Unterstützen', result: 'Mehr Lohn, bessere Laune. Der Kaffee ist jetzt Bio.', effect: { loyalty: 15, wagePct: 5 } },
+      { label: 'Dagegen kämpfen', result: 'Du gewinnst. Die Stimmung ist im Keller, und das Internet weiß es.', effect: { loyalty: -20, ruf: -4 } },
+    ],
+  },
+  {
+    key: 'praktikant', title: 'Missgeschick', weight: 3, minStage: 1, ignore: 1,
+    text: 'Praktikant Kevin hat die Karte eines Kunden fallen lassen. Ecke ab. Er weint.',
+    choices: [
+      { label: 'Kunden entschädigen', result: 'Teuer, aber der Kunde kommt wieder. Kevin auch.', effect: { cash: -600_00, ruf: 1 } },
+      { label: 'Vertuschen', result: 'Der Kunde merkt es. Natürlich merkt er es.', effect: { ruf: -5, loyalty: -5 } },
+    ],
+  },
+  {
+    key: 'nachbar', title: 'Der Nachbar', weight: 2, minStage: 1, ignore: 1,
+    text: 'Der Nachbar beschwert sich über den Lärm vom Schweißgerät. Er droht mit dem Ordnungsamt.',
+    choices: [
+      { label: 'Kuchen vorbeibringen', result: 'Er ist versöhnt und empfiehlt dich im Kleingartenverein.', effect: { cash: -30_00, boost: 0.1, hours: 12 } },
+      { label: 'Lauter machen', result: 'Das Ordnungsamt kommt. Mit Formular.', effect: { cash: -400_00, ruf: -2 } },
+    ],
+  },
+  {
+    key: 'kooperation', title: 'Kooperation', weight: 2, minStage: 2, ignore: 1,
+    text: 'Ein Kartenladen will seine Kunden an dich schicken. Gegen eine kleine Provision.',
+    choices: [
+      { label: 'Einschlagen', result: 'Der Laden schickt Kunden. Viele Kunden.', effect: { cash: -2_000_00, boost: 0.3, hours: 48 } },
+      { label: 'Ablehnen', result: 'Du bleibst unabhängig. Und leer.', effect: {} },
+    ],
+  },
+  {
+    key: 'abwerbung', title: 'Abwerbeversuch', weight: 2, minStage: 2, ignore: 1,
+    text: 'Die Konkurrenz hat deinen besten Leuten ein Angebot gemacht. Sie überlegen.',
+    choices: [
+      { label: 'Gehälter erhöhen', result: 'Alle bleiben. Und wissen jetzt, was sie wert sind.', effect: { wagePct: 8, loyalty: 10 } },
+      { label: 'Pokern', result: 'Sie bleiben, aber sie reden in der Kaffeeküche über dich.', effect: { loyalty: -15 } },
+    ],
+  },
+]
+
+export interface AwardDef {
+  key: string
+  name: string
+  text: string
+}
+
+/** Only for honest companies: no open Gefälligkeitsgutachten, no Schwarzarbeit, no scandal. */
+export const AWARDS: readonly AwardDef[] = [
+  { key: 'tuev', name: 'TÜV-geprüft', text: '500 Aufträge bei mindestens 90 % Genauigkeit.' },
+  { key: 'warentest', name: 'Stiftung Warentest: SEHR GUT (1,3)', text: 'Im Schnitt mindestens 4,3 Sterne aus 20 Bewertungen.' },
+  { key: 'din', name: 'DIN-Norm für Slabs', text: '5.000 Aufträge und mindestens 4 Sterne Ruf.' },
+]
+
+/** Umsatzsteuer-Voranmeldung: a form with one honest number and two wrong ones. */
+export const TAX_FORM = {
+  title: 'Umsatzsteuer-Voranmeldung',
+  question: 'Zeile 21: Umsatz der letzten sieben Tage. Welcher Betrag steht in deinen Büchern?',
+}
+
 /** What the server needs (seeded as config). */
 export const COMPANY_CONFIG = {
   'company.stages': STAGES.map(({ name: _n, quest: _q, key: _k, ...s }) => s),
@@ -223,4 +364,6 @@ export const COMPANY_CONFIG = {
   'company.last_names': LAST_NAMES.length,
   'company.review_counts': REVIEWS.map((r) => r.length),
   'company.label_colors': Object.keys(LABEL_COLORS),
+  'company.campaigns': Object.fromEntries(CAMPAIGNS.map(({ key, name: _n, text: _t, ...c }) => [key, c])),
+  'company.decisions': DECISIONS.map(({ title: _t, text: _x, choices, ...d }) => ({ ...d, choices: choices.map((c) => c.effect) })),
 } as const

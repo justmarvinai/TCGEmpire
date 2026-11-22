@@ -22,7 +22,7 @@ import { texts } from '@/texts/de.ts'
 import { ACHIEVEMENTS, CONSUMABLES, GOALS, itemName } from '@/lib/catalog.ts'
 import { FeedList } from '@/features/feed/Feed.tsx'
 import { personName } from '@/features/company/people.ts'
-import { STAGES } from '../../content/company.ts'
+import { AWARDS, DECISIONS, STAGES } from '../../content/company.ts'
 import { SNACK_ICON } from '@/features/shop/icons.ts'
 import { FeatureTour, Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
 import { CommandPalette } from './CommandPalette.tsx'
@@ -343,6 +343,14 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'loan_defaulted') return texts.notifications.loan_defaulted(n.data, formatMoney(Number(n.data.cents)))
   if (n.kind === 'loan_defaulted_self') return texts.notifications.loan_defaulted_self(n.data, formatMoney(Number(n.data.cents)))
   if (n.kind === 'break_done') return texts.notifications.break_done(n.data, formatMoney(Number(n.data.cents)))
+  if (n.kind === 'company_decision') return texts.notifications.company_decision(DECISIONS.find((x) => x.key === n.data.key)?.title ?? '')
+  if (n.kind === 'company_decision_ignored') return texts.notifications.company_decision_ignored(DECISIONS.find((x) => x.key === n.data.key)?.title ?? '')
+  if (n.kind === 'company_tax_advisor') return texts.notifications.company_tax_advisor(formatMoney(Number(n.data.cents)))
+  if (n.kind === 'company_tax_late') return texts.notifications.company_tax_late(formatMoney(Number(n.data.cents)))
+  if (n.kind === 'company_zoll') return texts.notifications.company_zoll(formatMoney(Number(n.data.cents)))
+  if (n.kind === 'company_audit') return texts.notifications.company_audit(formatMoney(Number(n.data.cents)))
+  if (n.kind === 'company_scandal') return texts.notifications.company_scandal
+  if (n.kind === 'company_award') return texts.notifications.company_award(AWARDS.find((x) => x.key === n.data.key)?.name ?? '')
   if (n.kind === 'company_order') return texts.notifications.company_order(n.data)
   if (n.kind === 'company_stage') return texts.notifications.company_stage(STAGES.find((x) => x.stage === Number(n.data.stage))?.name ?? '')
   if (n.kind === 'company_broke') return texts.notifications.company_broke

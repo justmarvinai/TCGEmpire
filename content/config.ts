@@ -328,6 +328,37 @@ export const config = {
   'company.vip_ruf_exact': 5,
   'company.vip_ruf_close': 2,
   'company.vip_ruf_bad': -3,
+  // Decisions: chance per hour while none is open, hours until the ignore choice happens. Umsatzsteuer-Voranmeldung
+  // every tax_days; late: a fee of tax_late_pct of the week's revenue; a Steuerberater (one-off, × stage wage level)
+  // files by himself for tax_advisor_pct. Shady: Schwarzarbeit pays wages × schwarz_wage_pct with a Zoll chance per
+  // hour (fine: schwarz_fine_hours of wages, Ruf); evaded Kapitalertragsteuer may meet a Steuerprüfung (chance per
+  // hour, back payment + penalty, Ruf); every Gefälligkeitsgutachten may blow up (chance per hour per slab; certain
+  // when such a slab is cracked): Ruf, and every slab of the company is worth less for scandal_days. Mystery-Boxen:
+  // bulk cards sold at mystery_markup × their value; the buyers' disappointment costs Ruf per box over time.
+  // Awards bring Ruf. A repaid loan is a kept deal: Ruf for the borrower.
+  'company.decision_per_hour': 0.15,
+  'company.decision_hours': 12,
+  'company.tax_days': 7,
+  'company.tax_late_pct': 10,
+  'company.tax_advisor_base_cents': 15_000_00,
+  'company.tax_advisor_pct': 2,
+  'company.schwarz_wage_pct': 70,
+  'company.schwarz_check_per_hour': 0.002,
+  'company.schwarz_fine_hours': 72,
+  'company.schwarz_ruf': -30,
+  'company.audit_per_hour': 0.0015,
+  'company.audit_penalty_pct': 50,
+  'company.audit_ruf': -25,
+  'company.bump_check_per_hour': 0.0005,
+  'company.scandal_ruf': -50,
+  'company.scandal_brand_pct': 70,
+  'company.scandal_days': 7,
+  'company.mystery_markup': 1.5,
+  'company.mystery_max': 200,
+  'company.mystery_ruf_per_box': 0.15,
+  'company.mystery_per_hour': 25,
+  'company.award_ruf': 20,
+  'loan.repaid_ruf': 5,
 
   // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,

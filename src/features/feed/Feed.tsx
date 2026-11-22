@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { slabName } from '@/components/cards/Slab.tsx'
 import { HOMES } from '@/lib/catalog.ts'
+import { AWARDS } from '../../../content/company.ts'
 import { CONSUMABLES, cardName, gameOf, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
 import type { BattleMode, FeedEntry } from '@/lib/schemas.ts'
@@ -20,6 +21,10 @@ export function feedText(f: FeedEntry, doener: string) {
     return texts.feed.set_phase(String(f.data.phase), Boolean(f.data.reprint), SETS.find((s) => s.id === f.data.set_id)?.name ?? String(f.data.set_id))
   if (f.kind === 'league') return texts.feed.league(f.data, texts.toplists.percent(Number(f.data.bps)))
   if (f.kind === 'company_founded') return texts.feed.company_founded(f.data)
+  if (f.kind === 'scandal') return texts.feed.scandal(f.data)
+  if (f.kind === 'zoll') return texts.feed.zoll(f.data)
+  if (f.kind === 'audit') return texts.feed.audit(f.data)
+  if (f.kind === 'award') return texts.feed.award(f.data, AWARDS.find((x) => x.key === f.data.key)?.name ?? '')
   if (f.kind === 'loan_defaulted') return texts.feed.loan_defaulted(f.data, formatMoney(Number(f.data.cents)))
   if (f.kind === 'battle')
     return texts.feed.battle(f.data, texts.battles.modes[f.data.mode as BattleMode]?.name ?? String(f.data.mode), formatMoney(Number(f.data.pot)))

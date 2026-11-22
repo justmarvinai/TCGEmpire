@@ -13,6 +13,7 @@ import type { Company } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
+import { BumpButton } from './Business.tsx'
 
 const T = texts.company
 const ASPECTS = ['centering', 'corners', 'edges', 'surface'] as const
@@ -43,6 +44,7 @@ export function PlayerOrders({ co }: { co: Company }) {
                   {formatMoney(o.fee_cents)}
                 </span>
               </span>
+              <BumpButton order={o} />
             </li>
           ))}
         </ul>
