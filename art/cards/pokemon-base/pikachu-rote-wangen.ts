@@ -67,7 +67,6 @@ function festival(p: Painter): void {
   p.fill(p.m().path(string), ROOF[0])
   lantern(p, 8, 14, 5.5, 6.5)
   lantern(p, 20.5, 8, 3.5, 4)
-  lantern(p, 65, 6, 3.5, 4)
 
   // lights of the stalls far away
   for (const [x, y] of pts([2, 31, 13, 34, 19, 29, 63, 33, 66, 27, 6, 37])) {
@@ -96,9 +95,17 @@ function ear(d: Painter, base: Pt, tip: Pt, w: number): void {
     base[0] + u[0] * len * t + n[0] * w * side,
     base[1] + u[1] * len * t + n[1] * w * side,
   ]
-  const shape = d.m().poly([...quad(along(0, -0.45), along(0.42, -1.05), tip), ...quad(tip, along(0.42, 1.05), along(0, 0.45))])
+  const shape = d
+    .m()
+    .poly([
+      ...quad(along(0, -0.45), along(0.42, -1.05), tip),
+      ...quad(tip, along(0.42, 1.05), along(0, 0.45)),
+    ])
   d.part(shape, YELLOW, { bevel: 3 })
-  const tipMask = d.m().disc(tip[0], tip[1], len * 0.42).and(shape)
+  const tipMask = d
+    .m()
+    .disc(tip[0], tip[1], len * 0.42)
+    .and(shape)
   d.shade(tipMask, BLACK, { bevel: 2 })
 }
 
@@ -131,7 +138,12 @@ function mouse(d: Painter): void {
     const cheek = m().disc(cx, cy, 4.1).and(head)
     d.fill(cheek, RED[1])
     d.fill(cheek.clone().minus(cheek.moved(-1, -1)), RED[0])
-    d.fill(m().disc(cx - 1.2, cy - 1.4, 1.5).and(cheek), RED[2])
+    d.fill(
+      m()
+        .disc(cx - 1.2, cy - 1.4, 1.5)
+        .and(cheek),
+      RED[2],
+    )
   }
   d.shine(false)
 
@@ -159,9 +171,9 @@ function charge(p: Painter): void {
     p.blit(shape)
   }
   spark(big, 16, 24, true)
-  spark(small, 20, 35, true)
-  spark(big, 57, 24, false)
-  for (const [x, y] of pts([14, 31, 23, 27, 62, 30, 58, 34])) p.px(x, y, LAMP[4])
+  spark(small, 17, 32, true)
+  spark(small, 57, 22, false)
+  for (const [x, y] of pts([14, 31, 23, 27, 59, 28, 56, 19])) p.px(x, y, LAMP[4])
 }
 
 export const pikachuRoteWangen: CardDef = {

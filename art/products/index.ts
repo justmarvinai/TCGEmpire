@@ -1,5 +1,6 @@
 import type { Painter } from '../toolkit/index.ts'
 import { pokemonCardBack } from './card-back.ts'
+import { SLAB_SAMPLES } from './slab-samples.ts'
 
 export interface ProductDef {
   id: string
@@ -8,4 +9,4 @@ export interface ProductDef {
   draw(p: Painter): void
 }
 
-export const PRODUCTS: readonly ProductDef[] = [pokemonCardBack]
+export const PRODUCTS: readonly ProductDef[] = [pokemonCardBack, ...SLAB_SAMPLES]
