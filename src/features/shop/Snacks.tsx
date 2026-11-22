@@ -39,7 +39,7 @@ export function Snacks({ shop, player, where }: { shop: Shop; player: Player; wh
           const offer = shop.snacks.find((s) => s.key === c.key)
           const affordable = where === 'kiosk' ? player.cash_cents >= (offer?.price_cents ?? Infinity) : player.pfandbons >= (c.pfandbons ?? Infinity)
           return (
-            <div key={c.key} className="flex items-center gap-3 bg-surface-2 p-2">
+            <div key={c.key} className="flex items-center gap-3 rounded-xl bg-surface-2 p-3">
               <PixelIcon name={SNACK_ICON[c.key] ?? 'gift'} scale={2} className="text-accent" />
               <div className="min-w-0 flex-1">
                 <p className="flex items-center gap-1 font-semibold">

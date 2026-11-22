@@ -35,15 +35,11 @@ export function useBunkerContent(b: Bunker | undefined) {
   return { content, max, fill: max > 0 ? content / max : 0, fullInS: Math.max(0, (b.capacity_h - hours) * 3600) }
 }
 
-export function BunkerPage() {
-  const bunker = useBunker()
-  const ups = useUpgrades()
-  const p = useMe().data?.player
+/** Empties the bunker; used by the bunker page and the home tile. */
+export function useCollectBunker() {
   const act = useAct()
   const client = useQueryClient()
   const [busy, setBusy] = useState(false)
-  const live = useBunkerContent(bunker.data)
-
   const collect = async () => {
     setBusy(true)
     const res = await act('bunker_collect', {}, ['quests'])
@@ -54,6 +50,15 @@ export function BunkerPage() {
       toast('success', T.collected(formatMoney(res.collected_cents + res.interest_cents)))
     }
   }
+  return { busy, collect }
+}
+
+export function BunkerPage() {
+  const bunker = useBunker()
+  const ups = useUpgrades()
+  const p = useMe().data?.player
+  const { busy, collect } = useCollectBunker()
+  const live = useBunkerContent(bunker.data)
 
   const b = bunker.data
   return (
@@ -72,7 +77,7 @@ export function BunkerPage() {
             <div className="flex flex-col items-center gap-4 py-2">
               <div
                 className={clsx(
-                  'grid size-40 place-items-center bg-surface-2 outline-2',
+                  'grid size-40 place-items-center rounded-3xl bg-surface-2 outline-2',
                   STAGE_OUTLINE[b.stage ?? 0],
                   live.fill >= 1 ? 'text-gold anim-heartbeat' : STAGE_TONE[b.stage ?? 0],
                 )}
@@ -81,7 +86,7 @@ export function BunkerPage() {
               </div>
               <div className="w-full max-w-sm text-center">
                 <p className="text-sm text-fg-3">{T.content}</p>
-                <p className="nums font-pixel text-4xl text-gold">{formatMoney(Math.floor(live.content))}</p>
+                <p className="nums text-4xl font-bold tracking-tight text-gold">{formatMoney(Math.floor(live.content))}</p>
                 <Progress value={live.fill} tone={live.fill >= 1 ? 'gain' : 'gold'} className="mt-2" />
                 <p className="mt-1 text-xs text-fg-3">{live.fill >= 1 ? T.full : T.fullIn(formatDuration(live.fullInS))}</p>
               </div>

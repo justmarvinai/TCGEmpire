@@ -70,10 +70,10 @@ export function OpenPage() {
                 <div key={s.product_id} className="flex items-center gap-5" data-tour="open-pack">
                   <div className="relative">
                     <PixelProduct id={product?.wrappers[0] ?? ''} scale={2} fallback={{ w: 84, h: 132 }} className="anim-bob" />
-                    <span className="nums absolute -top-2 -right-3 bg-accent px-2 font-pixel text-lg text-accent-fg">×{s.qty}</span>
+                    <span className="nums absolute -top-2 -right-3 rounded-lg bg-grad px-2 font-pixel text-lg text-white">×{s.qty}</span>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <p className="font-pixel text-xl">{product?.name}</p>
+                    <p className="text-xl font-bold tracking-tight">{product?.name}</p>
                     {SIZES.map((n) => (
                       <Button
                         key={n}

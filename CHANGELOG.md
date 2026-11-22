@@ -3,6 +3,16 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_04] — Flip (in progress)
+
+### Changed
+
+- **New look "Nachtschicht":** dark glass panels on soft colour glows, a floating sidebar with every page,
+  stats as pills that explain themselves on click, your level as a ring around your avatar, page search
+  with Strg+K, and KARTEN-BILD as a news button. The home page shows your last big pull, net worth, the
+  next step, the bunker, quests, the Stempelkarte and the latest headlines at a glance. Cards and boosters
+  look exactly as before.
+
 ## [0.0.1-alpha_03] — Grind (22 Nov 2026)
 
 There is always something to do now, and something keeps running while you are away.

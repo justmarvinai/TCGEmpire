@@ -188,6 +188,7 @@ RLS enabled on every table with no policies.
 | `stats_get`, `title_set` | read/write | counters, achievements, titles |
 | `recap_get`, `recap_collect` | read/write | "Willkommen zurück": bunker and finished shift in one click |
 | `account_reset`, `account_delete` | write | Gefahrenzone; confirmed with the username; reset once per 24 h |
+| `home_get` | read | home page document: latest Holo-or-better pull (index `card_copies_pulled`); net worth history follows |
 
 
 

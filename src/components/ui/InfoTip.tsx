@@ -6,7 +6,18 @@ import { sfx } from '@/lib/sfx.ts'
 
 /** The "i" next to every panel, stat and price: a short plain-German explanation. A custom trigger
  *  (for example a buff chip) replaces the "i". */
-export function InfoTip({ children, label = texts.common.info, trigger }: { children: ReactNode; label?: string; trigger?: ReactNode }) {
+export function InfoTip({
+  children,
+  label = texts.common.info,
+  trigger,
+  triggerClassName,
+}: {
+  children: ReactNode
+  label?: string
+  trigger?: ReactNode
+  /** style of a custom trigger (default: a small chip) */
+  triggerClassName?: string
+}) {
   return (
     <Popover.Root onOpenChange={(open) => open && sfx('toggle')}>
       <Popover.Trigger asChild>
@@ -15,7 +26,8 @@ export function InfoTip({ children, label = texts.common.info, trigger }: { chil
           aria-label={label}
           className={
             trigger
-              ? 'flex items-center bg-surface-3 px-1.5 py-1 text-warn outline-accent hover:outline-2 data-[state=open]:outline-2'
+              ? (triggerClassName ??
+                'grid size-11 place-items-center rounded-[0.9rem] border border-line bg-surface-2 text-warn backdrop-blur-xl hover:bg-surface-3 data-[state=open]:bg-surface-3')
               : 'inline-grid size-5 place-items-center text-fg-3 hover:text-accent data-[state=open]:text-accent transition-colors'
           }
         >
@@ -28,7 +40,7 @@ export function InfoTip({ children, label = texts.common.info, trigger }: { chil
           align="start"
           sideOffset={6}
           collisionPadding={12}
-          className="px-panel z-50 max-w-72 p-2 text-sm leading-snug text-fg-2 animate-fade-up"
+          className="panel-float z-50 max-w-72 p-3 text-sm leading-snug text-fg-2 animate-fade-up"
         >
           {children}
         </Popover.Content>

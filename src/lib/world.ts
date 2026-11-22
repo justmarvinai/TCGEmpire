@@ -24,11 +24,14 @@ interface World {
   bigPulls: FeedEntry[]
   /** a pack opening is on screen: celebrations wait until it closes */
   stageOpen: boolean
+  /** the page search (Strg+K) and, on small screens, the navigation drawer */
+  paletteOpen: boolean
+  navOpen: boolean
   apply: (patch: Partial<World>) => void
   reset: () => void
 }
 
-const EMPTY = { feed: [], notifications: [], unread: 0, clockOffsetMs: 0, levelUps: [], bigPulls: [], stageOpen: false }
+const EMPTY = { feed: [], notifications: [], unread: 0, clockOffsetMs: 0, levelUps: [], bigPulls: [], stageOpen: false, paletteOpen: false, navOpen: false }
 
 export const useWorld = create<World>((set) => ({
   ...EMPTY,

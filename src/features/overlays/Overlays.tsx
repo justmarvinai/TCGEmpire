@@ -74,7 +74,7 @@ function RecapSheet({ away, player }: { away: number; player: Player }) {
     <Dialog open onOpenChange={(o) => !o && setOpen(false)} title={texts.recap.title} description={texts.recap.away(formatDuration(away))}>
       <ul className="flex flex-col gap-2">
         {lines.map((l, i) => (
-          <li key={i} className="flex items-center gap-3 bg-surface-2 p-2 anim-deal" style={{ animationDelay: `${i * 80}ms` }}>
+          <li key={i} className="flex items-center gap-3 rounded-xl bg-surface-2 p-3 anim-deal" style={{ animationDelay: `${i * 80}ms` }}>
             <PixelIcon name={l.icon} className="text-accent" />
             <span className="flex-1 text-sm">{l.text}</span>
             {l.money !== undefined && <span className="nums font-semibold text-gold">+{formatMoney(l.money)}</span>}
@@ -108,8 +108,8 @@ function TourDock({ tour, onDone }: { tour: Tour; onDone: () => void }) {
   const [step, setStep] = useState(0)
   const last = step === tour.steps.length - 1
   return (
-    <aside className="px-panel mb-4 flex flex-wrap items-center gap-3 p-3 animate-fade-up" aria-live="polite" aria-label={texts.tour.title(tour.name)}>
-      <span className="grid size-10 shrink-0 place-items-center bg-tier-grail font-pixel text-xl text-accent-fg">M</span>
+    <aside className="panel mb-4 flex flex-wrap items-center gap-3 p-3 animate-fade-up" aria-live="polite" aria-label={texts.tour.title(tour.name)}>
+      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tier-grail font-pixel text-xl text-accent-fg">M</span>
       <div className="min-w-64 flex-1">
         <p className="text-xs text-fg-3">
           <span className="font-semibold text-gain">{texts.tour.title(tour.name)}</span> · {step + 1} / {tour.steps.length}
@@ -174,7 +174,7 @@ function LevelUpOverlay() {
           ))}
         </div>
       </div>
-      <div className="px-panel relative w-[min(92vw,26rem)] p-5 text-center animate-pop" onClick={(e) => e.stopPropagation()}>
+      <div className="panel-float relative w-[min(92vw,26rem)] p-6 text-center animate-pop" onClick={(e) => e.stopPropagation()}>
         <p className="font-pixel text-2xl text-accent">{texts.levelUp.title}</p>
         <p className="font-pixel text-7xl leading-none text-gold anim-stamp">{top.level}</p>
         <div className="mt-4 flex flex-col gap-1 text-sm">
@@ -188,7 +188,7 @@ function LevelUpOverlay() {
             <p className="mb-2 text-sm text-fg-3">{texts.levelUp.unlocks}</p>
             <div className="flex flex-wrap justify-center gap-2">
               {unlocks.map((u, i) => (
-                <span key={u.id} className="flex items-center gap-1 bg-surface-3 px-2 py-1 text-sm font-semibold anim-deal" style={{ animationDelay: `${200 + i * 120}ms` }}>
+                <span key={u.id} className="flex items-center gap-1 rounded-lg bg-surface-3 px-2 py-1 text-sm font-semibold anim-deal" style={{ animationDelay: `${200 + i * 120}ms` }}>
                   <PixelIcon name={u.icon} className="text-accent" />
                   {u.name}
                 </span>
@@ -239,7 +239,7 @@ function TutorialDock({ step }: { step: number }) {
       <button
         type="button"
         onClick={() => setHidden(false)}
-        className="mb-4 flex items-center gap-2 bg-surface-2 px-3 py-1.5 text-sm font-semibold outline-2 outline-line"
+        className="mb-4 flex items-center gap-2 rounded-xl border border-line bg-surface-2 px-3 py-1.5 text-sm font-semibold"
       >
         <PixelIcon name="chat" className="text-accent" /> {texts.tutorial.from}
       </button>
@@ -253,8 +253,8 @@ function TutorialDock({ step }: { step: number }) {
   }
 
   return (
-    <aside className="px-panel mb-4 flex flex-wrap items-center gap-3 p-3 animate-fade-up" aria-live="polite">
-      <span className="grid size-10 shrink-0 place-items-center bg-tier-grail font-pixel text-xl text-accent-fg">M</span>
+    <aside className="panel mb-4 flex flex-wrap items-center gap-3 p-3 animate-fade-up" aria-live="polite">
+      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tier-grail font-pixel text-xl text-accent-fg">M</span>
       <div className="min-w-64 flex-1">
         <p className="text-xs text-fg-3">
           <span className="font-semibold text-fg-2">{texts.tutorial.from}</span> · {step + 1} / {TUTORIAL.length}

@@ -20,10 +20,10 @@ export function Dialog({
     <Radix.Root open={open} onOpenChange={onOpenChange}>
       <Radix.Portal>
         <Radix.Overlay className="fixed inset-0 z-40 bg-ink/80" />
-        <Radix.Content className="px-panel fixed top-1/2 left-1/2 z-50 w-[min(92vw,30rem)] -translate-x-1/2 -translate-y-1/2 p-4 animate-pop">
+        <Radix.Content className="panel-float fixed top-1/2 left-1/2 z-50 w-[min(92vw,30rem)] -translate-x-1/2 -translate-y-1/2 p-4 animate-pop">
           <div className="mb-3 flex items-start gap-3">
             <div className="flex-1">
-              <Radix.Title className="font-pixel text-xl leading-tight">{title}</Radix.Title>
+              <Radix.Title className="text-xl leading-tight font-bold tracking-tight">{title}</Radix.Title>
               {description && <Radix.Description className="mt-1 text-sm text-fg-2">{description}</Radix.Description>}
             </div>
             <Radix.Close aria-label={texts.common.close} className="text-fg-3 hover:text-fg">

@@ -195,6 +195,11 @@ export const zJobs = z.object({
 })
 export type Jobs = z.infer<typeof zJobs>
 
+export const zHome = z.object({
+  last_hit: z.object({ card_id: z.string(), tier: z.string(), value_cents: z.number(), pulled_at: z.string() }).nullable(),
+})
+export type Home = z.infer<typeof zHome>
+
 export const zStats = z.object({
   counters: z.record(z.string(), z.number()),
   achievements: z.array(z.object({ key: z.string(), tier: z.number(), at: z.string() })),
@@ -223,6 +228,7 @@ export const RPC_SCHEMAS = {
   quest_reroll: zQuests.extend({ bonus_booster: z.boolean(), ...withPlayer }),
   stamp_claim: zQuests.extend({ bonus_booster: z.boolean(), ...withPlayer }),
   bunker_get: zBunker,
+  home_get: zHome,
   bunker_collect: z.object({ collected_cents: z.number(), interest_cents: z.number(), bunker: zBunker, ...withPlayer }),
   upgrades_get: zUpgrades,
   upgrade_buy: zUpgrades.extend({ bunker: zBunker, ...withPlayer }),

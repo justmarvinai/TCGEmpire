@@ -169,3 +169,21 @@ describe('kartenladen', () => {
     await t.assertLedgerMatches()
   })
 })
+
+describe('home', () => {
+  it('shows the latest Holo-or-better pull with its current value', async () => {
+    expect((await t.rpc(me, 'home_get')).last_hit).toBeNull()
+    const id = await t.playerId(me)
+    await t.sql(
+      `insert into game.card_copies (owner_id, card_id, q_centering, q_corners, q_edges, q_surface, pulled_at)
+       values ($1, 'pkm-base-088', 8, 8, 8, 8, private.now()), ($1, 'pkm-base-090', 9, 9, 9, 9, private.now() + interval '1 minute')`,
+      [id],
+    )
+    const hit = (await t.rpc(me, 'home_get')).last_hit!
+    expect(hit).toMatchObject({ card_id: 'pkm-base-090', tier: 'grail' })
+    expect(hit.value_cents).toBeGreaterThan(0)
+    // Another player's pulls never show up.
+    const other = await t.player('Neidhammel')
+    expect((await t.rpc(other, 'home_get')).last_hit).toBeNull()
+  })
+})

@@ -87,7 +87,7 @@ function Boot() {
     <div className="app-bg grid min-h-dvh place-items-center">
       <div className="text-center">
         <PixelIcon name="card" scale={4} className="mx-auto animate-pulse text-accent" />
-        <p className="mt-4 font-pixel text-xl text-fg-2">{texts.auth.loading}</p>
+        <p className="mt-4 text-xl font-semibold text-fg-2">{texts.auth.loading}</p>
       </div>
     </div>
   )

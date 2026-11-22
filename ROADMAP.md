@@ -83,8 +83,8 @@ Goal: the site gets its own, unmistakable layout. Icons and pixel art (cards, pr
 
 | | Scope | |
 |---|-------|---|
-| ◐ | 2–3 mockups of layout directions, same screen each; owner picks one | M |
-| ☐ | Build the chosen direction: shell, navigation, HUD, feed, panels, buttons, dialogs, overlays; 1440 px and 390 px | M |
+| ☑ | Mockups of layout directions (five, plus a variant), same screen each; the owner picked D2 "Nachtschicht" | M |
+| ☑ | Build the chosen direction: shell, navigation, HUD, feed, panels, buttons, dialogs, overlays; 1440 px and 390 px | M |
 
 ### alpha_04 — Flip
 

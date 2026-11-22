@@ -91,6 +91,19 @@ export const texts = {
     logout: 'Abmelden',
     admin: 'Admin',
     buffUntil: (time: string) => `Läuft bis ${time} Uhr.`,
+    menu: 'Menü',
+    search: 'Suchen oder springen …',
+    searchKey: 'Strg K',
+    statsTip: 'Ruf, Pfandbons und Preisniveau',
+    you: 'Profil und Einstellungen',
+    profile: 'Zum Profil',
+    version: (v: string) => `Version ${v}`,
+  },
+
+  palette: {
+    title: 'Springen',
+    placeholder: 'Wohin? Seite suchen …',
+    empty: 'Nichts gefunden. Tippfehler oder Größenwahn?',
   },
 
   feed: {
@@ -455,6 +468,7 @@ export const texts = {
   },
 
   stamps: {
+    next: (money: string) => `Nächster Stempel: ${money}`,
     title: 'Stempelkarte',
     tip: 'Einmal pro Tag stempeln. Jeder Stempel der Woche bringt mehr, der siebte einen Booster. Einmal pro Woche holt der Joker einen verpassten Tag nach.',
     claim: 'Stempeln',
@@ -525,6 +539,14 @@ export const texts = {
     cta: { recap: 'Einsammeln', bunkerFull: 'Zum Bunker', shiftDone: 'Abholen', stamp: 'Stempeln', sealed: 'Öffnen', quests: 'Abholen', pfand: 'Pfand sammeln', kiosk: 'Zum Kiosk', broke: 'Zur Sammlung' },
     questsTitle: 'Mini-Quests',
     cash: 'Bargeld',
+    cards: 'Karten',
+    lastHit: 'Letzter Hit',
+    lastHitTip: 'Deine zuletzt gezogene Karte ab Holo aufwärts, mit ihrem aktuellen Wert.',
+    value: 'Wert',
+    toCollection: 'Im Binder ansehen',
+    noHit: 'Noch kein Hit',
+    noHitBody: 'Holo oder besser landet hier. Bis dahin: Bulk, Bulk, Bulk.',
+    openNow: 'Booster öffnen',
     serverTitle: 'Server',
     version: 'Version',
     players: 'Du spielst als',

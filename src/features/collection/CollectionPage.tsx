@@ -64,7 +64,7 @@ export function CollectionPage() {
             <p className="flex items-center gap-1 text-sm text-fg-3">
               {set.name} · {T.progress} <InfoTip>{T.progressTip}</InfoTip>
             </p>
-            <p className="nums font-pixel text-3xl">
+            <p className="nums text-3xl font-bold tracking-tight">
               {owned.length} <span className="text-fg-3">/ {set.size}</span>
             </p>
             <Progress value={owned.length / set.size} tone="gold" className="mt-1" label={T.progress} />
@@ -73,7 +73,7 @@ export function CollectionPage() {
             <p className="flex items-center gap-1 text-sm text-fg-3">
               {T.value} <InfoTip>{T.valueTip}</InfoTip>
             </p>
-            <p className="nums font-pixel text-3xl text-gold">{formatMoney(value)}</p>
+            <p className="nums text-3xl font-bold tracking-tight text-gold">{formatMoney(value)}</p>
           </div>
           <div className="ml-auto flex items-center gap-1">
             <Button onClick={sellDupes} loading={selling} disabled={dupes.length === 0}>
@@ -127,7 +127,7 @@ function Chip({ active, onClick, className, children }: { active: boolean; onCli
         onClick()
       }}
       className={clsx(
-        'h-8 px-3 text-sm font-semibold outline-2 -outline-offset-2',
+        'h-8 rounded-lg px-3 text-sm font-semibold outline-2 -outline-offset-2',
         active ? 'bg-surface-3 outline-accent' : 'bg-surface-2 outline-line hover:bg-surface-3',
         className,
       )}
@@ -149,7 +149,7 @@ function Slot({ card, onOpen }: { card: BinderCard; onOpen: () => void }) {
             #{String(data?.no ?? 0).padStart(3, '0')}
           </span>
         )}
-        {card.qty > 1 && <span className="nums absolute top-1 right-1 bg-ink/85 px-1.5 font-pixel text-sm">×{card.qty}</span>}
+        {card.qty > 1 && <span className="nums absolute top-1 right-1 rounded-md bg-ink/85 px-1.5 font-pixel text-sm">×{card.qty}</span>}
       </div>
       <span className="w-40 truncate text-center text-xs text-fg-2">{data?.name}</span>
       <span className="nums text-xs font-semibold text-gold">{formatMoney(card.value_cents)}</span>
@@ -191,7 +191,7 @@ function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }
           </div>
           <div>
             <dt className="text-fg-3">{T.cardValue}</dt>
-            <dd className="nums font-pixel text-xl text-gold">{formatMoney(card.value_cents)}</dd>
+            <dd className="nums text-xl font-bold text-gold">{formatMoney(card.value_cents)}</dd>
           </div>
           <div>
             <dt className="flex items-center gap-1 text-fg-3">

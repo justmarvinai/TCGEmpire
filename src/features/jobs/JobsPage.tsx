@@ -86,7 +86,7 @@ function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
       ) : (
         <>
           {result && (
-            <div className="mb-3 flex flex-wrap items-center gap-4 bg-surface-2 p-3 anim-stamp">
+            <div className="mb-3 flex flex-wrap items-center gap-4 rounded-2xl bg-surface-2 p-4 anim-stamp">
               <span className="font-pixel text-xl">{T.resultTitle}</span>
               <span className="nums font-pixel text-2xl text-gold">+{formatMoney(result.payout)}</span>
               <span className="nums text-sm text-fg-2">
@@ -101,7 +101,7 @@ function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
               const locked = player.level < j.min_level
               const energy = j.energy ?? 0
               return (
-                <div key={j.key} className={clsx('flex flex-col gap-2 bg-surface-2 p-3', locked && 'opacity-50')} data-tour={j.minigame === 'pfand' ? 'pfand' : undefined}>
+                <div key={j.key} className={clsx('flex flex-col gap-2 rounded-2xl bg-surface-2 p-4', locked && 'opacity-50')} data-tour={j.minigame === 'pfand' ? 'pfand' : undefined}>
                   <p className="flex items-center gap-2 font-semibold">
                     <PixelIcon name={locked ? 'lock' : 'briefcase'} className="text-accent" />
                     {T.minigameNames[j.minigame!]}
@@ -173,11 +173,11 @@ function Shifts({ jobs, player }: { jobs: Jobs; player: Player }) {
     const def = jobDef(s.job)
     return (
       <Panel title={T.shifts} tip={T.shiftsTip}>
-        <div className="flex flex-col gap-3 bg-surface-2 p-4">
+        <div className="flex flex-col gap-3 rounded-2xl bg-surface-2 p-4">
           <p className="flex items-center gap-2 font-semibold">
             <PixelIcon name="clock" className="text-accent" />
             {def?.name} <span className="text-xs font-normal text-fg-3">{T.employer(def?.employer ?? '')}</span>
-            <span className="ml-auto font-pixel text-lg text-gold">{formatMoney(s.wage_cents)}</span>
+            <span className="nums ml-auto text-lg font-bold text-gold">{formatMoney(s.wage_cents)}</span>
           </p>
           <Progress value={total > 0 ? elapsed / total : 1} tone={done ? 'gain' : 'accent'} />
           <p className="text-sm text-fg-2">{done ? T.done : T.endsIn(formatDuration((total - elapsed) / 1000))}</p>
@@ -214,7 +214,7 @@ function Shifts({ jobs, player }: { jobs: Jobs; player: Player }) {
             <label
               key={j.key}
               className={clsx(
-                'flex cursor-pointer items-center gap-3 bg-surface-2 p-3 outline-2 -outline-offset-2',
+                'flex cursor-pointer items-center gap-3 rounded-2xl bg-surface-2 p-3 outline-2 -outline-offset-2',
                 job === j.key ? 'outline-accent' : 'outline-transparent',
                 locked && 'cursor-not-allowed opacity-50',
               )}

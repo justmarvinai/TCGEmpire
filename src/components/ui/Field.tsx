@@ -17,7 +17,7 @@ export function Field({ label, hint, className, ...rest }: Props) {
         id={id}
         aria-describedby={hint ? `${id}-hint` : undefined}
         {...rest}
-        className="px-inset w-full bg-transparent px-2 py-1 text-fg placeholder:text-fg-3 focus-visible:outline-accent"
+        className="panel-inset w-full bg-transparent px-2 py-1 text-fg placeholder:text-fg-3 focus-visible:outline-accent"
       />
       {hint && (
         <p id={`${id}-hint`} className="mt-1 text-xs text-fg-3">

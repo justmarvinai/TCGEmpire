@@ -163,7 +163,7 @@ export function OpeningStage({
   const packDone = phase === 'cards' && shown >= cards.length
 
   return (
-    <div className="fixed inset-0 z-50 grid grid-cols-[1fr_17rem] bg-ink/95 max-lg:grid-cols-1" role="dialog" aria-label={T.title}>
+    <div className="fixed inset-0 z-50 grid grid-cols-[1fr_17rem] bg-ink/85 backdrop-blur-xl max-lg:grid-cols-1" role="dialog" aria-label={T.title}>
       <div className="relative flex min-h-0 flex-col overflow-hidden">
         <header className="flex items-center gap-3 px-6 pt-4">
           <p className="font-pixel text-xl">{productById.get(productId)?.name}</p>

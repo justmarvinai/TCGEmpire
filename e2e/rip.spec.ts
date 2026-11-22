@@ -25,7 +25,7 @@ test('core loop: tutorial booster, opening, summary, binder, kiosk, sell, quests
   await stage.getByRole('button', { name: 'Zur Übersicht' }).last().click()
   await expect(stage.getByText('Alle Karten')).toBeVisible()
   await expect(stage.getByText('(11)')).toBeVisible()
-  await page.screenshot({ path: shot('summary') })
+  await page.screenshot({ path: shot('summary'), animations: 'disabled' })
   await stage.getByRole('button', { name: 'Schließen', exact: true }).last().click()
 
   // The level-up waited for the stage to close.
@@ -39,7 +39,7 @@ test('core loop: tutorial booster, opening, summary, binder, kiosk, sell, quests
   // Binder shows 11 of 90 at least.
   await page.getByRole('link', { name: 'Sammlung' }).click()
   await expect(page.getByText('/ 90')).toBeVisible()
-  await page.screenshot({ path: shot('binder') })
+  await page.screenshot({ path: shot('binder'), animations: 'disabled' })
 
   // Buy at the kiosk and open with instant reveal.
   await page.getByRole('link', { name: 'Läden' }).click()

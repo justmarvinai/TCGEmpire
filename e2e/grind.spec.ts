@@ -24,7 +24,7 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   // Patch notes of this version on the home page, until read.
   await page.getByRole('link', { name: 'Übersicht' }).click()
   await expect(page.getByText(/^Neu in 0\.0\.1-alpha_03/)).toBeVisible()
-  await page.screenshot({ path: shot('home-notes') })
+  await page.screenshot({ path: shot('home-notes'), animations: 'disabled' })
   await page.getByRole('button', { name: 'Gelesen' }).click()
   await expect(page.getByText(/^Neu in 0\.0\.1-alpha_03/)).toBeHidden()
 
@@ -36,7 +36,7 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   // Mutti's tour of the new feature, once; then NEU is gone.
   const tour = page.getByRole('complementary', { name: 'Neu: Geldbunker!' })
   await expect(tour).toBeVisible()
-  await page.screenshot({ path: shot('tour') })
+  await page.screenshot({ path: shot('tour'), animations: 'disabled' })
   await tour.getByRole('button', { name: 'Weiter' }).click()
   await tour.getByRole('button', { name: 'Weiter' }).click()
   await tour.getByRole('button', { name: 'Verstanden' }).click()
@@ -44,30 +44,30 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   await expect(page.getByRole('link', { name: 'Geldbunker NEU' })).toBeHidden()
   await page.getByRole('button', { name: 'Abholen' }).click()
   await expect(page.getByText(/12\d,\d\d € abgeholt\. Riecht nach Geld/)).toBeVisible() // one hour at 120 €/h
-  await page.screenshot({ path: shot('bunker') })
+  await page.screenshot({ path: shot('bunker'), animations: 'disabled' })
 
   // Upgrades: buy one.
   await page.getByRole('link', { name: 'Upgrades' }).click()
   await page.getByRole('button', { name: 'Kaufen' }).first().click()
   await expect(page.getByText(/verbessert\./)).toBeVisible()
-  await page.screenshot({ path: shot('upgrades') })
+  await page.screenshot({ path: shot('upgrades'), animations: 'disabled' })
 
   // Quests: dailies exist, stamp today.
   await page.getByRole('link', { name: 'Quests' }).click()
   await expect(page.getByRole('heading', { name: 'Tagesquests' })).toBeVisible()
   await page.getByRole('button', { name: 'Stempeln' }).click()
   await expect(page.getByRole('button', { name: 'Heute gestempelt' })).toBeVisible()
-  await page.screenshot({ path: shot('quests') })
+  await page.screenshot({ path: shot('quests'), animations: 'disabled' })
 
   // Jobs: start a 15-minute shift.
   await page.getByRole('link', { name: 'Jobs' }).click()
   await page.getByRole('button', { name: '15 Min' }).click()
   await expect(page.getByRole('button', { name: 'Feierabend machen' })).toBeVisible()
-  await page.screenshot({ path: shot('jobs') })
+  await page.screenshot({ path: shot('jobs'), animations: 'disabled' })
   // Phone width, once per milestone.
   const size = page.viewportSize()!
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.screenshot({ path: shot('jobs-390'), fullPage: true })
+  await page.screenshot({ path: shot('jobs-390'), fullPage: true, animations: 'disabled' })
   await page.setViewportSize(size)
 
   // Shop: a Döner gives greasy fingers.
@@ -81,7 +81,7 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   // Profile: achievements, then the Gefahrenzone resets everything.
   await page.getByRole('link', { name: 'Profil' }).click()
   await expect(page.getByRole('heading', { name: 'Erfolge' })).toBeVisible()
-  await page.screenshot({ path: shot('profile'), fullPage: true })
+  await page.screenshot({ path: shot('profile'), fullPage: true, animations: 'disabled' })
   await page.getByLabel('Tipp „Grinder“ zur Bestätigung').first().fill('grinder')
   const hold = page.getByRole('button', { name: /Account zurücksetzen/ })
   await hold.hover()
@@ -89,5 +89,6 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   await page.waitForTimeout(1700)
   await page.mouse.up()
   await expect(page.getByText('Alles weg. Neues Leben, gleiche Fehler.')).toBeVisible()
+  await page.getByRole('button', { name: 'Einstellungen' }).click()
   await expect(page.getByText('Level 1', { exact: true })).toBeVisible()
 })

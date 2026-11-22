@@ -42,11 +42,11 @@ export function ProfilePage() {
         <div className="grid gap-4 xl:grid-cols-2">
           <Panel>
             <div className="flex flex-wrap items-center gap-4">
-              <div className="grid size-16 place-items-center bg-accent font-pixel text-4xl text-accent-fg">
+              <div className="grid size-16 place-items-center rounded-full bg-grad font-pixel text-4xl text-white">
                 {player.username.slice(0, 1).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-pixel text-3xl leading-none">{player.username}</p>
+                <p className="text-3xl leading-none font-bold tracking-tight">{player.username}</p>
                 {player.title && <p className="font-semibold text-accent">{player.title}</p>}
                 <p className="mt-1 text-sm text-fg-2">
                   Level {player.level} · <span className="nums text-gold">{formatMoney(player.net_worth_cents)}</span>
@@ -58,7 +58,7 @@ export function ProfilePage() {
                 {T.titleLabel} · {T.titleTip}
               </span>
               <select
-                className="px-inset bg-transparent px-2 py-1 text-fg"
+                className="panel-inset bg-transparent px-2 py-1 text-fg"
                 value={stats.data.title ?? ''}
                 onChange={(e) => void setTitle(e.target.value || null)}
               >
@@ -93,7 +93,7 @@ export function ProfilePage() {
                 const have = stats.data.counters[a.event] ?? 0
                 const done = next === undefined
                 return (
-                  <div key={a.key} className={clsx('flex items-center gap-3 bg-surface-2 p-2', tier === 0 && 'opacity-60')}>
+                  <div key={a.key} className={clsx('flex items-center gap-3 rounded-xl bg-surface-2 p-3', tier === 0 && 'opacity-60')}>
                     <PixelIcon name={done ? 'trophy' : tier > 0 ? 'star' : 'lock'} scale={2} className={done ? 'text-gold' : tier > 0 ? 'text-accent' : 'text-fg-3'} />
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold">
@@ -139,7 +139,7 @@ function DangerZone({ player }: { player: Player }) {
       <div className="grid gap-4 md:grid-cols-2">
         {(['reset', 'delete'] as const).map((k) => (
           <div key={k} className="flex flex-col gap-3 bg-loss/10 p-3 outline-2 -outline-offset-2 outline-loss/40">
-            <p className="font-pixel text-xl text-loss">{k === 'reset' ? T.resetTitle : T.deleteTitle}</p>
+            <p className="text-xl font-bold text-loss">{k === 'reset' ? T.resetTitle : T.deleteTitle}</p>
             <p className="text-sm text-fg-2">{k === 'reset' ? T.resetBody : T.deleteBody}</p>
             <Field
               label={T.confirmLabel(player.username)}

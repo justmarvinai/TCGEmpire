@@ -15,64 +15,64 @@ excellent.** Pixel art costs a lot of production effort, so it is spent where pl
 New pixel art outside the first column needs a reason; the default answer is typography, colour and
 layout.
 
-## 1. Look and feel
+## 1. Look and feel — "Nachtschicht" (owner's pick, 22 Nov 2026; decision 056)
 
-**"A polished indie game dashboard, with real pixel art where it counts."**
+**"A sleek night-time app, with real pixel art where it counts."**
 
-- **UI: modern, calm, clean.** Dark theme, generous spacing, clear hierarchy, readable type. Data
-  (numbers, prices, tables) is always in a clean typeface with tabular figures.
-- **Pixel art: the personality — concentrated on cards and products** (§0), plus a small icon set.
-  Always integer-scaled, never blurred, never mixed pixel sizes inside one element.
-- **Chunky game feel on controls:** 2 px borders, hard "pressed" shadows, stepped pixel corners on panels,
-  buttons that sink when pressed.
-- **Juice with restraint:** big effects are reserved for big moments (hit reveal, level-up, Grail,
-  collecting the bunker). Everyday actions get small, fast feedback.
+- **UI: modern, dark, calm.** Frosted-glass panels on soft violet, pink and cyan glows; large rounded
+  corners; generous spacing; big bold numbers. Data is always in the body font with tabular figures.
+- **Pixel art: the personality — concentrated on cards and products** (§0), plus the small icon set.
+  Always integer-scaled, never blurred. Cards and boosters may glow in their tier colour behind them.
+- **The pixel font is for game moments only:** pack opening, level-up, minigames, card overlays, avatar
+  letters. Titles, prices and numbers use the body font.
+- **Juice with restraint:** big effects for big moments (hit reveal, level-up, Grail, bunker); everyday
+  actions get small, fast feedback.
 
-Things we avoid: generic gradient-purple "AI dashboard" look, glassmorphism, emoji as icons, stock
-illustration, blurry upscaled pixels, pixel fonts for body text or numbers.
+Things we avoid: emoji as icons, stock illustration, blurry upscaled pixels, pixel fonts for body text
+or numbers, glass on top of glass without a solid enough floating layer (`panel-float`).
 
-## 2. Design tokens (starting values)
+## 2. Design tokens
 
 | Token group | Values |
 |-------------|--------|
-| Background | ink `#0e1018`, surface 1 `#161a26`, surface 2 `#1f2433`, surface 3 `#2a3044` |
-| Text | primary `#f3f5fa`, secondary `#aab2c8`, muted `#7f88a3` |
-| Lines / pixel edge | `#2b3147`, edge shadow `#080a10` |
-| Brand accent | **Glurak-Orange** `#ff8a3d` (primary actions), gold `#ffcf5a` (money) |
-| Semantic | gain `#35d48a`, loss `#ff5d6c`, warning `#ffb547`, info `#5fb0ff` |
-| Rarity | Common `#9aa3b5`, Uncommon `#4fc97a`, Rare `#4f9dff`, Holo `#4fe3e0`, Alternative `#b47bff`, Ultra `#ffcf5a`, Grail animated rainbow-gold |
-| Game colours | Pokémon yellow/blue, Yu-Gi-Oh! brown/orange, One Piece red/straw, Riftbound teal/gold (used for tabs and set headers) |
-| Radii | 0 (pixel panels), 4, 8 px |
-| Shadows | hard offset `0 3px 0 edge`, no soft blur on game elements |
-| Motion | 80 / 150 / 220 / 320 / 480 ms; springs snappy / smooth / bouncy; one token file used by CSS and JS |
+| Background | ink `#07070c` with three soft glows (violet top left, pink top right, cyan bottom) |
+| Surfaces | glass `rgb(255 255 255 / 5 %)` + 1 px line `rgb(255 255 255 / 9 %)` + blur; floating layers (popovers, dialogs, toasts) `rgb(22 20 32 / 94 %)` |
+| Text | primary `#f4f3f9`, secondary `#b3b2c8`, muted `#83829c` |
+| Accent | gradient violet `#7d5cff` → pink `#ff4fa3` (primary buttons, active navigation, rings); solid accent `#a98bff`; gold `#ffc94d` (money) |
+| Semantic | gain `#3fe08f`, loss `#ff5a5f`, warning `#ffb547`, info `#34d3ff` |
+| Rarity | Common `#9aa3b5`, Uncommon `#4fc97a`, Rare `#4f9dff`, Holo `#4fe3e0`, Alternative `#b47bff`, Ultra `#ffcf5a`, Grail `#ff6ad5` |
+| Radii | panels 22 px, buttons 12 px, rows 12–16 px, chips full |
+| Motion | 80 / 150 / 220 / 320 / 480 ms; transform and opacity only |
 
-Contrast is tested automatically (WCAG AA for text). Tailwind's default palette is removed so only tokens
-can be used. One dark theme in 0.0.1.
+Utilities: `panel` (page panels), `panel-float` (popovers, dialogs, toasts), `panel-inset` (fields),
+`bg-grad` (accent gradient), `eyebrow` (small caps panel titles). Tailwind's default palette is removed.
 
-**Typography:** UI and numbers in a friendly geometric sans (candidates: Rubik, Nunito Sans, Inter);
-headings and celebration text in a pixel display font (candidates: Pixelify Sans, Silkscreen). All
-open-licence, self-hosted. Final pick on the showcase page.
+**Typography:** body and numbers **Space Grotesk**; game moments **Pixelify Sans**. Self-hosted.
 
 ## 3. Layout (desktop-first)
 
 ```
-┌────────────┬──────────────────────────────────────────────────────────────┬───────────────┐
-│  Sidebar   │ Top bar: picture + level ring + EP bar · Geld · Pfandbons ·  │  Right rail   │
-│  grouped   │ Ruf ★ · Energie · Bunker fill · notifications                │  (≥1440 px)   │
-│  nav with  ├──────────────────────────────────────────────────────────────┤  KARTEN-BILD  │
-│  pixel     │                                                              │  feed,        │
-│  icons,    │ Page: pixel header banner, one-line explanation, "i",        │  Stammtisch,  │
-│  locks +   │ content in max 1200 px                                       │  running      │
-│  NEU       │                                                              │  timers       │
-└────────────┴──────────────────────────────────────────────────────────────┴───────────────┘
+┌──────────────┬────────────────────────────────────────────────────────────────────────────┐
+│ ╭──────────╮ │ [Suchen oder springen … Strg K]   [€ Geld] [⚡ Energie] [★ · Bons · ×P]      │
+│ │ Sidebar  │ │                                    [Buffs] [KARTEN-BILD] [🔔] [Avatar+EP]   │
+│ │ (glass,  │ ├────────────────────────────────────────────────────────────────────────────┤
+│ │ floating)│ │ Group / Page (breadcrumb)                                                  │
+│ │ every    │ │ Big title, one-line explanation, "i"                                       │
+│ │ page,    │ │ Glass tiles (home: last hit, net worth, next step, bunker, quests, stamps, │
+│ │ grouped  │ │ headlines)                                                                 │
+│ ╰──────────╯ │                                                                            │
+└──────────────┴────────────────────────────────────────────────────────────────────────────┘
 ```
 
 - Navigation groups: **Start · Sammeln** (Shop, Öffnen, Sammlung, Grading) **· Handeln** (Cardmarket,
   Kleinanzeigen, Auktionen, Tausch) **· Verdienen** (Jobs, Geldbunker, Firma, Streaming) **· Aufsteigen**
   (Quests, Upgrades, Skills, Level-Pfad, Prestige) **· Leben** (Wohnen, Stil, Luxus) **· Freunde**
-  (Battles, Toplisten, Spieler, Megaprojekte).
-- Target 1280–1920 px. Usable down to 390 px (bottom tab bar, sheets) but phones are not the design
-  target (Q-14).
+  (Battles, Toplisten, Spieler, Megaprojekte). Active page: gradient pill; counts: pink badges; new
+  unlocks: green NEU; unbuilt: "Bald"; locked: lock and level.
+- Every stat pill opens its explanation on click; the avatar menu holds level, EP, profile, settings,
+  version and sign-out. KARTEN-BILD lives in a popover and on the home page.
+- Target 1280–1920 px. Usable down to 390 px: the sidebar becomes a drawer behind the menu button and the
+  top bar keeps money, notifications and the avatar.
 - Every page: skeleton loading in the shape of its content, a designed empty state, a designed error
   state. No bare spinners.
 - Every action has hover, pressed, focus, disabled, loading and success states. Full keyboard support

@@ -8,7 +8,7 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   // Fresh server: the first account sets the invite code and becomes admin.
   await expect(page.getByRole('tab', { name: 'Neu hier' })).toHaveAttribute('aria-selected', 'true')
   await expect(page.getByText('Du bist der erste Account')).toBeVisible()
-  await page.screenshot({ path: shot('auth') })
+  await page.screenshot({ path: shot('auth'), animations: 'disabled' })
 
   await page.getByLabel('Benutzername').fill('Testmogul')
   await page.getByLabel('Passwort').fill('passwort1')
@@ -18,9 +18,13 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
   await expect(page.getByText('400,00 €').first()).toBeVisible()
   await page.getByRole('button', { name: 'Danke, Mama' }).waitFor()
+  // Level and admin crown live in the avatar menu.
+  await page.getByRole('button', { name: 'Einstellungen' }).click()
   await expect(page.getByRole('img', { name: 'Admin' })).toBeVisible()
+  await expect(page.getByText('Level 1', { exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
   await expect(page.getByText('NEU IM GESCHÄFT: Testmogul')).toBeVisible()
-  await page.screenshot({ path: shot('home') })
+  await page.screenshot({ path: shot('home'), animations: 'disabled' })
 
   // Locked and not-yet-built features are visible, not hidden.
   await expect(page.getByTitle('Firma: Ab Level 30')).toBeVisible()
@@ -28,7 +32,7 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   await expect(page.getByText('Kommt bald')).toBeVisible()
 
   // Every stat explains itself.
-  await page.getByRole('button', { name: 'Preisniveau: Was ist das?' }).click()
+  await page.getByRole('button', { name: 'Ruf, Pfandbons und Preisniveau' }).click()
   await expect(page.getByText('Alles, was das Spiel bepreist oder auszahlt')).toBeVisible()
   await page.keyboard.press('Escape')
 
@@ -61,8 +65,11 @@ test('component showcase renders and local dev tools move money and levels', asy
   await page.getByRole('button', { name: '+1.000 €' }).click()
   await expect(page.getByText('1.400 €')).toBeVisible()
   await page.getByRole('button', { name: '+viel EP' }).click()
+  await page.getByRole('dialog', { name: 'LEVEL UP!' }).getByRole('button', { name: 'Weiter' }).click()
+  await page.getByRole('button', { name: 'Einstellungen' }).click()
   await expect(page.getByText(/Level (1[0-9]|[2-9][0-9])/)).toBeVisible()
+  await page.keyboard.press('Escape')
   // The page scrolls inside the shell: use a tall window to capture the whole showcase.
   await page.setViewportSize({ width: 1440, height: 2700 })
-  await page.screenshot({ path: shot('dev-ui') })
+  await page.screenshot({ path: shot('dev-ui'), animations: 'disabled' })
 })

@@ -45,7 +45,7 @@ export function UpgradeRow({ u, level, cash }: { u: Upgrade; level: number; cash
   }
 
   return (
-    <div className="grid grid-cols-[1fr_auto] items-center gap-4 bg-surface-2 p-3 max-md:grid-cols-1">
+    <div className="grid grid-cols-[1fr_auto] items-center gap-4 rounded-2xl bg-surface-2 p-4 max-md:grid-cols-1">
       <div className="min-w-0">
         <p className="flex items-center gap-2 font-semibold">
           {def.name}
@@ -66,7 +66,7 @@ export function UpgradeRow({ u, level, cash }: { u: Upgrade; level: number; cash
       </div>
       <div className="flex flex-col items-end gap-1 max-md:items-start">
         {maxed ? (
-          <span className="font-pixel text-gold">{T.max}</span>
+          <span className="font-bold text-gold">{T.max}</span>
         ) : (
           <>
             <span className={clsx('nums font-semibold', cash >= (u.cost_cents ?? 0) ? 'text-gold' : 'text-loss')}>

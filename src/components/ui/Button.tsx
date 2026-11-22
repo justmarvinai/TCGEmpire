@@ -12,9 +12,9 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const SIZES: Record<Size, string> = {
-  sm: 'px-1 text-sm min-h-8',
-  md: 'px-3 py-0.5 min-h-10',
-  lg: 'px-5 py-1.5 text-lg min-h-12',
+  sm: 'px-3 text-sm min-h-8',
+  md: 'px-4 min-h-10',
+  lg: 'px-6 text-lg min-h-12 rounded-[0.9rem]',
 }
 
 export function Button({ variant = 'neutral', size = 'md', loading, disabled, className, children, onClick, ...rest }: Props) {

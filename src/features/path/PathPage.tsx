@@ -39,16 +39,16 @@ export function PathPage() {
                   key={l.level}
                   ref={next ? here : undefined}
                   className={clsx(
-                    'grid grid-cols-[5rem_1fr_auto] items-center gap-4 border-b-2 border-line px-2 py-2',
+                    'grid grid-cols-[5rem_1fr_auto] items-center gap-4 rounded-xl border-b border-line px-3 py-2.5',
                     reached ? 'opacity-55' : '',
                     next && 'bg-surface-2 outline-2 -outline-offset-2 outline-accent',
                   )}
                 >
-                  <span className={clsx('font-pixel text-2xl', next ? 'text-accent' : 'text-gold')}>Lv {l.level}</span>
+                  <span className={clsx('text-2xl font-bold tracking-tight', next ? 'text-accent' : 'text-gold')}>Lv {l.level}</span>
                   <div className="flex flex-wrap items-center gap-2 text-sm">
                     {next && <span className="bg-accent px-1.5 text-xs font-bold text-accent-fg">{T.current}</span>}
                     {unlocks.map((u) => (
-                      <span key={u.id} className="flex items-center gap-1 bg-surface-3 px-2 py-0.5 font-semibold">
+                      <span key={u.id} className="flex items-center gap-1 rounded-md bg-surface-3 px-2 py-0.5 font-semibold">
                         <PixelIcon name={u.icon} className="text-accent" />
                         {texts.nav.items[u.id]}
                       </span>

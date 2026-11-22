@@ -39,5 +39,6 @@ export const useBunker = () => useQuery({ queryKey: ['bunker'], queryFn: () => r
 export const useUpgrades = () => useQuery({ queryKey: ['upgrades'], queryFn: () => rpc('upgrades_get') })
 export const useJobs = () => useQuery({ queryKey: ['jobs'], queryFn: () => rpc('jobs_get') })
 export const useStats = () => useQuery({ queryKey: ['stats'], queryFn: () => rpc('stats_get') })
+export const useHome = () => useQuery({ queryKey: ['home'], queryFn: () => rpc('home_get') })
 export const useLevelPath = () =>
   useQuery({ queryKey: ['levelpath'], queryFn: () => rpc('level_path_get'), staleTime: 5 * 60_000 })

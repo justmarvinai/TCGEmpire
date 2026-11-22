@@ -131,7 +131,7 @@ function PfandGame({ duration, onDone }: { duration: number; onDone: Done }) {
     <div>
       <Hud left={left} score={score} extra={`${T.bottles}: ${bottles}`} />
       <div
-        className="relative h-[26rem] overflow-hidden outline-2 outline-line select-none"
+        className="relative h-[26rem] overflow-hidden rounded-2xl border border-line select-none"
         style={{
           background:
             'radial-gradient(circle at 20% 30%, rgb(80 140 70 / 0.35), transparent 40%), radial-gradient(circle at 80% 70%, rgb(60 120 60 / 0.35), transparent 45%), linear-gradient(180deg, #1d3a24, #13261a)',
@@ -149,7 +149,7 @@ function PfandGame({ duration, onDone }: { duration: number; onDone: Done }) {
               style={{ left: `${i.x}%`, top: `${i.y}%`, transform: i.kind === 'scherbe' ? 'rotate(20deg)' : undefined }}
             >
               <PixelIcon name={def.icon} scale={3} />
-              <span className="nums bg-ink/70 px-1 text-[0.625rem] font-semibold">{formatMoney(def.cents)}</span>
+              <span className="nums rounded bg-ink/70 px-1 text-[0.625rem] font-semibold">{formatMoney(def.cents)}</span>
             </button>
           )
         })}
@@ -224,10 +224,10 @@ function SortGame({ game, duration, onDone }: { game: 'regale' | 'sortieren'; du
   return (
     <div>
       <Hud left={left} score={score} extra={`${T.right}: ${count}`} />
-      <div className="flex flex-col items-center gap-5 bg-surface-2 p-6 outline-2 outline-line select-none">
+      <div className="flex flex-col items-center gap-5 rounded-2xl border border-line bg-surface-2 p-6 select-none">
         <div key={item.id} className={clsx('anim-deal', flash === 'wrong' && 'animate-shake')}>
           {game === 'regale' ? (
-            <p className="bg-surface-3 px-6 py-4 font-pixel text-4xl">{item.id}</p>
+            <p className="rounded-xl bg-surface-3 px-6 py-4 font-pixel text-4xl">{item.id}</p>
           ) : (
             <Card id={item.id} scale={2} foil="none" />
           )}
@@ -312,8 +312,8 @@ function TimingGame({ duration, onDone }: { duration: number; onDone: Done }) {
   return (
     <div>
       <Hud left={left} score={score} extra={T.parcels(parcels)} />
-      <button type="button" onPointerDown={drop} className="block w-full bg-surface-2 p-8 outline-2 outline-line select-none">
-        <div className="relative h-14 bg-ink outline-2 outline-line">
+      <button type="button" onPointerDown={drop} className="block w-full rounded-2xl border border-line bg-surface-2 p-8 select-none">
+        <div className="relative h-14 overflow-hidden rounded-xl border border-line bg-ink">
           <div className="absolute inset-y-0 bg-gain/40 outline-2 outline-gain" style={{ left: `${win.start * 100}%`, width: `${win.width * 100}%` }} />
           <div ref={marker} className="absolute inset-y-[-6px] left-0 w-full">
             <div className="h-full w-1.5 bg-gold" />

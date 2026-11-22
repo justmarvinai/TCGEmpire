@@ -1,35 +1,36 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/rubik/wght.css';
+@import '@fontsource-variable/space-grotesk/wght.css';
 @import '@fontsource-variable/pixelify-sans/wght.css';
 
-/* Design tokens. The default Tailwind palette is removed: only these colours exist. */
+/* Design tokens, look "Nachtschicht" (docs/ART_DIRECTION.md §1–3). The default Tailwind palette is removed:
+   only these colours exist. Surfaces and lines are translucent so the background glow shines through. */
 @theme {
   --color-*: initial;
   --color-white: #ffffff;
   --color-black: #000000;
 
-  --color-ink: #0e1018;
-  --color-surface-1: #161a26;
-  --color-surface-2: #1f2433;
-  --color-surface-3: #2a3044;
-  --color-line: #2b3147;
-  --color-line-strong: #3d4563;
-  --color-edge: #080a10;
+  --color-ink: #07070c;
+  --color-surface-1: #110f18;
+  --color-surface-2: rgb(255 255 255 / 0.05);
+  --color-surface-3: rgb(255 255 255 / 0.1);
+  --color-line: rgb(255 255 255 / 0.09);
+  --color-line-strong: rgb(255 255 255 / 0.18);
+  --color-edge: #000000;
 
-  --color-fg: #f3f5fa;
-  --color-fg-2: #aab2c8;
-  --color-fg-3: #7f88a3;
+  --color-fg: #f4f3f9;
+  --color-fg-2: #b3b2c8;
+  --color-fg-3: #83829c;
 
-  --color-accent: #ff8a3d;
-  --color-accent-hi: #ffb07a;
-  --color-accent-lo: #c45a17;
-  --color-accent-fg: #1a0e04;
-  --color-gold: #ffcf5a;
+  --color-accent: #a98bff;
+  --color-accent-hi: #ff4fa3;
+  --color-accent-lo: #7d5cff;
+  --color-accent-fg: #ffffff;
+  --color-gold: #ffc94d;
 
-  --color-gain: #35d48a;
-  --color-loss: #ff5d6c;
+  --color-gain: #3fe08f;
+  --color-loss: #ff5a5f;
   --color-warn: #ffb547;
-  --color-info: #5fb0ff;
+  --color-info: #34d3ff;
 
   --color-tier-common: #9aa3b5;
   --color-tier-uncommon: #4fc97a;
@@ -39,7 +40,7 @@
   --color-tier-ultra: #ffcf5a;
   --color-tier-grail: #ff6ad5;
 
-  --font-sans: 'Rubik Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --font-pixel: 'Pixelify Sans Variable', ui-monospace, monospace;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -64,15 +65,6 @@
   }
 }
 
-/* Pixel 9-slice frames: stepped corners, 2 px border. One SVG per variant (12x12 units, slice 4). */
-:root {
-  --px-panel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%232b3147' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%23161a26' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3C/svg%3E");
-  --px-inset: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%232b3147' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%230e1018' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3C/svg%3E");
-  --px-btn-accent: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%23c45a17' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%23ff8a3d' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3Cpath fill='%23ffb07a' d='M3 1h6v1H3z'/%3E%3C/svg%3E");
-  --px-btn-neutral: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%233d4563' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%232a3044' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3Cpath fill='%233d4563' d='M3 1h6v1H3z'/%3E%3C/svg%3E");
-  --px-btn-danger: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpath fill='%23a8323f' d='M2 0h8v1h1v1h1v8h-1v1h-1v1H2v-1H1v-1H0V2h1V1h1z'/%3E%3Cpath fill='%23ff5d6c' d='M3 1h6v1h1v1h1v6h-1v1H9v1H3v-1H2V9H1V3h1V2h1z'/%3E%3Cpath fill='%23ff8f99' d='M3 1h6v1H3z'/%3E%3C/svg%3E");
-}
-
 @layer base {
   html {
     color-scheme: dark;
@@ -83,7 +75,7 @@
     min-height: 100dvh;
   }
   ::selection {
-    background: var(--color-accent);
+    background: var(--color-accent-lo);
     color: var(--color-accent-fg);
   }
   :focus-visible {
@@ -98,21 +90,36 @@
   }
 }
 
-@utility px-frame {
-  border: 8px solid transparent;
-  border-image: var(--px-panel) 4 fill / 8px;
-  image-rendering: pixelated;
+/* Glass surfaces: page panels, floating layers (popovers, dialogs, toasts) and inset fields. */
+@utility panel {
+  border-radius: 1.375rem;
+  background-color: rgb(255 255 255 / 0.05);
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 18px 40px rgb(0 0 0 / 0.3);
 }
-@utility px-panel {
-  border: 8px solid transparent;
-  border-image: var(--px-panel) 4 fill / 8px;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 3px 0 var(--color-edge));
+@utility panel-float {
+  border-radius: 1.125rem;
+  background-color: rgb(22 20 32 / 0.94);
+  border: 1px solid var(--color-line-strong);
+  backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.55);
 }
-@utility px-inset {
-  border: 8px solid transparent;
-  border-image: var(--px-inset) 4 fill / 8px;
-  image-rendering: pixelated;
+@utility panel-inset {
+  border-radius: 0.875rem;
+  background-color: rgb(0 0 0 / 0.28);
+  border: 1px solid var(--color-line);
+}
+/* The accent gradient: active navigation, primary buttons, rings. */
+@utility bg-grad {
+  background-image: linear-gradient(135deg, var(--color-accent-lo), var(--color-accent-hi));
+}
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-fg-2);
 }
 @utility pixelated {
   image-rendering: pixelated;
@@ -121,13 +128,13 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Subtle pixel grid behind everything. */
+/* Soft colour glows behind everything. */
 .app-bg {
   background-color: var(--color-ink);
   background-image:
-    linear-gradient(rgb(255 255 255 / 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.018) 1px, transparent 1px);
-  background-size: 16px 16px;
+    radial-gradient(760px 520px at 14% -8%, rgb(125 92 255 / 0.3), transparent 62%),
+    radial-gradient(700px 560px at 104% 8%, rgb(255 79 163 / 0.18), transparent 60%),
+    radial-gradient(900px 440px at 52% 118%, rgb(52 211 255 / 0.13), transparent 62%);
 }
 
 /* Honour the player's setting as well as the system preference. */
@@ -144,34 +151,34 @@
   }
 }
 
-/* Buttons: pixel frame, hard edge shadow, sink on press. */
+/* Buttons: rounded, gradient for the main action, glass for the rest; sink a little on press. */
 .btn {
-  border: 8px solid transparent;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 3px 0 var(--color-edge));
-  transition: transform 80ms var(--ease-standard), filter 80ms var(--ease-standard);
+  border-radius: 0.75rem;
+  transition: transform 80ms var(--ease-standard), filter 120ms var(--ease-standard);
 }
 .btn:hover:not(:disabled) {
-  filter: brightness(1.1) drop-shadow(0 3px 0 var(--color-edge));
+  filter: brightness(1.12);
 }
 .btn:active:not(:disabled) {
-  transform: translateY(2px);
-  filter: brightness(0.95) drop-shadow(0 1px 0 var(--color-edge));
+  transform: translateY(1px) scale(0.99);
 }
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
 }
 .btn-primary {
-  border-image: var(--px-btn-accent) 4 fill / 8px;
-  color: var(--color-accent-fg);
+  color: #ffffff;
+  background-image: linear-gradient(135deg, var(--color-accent-lo), var(--color-accent-hi));
+  box-shadow: 0 8px 22px rgb(255 79 163 / 0.26), inset 0 1px 0 rgb(255 255 255 / 0.22);
 }
 .btn-neutral {
-  border-image: var(--px-btn-neutral) 4 fill / 8px;
   color: var(--color-fg);
+  background-color: rgb(255 255 255 / 0.08);
+  box-shadow: inset 0 0 0 1px var(--color-line);
 }
 .btn-danger {
-  border-image: var(--px-btn-danger) 4 fill / 8px;
-  color: var(--color-accent-fg);
+  color: #ffffff;
+  background-image: linear-gradient(135deg, #ff5a5f, #c92e4a);
+  box-shadow: 0 8px 22px rgb(255 90 95 / 0.24);
 }
 
 @keyframes dots {
@@ -195,7 +202,8 @@
   100% { opacity: 0.5; }
 }
 .skeleton {
-  background: var(--color-surface-2);
+  border-radius: 0.875rem;
+  background: rgb(255 255 255 / 0.06);
   animation: shimmer 1400ms infinite;
 }
 
@@ -363,7 +371,8 @@
 .anim-nudge::after {
   content: '';
   position: absolute;
-  inset: -10px;
+  inset: -7px;
+  border-radius: 1.1rem;
   border: 2px solid var(--color-accent);
   pointer-events: none;
   animation: nudge-ring 1.4s var(--ease-out) infinite;

@@ -47,14 +47,14 @@ export function AuthPage({ me, localMode }: { me: Me; localMode: boolean }) {
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
           <PixelIcon name="card" scale={4} className="mx-auto text-accent" />
-          <h1 className="mt-3 font-pixel text-5xl leading-none">
+          <h1 className="mt-3 text-5xl leading-none font-bold tracking-tight">
             TCG<span className="text-accent">Empire</span>
           </h1>
           <p className="mt-2 text-sm text-fg-2">{texts.brand.claim}</p>
         </div>
 
-        <form onSubmit={submit} className="px-panel p-4">
-          <div className="mb-4 grid grid-cols-2 gap-1 bg-ink p-1" role="tablist">
+        <form onSubmit={submit} className="panel p-4">
+          <div className="mb-4 grid grid-cols-2 gap-1 rounded-xl bg-ink/60 p-1" role="tablist">
             {(['login', 'register'] as const).map((m) => (
               <button
                 key={m}
@@ -66,7 +66,7 @@ export function AuthPage({ me, localMode }: { me: Me; localMode: boolean }) {
                   setError(null)
                   sfx('toggle')
                 }}
-                className={clsx('h-9 font-semibold', mode === m ? 'bg-surface-3 text-fg' : 'text-fg-3 hover:text-fg')}
+                className={clsx('h-9 rounded-lg font-semibold', mode === m ? 'bg-surface-3 text-fg' : 'text-fg-3 hover:text-fg')}
               >
                 {texts.auth[m]}
               </button>

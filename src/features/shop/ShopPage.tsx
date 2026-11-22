@@ -64,12 +64,12 @@ export function ShopPage() {
                   <PixelProduct id={product?.wrappers[0] ?? ''} scale={2} fallback={{ w: 84, h: 132 }} className="anim-bob" />
                   <div className="flex min-w-56 flex-col gap-3">
                     <div>
-                      <p className="font-pixel text-2xl">{product?.name}</p>
+                      <p className="text-2xl font-bold tracking-tight">{product?.name}</p>
                       <p className="flex items-center gap-1 text-sm text-fg-2">
                         {T.odds} <InfoTip>{T.oddsTip(oddsText())}</InfoTip>
                       </p>
                     </div>
-                    <p className="nums font-pixel text-3xl text-gold">{formatMoney(k.price_cents)}</p>
+                    <p className="nums text-3xl font-bold tracking-tight text-gold">{formatMoney(k.price_cents)}</p>
                     <p className="text-xs text-fg-3">{T.today(k.bought_today, k.daily_limit)}</p>
                     <div className="flex flex-wrap gap-2">
                       {[1, 5, 10].map((n) => (

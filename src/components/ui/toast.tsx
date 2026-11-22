@@ -29,7 +29,7 @@ export function ToastViewport() {
   return (
     <div className="pointer-events-none fixed right-4 bottom-4 z-60 flex w-80 flex-col gap-2" role="status" aria-live="polite">
       {items.map((t) => (
-        <div key={t.id} className="px-panel pointer-events-auto flex items-start gap-2 p-2 text-sm animate-fade-up">
+        <div key={t.id} className="panel-float pointer-events-auto flex items-start gap-2 p-2 text-sm animate-fade-up">
           <PixelIcon name={ICON[t.kind]} className={clsx('mt-0.5', COLOR[t.kind])} />
           <span>{t.text}</span>
         </div>

@@ -1,19 +1,20 @@
 import clsx from 'clsx'
 
-/** Pixel progress bar. `value` 0..1. */
-export function Progress({ value, className, tone = 'accent', label }: { value: number; className?: string; tone?: 'accent' | 'gain' | 'gold' | 'info'; label?: string }) {
-  const pct = Math.max(0, Math.min(1, value)) * 100
-  const tones = { accent: 'bg-accent', gain: 'bg-gain', gold: 'bg-gold', info: 'bg-info' }
+const TONES = { accent: 'bg-grad', gain: 'bg-gain', gold: 'bg-gold', info: 'bg-info' }
+
+/** Rounded progress bar. `value` 0..1; the fill moves by transform only. */
+export function Progress({ value, className, tone = 'accent', label }: { value: number; className?: string; tone?: keyof typeof TONES; label?: string }) {
+  const v = Math.max(0, Math.min(1, value))
   return (
     <div
       role="progressbar"
       aria-label={label}
-      aria-valuenow={Math.round(pct)}
+      aria-valuenow={Math.round(v * 100)}
       aria-valuemin={0}
       aria-valuemax={100}
-      className={clsx('h-2 w-full bg-ink outline-2 outline-line', className)}
+      className={clsx('h-2 w-full overflow-hidden rounded-full bg-surface-3', className)}
     >
-      <div className={clsx('h-full transition-[width] duration-300', tones[tone])} style={{ width: `${pct}%` }} />
+      <div className={clsx('h-full origin-left rounded-full transition-transform duration-300', TONES[tone])} style={{ transform: `scaleX(${v})` }} />
     </div>
   )
 }

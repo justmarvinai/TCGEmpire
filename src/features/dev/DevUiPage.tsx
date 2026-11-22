@@ -13,6 +13,7 @@ import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
+import { Ring } from '@/components/ui/Ring.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { getBackend } from '@/lib/backend/index.ts'
@@ -48,8 +49,8 @@ export default function DevUiPage() {
 
         <Panel title="Schrift">
           <p className="font-pixel text-4xl leading-tight">Glurak! 1.234.567 €</p>
-          <p className="font-pixel text-xl">Pixelify Sans für Titel und große Momente</p>
-          <p className="mt-2">Rubik für alles, was man liest: Zahlen 0123456789, Umlaute ÄÖÜäöüß.</p>
+          <p className="font-pixel text-xl">Pixelify Sans für große Spielmomente</p>
+          <p className="mt-2">Space Grotesk für alles, was man liest: Zahlen 0123456789, Umlaute ÄÖÜäöüß.</p>
           <p className="text-sm text-fg-2">Sekundärtext in fg-2, Hinweise in fg-3.</p>
         </Panel>
 
@@ -81,7 +82,7 @@ export default function DevUiPage() {
         </Panel>
 
         <Panel title="Zahlen und Fortschritt">
-          <NumberTicker value={amount} format={formatMoney} className="nums font-pixel text-3xl text-gold" />
+          <NumberTicker value={amount} format={formatMoney} className="nums text-3xl font-bold tracking-tight text-gold" />
           <div className="mt-2 flex gap-2">
             <Button size="sm" onClick={() => { setAmount((a) => a * 7 + 9900); sfx('coin') }}>mehr</Button>
             <Button size="sm" onClick={() => setAmount((a) => Math.round(a / 5))}>weniger</Button>
@@ -90,6 +91,12 @@ export default function DevUiPage() {
             <Progress value={0.35} />
             <Progress value={0.7} tone="gold" />
             <Progress value={0.9} tone="gain" />
+            <div className="flex gap-4">
+              <Ring value={0.65}>65 %</Ring>
+              <Ring value={0.3} tone="accent" size={64} stroke={8}>
+                30 %
+              </Ring>
+            </div>
           </div>
         </Panel>
 

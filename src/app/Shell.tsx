@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 import { Popover } from 'radix-ui'
-import type { ReactNode } from 'react'
-import { NavLink, Outlet } from 'react-router'
+import type { CSSProperties } from 'react'
+import { Link, NavLink, Outlet } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
-import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
+import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
@@ -16,74 +16,98 @@ import { useSettings } from '@/lib/settings.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { serverNow, useSetMe, useSync, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
-import { ACHIEVEMENTS, CONSUMABLES, cardName } from '@/lib/catalog.ts'
+import { ACHIEVEMENTS, CONSUMABLES } from '@/lib/catalog.ts'
+import { FeedList } from '@/features/feed/Feed.tsx'
 import { SNACK_ICON } from '@/features/shop/icons.ts'
-import { NAV, type NavItem, unseenFeatures } from './nav.ts'
 import { FeatureTour, Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
+import { CommandPalette } from './CommandPalette.tsx'
+import { NAV, type NavItem, unseenFeatures } from './nav.ts'
 
-const DOENER_BASE_CENTS = 150_00
+type SignedIn = Me & { player: Player }
 
-export function Shell({ me }: { me: Me & { player: Player } }) {
+export function Shell({ me }: { me: SignedIn }) {
   useSync(true)
   return (
-    <div className="app-bg grid h-dvh grid-cols-[15rem_1fr] grid-rows-[3.5rem_1fr] max-lg:grid-cols-[3.5rem_1fr] min-[1440px]:grid-cols-[15rem_1fr_18rem]">
+    <div className="app-bg flex h-dvh">
       <Sidebar player={me.player} />
-      <TopBar me={me} />
-      <main className="col-start-2 row-start-2 min-w-0 overflow-y-auto" id="scroll-root">
-        <div className="mx-auto max-w-[75rem] p-6 max-lg:p-3">
+      <main className="min-w-0 flex-1 overflow-y-auto" id="scroll-root">
+        <TopBar me={me} />
+        <div className="mx-auto max-w-[80rem] px-8 pt-3 pb-14 max-lg:px-4">
           <TutorialBanner player={me.player} />
           <FeatureTour player={me.player} />
           <Outlet />
         </div>
       </main>
-      <FeedRail priceLevel={me.server.price_level} />
       <Overlays awayS={me.away_s} player={me.player} />
+      <CommandPalette player={me.player} />
     </div>
   )
 }
 
 // ----------------------------------------------------------------------------------------------
-// Sidebar
+// Sidebar: every page, grouped; a floating glass panel (a drawer on small screens)
 // ----------------------------------------------------------------------------------------------
 function Sidebar({ player }: { player: Player }) {
-  const level = player.level
+  const open = useWorld((s) => s.navOpen)
+  const apply = useWorld((s) => s.apply)
   const badges: Partial<Record<NavItem['id'], number>> = { open: player.sealed_total, quests: player.quests_ready }
   const fresh = unseenFeatures(player, useSettings((s) => s.seenTours))
+  const close = () => apply({ navOpen: false })
   return (
-    <aside className="col-start-1 row-span-2 row-start-1 flex flex-col overflow-y-auto border-r-2 border-line bg-surface-1">
-      <NavLink to="/" className="flex h-14 shrink-0 items-center gap-2 border-b-2 border-line px-4 max-lg:justify-center max-lg:px-0">
-        <PixelIcon name="card" scale={2} className="text-accent" />
-        <span className="font-pixel text-2xl leading-none max-lg:hidden">
-          TCG<span className="text-accent">Empire</span>
-        </span>
-      </NavLink>
-      <nav className="flex-1 p-2">
-        {NAV.map((group) => (
-          <div key={group.group} className="mb-3">
-            <p className="px-2 pb-1 text-[0.6875rem] font-semibold tracking-widest text-fg-3 uppercase max-lg:hidden">
-              {texts.nav.groups[group.group]}
-            </p>
-            {group.items.map((item) => (
-              <SidebarItem key={item.id} item={item} level={level} badge={badges[item.id]} isNew={fresh.some((f) => f.path === item.path)} />
-            ))}
-          </div>
-        ))}
-      </nav>
-    </aside>
+    <>
+      {open && <div className="fixed inset-0 z-40 bg-ink/60 backdrop-blur-sm lg:hidden" onClick={close} aria-hidden />}
+      <aside
+        className={clsx(
+          'panel z-50 flex w-63 shrink-0 flex-col overflow-hidden lg:my-4 lg:ml-4',
+          'max-lg:fixed max-lg:inset-y-3 max-lg:left-3 max-lg:bg-surface-1 max-lg:transition-transform max-lg:duration-300',
+          !open && 'max-lg:-translate-x-[110%]',
+        )}
+        aria-label={texts.hud.menu}
+      >
+        <div className="flex items-center gap-3 px-5 pt-5 pb-1">
+          <Link to="/" onClick={close} className="flex items-center gap-3 text-lg font-bold tracking-tight">
+            <span className="grid size-10 place-items-center rounded-xl bg-grad text-white shadow-[0_6px_18px_rgb(255_79_163/0.35)]">
+              <PixelIcon name="card" />
+            </span>
+            TCGEmpire
+          </Link>
+          <button type="button" onClick={close} className={clsx(roundBtn, 'ml-auto size-9 lg:hidden')} aria-label={texts.common.close}>
+            <PixelIcon name="close" />
+          </button>
+        </div>
+        <nav className="flex-1 overflow-y-auto px-3 pb-10 [mask-image:linear-gradient(#000_88%,transparent)]">
+          {NAV.map((group) => (
+            <div key={group.group}>
+              <p className="mx-2.5 mt-4 mb-1.5 text-[0.6875rem] font-semibold tracking-[0.14em] text-fg-3 uppercase">
+                {texts.nav.groups[group.group]}
+              </p>
+              {group.items.map((item) => (
+                <SidebarItem
+                  key={item.id}
+                  item={item}
+                  level={player.level}
+                  badge={badges[item.id]}
+                  isNew={fresh.some((f) => f.path === item.path)}
+                  onPick={close}
+                />
+              ))}
+            </div>
+          ))}
+        </nav>
+      </aside>
+    </>
   )
 }
 
-function SidebarItem({ item, level, badge, isNew }: { item: NavItem; level: number; badge?: number; isNew: boolean }) {
+function SidebarItem({ item, level, badge, isNew, onPick }: { item: NavItem; level: number; badge?: number; isNew: boolean; onPick: () => void }) {
   const label = texts.nav.items[item.id]
-  const locked = level < item.level
-  const base = 'flex h-9 items-center gap-2.5 px-2 text-sm font-medium max-lg:justify-center'
-
-  if (locked) {
+  const base = 'flex h-9 items-center gap-3 rounded-xl px-2.5 text-[0.9rem] font-medium'
+  if (level < item.level) {
     return (
-      <div className={clsx(base, 'cursor-not-allowed text-fg-3/60')} title={`${label}: ${texts.nav.lockedLevel(item.level)}`}>
+      <div className={clsx(base, 'cursor-not-allowed text-fg-3/70')} title={`${label}: ${texts.nav.lockedLevel(item.level)}`}>
         <PixelIcon name="lock" />
-        <span className="flex-1 truncate max-lg:hidden">{label}</span>
-        <span className="nums text-xs max-lg:hidden">Lv {item.level}</span>
+        <span className="flex-1 truncate">{label}</span>
+        <span className="nums text-xs font-semibold">Lv {item.level}</span>
       </div>
     )
   }
@@ -91,76 +115,121 @@ function SidebarItem({ item, level, badge, isNew }: { item: NavItem; level: numb
     <NavLink
       to={item.path}
       end={item.path === '/'}
-      onClick={() => sfx('click')}
+      onClick={() => {
+        sfx('click')
+        onPick()
+      }}
       title={label}
       className={({ isActive }) =>
-        clsx(base, isActive ? 'bg-surface-3 text-fg shadow-[inset_3px_0_0_var(--color-accent)]' : 'text-fg-2 hover:bg-surface-2 hover:text-fg')
+        clsx(base, isActive ? 'bg-grad font-semibold text-white shadow-[0_8px_20px_rgb(255_79_163/0.28)]' : 'text-fg-2 hover:bg-surface-2 hover:text-fg')
       }
     >
       <PixelIcon name={item.icon} />
-      <span className="flex-1 truncate max-lg:hidden">{label}</span>
+      <span className="flex-1 truncate">{label}</span>
       {!item.built && (
-        <span className="bg-surface-3 px-1.5 py-0.5 text-[0.625rem] font-semibold tracking-wide text-fg-3 uppercase max-lg:hidden">
-          {texts.nav.soon}
-        </span>
+        <span className="rounded-md bg-surface-2 px-1.5 py-0.5 text-[0.625rem] font-bold tracking-wide text-fg-3 uppercase">{texts.nav.soon}</span>
       )}
-      {isNew && <span className="bg-gain px-1.5 py-0.5 text-[0.625rem] font-bold tracking-wide text-ink uppercase max-lg:hidden">{texts.nav.new}</span>}
-      {!!badge && <span className="nums min-w-5 bg-accent px-1 text-center text-xs font-bold text-accent-fg max-lg:hidden">{badge}</span>}
+      {isNew && <span className="rounded-md bg-gain px-1.5 py-0.5 text-[0.625rem] font-bold tracking-wide text-ink uppercase">{texts.nav.new}</span>}
+      {!!badge && <span className="nums min-w-5 rounded-full bg-accent-hi px-1.5 text-center text-xs leading-5 font-bold text-white">{badge}</span>}
     </NavLink>
   )
 }
 
 // ----------------------------------------------------------------------------------------------
-// Top bar
+// Top bar: page search, stat pills (each opens its explanation), buffs, news, notifications, you
 // ----------------------------------------------------------------------------------------------
-function TopBar({ me }: { me: Me & { player: Player } }) {
-  const p = me.player
-  return (
-    <header className="col-start-2 row-start-1 flex min-w-0 items-center gap-4 border-b-2 border-line bg-surface-1 px-4 max-lg:gap-2 max-lg:px-2">
-      <div className="flex min-w-0 flex-1 items-center gap-3">
-        <div className="grid size-9 shrink-0 place-items-center bg-accent font-pixel text-xl text-accent-fg" aria-hidden>
-          {p.username.slice(0, 1).toUpperCase()}
-        </div>
-        <div className="min-w-0 flex-1 max-md:hidden">
-          <div className="flex items-center gap-2 leading-tight">
-            <span className="truncate font-semibold">{p.username}</span>
-            {p.is_admin && <PixelIcon name="crown" className="text-accent" title={texts.hud.admin} />}
-            {p.title && <span className="truncate text-xs font-semibold text-accent max-xl:hidden">{p.title}</span>}
-            <span className="shrink-0 bg-surface-3 px-1.5 font-pixel text-sm whitespace-nowrap text-gold">
-              {texts.hud.level} {p.level}
-            </span>
-            <InfoTip label={`${texts.hud.ep}: ${texts.common.info}`}>
-              <strong className="text-fg">
-                {p.ep_to_next ? `${formatNumber(p.ep)} / ${formatNumber(p.ep_to_next)} ${texts.hud.ep}` : texts.hud.maxLevel}.
-              </strong>{' '}
-              {texts.hud.epTip}
-            </InfoTip>
-          </div>
-          <div className="mt-1.5 flex items-center gap-2">
-            <Progress className="max-w-56" tone="gold" value={p.ep_to_next ? p.ep / p.ep_to_next : 1} label={texts.hud.ep} />
-            <span className="nums text-xs whitespace-nowrap text-fg-3 max-[1599px]:hidden">
-              {p.ep_to_next ? `${formatNumber(p.ep)} / ${formatNumber(p.ep_to_next)} ${texts.hud.ep}` : texts.hud.maxLevel}
-            </span>
-          </div>
-        </div>
-      </div>
+const roundBtn =
+  'relative grid size-11 shrink-0 place-items-center rounded-[0.9rem] border border-line bg-surface-2 text-fg-2 backdrop-blur-xl hover:bg-surface-3 hover:text-fg data-[state=open]:bg-surface-3 data-[state=open]:text-fg'
+const pill =
+  'flex h-11 items-center gap-2.5 rounded-[0.9rem] border border-line bg-surface-2 pr-3.5 pl-1.5 font-semibold whitespace-nowrap backdrop-blur-xl hover:bg-surface-3 data-[state=open]:bg-surface-3'
+const chip = 'grid size-8 place-items-center rounded-[0.6rem] text-ink'
 
-      <div className="ml-auto flex shrink-0 items-center gap-1 whitespace-nowrap">
-        <Stat icon="coin" tone="text-gold" label={texts.hud.cash} tip={texts.hud.cashTip}>
-          <NumberTicker value={p.cash_cents} format={formatMoney} className="nums font-semibold" />
-        </Stat>
-        <Stat icon="bottle" tone="text-gain" label={texts.hud.pfandbons} tip={texts.hud.pfandbonsTip} className="max-[1599px]:hidden">
-          <span className="nums font-semibold">{formatNumber(p.pfandbons)}</span>
-        </Stat>
-        <Stat icon="star" tone="text-warn" label={texts.hud.ruf} tip={texts.hud.rufTip} className="max-xl:hidden">
-          <span className="nums font-semibold">{formatStars(p.ruf)}</span>
-        </Stat>
-        <Stat icon="bolt" tone="text-info" label={texts.hud.energy} tip={texts.hud.energyTip} className="max-xl:hidden">
-          <span className="nums font-semibold">
-            {p.energy}
-            <span className="text-fg-3">/{p.energy_max}</span>
+function TopBar({ me }: { me: SignedIn }) {
+  const p = me.player
+  const apply = useWorld((s) => s.apply)
+  return (
+    <header className="sticky top-0 z-30 flex h-19 items-center gap-3 bg-ink/45 px-8 backdrop-blur-xl max-lg:px-4">
+      <button type="button" onClick={() => apply({ navOpen: true })} className={clsx(roundBtn, 'lg:hidden')} aria-label={texts.hud.menu}>
+        <PixelIcon name="menu" />
+      </button>
+      <button
+        type="button"
+        onClick={() => apply({ paletteOpen: true })}
+        aria-label={texts.palette.title}
+        className="flex h-11 w-90 items-center gap-2.5 rounded-[0.9rem] border border-line bg-surface-2 pr-2 pl-3.5 text-sm text-fg-2 backdrop-blur-xl hover:bg-surface-3 max-xl:w-11 max-xl:justify-center max-xl:p-0"
+      >
+        <PixelIcon name="search" />
+        <span className="flex-1 text-left max-xl:hidden">{texts.hud.search}</span>
+        <kbd className="rounded-md bg-surface-3 px-1.5 py-0.5 text-[0.6875rem] font-semibold text-fg-3 max-xl:hidden">{texts.hud.searchKey}</kbd>
+      </button>
+
+      <div className="ml-auto flex items-center gap-2.5">
+        <InfoTip
+          label={texts.hud.cash}
+          triggerClassName={clsx(pill, 'border-gold/35 shadow-[0_0_24px_rgb(255_201_77/0.1)]')}
+          trigger={
+            <>
+              <span className={clsx(chip, 'bg-gold')}>
+                <PixelIcon name="coin" />
+              </span>
+              <NumberTicker value={p.cash_cents} format={formatMoney} className="nums" />
+            </>
+          }
+        >
+          <strong className="text-fg">{texts.hud.cash}.</strong> {texts.hud.cashTip}
+        </InfoTip>
+        <InfoTip
+          label={texts.hud.energy}
+          triggerClassName={clsx(pill, 'max-md:hidden')}
+          trigger={
+            <>
+              <span className={clsx(chip, 'bg-info')}>
+                <PixelIcon name="bolt" />
+              </span>
+              <span className="nums">
+                {p.energy}
+                <span className="font-medium text-fg-3">/{p.energy_max}</span>
+              </span>
+              <span className="h-1.5 w-11 overflow-hidden rounded-full bg-surface-3">
+                <i className="block h-full rounded-full bg-info" style={{ width: `${Math.round((100 * p.energy) / Math.max(1, p.energy_max))}%` }} />
+              </span>
+            </>
+          }
+        >
+          <strong className="text-fg">{texts.hud.energy}.</strong> {texts.hud.energyTip}
+        </InfoTip>
+        <InfoTip
+          label={texts.hud.statsTip}
+          triggerClassName={clsx(pill, 'gap-3.5 px-3.5 font-medium text-fg-2 max-xl:hidden')}
+          trigger={
+            <>
+              <span className="flex items-center gap-1.5">
+                <PixelIcon name="star" className="text-warn" />
+                <b className="nums font-semibold text-fg">{formatStars(p.ruf)}</b>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <PixelIcon name="bottle" className="text-gain" />
+                <b className="nums font-semibold text-fg">{formatNumber(p.pfandbons)}</b>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <PixelIcon name="doener" className="text-accent" />
+                <b className="nums font-semibold text-fg">{formatFactor(me.server.price_level)}</b>
+              </span>
+            </>
+          }
+        >
+          <span className="flex flex-col gap-2">
+            <span>
+              <strong className="text-fg">{texts.hud.ruf}.</strong> {texts.hud.rufTip}
+            </span>
+            <span>
+              <strong className="text-fg">{texts.hud.pfandbons}.</strong> {texts.hud.pfandbonsTip}
+            </span>
+            <span>
+              <strong className="text-fg">{texts.hud.price}.</strong> {texts.hud.priceTip}
+            </span>
           </span>
-        </Stat>
+        </InfoTip>
         {p.buffs.map((b) => {
           const buff = CONSUMABLES.find((c) => c.key === b.key)?.buff
           const name = buff?.name ?? b.key
@@ -170,43 +239,33 @@ function TopBar({ me }: { me: Me & { player: Player } }) {
             </InfoTip>
           )
         })}
-        <Stat icon="doener" tone="text-accent" label={texts.hud.price} tip={texts.hud.priceTip} className="max-lg:hidden">
-          <span className="nums font-semibold">{formatFactor(me.server.price_level)}</span>
-        </Stat>
+        <NewsButton priceLevel={me.server.price_level} />
         <NotificationBell />
-        <SettingsMenu />
+        <YouMenu me={me} />
       </div>
     </header>
   )
 }
 
-function Stat({
-  icon,
-  tone,
-  label,
-  tip,
-  className,
-  children,
-}: {
-  icon: IconName
-  tone: string
-  label: string
-  tip: string
-  className?: string
-  children: ReactNode
-}) {
+function NewsButton({ priceLevel }: { priceLevel: number }) {
   return (
-    <div className={clsx('flex items-center gap-1.5 px-2', className)} title={label}>
-      <PixelIcon name={icon} className={tone} />
-      {children}
-      <InfoTip label={`${label}: ${texts.common.info}`}>
-        <strong className="text-fg">{label}.</strong> {tip}
-      </InfoTip>
-    </div>
+    <Popover.Root>
+      <Popover.Trigger className={clsx(roundBtn, 'max-sm:hidden')} aria-label={texts.feed.title}>
+        <PixelIcon name="news" />
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content align="end" sideOffset={8} collisionPadding={12} className="panel-float z-50 w-96 max-w-[92vw] p-4 animate-fade-up">
+          <p className="flex items-center gap-2 font-bold text-loss">
+            <PixelIcon name="news" />
+            {texts.feed.title}
+          </p>
+          <p className="mb-3 text-xs text-fg-3">{texts.feed.subtitle}</p>
+          <FeedList priceLevel={priceLevel} className="max-h-96 overflow-y-auto" />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   )
 }
-
-const iconButton = 'grid size-9 place-items-center text-fg-2 hover:bg-surface-2 hover:text-fg data-[state=open]:bg-surface-3 data-[state=open]:text-fg'
 
 function NotificationBell() {
   const notifications = useWorld((s) => s.notifications)
@@ -214,23 +273,25 @@ function NotificationBell() {
   const apply = useWorld((s) => s.apply)
   return (
     <Popover.Root onOpenChange={(open) => open && apply({ unread: 0 })}>
-      <Popover.Trigger className={clsx(iconButton, 'relative')} aria-label={texts.hud.notifications}>
+      <Popover.Trigger className={roundBtn} aria-label={texts.hud.notifications}>
         <PixelIcon name="bell" />
         {unread > 0 && (
-          <span className="nums absolute top-0.5 right-0.5 min-w-4 bg-loss px-1 text-[0.625rem] leading-4 font-bold text-accent-fg">{unread}</span>
+          <span className="nums absolute -top-1 -right-1 min-w-5 rounded-full bg-accent-hi px-1 text-center text-[0.6875rem] leading-5 font-bold text-white">
+            {unread}
+          </span>
         )}
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content align="end" sideOffset={6} className="px-panel z-50 w-80 p-2 animate-fade-up">
-          <p className="mb-2 font-pixel text-lg">{texts.hud.notifications}</p>
+        <Popover.Content align="end" sideOffset={8} collisionPadding={12} className="panel-float z-50 w-88 max-w-[92vw] p-4 animate-fade-up">
+          <p className="mb-3 font-bold">{texts.hud.notifications}</p>
           {notifications.length === 0 ? (
             <p className="py-4 text-center text-sm text-fg-3">{texts.hud.noNotifications}</p>
           ) : (
-            <ul className="flex max-h-80 flex-col gap-1 overflow-y-auto">
+            <ul className="flex max-h-96 flex-col gap-2 overflow-y-auto">
               {[...notifications].reverse().map((n) => (
-                <li key={n.id} className="bg-surface-2 p-2 text-sm">
+                <li key={n.id} className="rounded-xl bg-surface-2 px-3 py-2.5 text-sm leading-snug">
                   {notificationText(n)}
-                  <span className="mt-0.5 block text-xs text-fg-3">{formatAgo(n.at, serverNow())}</span>
+                  <span className="mt-1 block text-xs text-fg-3">{formatAgo(n.at, serverNow())}</span>
                 </li>
               ))}
             </ul>
@@ -251,17 +312,21 @@ function notificationText(n: FeedEntry) {
   return texts.notifications.unknown
 }
 
-function SettingsMenu() {
+/** The avatar with its EP ring: level, EP, profile link, settings, version and sign-out. */
+function YouMenu({ me }: { me: SignedIn }) {
+  const p = me.player
   const { volume, reducedMotion, set } = useSettings()
   const setMe = useSetMe()
   const client = useQueryClient()
   const reset = useWorld((s) => s.reset)
+  const pct = p.ep_to_next ? Math.round((100 * p.ep) / p.ep_to_next) : 100
+  const ring = { background: `conic-gradient(var(--color-accent-lo), var(--color-accent-hi) ${pct}%, rgb(255 255 255 / 0.12) ${pct}%)` } as CSSProperties
 
   const logout = async () => {
     try {
-      const me = await rpc('logout')
+      const res = await rpc('logout')
       reset()
-      setMe(me)
+      setMe(res)
       // Drop everything that belonged to the signed-out player; keep the session query and static art.
       client.removeQueries({ predicate: (q) => q.queryKey[0] !== 'me' && q.queryKey[0] !== 'atlas' })
     } catch (e) {
@@ -271,12 +336,38 @@ function SettingsMenu() {
 
   return (
     <Popover.Root>
-      <Popover.Trigger className={iconButton} aria-label={texts.hud.settings}>
-        <PixelIcon name="gear" />
+      <Popover.Trigger className="relative grid size-12 shrink-0 place-items-center rounded-full" style={ring} aria-label={texts.hud.settings}>
+        <span className="grid size-10 place-items-center rounded-full bg-surface-1 font-pixel text-xl">{p.username.slice(0, 1).toUpperCase()}</span>
+        <span className="nums absolute -right-1.5 -bottom-1 rounded-lg bg-fg px-1.5 text-[0.6875rem] leading-4 font-bold text-ink">{p.level}</span>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content align="end" sideOffset={6} className="px-panel z-50 w-72 p-3 animate-fade-up">
-          <p className="mb-3 font-pixel text-lg">{texts.hud.settings}</p>
+        <Popover.Content align="end" sideOffset={8} collisionPadding={12} className="panel-float z-50 w-80 p-4 animate-fade-up">
+          <div className="flex items-center gap-3">
+            <span className="grid size-11 place-items-center rounded-full bg-grad font-pixel text-xl text-white">{p.username.slice(0, 1).toUpperCase()}</span>
+            <div className="min-w-0 flex-1">
+              <p className="flex items-center gap-1.5 truncate font-bold">
+                {p.username}
+                {p.is_admin && <PixelIcon name="crown" className="text-gold" title={texts.hud.admin} />}
+              </p>
+              {p.title && <p className="truncate text-xs font-semibold text-accent">{p.title}</p>}
+            </div>
+            <span className="nums rounded-lg bg-surface-3 px-2 py-0.5 text-sm font-bold">
+              {texts.hud.level} {p.level}
+            </span>
+          </div>
+          <div className="mt-4">
+            <div className="mb-1.5 flex justify-between text-xs text-fg-3">
+              <span>{texts.hud.ep}</span>
+              <span className="nums">{p.ep_to_next ? `${formatNumber(p.ep)} / ${formatNumber(p.ep_to_next)}` : texts.hud.maxLevel}</span>
+            </div>
+            <Progress value={pct / 100} label={texts.hud.ep} />
+            <p className="mt-2 text-xs leading-snug text-fg-3">{texts.hud.epTip}</p>
+          </div>
+          <Link to="/profile" className="mt-3 inline-flex text-sm font-semibold text-accent hover:underline">
+            {texts.hud.profile} →
+          </Link>
+          <div className="my-4 h-px bg-line" />
+          <p className="mb-3 eyebrow">{texts.hud.settings}</p>
           <label className="mb-3 flex items-center gap-3 text-sm">
             <PixelIcon name={volume > 0 ? 'sound_on' : 'sound_off'} className="text-fg-2" />
             <span className="w-14">{texts.hud.sound}</span>
@@ -299,48 +390,9 @@ function SettingsMenu() {
             <PixelIcon name="logout" />
             {texts.hud.logout}
           </Button>
+          <p className="nums mt-3 text-center text-xs text-fg-3">{texts.hud.version(me.server.version)}</p>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
   )
-}
-
-// ----------------------------------------------------------------------------------------------
-// Feed rail (KARTEN-BILD)
-// ----------------------------------------------------------------------------------------------
-function FeedRail({ priceLevel }: { priceLevel: number }) {
-  const feed = useWorld((s) => s.feed)
-  const doener = formatMoney(Math.round(DOENER_BASE_CENTS * priceLevel))
-  return (
-    <aside className="col-start-3 row-span-2 row-start-1 flex flex-col overflow-hidden border-l-2 border-line bg-surface-1 max-[1439px]:hidden">
-      <div className="border-b-2 border-line px-3 py-2">
-        <p className="flex items-center gap-2 font-pixel text-xl leading-none text-loss">
-          <PixelIcon name="news" />
-          {texts.feed.title}
-        </p>
-        <p className="mt-1 text-xs text-fg-3">{texts.feed.subtitle}</p>
-      </div>
-      {feed.length === 0 ? (
-        <p className="p-4 text-center text-sm text-fg-3">{texts.feed.empty}</p>
-      ) : (
-        <ul className="flex flex-1 flex-col gap-2 overflow-y-auto p-2">
-          {[...feed].reverse().map((f) => (
-            <li key={f.id} className="bg-surface-2 p-2 text-sm leading-snug animate-fade-up">
-              {feedText(f, doener)}
-              <span className="mt-1 block text-xs text-fg-3">{formatAgo(f.at, serverNow())}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </aside>
-  )
-}
-
-function feedText(f: FeedEntry, doener: string) {
-  if (f.kind === 'player_joined') return texts.feed.player_joined(f.data)
-  if (f.kind === 'inflation') return texts.feed.inflation(f.data, doener)
-  if (f.kind === 'pull_grail') return texts.feed.pull_grail(f.data, cardName(String(f.data.card_id)))
-  if (f.kind === 'pull_ultra') return texts.feed.pull_ultra(f.data, cardName(String(f.data.card_id)))
-  if (f.kind === 'player_reset') return texts.feed.player_reset(f.data)
-  return texts.feed.unknown
 }
