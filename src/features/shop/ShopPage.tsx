@@ -8,13 +8,14 @@ import { Panel } from '@/components/ui/Panel.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { duplicateStacks } from '@/features/collection/sellDupes.ts'
-import { useAct, useShop } from '@/lib/actions.ts'
-import { productById, SETS } from '@/lib/catalog.ts'
+import { useAct, useLicenses, useShop } from '@/lib/actions.ts'
+import { gameOf, productById, SETS } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { texts } from '@/texts/de.ts'
 import { useMe } from '@/lib/world.ts'
+import { LicensePanel } from './Licenses.tsx'
 import { Snacks } from './Snacks.tsx'
 import { Lager, Stores } from './Stores.tsx'
 import { config } from '../../../content/config.ts'
@@ -34,6 +35,8 @@ export function ShopPage() {
   const [busy, setBusy] = useState<string | null>(null)
   const [justBought, setJustBought] = useState(false)
   const player = useMe().data?.player
+  const owned = useLicenses().data?.owned ?? []
+  const licensed = (productId: string) => owned.some((g) => g === gameOf(productId))
 
   const buy = async (productId: string, qty: number) => {
     setBusy(`${productId}:${qty}`)
@@ -48,6 +51,7 @@ export function ShopPage() {
 
   return (
     <Page icon="shop" title={T.title} subtitle={T.subtitle}>
+      {player && <LicensePanel level={player.level} />}
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <Panel title={T.kiosk} tip={T.kioskTip}>
           {shop.isPending ? (
@@ -57,7 +61,7 @@ export function ShopPage() {
           ) : shop.data.kiosk.length === 0 ? (
             <EmptyState icon="shop" title={T.empty} />
           ) : (
-            shop.data.kiosk.map((k) => {
+            shop.data.kiosk.filter((k) => licensed(k.product_id)).map((k) => {
               const product = productById.get(k.product_id)
               const left = k.daily_limit - k.bought_today
               return (
@@ -95,6 +99,22 @@ export function ShopPage() {
               )
             })
           )}
+          {shop.data && shop.data.kiosk.some((k) => !licensed(k.product_id)) && (
+            <ul className="mt-6 flex flex-wrap gap-2 border-t border-line pt-4">
+              {shop.data.kiosk
+                .filter((k) => !licensed(k.product_id))
+                .map((k) => (
+                  <li key={k.product_id} className="flex items-center gap-2 rounded-xl bg-surface-2 py-1.5 pr-3 pl-2 text-sm text-fg-3">
+                    <ProductArt id={k.product_id} scale={1} className="h-16 w-auto opacity-60 grayscale" />
+                    <span>
+                      <b className="block text-fg-2">{productById.get(k.product_id)?.name}</b>
+                      {texts.licenses.missing}
+                    </span>
+                    <InfoTip>{texts.licenses.missingTip(texts.games[gameOf(k.product_id) ?? 'pokemon'])}</InfoTip>
+                  </li>
+                ))}
+            </ul>
+          )}
         </Panel>
 
         <div className="flex flex-col gap-4">
@@ -110,7 +130,7 @@ export function ShopPage() {
       {shop.data && player && (
         <>
           <h2 className="mt-8 mb-4 text-2xl font-bold tracking-tight">{T.stores}</h2>
-          <Stores shop={shop.data} player={player} />
+          <Stores shop={shop.data} player={player} licensed={licensed} />
         </>
       )}
     </Page>

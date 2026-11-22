@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createTestDb, type TestDb } from './harness.ts'
 
-const B = 'booster-pkm-base'
 const rid = () => crypto.randomUUID()
 let t: TestDb
 let me: string
@@ -54,12 +53,16 @@ describe('mini-quests', () => {
 
 describe('tutorial', () => {
   it('walks through the steps on real events and pays rewards', async () => {
+    const id = await t.playerId(me)
+    await t.sql(`delete from game.licenses where player_id = $1`, [id]) // fresh from registration: no game yet
     let p = (await t.rpc(me, 'me_get')).player!
     expect(p.tutorial_step).toBe(0)
     await expect(t.rpc(me, 'tutorial_skip', { p_request_id: rid() })).rejects.toThrow('tutorial_not_skippable')
-    p = (await t.rpc(me, 'tutorial_ack', { p_request_id: rid() })).player
-    expect(p).toMatchObject({ tutorial_step: 1, sealed_total: 1 }) // Opa's booster
-    p = (await t.rpc(me, 'pack_open', { p_request_id: rid(), p_product: B, p_qty: 1 })).player
+    p = (await t.rpc(me, 'starter_pick', { p_request_id: rid(), p_game: 'yugioh' })).player
+    expect(p).toMatchObject({ tutorial_step: 1, sealed_total: 1 }) // Opa's booster, from the favourite game
+    const sealed = await t.sql<{ product_id: string }>(`select product_id from game.sealed where player_id = $1 and qty > 0`, [id])
+    expect(sealed.map((r) => r.product_id)).toEqual(['booster-ygo-lob'])
+    p = (await t.rpc(me, 'pack_open', { p_request_id: rid(), p_product: 'booster-ygo-lob', p_qty: 1 })).player
     expect(p.tutorial_step).toBe(2)
     // acknowledging again does nothing outside its step
     p = (await t.rpc(me, 'tutorial_ack', { p_request_id: rid() })).player

@@ -17,7 +17,7 @@ const T = texts.shop
 const SIZES = [1, 2, 5, 10]
 
 /** Müller, Würfelbude and Smyths: shared restock waves or a weekly allocation. */
-export function Stores({ shop, player }: { shop: Shop; player: Player }) {
+export function Stores({ shop, player, licensed }: { shop: Shop; player: Player; licensed: (productId: string) => boolean }) {
   const act = useAct()
   const [busy, setBusy] = useState<string | null>(null)
   const buy = async (store: string, product: string, qty: number) => {
@@ -64,6 +64,10 @@ export function Stores({ shop, player }: { shop: Shop; player: Player }) {
                           </p>
                           {player.level < o.min_level ? (
                             <p className="mt-2 text-sm text-fg-3">{T.fromLevel(o.min_level)}</p>
+                          ) : !licensed(o.product_id) ? (
+                            <Button size="sm" disabled className="mt-2">
+                              {texts.licenses.missing}
+                            </Button>
                           ) : (
                             <div className="mt-2 flex flex-wrap gap-1.5">
                               {sizes.length === 0 && (

@@ -32,10 +32,18 @@ export async function createTestDb() {
     browser() {
       return randomUUID()
     },
-    /** Registers a player from a fresh browser and returns that browser's id (use it for rpc calls). */
-    async player(username: string, inviteCode = 'geheim123') {
+    /**
+     * Registers a player from a fresh browser and returns that browser's id (use it for rpc calls). Test players
+     * collect Pokémon unless `starter` says otherwise (null = no licence yet, as right after registration).
+     */
+    async player(username: string, inviteCode = 'geheim123', starter: string | null = 'pokemon') {
       const browser = this.browser()
       await this.rpc(browser, 'join', { p_username: username, p_password: 'passwort1', p_invite_code: inviteCode })
+      if (starter) {
+        const id = await this.playerId(browser)
+        await sql(`insert into game.licenses (player_id, game, at) values ($1, $2, private.now())`, [id, starter])
+        await sql(`update game.players set fav_game = $2 where id = $1`, [id, starter])
+      }
       return browser
     },
     /** The player id behind a signed-in browser (for direct SQL in tests). */

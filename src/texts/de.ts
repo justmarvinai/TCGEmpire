@@ -169,6 +169,31 @@ export const texts = {
     ruf: 'Ruf',
   },
 
+  games: { pokemon: 'Pokémon', yugioh: 'Yu-Gi-Oh!', onepiece: 'One Piece', riftbound: 'Riftbound' },
+  gamePitch: {
+    pokemon: 'Der Klassiker. Glurak, Opas Liebling. Teuer, aber nostalgisch.',
+    yugioh: 'Herz der Karten. Exodia sammeln, Drachen vergöttern, Regeln nie ganz verstehen.',
+    onepiece: 'Strohhüte, Schwerter, Shanks. Für Leute, die 1.100 Folgen geschaut haben.',
+    riftbound: 'League of Legends auf Pappe. Jinx, Ahri und viel zu viele Runen.',
+  },
+
+  licenses: {
+    title: 'Händlerlizenzen',
+    tip: 'Im Laden kaufen darfst du nur Spiele, für die du eine Lizenz hast. Dein Lieblingsspiel ist gratis, weitere Lizenzen gibt es ab Level 10, 20 und 28 gegen eine kleine Gebühr. Handeln, Tauschen und Kleinanzeigen gehen immer.',
+    pickTitle: 'Welches Spiel ist dein Ding?',
+    pickText: 'Dein Lieblingsspiel: Lizenz gratis, Opas Booster und alle Belohnungs-Booster kommen daher. Die anderen Spiele kannst du später dazukaufen.',
+    pick: (game: string) => `${game} nehmen`,
+    picked: (game: string) => `${game} also. Mama hätte was anderes genommen.`,
+    owned: 'Lizenz',
+    fav: 'Lieblingsspiel',
+    buy: (fee: string) => `Lizenz kaufen · ${fee}`,
+    bought: (game: string) => `Lizenz für ${game} gekauft. Der Großhändler kennt jetzt deinen Namen.`,
+    fromLevel: (n: number) => `nächste Lizenz ab Level ${n}`,
+    allDone: 'Alle vier Lizenzen. Du bist offiziell nicht mehr zu retten.',
+    missing: 'Lizenz fehlt',
+    missingTip: (game: string) => `Für ${game} brauchst du erst eine Händlerlizenz.`,
+  },
+
   admin: {
     title: 'Admin-Konsole',
     subtitle: 'Hier drehst du an den Schrauben. Alles wirkt sofort für alle.',
@@ -399,6 +424,7 @@ export const texts = {
       pct > 0
         ? `KURSRAKETE: ${item} heute +${pct} %. Wer gestern verkauft hat, beißt jetzt in die Tischkante.`
         : `KURSSTURZ: ${item} heute ${pct} %. Sammler weinen in ihre Schutzhüllen.`,
+    license: (d: Record<string, unknown>, game: string) => `EXPANSION: ${String(d.name)} steigt bei ${game} ein. Der Markt zittert. Nicht.`,
     set_phase: (phase: string, reprint: boolean, set: string) => {
       if (reprint) return `REPRINT: ${set} wird nachgedruckt. Investoren weinen, Kinder jubeln.`
       const lines: Record<string, string> = {
@@ -490,6 +516,13 @@ export const texts = {
           'Hänge eine Karte an, wenn du protzen willst. Daneben siehst du, wer gerade da ist, und die neuesten Schlagzeilen.',
         ],
       },
+      licenses: {
+        name: 'Händlerlizenzen',
+        steps: [
+          'Du darfst jetzt ein zweites Kartenspiel in dein Sortiment nehmen. Lizenzen gibt es oben bei den Läden.',
+          'Die Lizenz kostet eine kleine Gebühr. Ab Level 20 und 28 kommt jeweils eine weitere dazu.',
+        ],
+      },
       players: {
         name: 'Spieler',
         steps: [
@@ -545,6 +578,7 @@ export const texts = {
         kleinanzeigen: 'Mama: Kleinanzeigen! Pass auf, da sind Verrückte unterwegs. Triff dich nie im Wald.',
         cardmarket: 'Mama: Der Cardmarket ist offen. Verkauf nicht Opas Sammlung, das merkt der.',
         trade: 'Mama: Jetzt kannst du mit deinen Freunden tauschen und ihnen was schenken. Lass dich nicht übers Ohr hauen.',
+        licenses: 'Mama: Du darfst jetzt ein zweites Kartenspiel verkaufen. Noch mehr Pappe im Haus. Toll.',
         lager: 'Mama: Jetzt gibt es Displays. Und nein, die stellst du nicht in mein Wohnzimmer.',
       }
       return lines[f] ?? `Neu freigeschaltet: ${name}`
@@ -1004,6 +1038,7 @@ export const texts = {
     not_enough_sealed: 'So viele Booster hast du nicht.',
     not_owned: 'Die Karte gehört dir nicht (mehr).',
     forbidden: 'Nur für den Admin. Netter Versuch.',
+    no_license: 'Dafür fehlt dir die Händlerlizenz. Erst Papierkram, dann Pappe.',
     trade_locked: 'Neue und frisch zurückgesetzte Konten dürfen in der ersten Stunde nicht tauschen oder schenken.',
     partner_locked: 'Die andere Seite darf noch nicht: zu neu oder unter Level 10.',
     trade_invalid: 'Das passt nicht mehr: Jemand hat die Sachen nicht mehr oder das Geld reicht nicht.',

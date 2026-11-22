@@ -36,7 +36,10 @@ export const config = {
   // Level rewards: minutes of reference income, plus a booster every n levels
   'level.reward_minutes': 8,
   'level.booster_every': 5,
-  'level.reward_product': 'booster-pkm-base',
+  // Reward boosters (levels, quests, stamps, chests, tutorial) come from the player's favourite game; the alias
+  // is resolved on the server, the default covers players who have not picked yet
+  'level.reward_product': 'reward-booster',
+  'reward.default_product': 'booster-pkm-base',
 
   // Preisniveau: P = min(cap, rate^max(0, median career level - free_levels)), daily, limited step
   'price.rate': 1.018,
@@ -105,6 +108,9 @@ export const config = {
   'feed.big_deal_base_cents': 200_00,
   'feed.price_move_pct': 12,
   'feed.price_move_min_base_cents': 5_00,
+  // Händlerlizenzen: the favourite game is free; one more licence at each of these levels, for these fees (Basis-€)
+  'license.levels': [10, 20, 28],
+  'license.fees_base_cents': [200_00, 600_00, 1_500_00],
   // Presence: seen within this many seconds counts as online
   'presence.online_seconds': 120,
   // Toplists: rows shown; net worth snapshots stay hourly this long, then daily

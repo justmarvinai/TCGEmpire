@@ -526,7 +526,7 @@ insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, pa
 on conflict (id) do update set name = excluded.name, archetype = excluded.archetype, ruf = excluded.ruf,
   budget_base_cents = excluded.budget_base_cents, activity = excluded.activity, params = excluded.params;
 insert into game.tutorial_steps (step, event, reward_booster, reward_base_cents, reward_ep) values
-  (0, 'tutorial_ack', 1, 0, 0),
+  (0, 'starter_picked', 1, 0, 0),
   (1, 'pack_opened', 0, 0, 10),
   (2, 'minigame_round', 0, 5000, 0),
   (3, 'packs_bought', 0, 0, 10),

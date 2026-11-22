@@ -11,7 +11,7 @@ test('core loop: tutorial booster, opening, summary, binder, kiosk, sell, quests
   await expect(page.getByRole('heading', { name: 'Moin, Rippa.' })).toBeVisible()
 
   // Mutti hands over Opa's booster.
-  await page.getByRole('button', { name: 'Danke, Mama' }).click()
+  await page.getByRole('button', { name: 'Pokémon', exact: true }).click() // Mama asks for the favourite game
   await page.getByRole('button', { name: "Zeig's mir" }).click()
   await expect(page.getByRole('heading', { name: 'Booster öffnen' })).toBeVisible()
   await page.getByRole('button', { name: '1× öffnen' }).click()

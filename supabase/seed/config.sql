@@ -20,7 +20,8 @@ insert into game.config (key, value) values
   ('income.ref_growth', '1.08'::jsonb),
   ('level.reward_minutes', '8'::jsonb),
   ('level.booster_every', '5'::jsonb),
-  ('level.reward_product', '"booster-pkm-base"'::jsonb),
+  ('level.reward_product', '"reward-booster"'::jsonb),
+  ('reward.default_product', '"booster-pkm-base"'::jsonb),
   ('price.rate', '1.018'::jsonb),
   ('price.cap', '250'::jsonb),
   ('price.free_levels', '20'::jsonb),
@@ -77,6 +78,8 @@ insert into game.config (key, value) values
   ('feed.big_deal_base_cents', '20000'::jsonb),
   ('feed.price_move_pct', '12'::jsonb),
   ('feed.price_move_min_base_cents', '500'::jsonb),
+  ('license.levels', '[10,20,28]'::jsonb),
+  ('license.fees_base_cents', '[20000,60000,150000]'::jsonb),
   ('presence.online_seconds', '120'::jsonb),
   ('toplist.size', '50'::jsonb),
   ('snapshots.hourly_days', '7'::jsonb),
@@ -153,6 +156,7 @@ insert into game.config (key, value) values
   ('unlock.kleinanzeigen', '4'::jsonb),
   ('unlock.cardmarket', '10'::jsonb),
   ('unlock.trade', '10'::jsonb),
+  ('unlock.licenses', '10'::jsonb),
   ('unlock.weekly_quests', '13'::jsonb),
   ('unlock.lager', '18'::jsonb)
 on conflict (key) do update set value = excluded.value;

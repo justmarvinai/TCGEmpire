@@ -17,7 +17,7 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
 
   await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
   await expect(page.getByText('400,00 €').first()).toBeVisible()
-  await page.getByRole('button', { name: 'Danke, Mama' }).waitFor()
+  await page.getByRole('button', { name: 'Pokémon', exact: true }).waitFor()
   // Level and admin crown live in the avatar menu.
   await page.getByRole('button', { name: 'Einstellungen' }).click()
   await expect(page.getByRole('img', { name: 'Admin' })).toBeVisible()

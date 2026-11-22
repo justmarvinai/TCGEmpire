@@ -76,6 +76,7 @@ const FEATURE_PAGE: Record<Feature, string> = {
   stammtisch: '/stammtisch',
   players: '/players',
   trade: '/trade',
+  licenses: '/shop',
   daily_quests: '/quests',
   stamps: '/quests',
   bunker: '/bunker',

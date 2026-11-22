@@ -13,6 +13,7 @@ export const UNLOCKS = {
   kleinanzeigen: 4,
   cardmarket: 10,
   trade: 10,
+  licenses: 10,
   weekly_quests: 13,
   lager: 18,
 } as const

@@ -9,14 +9,16 @@ export interface TutorialStep {
   text: string
   /** button label for steps that are acknowledged by clicking */
   ack?: string
+  /** the step is done by picking the favourite game (starter choice) */
+  pick?: true
 }
 
 export const TUTORIAL: readonly TutorialStep[] = [
   {
-    event: 'tutorial_ack',
+    event: 'starter_picked',
     reward: { booster: 1 },
-    text: 'Hallo Schatz, hier ist die Mama. Opa war da und hat dir einen Booster dagelassen. Er meint, die Karten sind „bestimmt mal was wert“. Wie seine Telefonkarten. LG Mama',
-    ack: 'Danke, Mama',
+    text: 'Hallo Schatz, hier ist die Mama. Opa war da und will dir einen Booster dalassen. Er fragt, welches Kartenspiel. Ich hab gesagt, die sind eh alle gleich. Such dir eins aus. LG Mama',
+    pick: true,
   },
   { event: 'pack_opened', path: '/open', reward: { ep: 10 }, text: 'Mach Opas Booster auf. Er will wissen, was drin war. Lüg ihn nicht an.' },
   {

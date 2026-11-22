@@ -10,7 +10,8 @@ import { rpc } from '@/lib/rpc.ts'
 import { Button } from '@/components/ui/Button.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { useAct } from '@/lib/actions.ts'
-import { cardName, JOBS, TUTORIAL } from '@/lib/catalog.ts'
+import { useStarterPick } from '@/features/shop/Licenses.tsx'
+import { cardName, GAMES, JOBS, TUTORIAL } from '@/lib/catalog.ts'
 import { formatDuration, formatMoney } from '@/lib/format.ts'
 import { hash01, useNow } from '@/lib/pure.ts'
 import type { Player } from '@/lib/schemas.ts'
@@ -226,6 +227,20 @@ function BigPulls() {
 }
 
 /** Mutti's messages: one step at a time, each completes when the server sees the action. */
+/** Mutti's first message: pick the favourite game (starter choice). */
+function StarterButtons() {
+  const { pick, busy } = useStarterPick()
+  return (
+    <span className="flex flex-wrap gap-2">
+      {GAMES.map((g) => (
+        <Button key={g} variant="primary" size="sm" loading={busy === g} disabled={busy !== null} onClick={() => void pick(g)}>
+          {texts.games[g]}
+        </Button>
+      ))}
+    </span>
+  )
+}
+
 function TutorialDock({ step }: { step: number }) {
   const def = TUTORIAL[step]
   const act = useAct()
@@ -262,7 +277,9 @@ function TutorialDock({ step }: { step: number }) {
         <p className="text-sm leading-snug">{def.text}</p>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        {def.ack ? (
+        {def.pick ? (
+          <StarterButtons />
+        ) : def.ack ? (
           <Button variant="primary" size="sm" loading={busy} onClick={() => run('tutorial_ack')}>
             {def.ack}
           </Button>

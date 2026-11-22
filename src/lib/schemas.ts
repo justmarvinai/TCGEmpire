@@ -479,6 +479,16 @@ export const zAdmin = z.object({
 })
 export type Admin = z.infer<typeof zAdmin>
 
+export const zLicenses = z.object({
+  fav_game: z.enum(['pokemon', 'yugioh', 'onepiece', 'riftbound']).nullable(),
+  owned: z.array(z.enum(['pokemon', 'yugioh', 'onepiece', 'riftbound'])),
+  allowed: z.number(),
+  levels: z.array(z.number()),
+  next_fee_cents: z.number().nullable(),
+})
+export type Licenses = z.infer<typeof zLicenses>
+const zLicensesWrite = z.object({ licenses: zLicenses, player: zPlayer })
+
 export const TOPLISTS = ['worth', 'level', 'cash', 'collection'] as const
 export type ToplistId = (typeof TOPLISTS)[number]
 export const zToplist = z.object({
@@ -532,6 +542,9 @@ export const RPC_SCHEMAS = {
   toplist_get: zToplist,
   players_get: zPlayers,
   chat_get: zChat,
+  licenses_get: zLicenses,
+  starter_pick: zLicensesWrite,
+  license_buy: zLicensesWrite,
   admin_get: zAdmin,
   admin_set_phase: zAdmin,
   admin_restock: zAdmin,

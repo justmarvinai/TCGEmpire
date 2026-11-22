@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { CONSUMABLES, cardName, itemName, SETS, STORES } from '@/lib/catalog.ts'
+import { CONSUMABLES, cardName, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
 import type { FeedEntry } from '@/lib/schemas.ts'
 import { serverNow, useWorld } from '@/lib/world.ts'
@@ -16,6 +16,7 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'overtake') return texts.feed.overtake(f.data)
   if (f.kind === 'set_phase')
     return texts.feed.set_phase(String(f.data.phase), Boolean(f.data.reprint), SETS.find((s) => s.id === f.data.set_id)?.name ?? String(f.data.set_id))
+  if (f.kind === 'license') return texts.feed.license(f.data, texts.games[f.data.game as Game] ?? String(f.data.game))
   if (f.kind === 'announcement') return texts.feed.announcement(String(f.data.text))
   if (f.kind === 'big_deal') return texts.feed.big_deal(f.data, itemName(String(f.data.item_id)), formatMoney(Number(f.data.cents)))
   if (f.kind === 'price_move') return texts.feed.price_move(Number(f.data.pct), itemName(String(f.data.item_id)))
