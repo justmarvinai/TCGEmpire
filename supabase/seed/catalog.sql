@@ -95,10 +95,11 @@ insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_bas
   ('pkm-base-090', 'pokemon-base', 90, 'Glurak', 'grail', 'pokemon', 'Feuer', 977856)
 on conflict (id) do update set set_id = excluded.set_id, no = excluded.no, name = excluded.name, tier = excluded.tier,
   kind = excluded.kind, element = excluded.element, value_base_cents = excluded.value_base_cents;
-insert into game.product_defs (id, set_id, kind, name, price_base_cents, slots) values
-  ('booster-pkm-base', 'pokemon-base', 'booster', 'Basis-Set Booster', 10000, '[{"pool":"energy","n":2},{"pool":"common","n":5},{"pool":"uncommon","n":3},{"pool":"hit","n":1}]'::jsonb)
+insert into game.product_defs (id, set_id, kind, name, price_base_cents, slots, contents) values
+  ('booster-pkm-base', 'pokemon-base', 'booster', 'Basis-Set Booster', 10000, '[{"pool":"energy","n":2},{"pool":"common","n":5},{"pool":"uncommon","n":3},{"pool":"hit","n":1}]'::jsonb, null),
+  ('display-pkm-base', 'pokemon-base', 'display', 'Basis-Set Display', 320000, '[]'::jsonb, '{"product":"booster-pkm-base","qty":36}'::jsonb)
 on conflict (id) do update set set_id = excluded.set_id, kind = excluded.kind, name = excluded.name,
-  price_base_cents = excluded.price_base_cents, slots = excluded.slots;
+  price_base_cents = excluded.price_base_cents, slots = excluded.slots, contents = excluded.contents;
 insert into game.quest_templates (key, event, min_target, max_target, kind, min_level) values
   ('open', 'pack_opened', 2, 5, 'mini', 1),
   ('buy', 'packs_bought', 2, 5, 'mini', 1),
@@ -139,6 +140,7 @@ insert into game.upgrade_defs (key, grp, max_level, cost_base_cents, growth, min
   ('fleiss', 'jobs', 20, 150000, 1.35, 7, 1, 'wage_pct', 'flat', 5),
   ('pack_glueck', 'oeffnen', 10, 300000, 1.6, 5, 3, 'pack_luck', 'flat', 5),
   ('verkaufsflaeche', 'handel', 10, 250000, 1.5, 10, 2, 'listing_slots', 'flat', 5),
+  ('lagerregal', 'handel', 10, 300000, 1.5, 18, 2, 'lager_units', 'flat', 30),
   ('schnelllerner', 'fortschritt', 20, 200000, 1.4, 5, 2, 'ep', 'pct', 3)
 on conflict (key) do update set grp = excluded.grp, max_level = excluded.max_level, cost_base_cents = excluded.cost_base_cents,
   growth = excluded.growth, min_level = excluded.min_level, level_step = excluded.level_step, stat = excluded.stat,
@@ -180,6 +182,13 @@ insert into game.achievement_defs (key, event, tiers, titles) values
   ('doener', 'doener_eaten', '[5,50,500]'::jsonb, '[null,"Dönerprinz","Spießkönig"]'::jsonb),
   ('levels', 'level_up', '[9,24,49,99]'::jsonb, '[null,"Aufsteiger","Großkopferter","Endgegner"]'::jsonb)
 on conflict (key) do update set event = excluded.event, tiers = excluded.tiers, titles = excluded.titles;
+insert into game.store_defs (key, min_level, markup_bps, closed_sunday, restocks, stock_per_player, lim, lim_per_ruf100, products) values
+  ('mueller', 4, 10000, true, '["10:00","16:00"]'::jsonb, 4, 2, 0, '[{"id":"booster-pkm-base"}]'::jsonb),
+  ('wuerfelbude', 6, 10000, true, '[]'::jsonb, 0, 6, 1, '[{"id":"booster-pkm-base"},{"id":"display-pkm-base","minLevel":18}]'::jsonb),
+  ('smyths', 12, 9800, true, '["14:00"]'::jsonb, 12, 12, 0, '[{"id":"booster-pkm-base"},{"id":"display-pkm-base","minLevel":18}]'::jsonb)
+on conflict (key) do update set min_level = excluded.min_level, markup_bps = excluded.markup_bps, closed_sunday = excluded.closed_sunday,
+  restocks = excluded.restocks, stock_per_player = excluded.stock_per_player, lim = excluded.lim, lim_per_ruf100 = excluded.lim_per_ruf100,
+  products = excluded.products;
 insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, params) values
   ('sabine', 'Sammler-Sabine', 'collector', 900, 300000, 40, '{"buyBelowPct":95,"buysPerTick":2,"orders":3,"orderPct":80}'::jsonb),
   ('kalle', 'Kartenhändler Kalle', 'dealer', 700, 0, 50, '{"stock":14,"markupMinPct":110,"markupMaxPct":135,"maxAgeH":48,"hitChancePct":12}'::jsonb),

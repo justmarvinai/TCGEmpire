@@ -22,6 +22,17 @@ export const PRODUCTS: readonly ProductData[] = [
     ],
     wrappers: ['booster-pkm-base-glurak', 'booster-pkm-base-turtok', 'booster-pkm-base-bisaflor'],
   },
+  {
+    id: 'display-pkm-base',
+    set: 'pokemon-base',
+    kind: 'display',
+    name: 'Basis-Set Display',
+    // 36 boosters for 3.200 € instead of 3.600 € (docs/ECONOMY.md §5.4)
+    priceBaseCents: 3_200_00,
+    slots: [],
+    contains: { product: 'booster-pkm-base', qty: 36 },
+    wrappers: ['booster-pkm-base-glurak', 'booster-pkm-base-turtok', 'booster-pkm-base-bisaflor'],
+  },
 ]
 
 /** In-print, ungraded value range per tier in Basis-€ cents (docs/ECONOMY.md §5.1). */
@@ -63,7 +74,7 @@ export function packEv(product: ProductData, set: SetData, value: (c: CardData) 
 
 /** Final Basis-€ cent value of every card: tier range by desirability, scaled so the pack EV hits the target. */
 export function cardValues(set: SetData): Map<string, number> {
-  const product = PRODUCTS.find((p) => p.set === set.id)
+  const product = PRODUCTS.find((p) => p.set === set.id && p.kind === 'booster')
   const factor = product ? (PACK_EV_SHARE * product.priceBaseCents) / packEv(product, set, rawValue) : 1
   return new Map(set.cards.map((c) => [c.id, Math.max(1, Math.round(rawValue(c) * factor))]))
 }

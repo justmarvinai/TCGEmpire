@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
+import { ProductArt } from '@/components/pixel/ProductArt.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -16,6 +16,7 @@ import { sfx } from '@/lib/sfx.ts'
 import { texts } from '@/texts/de.ts'
 import { useMe } from '@/lib/world.ts'
 import { Snacks } from './Snacks.tsx'
+import { Lager, Stores } from './Stores.tsx'
 import { config } from '../../../content/config.ts'
 
 const T = texts.shop
@@ -61,7 +62,7 @@ export function ShopPage() {
               const left = k.daily_limit - k.bought_today
               return (
                 <div key={k.product_id} className="flex flex-wrap items-center gap-6" data-tour="kiosk">
-                  <PixelProduct id={product?.wrappers[0] ?? ''} scale={2} fallback={{ w: 84, h: 132 }} className="anim-bob" />
+                  <ProductArt id={k.product_id} scale={2} className="anim-bob" />
                   <div className="flex min-w-56 flex-col gap-3">
                     <div>
                       <p className="text-2xl font-bold tracking-tight">{product?.name}</p>
@@ -100,10 +101,18 @@ export function ShopPage() {
           <Panel title={T.ankauf} tip={T.ankaufTip}>
             <SellDuplicates />
           </Panel>
+          {shop.data && <Lager shop={shop.data} />}
           {shop.data && player && <Snacks shop={shop.data} player={player} where="kiosk" />}
           {shop.data && player && <Snacks shop={shop.data} player={player} where="pfandautomat" />}
         </div>
       </div>
+
+      {shop.data && player && (
+        <>
+          <h2 className="mt-8 mb-4 text-2xl font-bold tracking-tight">{T.stores}</h2>
+          <Stores shop={shop.data} player={player} />
+        </>
+      )}
     </Page>
   )
 }

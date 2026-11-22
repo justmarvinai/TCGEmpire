@@ -8,9 +8,10 @@ import { JOBS, RANKS, SHIFT_HOURS } from '../../content/jobs.ts'
 import { CONSUMABLES } from '../../content/consumables.ts'
 import { ACHIEVEMENTS, STAT_LABELS } from '../../content/achievements.ts'
 import { UNLOCKS } from '../../content/unlocks.ts'
+import { STORES } from '../../content/stores.ts'
 
 export { ACHIEVEMENTS, ALL_QUESTS, cardById, CONSUMABLES, JOBS, PRODUCTS, productById, RANKS, SETS, SHIFT_HOURS }
-export { STAT_LABELS, TIERS, TUTORIAL, UNLOCKS, UPGRADES }
+export { STAT_LABELS, STORES, TIERS, TUTORIAL, UNLOCKS, UPGRADES }
 export type { CardData, Tier }
 
 export const HIT_TIERS: ReadonlySet<string> = new Set<Tier>(['holo', 'alternative', 'ultra', 'grail'])

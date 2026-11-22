@@ -12,6 +12,7 @@ import { CONSUMABLES } from '../content/consumables.ts'
 import { ACHIEVEMENTS } from '../content/achievements.ts'
 import { TUTORIAL } from '../content/tutorial.ts'
 import { NPCS } from '../content/npcs.ts'
+import { STORES } from '../content/stores.ts'
 
 const q = (v: string | null | undefined) => (v == null ? 'null' : `'${v.replace(/'/g, "''")}'`)
 const rows = (list: string[]) => list.map((r) => `  (${r})`).join(',\n')
@@ -52,14 +53,14 @@ export function buildCatalogSql(): string {
     )
   }
   out.push(
-    'insert into game.product_defs (id, set_id, kind, name, price_base_cents, slots) values',
+    'insert into game.product_defs (id, set_id, kind, name, price_base_cents, slots, contents) values',
     rows(
       PRODUCTS.map(
-        (p) => `${q(p.id)}, ${q(p.set)}, ${q(p.kind)}, ${q(p.name)}, ${p.priceBaseCents}, ${q(JSON.stringify(p.slots))}::jsonb`,
+        (p) => `${q(p.id)}, ${q(p.set)}, ${q(p.kind)}, ${q(p.name)}, ${p.priceBaseCents}, ${q(JSON.stringify(p.slots))}::jsonb, ${p.contains ? `${q(JSON.stringify(p.contains))}::jsonb` : 'null'}`,
       ),
     ),
     'on conflict (id) do update set set_id = excluded.set_id, kind = excluded.kind, name = excluded.name,',
-    '  price_base_cents = excluded.price_base_cents, slots = excluded.slots;',
+    '  price_base_cents = excluded.price_base_cents, slots = excluded.slots, contents = excluded.contents;',
     'insert into game.quest_templates (key, event, min_target, max_target, kind, min_level) values',
     rows(
       Object.entries(QUESTS_BY_KIND).flatMap(([kind, list]) =>
@@ -98,6 +99,16 @@ export function buildCatalogSql(): string {
       ),
     ),
     'on conflict (key) do update set event = excluded.event, tiers = excluded.tiers, titles = excluded.titles;',
+    'insert into game.store_defs (key, min_level, markup_bps, closed_sunday, restocks, stock_per_player, lim, lim_per_ruf100, products) values',
+    rows(
+      STORES.map(
+        (st) =>
+          `${q(st.key)}, ${st.minLevel}, ${st.markupBps}, ${st.closedSunday}, ${q(JSON.stringify(st.restocks ?? []))}::jsonb, ${st.stockPerPlayer ?? 0}, ${st.limit}, ${st.limitPerRuf100 ?? 0}, ${q(JSON.stringify(st.products))}::jsonb`,
+      ),
+    ),
+    'on conflict (key) do update set min_level = excluded.min_level, markup_bps = excluded.markup_bps, closed_sunday = excluded.closed_sunday,',
+    '  restocks = excluded.restocks, stock_per_player = excluded.stock_per_player, lim = excluded.lim, lim_per_ruf100 = excluded.lim_per_ruf100,',
+    '  products = excluded.products;',
     'insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, params) values',
     rows(NPCS.map((n) => `${q(n.id)}, ${q(n.name)}, ${q(n.archetype)}, ${n.ruf}, ${n.budgetBaseCents}, ${n.activity}, ${q(JSON.stringify(n.params))}::jsonb`)),
     'on conflict (id) do update set name = excluded.name, archetype = excluded.archetype, ruf = excluded.ruf,',

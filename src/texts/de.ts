@@ -188,6 +188,9 @@ export const texts = {
       `${String(d.name)} zieht ${card}. Neid ist auch eine Form von Anerkennung.`,
     player_reset: (d: Record<string, unknown>) =>
       `NEUSTART: ${String(d.name)} hat alles verbrannt und fängt von vorne an. Die Feuerwehr ermittelt.`,
+    restock: (store: string) => `LIEFERUNG: ${store} hat aufgefüllt. Die Schlange reicht bis zum Parkplatz.`,
+    scalper_raid: (d: Record<string, unknown>, store: string) =>
+      `${String(d.name)} räumt bei ${store} ${String(d.qty)} Booster ab. Die Rentner in der Schlange sind fassungslos.`,
     unknown: 'Irgendwas ist passiert. Die Redaktion schläft noch.',
   },
 
@@ -243,6 +246,21 @@ export const texts = {
           'Zu teuer bleibt liegen, zu billig kauft dir einer weg. Willkommen in der freien Marktwirtschaft.',
         ],
       },
+      stores: {
+        name: 'Läden',
+        steps: [
+          'Neben dem Kiosk haben jetzt richtige Läden für dich auf. Müller zuerst, später die Würfelbude und Smyths.',
+          'Müller und Smyths liefern zu festen Zeiten, und alle teilen sich den Bestand. Wer zu spät kommt, guckt in leere Regale.',
+          'Scalper-Sven ist immer schon da. Sei schneller oder kauf ihm später zu viel bezahlte Booster ab.',
+        ],
+      },
+      lager: {
+        name: 'Lager und Displays',
+        steps: [
+          'Jetzt gibt es Displays: 36 Booster in einer Box, günstiger als einzeln. Erst auspacken, dann aufreißen.',
+          'Jeder Booster und jedes Display braucht einen Platz im Lager. Ist es voll, verkaufen dir die Läden nichts mehr.',
+        ],
+      },
       weekly_quests: {
         name: 'Wochenquests',
         steps: [
@@ -293,6 +311,22 @@ export const texts = {
   },
 
   shop: {
+    stores: 'Läden',
+    storeNext: (time: string) => `Nächste Lieferung ${time} Uhr`,
+    storeClosed: 'Heute zu. Sonntag ist Flohmarkt.',
+    storeWeekly: 'Für dich zurückgelegt, jede Woche neu.',
+    stock: (left: number, total: number) => `Noch ${left} von ${total}`,
+    soldOut: 'Ausverkauft',
+    noDelivery: 'Noch keine Lieferung heute',
+    yourLimit: (bought: number, limit: number) => `Deins: ${bought} von ${limit}`,
+    sharedTip: (times: string, limit: number) =>
+      `Lieferung um ${times} Uhr. Alle teilen sich den Bestand, höchstens ${limit} pro Person und Lieferung. Scalper sind schneller als du.`,
+    weeklyTip: (base: number, per: number) => `Jede Woche ${base} Stück für dich zurückgelegt, dazu ${per} je 100 Ruf. Montags neu.`,
+    fromLevel: (level: number) => `Ab Level ${level}`,
+    lager: 'Lager',
+    lagerTip:
+      'Jeder Booster und jedes Display braucht einen Platz. Ist das Lager voll, verkaufen dir die Läden nichts mehr: öffnen, verkaufen oder das Lagerregal ausbauen.',
+    lagerUsed: (used: number, cap: number) => `${used} von ${cap} Plätzen belegt`,
     title: 'Läden',
     subtitle: 'Kiosk am Eck und der Kartenladen. Mehr Läden machen auf, wenn du groß bist.',
     kiosk: 'Kiosk am Eck',
@@ -316,6 +350,9 @@ export const texts = {
   },
 
   open: {
+    unbox: 'Auspacken',
+    unboxed: (n: number) => `${n} Booster ausgepackt. Riecht nach frischer Pappe.`,
+    displayHint: 'Ein Display wird erst ausgepackt. Dann reißt du die Booster einzeln auf.',
     title: 'Booster öffnen',
     subtitle: 'Hier passiert die Magie. Oder die Enttäuschung. Meistens die Enttäuschung.',
     yours: 'Deine Booster',
@@ -651,6 +688,9 @@ export const texts = {
   errors: {
     server_error: 'Der Server hat sich verschluckt. Versuch es gleich nochmal.',
     not_found: 'Gibt es nicht (mehr). Jemand war schneller.',
+    lager_full: 'Lager voll. Öffnen, verkaufen oder das Lagerregal ausbauen.',
+    store_closed: 'Heute zu. Sonntags gibt es nur den Flohmarkt.',
+    sold_out: 'Ausverkauft. Zu langsam. Wie immer.',
     no_slots: 'Keine Plätze frei. Zieh etwas zurück oder bau die Verkaufsfläche aus.',
     own_listing: 'Das ist dein eigenes Angebot. Netter Versuch.',
     contract_mismatch: 'Der Server antwortet anders als erwartet. Lade die Seite neu.',

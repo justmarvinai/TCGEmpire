@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react'
 import { Link } from 'react-router'
 import { Card, CardBack } from '@/components/cards/Card.tsx'
 import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
-import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
+import { ProductArt } from '@/components/pixel/ProductArt.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
@@ -15,7 +15,7 @@ import { useBunkerContent, useCollectBunker } from '@/features/bunker/BunkerPage
 import { FeedList } from '@/features/feed/Feed.tsx'
 import { QuestList, Stamps } from '@/features/quests/QuestsPage.tsx'
 import { useBunker, useHome, useJobs, useQuests, useShop } from '@/lib/actions.ts'
-import { cardById, productById, SETS, TIER_LABEL, type Tier } from '@/lib/catalog.ts'
+import { cardById, SETS, TIER_LABEL, type Tier } from '@/lib/catalog.ts'
 import { formatAgo, formatDuration, formatMoney } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import type { Home, Me, Player } from '@/lib/schemas.ts'
@@ -59,7 +59,7 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
     shiftDone: !!jobs.data?.shift?.done,
     stamp: !!quests.data?.stamps.unlocked && !quests.data.stamps.today_done,
   })
-  const sealedArt = next.key === 'sealed' ? productById.get(shop.data?.sealed[0]?.product_id ?? '')?.wrappers[0] : undefined
+  const sealedArt = next.key === 'sealed' ? shop.data?.sealed[0]?.product_id : undefined
   const cards = Math.max(0, p.net_worth_cents - p.cash_cents)
 
   return (
@@ -101,7 +101,7 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
         <section className="panel relative flex min-h-52 flex-col overflow-hidden p-5 lg:col-span-6 xl:col-span-3">
           <div className="pointer-events-none absolute -top-12 -right-14 size-56 rounded-full bg-[radial-gradient(circle,rgb(255_140_60/0.28),transparent_65%)]" />
           {sealedArt ? (
-            <PixelProduct id={sealedArt} scale={1} fallback={{ w: 84, h: 132 }} className="absolute top-5 right-5 drop-shadow-[0_16px_24px_rgb(0_0_0/0.5)]" />
+            <ProductArt id={sealedArt} scale={1} className="absolute top-5 right-5 drop-shadow-[0_16px_24px_rgb(0_0_0/0.5)]" />
           ) : (
             <PixelIcon name={next.icon} scale={3} className="absolute top-5 right-5 text-accent" />
           )}

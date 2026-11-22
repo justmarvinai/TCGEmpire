@@ -76,6 +76,28 @@ export const zShop = z.object({
   kiosk: z.array(
     z.object({ product_id: z.string(), price_cents: z.number(), bought_today: z.number(), daily_limit: z.number() }),
   ),
+  stores: z.array(
+    z.object({
+      key: z.string(),
+      min_level: z.number(),
+      open: z.boolean(),
+      shared: z.boolean(),
+      next_restock_at: z.string().nullable(),
+      offers: z.array(
+        z.object({
+          product_id: z.string(),
+          min_level: z.number(),
+          price_cents: z.number(),
+          left: z.number().nullable(),
+          total: z.number().nullable(),
+          restocked_at: z.string().nullable(),
+          limit: z.number(),
+          bought: z.number(),
+        }),
+      ),
+    }),
+  ),
+  lager: z.object({ used: z.number(), cap: z.number(), unlock_level: z.number() }),
   sealed: z.array(z.object({ product_id: z.string(), qty: z.number() })),
   snacks: z.array(z.object({ key: z.string(), price_cents: z.number().nullable(), pfandbons: z.number().nullable() })),
 })
@@ -295,6 +317,8 @@ export const RPC_SCHEMAS = {
   home_get: zHome,
   market_item: zMarketItem,
   market_overview: zMarketOverview,
+  retail_buy: z.object({ bought: z.number(), paid_cents: z.number(), player: zPlayer }),
+  display_unbox: z.object({ boosters: z.number(), player: zPlayer }),
   cardmarket_get: zCardmarket,
   cardmarket_item: zCardmarketItem,
   seller_get: zSeller,

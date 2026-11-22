@@ -1,8 +1,8 @@
 import clsx from 'clsx'
 import { useQuery } from '@tanstack/react-query'
 import { Card } from '@/components/cards/Card.tsx'
-import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
-import { cardById, productById, TIER_LABEL, TIER_TEXT, type Tier } from '@/lib/catalog.ts'
+import { ProductArt } from '@/components/pixel/ProductArt.tsx'
+import { cardById, TIER_LABEL, TIER_TEXT, type Tier } from '@/lib/catalog.ts'
 import { rpc } from '@/lib/rpc.ts'
 import { texts } from '@/texts/de.ts'
 
@@ -19,7 +19,7 @@ export function ItemTier({ id, className }: { id: string; className?: string }) 
 /** Card art or the product's first wrapper. */
 export function ItemArt({ id, scale = 2, className }: { id: string; scale?: number; className?: string }) {
   if (cardById.has(id)) return <Card id={id} scale={scale} className={className} />
-  return <PixelProduct id={productById.get(id)?.wrappers[0] ?? ''} scale={scale} fallback={{ w: 84, h: 132 }} className={className} />
+  return <ProductArt id={id} scale={scale} className={className} />
 }
 
 export const TraderName = ({ name, kind }: { name: string; kind: 'player' | 'npc' }) => (

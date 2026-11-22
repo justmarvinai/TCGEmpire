@@ -77,6 +77,8 @@ const FEATURE_PAGE: Record<Feature, string> = {
   upgrades: '/upgrades',
   shifts: '/jobs',
   cardmarket: '/cardmarket',
+  stores: '/shop',
+  lager: '/shop',
   weekly_quests: '/quests',
 }
 

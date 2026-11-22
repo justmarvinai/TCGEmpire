@@ -52,6 +52,9 @@ insert into game.config (key, value) values
   ('market.day_down_pct', '22'::jsonb),
   ('market.history_fine_h', '48'::jsonb),
   ('market.history_hourly_d', '14'::jsonb),
+  ('lager.base_units', '60'::jsonb),
+  ('stores.scalper_share_pct', '30'::jsonb),
+  ('stores.scalper_window_minutes', '20'::jsonb),
   ('market.fee_bps', '500'::jsonb),
   ('market.ship_min_minutes', '5'::jsonb),
   ('market.ship_max_minutes', '20'::jsonb),
@@ -116,6 +119,8 @@ insert into game.config (key, value) values
   ('unlock.bunker', '3'::jsonb),
   ('unlock.upgrades', '5'::jsonb),
   ('unlock.shifts', '7'::jsonb),
+  ('unlock.stores', '4'::jsonb),
   ('unlock.cardmarket', '10'::jsonb),
-  ('unlock.weekly_quests', '13'::jsonb)
+  ('unlock.weekly_quests', '13'::jsonb),
+  ('unlock.lager', '18'::jsonb)
 on conflict (key) do update set value = excluded.value;

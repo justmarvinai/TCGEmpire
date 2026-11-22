@@ -6,6 +6,8 @@ export const UNLOCKS = {
   bunker: 3,
   upgrades: 5,
   shifts: 7,
+  stores: 4,
   cardmarket: 10,
   weekly_quests: 13,
+  lager: 18,
 } as const

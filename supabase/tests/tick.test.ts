@@ -9,10 +9,10 @@ describe('tick', () => {
     const t = await createTestDb()
     await t.sql(`insert into game.tick_systems (name, every_seconds) values ('broken', 60)`)
     const first = await t.tick()
-    expect(first).toEqual({ ran: 7, failed: 1 }) // broken, cleanup, daily, history, market, npcs, shipments
+    expect(first).toEqual({ ran: 8, failed: 1 }) // broken, cleanup, daily, history, market, npcs, shipments, stores
     expect((await t.tick()).ran).toBe(0)
     await t.advance('61 seconds')
-    expect(await t.tick()).toEqual({ ran: 3, failed: 1 }) // daily, broken, shipments; the rest run less often
+    expect(await t.tick()).toEqual({ ran: 4, failed: 1 }) // daily, broken, shipments, stores; the rest run less often
     const errors = await t.sql<{ name: string; error: string }>(`select name, error from game.job_runs where not ok`)
     expect(errors).toHaveLength(2)
     expect(errors[0]!.name).toBe('broken')

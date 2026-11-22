@@ -42,11 +42,14 @@ export interface SlotGroup {
 export interface ProductData {
   id: string
   set: string
-  kind: 'booster'
+  kind: 'booster' | 'display'
   name: string
   /** List price in Basis-€ cents. */
   priceBaseCents: number
+  /** pack structure (boosters only) */
   slots: readonly SlotGroup[]
+  /** what a display holds (displays only) */
+  contains?: { product: string; qty: number }
   /** Wrapper artworks (products atlas ids); purely cosmetic. */
   wrappers: readonly string[]
 }

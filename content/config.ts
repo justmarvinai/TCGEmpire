@@ -73,6 +73,11 @@ export const config = {
   'market.day_down_pct': 22,
   'market.history_fine_h': 48,
   'market.history_hourly_d': 14,
+  // Lager: sealed products you can keep (every booster or display counts 1); more from the upgrade
+  'lager.base_units': 60,
+  // Scalpers buy a share of every restock shortly after it lands
+  'stores.scalper_share_pct': 30,
+  'stores.scalper_window_minutes': 20,
   // Cardmarket: seller fee, shipping time, places for listings and buy orders together
   'market.fee_bps': 500,
   'market.ship_min_minutes': 5,

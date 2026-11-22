@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
+import { ProductArt } from '@/components/pixel/ProductArt.tsx'
+import { toast } from '@/components/ui/toast.tsx'
+import { sfx } from '@/lib/sfx.ts'
 import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -32,6 +34,15 @@ export function OpenPage() {
   }
 
   const sealed = shop.data?.sealed ?? []
+  const unbox = async (productId: string) => {
+    setBusy(`${productId}:unbox`)
+    const res = await act('display_unbox', { p_product: productId }, ['shop'])
+    setBusy(null)
+    if (res) {
+      sfx('tear')
+      toast('success', T.unboxed(res.boosters))
+    }
+  }
   const left = session ? (sealed.find((s) => s.product_id === session.productId)?.qty ?? 0) : 0
 
   return (
@@ -69,12 +80,20 @@ export function OpenPage() {
               return (
                 <div key={s.product_id} className="flex items-center gap-5" data-tour="open-pack">
                   <div className="relative">
-                    <PixelProduct id={product?.wrappers[0] ?? ''} scale={2} fallback={{ w: 84, h: 132 }} className="anim-bob" />
+                    <ProductArt id={s.product_id} scale={2} className="anim-bob" />
                     <span className="nums absolute -top-2 -right-3 rounded-lg bg-grad px-2 font-pixel text-lg text-white">×{s.qty}</span>
                   </div>
                   <div className="flex flex-col gap-2">
                     <p className="text-xl font-bold tracking-tight">{product?.name}</p>
-                    {SIZES.map((n) => (
+                    {product?.kind === 'display' && (
+                      <>
+                        <p className="max-w-56 text-sm text-fg-2">{T.displayHint}</p>
+                        <Button variant="primary" disabled={busy !== null} loading={busy === `${s.product_id}:unbox`} onClick={() => unbox(s.product_id)}>
+                          {T.unbox}
+                        </Button>
+                      </>
+                    )}
+                    {product?.kind !== 'display' && SIZES.map((n) => (
                       <Button
                         key={n}
                         variant={n === 1 ? 'primary' : 'neutral'}
