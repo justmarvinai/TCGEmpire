@@ -135,6 +135,8 @@ RLS enabled on every table with no policies.
 |-------|---------|
 | `game.events_active` | Running global and personal events. |
 | `game.megaprojects`, `game.donations` | Server goals. |
+| `game.licenses` | alpha_05 · Händlerlizenzen per player and game; the first is the favourite (`game.players.fav_game`, free). Triggers on `store_purchases` and `store_buys` refuse unlicensed games (`no_license`). |
+| `game.goal_defs`, `game.goals_done` | alpha_05 · Sammelziele (card groups and a bonus, seeded from `content/goals.ts`) and reached goals; a trigger on `game.collection` checks them and books a permanent modifier `goal:<key>`. |
 | `game.worth_snapshots` | alpha_04 · net worth per player, hourly for `snapshots.hourly_days`, then the last one per Berlin day; deleted on reset. |
 | `game.rivals` | alpha_04 · 40 NPC tycoons (seeded from `content/rivals.ts`); their numbers are pure functions of the days since `game.server.started_at`. `game.server.worth_ranking` remembers the last Vermögen order for overtake headlines. |
 | `game.leagues` | Wochenwertung. |
@@ -196,6 +198,8 @@ RLS enabled on every table with no policies.
 | `gift_send`, `trade_offer`, `trade_answer(trade, accept)` | write | alpha_04 · gifts move at once; trades on acceptance (both sides re-checked, players locked by id); the side giving more value books the difference against its allowance and pays 20 % above it; the offerer withdraws with `accept = false` |
 | `chat_get`, `chat_send(body, item)` | read/write | alpha_04 · last 100 messages plus who is online; the chat page polls every 5 s until Realtime |
 | `admin_get`, `admin_set_phase`, `admin_restock`, `admin_invite_set`, `admin_config_set`, `admin_grant`, `admin_announce` | read/write | alpha_04 · admin only (`forbidden`); every write returns the console document. Out of Print stores `oop_at` and `sealed_at_oop`; a step back from OOP/Vintage is a reprint and clears both |
+| `licenses_get`, `starter_pick(game)`, `license_buy(game)` | read/write | alpha_05 · the first pick is free and completes tutorial step 0; further licences at `license.levels` for `license.fees_base_cents`. `sealed_add` resolves the product alias `reward-booster` to the favourite game's booster |
+| `goals_get` | read | alpha_05 · every goal with groups owned (`have` / `total`), `done_at` and the bonus |
 | `sync(after_notification, after_feed, after_chat)` | read | alpha_04 adds `chat_unread` (messages by others after the device's last seen id; 0 before the first visit) and `chat_last_id` |
 
 

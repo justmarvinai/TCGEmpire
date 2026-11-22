@@ -758,7 +758,8 @@ upgrade tier) plus a level reward.
 
 **TCG licences (Q-10):** at the start you pick your favourite of the four games and get a starter bundle
 for it. The other three unlock as "Händlerlizenzen" at levels 10, 20 and 28 (small fee), in the order you
-choose.
+choose. A licence is needed to buy a game's sealed product in the Kiosk and in stores; markets, Kleinanzeigen and
+trades are open to every game. Reward boosters come from the favourite game (decision 061).
 
 ### Profil and Gefahrenzone
 
