@@ -37,7 +37,7 @@ describe('kiosk', () => {
     expect(res.player.cash_cents).toBe(before - 110_00)
     expect(res.player.sealed_total).toBe(1)
     const shop = await t.rpc(me, 'shop_get')
-    expect(shop.kiosk[0]).toMatchObject({ product_id: B, price_cents: 110_00, bought_today: 1 })
+    expect(shop.kiosk.find((k) => k.product_id === B)).toMatchObject({ product_id: B, price_cents: 110_00, bought_today: 1 })
     expect(shop.sealed).toEqual([{ product_id: B, qty: 1 }])
     await t.assertLedgerMatches()
   })

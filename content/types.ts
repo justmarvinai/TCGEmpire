@@ -6,7 +6,15 @@ export const TIERS: readonly Tier[] = ['common', 'uncommon', 'rare', 'holo', 'al
 /** Tiers that are stored as individual copies (with hidden quality values) instead of stacks. */
 export const COPY_TIERS: readonly Tier[] = ['holo', 'alternative', 'ultra', 'grail']
 
-export type CardKind = 'pokemon' | 'trainer' | 'energy' | 'monster' | 'spell' | 'trap' | 'leader' | 'character' | 'event' | 'unit' | 'gear' | 'rune'
+export type CardKind =
+  | 'pokemon' | 'trainer' | 'energy'
+  | 'monster' | 'spell' | 'trap'
+  | 'leader' | 'character' | 'event'
+  | 'legend' | 'unit' | 'gear' | 'rune' | 'battlefield'
+
+/** The four games; one set each in 0.0.1. */
+export type Game = 'pokemon' | 'yugioh' | 'onepiece' | 'riftbound'
+export const GAMES: readonly Game[] = ['pokemon', 'yugioh', 'onepiece', 'riftbound']
 
 export interface CardData {
   /** Stable id, also the atlas key, e.g. 'pkm-base-090'. */
@@ -18,7 +26,10 @@ export interface CardData {
   en: string
   tier: Tier
   kind: CardKind
+  /** Pokémon type, Yu-Gi-Oh! attribute, One Piece colour or Riftbound domain. */
   element?: string
+  /** Yu-Gi-Oh! subtype for the frame colour: normal, effect, fusion (monsters), normal, equip, field (spells), normal, continuous (traps). */
+  sub?: string
   /** Desirability 1-10: real-world popularity; sets the value inside the tier. */
   d: number
 }
@@ -26,7 +37,7 @@ export interface CardData {
 export interface SetData {
   /** Set id, also the atlas name, e.g. 'pokemon-base'. */
   id: string
-  game: 'pokemon' | 'yugioh' | 'onepiece' | 'riftbound'
+  game: Game
   name: string
   /** Printed set size. */
   size: number

@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_04` delivered (22 Nov 2026). Waiting for the owner's go for `alpha_05`.**
+> **Current phase: `alpha_05` (owner's go on 22 Nov 2026; alpha_04 accepted).**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a

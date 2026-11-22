@@ -29,7 +29,7 @@ export const STORES: readonly StoreDef[] = [
     restocks: ['10:00', '16:00'],
     stockPerPlayer: 4,
     limit: 2,
-    products: [{ id: 'booster-pkm-base' }],
+    products: [{ id: 'booster-pkm-base' }, { id: 'booster-ygo-lob' }],
   },
   {
     key: 'wuerfelbude',
@@ -40,7 +40,16 @@ export const STORES: readonly StoreDef[] = [
     closedSunday: true,
     limit: 6,
     limitPerRuf100: 1,
-    products: [{ id: 'booster-pkm-base' }, { id: 'display-pkm-base', minLevel: 18 }],
+    products: [
+      { id: 'booster-pkm-base' },
+      { id: 'booster-ygo-lob' },
+      { id: 'booster-op01' },
+      { id: 'booster-rb-ogn' },
+      { id: 'display-pkm-base', minLevel: 18 },
+      { id: 'display-ygo-lob', minLevel: 18 },
+      { id: 'display-op01', minLevel: 18 },
+      { id: 'display-rb-ogn', minLevel: 18 },
+    ],
   },
   {
     key: 'smyths',
@@ -52,6 +61,13 @@ export const STORES: readonly StoreDef[] = [
     restocks: ['14:00'],
     stockPerPlayer: 12,
     limit: 12,
-    products: [{ id: 'booster-pkm-base' }, { id: 'display-pkm-base', minLevel: 18 }],
+    products: [
+      { id: 'booster-pkm-base' },
+      { id: 'booster-op01' },
+      { id: 'booster-rb-ogn' },
+      { id: 'display-pkm-base', minLevel: 18 },
+      { id: 'display-op01', minLevel: 18 },
+      { id: 'display-rb-ogn', minLevel: 18 },
+    ],
   },
 ]

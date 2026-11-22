@@ -87,6 +87,6 @@ describe('retail stores', () => {
     await expect(t.rpc(a, 'pack_open', { p_request_id: rid(), p_product: D, p_qty: 1 })).rejects.toThrow('invalid_request')
     const shop = await t.rpc(a, 'shop_get')
     expect(shop.lager).toMatchObject({ used: 41, cap: 40, unlock_level: 18 })
-    expect(shop.kiosk.map((k) => k.product_id)).toEqual([B]) // the Kiosk sells boosters only
+    expect(shop.kiosk.every((k) => k.product_id.startsWith('booster-'))).toBe(true) // the Kiosk sells boosters only
   })
 })

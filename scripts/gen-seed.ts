@@ -3,7 +3,7 @@
 //   supabase/seed/catalog.sql  sets, cards (with calibrated values), products, quest templates, tutorial
 import { writeFileSync } from 'node:fs'
 import { config } from '../content/config.ts'
-import { cardValues, PRODUCTS, SETS } from '../content/catalog.ts'
+import { cardValues, isEnergy, PRODUCTS, SETS } from '../content/catalog.ts'
 import { QUESTS_BY_KIND } from '../content/quests.ts'
 import { UNLOCKS } from '../content/unlocks.ts'
 import { UPGRADES } from '../content/upgrades.ts'
@@ -46,7 +46,8 @@ export function buildCatalogSql(): string {
       'insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_base_cents) values',
       rows(
         s.cards.map(
-          (c) => `${q(c.id)}, ${q(s.id)}, ${c.no}, ${q(c.name)}, ${q(c.tier)}, ${q(c.kind)}, ${q(c.element)}, ${values.get(c.id)}`,
+          // the server knows one resource kind: Riftbound runes fill the energy slot like Pokémon energies
+          (c) => `${q(c.id)}, ${q(s.id)}, ${c.no}, ${q(c.name)}, ${q(c.tier)}, ${q(isEnergy(c) ? 'energy' : c.kind)}, ${q(c.element)}, ${values.get(c.id)}`,
         ),
       ),
       'on conflict (id) do update set set_id = excluded.set_id, no = excluded.no, name = excluded.name, tier = excluded.tier,',

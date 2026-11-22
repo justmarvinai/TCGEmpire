@@ -1,10 +1,13 @@
 // Sets, products and card values. Values are computed here once at build time and seeded; at runtime the
 // server multiplies them with the Preisniveau and (later) the market factors.
 import type { CardData, ProductData, SetData, Tier } from './types.ts'
+import { onepieceOp01 } from './sets/onepiece-op01.ts'
 import { pokemonBase } from './sets/pokemon-base.ts'
+import { riftboundOrigins } from './sets/riftbound-origins.ts'
+import { yugiohLob } from './sets/yugioh-lob.ts'
 import { config } from './config.ts'
 
-export const SETS: readonly SetData[] = [pokemonBase]
+export const SETS: readonly SetData[] = [pokemonBase, yugiohLob, onepieceOp01, riftboundOrigins]
 
 export const PRODUCTS: readonly ProductData[] = [
   {
@@ -33,6 +36,80 @@ export const PRODUCTS: readonly ProductData[] = [
     contains: { product: 'booster-pkm-base', qty: 36 },
     wrappers: ['booster-pkm-base-glurak', 'booster-pkm-base-turtok', 'booster-pkm-base-bisaflor'],
   },
+  // Structures and prices: docs/SETS.md §3 and §5; displays hold 24 boosters at about 11 % off.
+  {
+    id: 'booster-ygo-lob',
+    set: 'yugioh-lob',
+    kind: 'booster',
+    name: 'Yu-Gi-Oh! LOB Booster',
+    priceBaseCents: 80_00,
+    slots: [
+      { pool: 'common', n: 5 },
+      { pool: 'uncommon', n: 3 },
+      { pool: 'hit', n: 1 },
+    ],
+    wrappers: ['booster-ygo-lob-blue-eyes', 'booster-ygo-lob-dark-magician', 'booster-ygo-lob-red-eyes'],
+  },
+  {
+    id: 'display-ygo-lob',
+    set: 'yugioh-lob',
+    kind: 'display',
+    name: 'Yu-Gi-Oh! LOB Display',
+    priceBaseCents: 1_700_00,
+    slots: [],
+    contains: { product: 'booster-ygo-lob', qty: 24 },
+    wrappers: ['booster-ygo-lob-blue-eyes', 'booster-ygo-lob-dark-magician', 'booster-ygo-lob-red-eyes'],
+  },
+  {
+    id: 'booster-op01',
+    set: 'onepiece-op01',
+    kind: 'booster',
+    name: 'One Piece OP-01 Booster',
+    priceBaseCents: 100_00,
+    slots: [
+      { pool: 'common', n: 7 },
+      { pool: 'uncommon', n: 3 },
+      { pool: 'rare', n: 1 },
+      { pool: 'hit', n: 1 },
+    ],
+    wrappers: ['booster-op01-luffy', 'booster-op01-shanks', 'booster-op01-zoro'],
+  },
+  {
+    id: 'display-op01',
+    set: 'onepiece-op01',
+    kind: 'display',
+    name: 'One Piece OP-01 Display',
+    priceBaseCents: 2_100_00,
+    slots: [],
+    contains: { product: 'booster-op01', qty: 24 },
+    wrappers: ['booster-op01-luffy', 'booster-op01-shanks', 'booster-op01-zoro'],
+  },
+  {
+    id: 'booster-rb-ogn',
+    set: 'riftbound-origins',
+    kind: 'booster',
+    name: 'Riftbound Origins Booster',
+    priceBaseCents: 100_00,
+    // 14 cards; the rune is one of the commons (the "another rune" gag).
+    slots: [
+      { pool: 'energy', n: 1 },
+      { pool: 'common', n: 7 },
+      { pool: 'uncommon', n: 4 },
+      { pool: 'rare', n: 1 },
+      { pool: 'hit', n: 1 },
+    ],
+    wrappers: ['booster-rb-ogn-ahri', 'booster-rb-ogn-jinx', 'booster-rb-ogn-kaisa'],
+  },
+  {
+    id: 'display-rb-ogn',
+    set: 'riftbound-origins',
+    kind: 'display',
+    name: 'Riftbound Origins Display',
+    priceBaseCents: 2_100_00,
+    slots: [],
+    contains: { product: 'booster-rb-ogn', qty: 24 },
+    wrappers: ['booster-rb-ogn-ahri', 'booster-rb-ogn-jinx', 'booster-rb-ogn-kaisa'],
+  },
 ]
 
 /** In-print, ungraded value range per tier in Basis-€ cents (docs/ECONOMY.md §5.1). */
@@ -54,8 +131,11 @@ const rawValue = (c: CardData) => {
   return lo * Math.pow(hi / lo, (c.d - 1) / 9)
 }
 
+/** Basic resource cards fill the energy slot: Pokémon energies and Riftbound runes. */
+export const isEnergy = (c: Pick<CardData, 'kind'>) => c.kind === 'energy' || c.kind === 'rune'
+
 function poolOf(c: CardData): string {
-  if (c.tier === 'common') return c.kind === 'energy' ? 'energy' : 'common'
+  if (c.tier === 'common') return isEnergy(c) ? 'energy' : 'common'
   return c.tier
 }
 

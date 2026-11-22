@@ -1,4 +1,4 @@
-import { pokemonBase } from '../../content/sets/pokemon-base.ts'
+import { SETS as CONTENT_SETS } from '../../content/catalog.ts'
 import type { CardData } from '../../content/types.ts'
 import type { Attack, CardDef, CardKind, PokemonType } from '../cards/types.ts'
 import type { Painter } from '../toolkit/index.ts'
@@ -38,7 +38,7 @@ export interface KitSpec {
 }
 
 /** Card data of every set the kit can paint. */
-const CATALOG = new Map<string, CardData>([pokemonBase].flatMap((s) => s.cards.map((c) => [c.id, c] as const)))
+const CATALOG = new Map<string, CardData>(CONTENT_SETS.flatMap((s) => s.cards.map((c) => [c.id, c] as const)))
 
 const TYPES: readonly PokemonType[] = ['Feuer', 'Wasser', 'Pflanze', 'Elektro', 'Psycho', 'Kampf', 'Farblos']
 const COST: Readonly<Record<string, PokemonType>> = { F: 'Feuer', W: 'Wasser', P: 'Pflanze', E: 'Elektro', Y: 'Psycho', K: 'Kampf', C: 'Farblos' }

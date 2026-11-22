@@ -5,7 +5,9 @@ export type Tier = 'common' | 'uncommon' | 'rare' | 'holo' | 'alternative' | 'ul
 
 export const TIERS: readonly Tier[] = ['common', 'uncommon', 'rare', 'holo', 'alternative', 'ultra', 'grail']
 
-export type CardKind = 'pokemon' | 'trainer' | 'energy'
+/** Every card kind of the four games (content catalog). */
+export type { CardKind } from '../../content/types.ts'
+import type { CardKind } from '../../content/types.ts'
 
 /** German type names as printed in the set lists. */
 export type PokemonType = 'Feuer' | 'Wasser' | 'Pflanze' | 'Elektro' | 'Psycho' | 'Kampf' | 'Farblos'
@@ -40,8 +42,14 @@ export interface CardDef {
   /** KP of a Pokémon. */
   hp?: number
   attacks?: readonly Attack[]
-  /** Rules text of a trainer card. */
+  /** Rules text of a trainer card (or any card that prints text). */
   text?: string
+  /** Yu-Gi-Oh! attribute, One Piece colour or Riftbound domain, as in the content catalog. */
+  element?: string
+  /** Yu-Gi-Oh! subtype as in the content catalog (normal, effect, fusion, equip, field, continuous). */
+  sub?: string
+  /** Printed values of the other games, read by their frame, e.g. { atk: '3000', def: '2500', level: 8 }. */
+  print?: Readonly<Record<string, string | number>>
   /** Paints the artwork. The painter has the size of the art area of the card's layout. */
   draw(p: Painter): void
   foil: FoilDef

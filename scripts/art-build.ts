@@ -30,6 +30,10 @@ mkdirSync(OUT, { recursive: true })
 
 for (const set of SETS) {
   const cards = [...set.cards].sort((a, b) => a.id.localeCompare(b.id))
+  if (cards.length === 0) {
+    console.log(`${set.id}: no art yet, skipped`)
+    continue
+  }
   const rendered = cards.map((def) => set.render(def))
   const cell = { w: rendered[0]?.card.w ?? 0, h: rendered[0]?.card.h ?? 0 }
   const columns = Math.min(COLUMNS, cards.length)

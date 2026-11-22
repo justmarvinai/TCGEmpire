@@ -98,6 +98,6 @@ describe('market values', () => {
     expect(item.history).toHaveLength(4)
     const overview = await t.rpc(me, 'market_overview')
     expect(overview.games.map((g) => g.game)).toContain('pokemon')
-    expect(overview.sets[0]).toMatchObject({ set_id: SET, phase: 'print' })
+    expect(overview.sets.find((s) => s.set_id === SET)).toMatchObject({ set_id: SET, phase: 'print' })
   })
 })
