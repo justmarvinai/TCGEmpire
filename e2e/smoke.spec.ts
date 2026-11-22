@@ -17,13 +17,14 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
 
   await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
   await expect(page.getByText('400,00 €').first()).toBeVisible()
+  await page.getByRole('button', { name: 'Danke, Mama' }).waitFor()
   await expect(page.getByRole('img', { name: 'Admin' })).toBeVisible()
   await expect(page.getByText('NEU IM GESCHÄFT: Testmogul')).toBeVisible()
   await page.screenshot({ path: shot('home') })
 
   // Locked and not-yet-built features are visible, not hidden.
   await expect(page.getByTitle('Firma: Ab Level 30')).toBeVisible()
-  await page.getByRole('link', { name: 'Sammlung' }).click()
+  await page.getByRole('link', { name: 'Toplisten' }).click()
   await expect(page.getByText('Kommt bald')).toBeVisible()
 
   // Every stat explains itself.

@@ -5,6 +5,7 @@ import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
 import { useCardAtlas, useSpriteAtlas } from '@/components/pixel/atlas.ts'
 import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
 import { Card, TiltCard } from '@/components/cards/Card.tsx'
+import { Slab } from '@/components/cards/Slab.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { Field } from '@/components/ui/Field.tsx'
@@ -130,6 +131,15 @@ export default function DevUiPage() {
         </Panel>
 
         <ArtGallery />
+
+        <Panel title="Slabs" className="lg:col-span-2" tip="Ein Rahmen pro Grading-Firma. Karte und Beschriftung kommen zur Laufzeit dazu.">
+          <div className="flex flex-wrap gap-6">
+            <Slab grader="psa" cardId="pkm-base-090" title="Glurak" subtitle="Basis-Set · 090" grade="10" gradeWord="GEM MT" cert="40117352" />
+            <Slab grader="bgs" cardId="pkm-base-088" title="Turtok" subtitle="Basis-Set · 088" grade="9.5" gradeWord="GEM MINT" cert="00902841" scale={2} />
+            <Slab grader="cgc" cardId="pkm-base-028" title="Pikachu" subtitle="Basis-Set · 028" grade="9" gradeWord="MINT" cert="38650127" scale={2} />
+            <Slab grader="company" cardId="pkm-base-084" title="Pikachu" subtitle="Basis-Set · 084" grade="8" gradeWord="NM-MT" cert="00000001" brand="KALLE" scale={2} />
+          </div>
+        </Panel>
 
         {backend?.devSql && <DevTools sql={backend.devSql} />}
       </div>
