@@ -25,6 +25,8 @@ export interface SimResult {
   jobErrors: string[]
   /** notifications the bot got, by kind */
   notes: Record<string, number>
+  /** events that happened, by slot */
+  events: Record<string, number>
   /** the company at the end (if founded): stage, value, and per German day its profit and the player's other income */
   company: {
     stage: number
@@ -44,6 +46,10 @@ export interface SimResult {
 export async function simulate(opts: { days: number; activeMinPerDay: number; seed?: number }): Promise<SimResult> {
   const t = await createTestDb()
   await t.sql(`select setseed($1)`, [opts.seed ?? 0.5])
+  // a fixed Monday morning, so that weekly and calendar events fall the same way on every run
+  await t.sql(`update game.server set clock_offset = (timestamp '2026-11-23 08:00' at time zone 'Europe/Berlin') - now() where id`)
+  // the world happens to the bot as well: daily, random, personal and calendar events (the tests switch them off)
+  await t.sql(`update game.config_overrides set value = 'true', updated_at = now() where key = 'events.enabled'`)
   const me = await t.player('Bot')
   const id = await t.playerId(me)
   await t.sql(`update game.players set tutorial_step = -1 where id = $1`, [id])
@@ -57,6 +63,8 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   for (; day <= opts.days; day++) {
     let spent = 0
     await quietly(t, me, 'recap_collect', {})
+    await quietly(t, me, 'sync', {}) // online: personal events can find the bot
+    await t.sql(`select private.tick_events(), private.tick_calendar()`) // the only tick systems the sim runs
     while (spent < opts.activeMinPerDay * 60) {
       advanced = 0
       const s = await step(t, me)
@@ -65,6 +73,7 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
       if (s > advanced) await t.advance(`${Math.round(s - advanced)} seconds`)
       note((await t.rpc(me, 'me_get')).player!.level)
     }
+    await t.sql(`select private.tick_events(), private.tick_calendar()`)
     // Before leaving: start a long shift, then the rest of the day passes.
     const jobs = await t.rpc(me, 'jobs_get')
     if (!jobs.shift && (await level(t, me)) >= jobs.unlock_shifts) await quietly(t, me, 'shift_start', { p_job: bestShift(jobs, await level(t, me)), p_hours: 8 })
@@ -106,7 +115,10 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   const notes = Object.fromEntries(
     (await t.sql<{ kind: string; n: string }>(`select kind, count(*) as n from game.notifications where player_id = $1 group by kind`, [id])).map((x) => [x.kind, Number(x.n)]),
   )
-  return { levels, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`), company, jobErrors, notes }
+  const events = Object.fromEntries(
+    (await t.sql<{ slot: string; n: string }>(`select slot, count(*) as n from game.events where applied group by slot`)).map((x) => [x.slot, Number(x.n)]),
+  )
+  return { levels, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`), company, jobErrors, notes, events }
 }
 
 /** Seconds the current step already moved the clock (a minijob round has to really last). */

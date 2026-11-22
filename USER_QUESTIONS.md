@@ -63,3 +63,8 @@ changes.
 
 - Deployment still needs (see Q-2) the Supabase project, the Vercel project and three GitHub secrets — exact steps
   are given when deployment is wanted; coding and local testing work without them.
+- **Q-27 (alpha_10): eBay-Auktionen.** They moved to alpha_11, because timed auctions with NPC bidders need a bidding
+  flow of their own and Cardmarket plus Bares für Rares already cover selling. *Recommended:* build them in alpha_11
+  as planned; alternative: drop them for 0.0.1.
+- **Q-28 (alpha_10): Anfängerschutz.** Players below level 35 cannot be attacked (they cannot attack either).
+  *Recommended:* keep it; alternative: everyone from level 10 can be a target.

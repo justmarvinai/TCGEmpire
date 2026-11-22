@@ -27,4 +27,5 @@ if (r.company) {
     console.log(`${d.day} | ${(d.profit / 100).toFixed(0).padStart(14)} | ${(d.other / 100).toFixed(0).padStart(12)} | ${((d.profit / Math.max(1, d.profit + d.other)) * 100).toFixed(0).padStart(4)} %`)
 }
 if (r.jobErrors.length) console.log(`\nFailed tick jobs:\n${r.jobErrors.join('\n')}`)
+console.log(`\nEvents: ${Object.entries(r.events).map(([k, n]) => `${k} ${n}`).join(', ') || 'none'}`)
 console.log(`\nNotifications: ${Object.entries(r.notes).filter(([k]) => k.startsWith('company') || k.startsWith('staff')).map(([k, n]) => `${k} ${n}`).join(', ')}`)

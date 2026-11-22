@@ -1,6 +1,20 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1-alpha_10',
+    title: 'Risiko',
+    items: [
+      'Jeden Tag um Mitternacht ein Tagesereignis für alle: Glücksrausch, Kiosk-Rabatt, Freitag der 13. Dazu Zufälle am Markt und bei dir persönlich. Oma steckt dir was zu, der GEZ-Brief findet dich.',
+      'Dreimal die Woche ein angekündigtes Highlight: Doppel-EP-Abend, God-Pack-Nacht, Mega-Restock oder die Blase platzt. Die Schlagzeilen sagen dir vorher Bescheid.',
+      'Ab Level 35 die Schattenwirtschaft: Bunker knacken, beim Finanzamt anschwärzen, 1-Stern-Bewertungen, Leute abwerben, Gerüchte streuen. Jeder Versuch ist ein Wurf gegen die Abwehr des Opfers.',
+      'Neue Abwehr-Upgrades: Steuerkanzlei, Rechtsschutz, Betriebsklima, Faktencheck, Prüfgerät. Wer abblitzt, zahlt Strafe, und das Opfer kassiert Schadenfreude. Wer angegriffen wurde, kriegt 24 Stunden billige Rache.',
+      'Präparierte Booster: aufschneiden, Hits raus, Bulk rein, zukleben. Nur unter der Hand loszuwerden. Ein Prüfgerät kann dich auffliegen lassen.',
+      'Kredite kannst du jetzt mit Absicht platzen lassen. Das Geld bleibt bei dir, die Ehre nicht.',
+      'Ab 1. Dezember der Adventskalender: jeden Tag ein Türchen bis Heiligabend. Sonntags baut Flohmarkt-Horst seinen Stand in den Kleinanzeigen auf.',
+      'Ab Level 28 Bares für Rares: Einmal am Tag zeigst du einen Hit oder Slab im Studio. Der Experte schätzt, die Händler bieten, einer bietet immer 80 €.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_09',
     title: 'Firma',
     items: [

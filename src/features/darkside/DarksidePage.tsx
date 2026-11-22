@@ -214,9 +214,9 @@ function Rumour({ d, cash }: { d: Darkside; cash: number }) {
   const blocked = !card || picked?.busy || !d.rumour.ok || cash < d.rumour.cost_cents || busy !== null
   return (
     <Panel title={T.rumour} tip={DEF.geruecht.text} className="lg:col-span-6">
-      <label className="flex flex-col gap-1 text-sm">
+      <label className="flex min-w-0 flex-col gap-1 text-sm">
         <span className="text-fg-3">{T.rumourCard}</span>
-        <select className="panel-inset h-9 bg-transparent px-2 text-fg" value={card} onChange={(e) => setCard(e.target.value)}>
+        <select className="panel-inset h-9 w-full min-w-0 bg-transparent px-2 text-fg" value={card} onChange={(e) => setCard(e.target.value)}>
           {d.rumour.cards.map((c) => (
             <option key={c.card_id} value={c.card_id}>
               {cardName(c.card_id)} · {formatMoney(c.value_cents)}
@@ -266,7 +266,7 @@ function Reseal({ d, cash }: { d: Darkside; cash: number }) {
             const n = Math.max(1, Math.min(free, qty[s.product_id] ?? 1))
             return (
               <li key={s.product_id} className="flex flex-wrap items-center gap-2 rounded-lg bg-surface-2 px-3 py-2 text-sm">
-                <span className="min-w-0 flex-1">
+                <span className="min-w-40 flex-1">
                   <span className="block truncate font-semibold">{itemName(s.product_id)}</span>
                   <span className="nums text-xs text-fg-3">
                     {T.inStock(s.qty)}

@@ -83,6 +83,10 @@ Measured by `pnpm sim` (bot, 150 active minutes per day, 22 Nov 2026): level 10 
 day 2, level 30 on day 3, level 40 on day 4, level 45 on day 5. The early game is a firehose of playing; mid game is
 driven by quests and shifts. Remaining gap to the target (level 30 on day 2): idle waiting once energy and money run
 out on day 1 — the market features of alpha_04 add things to do there. `sim/pace.test.ts` guards the pace in CI.
+Since alpha_10 the sim runs the events and calendar ticks too, from a fixed Monday morning (23 Nov 2026, so that
+weekly events fall the same way on every run) and the bot syncs once a day like a client. 5 days: level 10 after
+12 min, 20 and 25 on day 2, 30 and 35 on day 3, 40 on day 4, level 44 at the end; income 49 % shifts, 18 % quests,
+13 % level rewards, 10 % Stempelkarte, 7 % bunker; events change the pace by about one level, within the bands.
 
 ## 4. Preisniveau (the game's own inflation)
 

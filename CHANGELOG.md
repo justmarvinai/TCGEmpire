@@ -3,6 +3,36 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_10] — Risiko (22 Nov 2026)
+
+The world happens to you, and you happen to your friends.
+
+### Added
+
+- **Events:** every day at midnight a **Tagesereignis** for everyone (Glücksrausch, Kiosk-Rabatt, Freitag der 13. …),
+  small random events on the market and for you personally (Oma, GEZ-Brief, Opas alter Ordner …), and three
+  **Highlight-Events** a week, announced in the headlines (Doppel-EP-Abend, God-Pack-Nacht, Mega-Restock, Die Blase
+  platzt …). All on the home page with countdowns.
+- **Schattenwirtschaft** (level 35, only against players from level 35): Bunker knacken, beim Finanzamt anschwärzen,
+  1-Stern-Bewertung, Abwerben and Gerüchte that move a card's price. Every action is one roll: base chance plus your
+  **Angriff** (every Schlitzohr skill) minus the victim's **Abwehr** (new upgrade ladders: Steuerkanzlei,
+  Rechtsschutz, Betriebsklima, Faktencheck, Prüfgerät; Wachhund Rex guards the bunker). Blocked attacks cost a fine,
+  half of it goes to the defender as Schadenfreude. Cooldowns, two successes a day per victim, a daily loss cap,
+  and 24 hours of cheaper **Rache** for every victim. Everything lands in the headlines and in your **Akte**.
+- **Präparierte Booster:** open your boosters, keep the cards, glue them shut again. Only in Direkthandel can you
+  pass them on; whoever opens one finds bulk, unless their Prüfgerät catches you. Sell them any other way and the
+  buyer protection makes you pay.
+- **Kredit platzen lassen** (level 35): keep a friend's money right away. Schufa, Ruf and honour included.
+- **Adventskalender** from 1 December: one door a day until Christmas Eve.
+- **Sonntags-Flohmarkt:** every Sunday Flohmarkt-Horst puts cheap cards into the Kleinanzeigen, with all the usual
+  risks.
+- **Bares für Rares** (level 28): once a day bring a hit or a slab to the studio. The expert appraises, three
+  dealers bid, and one of them always bids 80 €.
+
+### Changed
+
+- eBay-Auktionen move to the next update.
+
 ## [0.0.1-alpha_09] — Firma (22 Nov 2026)
 
 The business sim: your own grading company.
