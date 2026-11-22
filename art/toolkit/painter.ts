@@ -85,6 +85,9 @@ export class Painter {
   }
 
   private put(x: number, y: number, c: RGB, detail: boolean): void {
+    // fractional coordinates would address bytes inside a neighbouring pixel
+    x = Math.round(x)
+    y = Math.round(y)
     if (x < 0 || y < 0 || x >= this.w || y >= this.h) return
     const i = y * this.w + x
     this.data[i * 4] = (c >> 16) & 255
