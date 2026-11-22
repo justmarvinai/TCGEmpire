@@ -13,6 +13,7 @@ import { ACHIEVEMENTS } from '../content/achievements.ts'
 import { TUTORIAL } from '../content/tutorial.ts'
 import { NPCS } from '../content/npcs.ts'
 import { STORES } from '../content/stores.ts'
+import { RIVALS } from '../content/rivals.ts'
 
 const q = (v: string | null | undefined) => (v == null ? 'null' : `'${v.replace(/'/g, "''")}'`)
 const rows = (list: string[]) => list.map((r) => `  (${r})`).join(',\n')
@@ -109,6 +110,10 @@ export function buildCatalogSql(): string {
     'on conflict (key) do update set min_level = excluded.min_level, markup_bps = excluded.markup_bps, closed_sunday = excluded.closed_sunday,',
     '  restocks = excluded.restocks, stock_per_player = excluded.stock_per_player, lim = excluded.lim, lim_per_ruf100 = excluded.lim_per_ruf100,',
     '  products = excluded.products;',
+    'insert into game.rivals (id, name, start_base_cents, growth_pct, start_level, level_per_day, start_collection_pct) values',
+    rows(RIVALS.map((r) => `${q(r.id)}, ${q(r.name)}, ${r.startBaseCents}, ${r.growthPct}, ${r.startLevel}, ${r.levelPerDay}, ${r.startCollectionPct}`)),
+    'on conflict (id) do update set name = excluded.name, start_base_cents = excluded.start_base_cents, growth_pct = excluded.growth_pct,',
+    '  start_level = excluded.start_level, level_per_day = excluded.level_per_day, start_collection_pct = excluded.start_collection_pct;',
     'insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, params) values',
     rows(NPCS.map((n) => `${q(n.id)}, ${q(n.name)}, ${q(n.archetype)}, ${n.ruf}, ${n.budgetBaseCents}, ${n.activity}, ${q(JSON.stringify(n.params))}::jsonb`)),
     'on conflict (id) do update set name = excluded.name, archetype = excluded.archetype, ruf = excluded.ruf,',

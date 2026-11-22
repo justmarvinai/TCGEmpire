@@ -13,6 +13,7 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'pull_grail') return texts.feed.pull_grail(f.data, cardName(String(f.data.card_id)))
   if (f.kind === 'pull_ultra') return texts.feed.pull_ultra(f.data, cardName(String(f.data.card_id)))
   if (f.kind === 'player_reset') return texts.feed.player_reset(f.data)
+  if (f.kind === 'overtake') return texts.feed.overtake(f.data)
   const store = STORES.find((s) => s.key === f.data.store)?.name ?? String(f.data.store)
   if (f.kind === 'restock') return texts.feed.restock(store)
   if (f.kind === 'scalper_raid') return texts.feed.scalper_raid(f.data, store)

@@ -336,8 +336,35 @@ const zAdsWrite = z.object({ ads: zAds, player: zPlayer })
 
 export const zHome = z.object({
   last_hit: z.object({ card_id: z.string(), tier: z.string(), value_cents: z.number(), pulled_at: z.string() }).nullable(),
+  worth: z.object({
+    now_cents: z.number(),
+    /** [unix seconds, cents], hourly for a week, ending now */
+    history: z.array(z.tuple([z.number(), z.number()])),
+    day_open_cents: z.number().nullable(),
+  }),
 })
 export type Home = z.infer<typeof zHome>
+
+export const TOPLISTS = ['worth', 'level', 'cash', 'collection'] as const
+export type ToplistId = (typeof TOPLISTS)[number]
+export const zToplist = z.object({
+  list: z.enum(TOPLISTS),
+  npcs: z.boolean(),
+  cards_total: z.number(),
+  rows: z.array(
+    z.object({
+      rank: z.number(),
+      kind: z.enum(['player', 'npc']),
+      id: z.string(),
+      name: z.string(),
+      title: z.string().nullable(),
+      level: z.number(),
+      value: z.number(),
+      me: z.boolean(),
+    }),
+  ),
+})
+export type Toplist = z.infer<typeof zToplist>
 
 export const zStats = z.object({
   counters: z.record(z.string(), z.number()),
@@ -368,6 +395,7 @@ export const RPC_SCHEMAS = {
   stamp_claim: zQuests.extend({ bonus_booster: z.boolean(), ...withPlayer }),
   bunker_get: zBunker,
   home_get: zHome,
+  toplist_get: zToplist,
   market_item: zMarketItem,
   market_overview: zMarketOverview,
   retail_buy: z.object({ bought: z.number(), paid_cents: z.number(), player: zPlayer }),

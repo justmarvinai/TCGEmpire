@@ -134,7 +134,8 @@ RLS enabled on every table with no policies.
 |-------|---------|
 | `game.events_active` | Running global and personal events. |
 | `game.megaprojects`, `game.donations` | Server goals. |
-| `game.toplist_snapshots`, `game.rivals` | Cached rankings, NPC rivals. |
+| `game.worth_snapshots` | alpha_04 · net worth per player, hourly for `snapshots.hourly_days`, then the last one per Berlin day; deleted on reset. |
+| `game.rivals` | alpha_04 · 40 NPC tycoons (seeded from `content/rivals.ts`); their numbers are pure functions of the days since `game.server.started_at`. `game.server.worth_ranking` remembers the last Vermögen order for overtake headlines. |
 | `game.leagues` | Wochenwertung. |
 | `game.prestige_history` | Past runs. |
 | `game.tick_schedule`, `game.job_runs` | Tick systems with intervals; run log. |
@@ -188,7 +189,8 @@ RLS enabled on every table with no policies.
 | `stats_get`, `title_set` | read/write | counters, achievements, titles |
 | `recap_get`, `recap_collect` | read/write | "Willkommen zurück": bunker and finished shift in one click |
 | `account_reset`, `account_delete` | write | Gefahrenzone; confirmed with the username; reset once per 24 h |
-| `home_get` | read | home page document: latest Holo-or-better pull (index `card_copies_pulled`); net worth history follows |
+| `home_get` | read | home page document: latest Holo-or-better pull (index `card_copies_pulled`); alpha_04 adds `worth` (now, 7-day hourly history ending now, value at the end of yesterday) |
+| `toplist_get(list, npcs)` | read | alpha_04 · `worth`, `level`, `cash`, `collection`; top `toplist.size` rows plus the caller and the row directly ahead; rivals optional |
 
 
 

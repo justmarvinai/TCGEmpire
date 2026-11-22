@@ -5,6 +5,7 @@ import { Card, CardBack } from '@/components/cards/Card.tsx'
 import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
 import { ProductArt } from '@/components/pixel/ProductArt.tsx'
 import { Button } from '@/components/ui/Button.tsx'
+import { Chart } from '@/components/ui/Chart.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -82,7 +83,8 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
 
         <Panel title={T.netWorth} tip={T.netWorthTip} className="lg:col-span-12 xl:col-span-6">
           <NumberTicker value={p.net_worth_cents} format={formatMoney} className="nums block text-5xl font-bold tracking-tight max-md:text-4xl" />
-          <div className="mt-6 flex h-2.5 gap-1 overflow-hidden rounded-full" aria-hidden>
+          <WorthTrend worth={home.data?.worth} now={p.net_worth_cents} />
+          <div className="mt-4 flex h-2.5 gap-1 overflow-hidden rounded-full" aria-hidden>
             <i className="rounded-full bg-accent-lo" style={{ flexGrow: Math.max(1, p.cash_cents) }} />
             <i className="rounded-full bg-info" style={{ flexGrow: Math.max(1, cards) }} />
           </div>
@@ -222,5 +224,30 @@ function LastHit({ hit, loading, className }: { hit: Home['last_hit'] | undefine
         )}
       </div>
     </section>
+  )
+}
+
+/** Today's change and the last seven days of net worth (hourly snapshots from the server). */
+function WorthTrend({ worth, now }: { worth: Home['worth'] | undefined; now: number }) {
+  if (!worth) return <Skeleton className="mt-3 h-24 w-full" />
+  const change = worth.day_open_cents === null ? 0 : now - worth.day_open_cents
+  const points = worth.history.length > 0 ? [...worth.history.slice(0, -1), [worth.history.at(-1)![0], now] as const] : []
+  return (
+    <>
+      <p className={clsx('nums mt-1 text-sm font-semibold', change > 0 ? 'text-gain' : change < 0 ? 'text-loss' : 'text-fg-3')}>
+        {change > 0 ? '+' : ''}
+        {formatMoney(change)} {T.today}
+      </p>
+      <div className="mt-3">
+        {points.length >= 3 ? (
+          <Chart points={points} height={88} tone={change < 0 ? 'loss' : 'accent'} label={T.historyLabel} />
+        ) : (
+          <p className="text-xs text-fg-3">{T.historySoon}</p>
+        )}
+      </div>
+      <Link to="/toplists" className="mt-2 inline-block text-xs font-semibold text-accent hover:underline">
+        {T.toplists}
+      </Link>
+    </>
   )
 }

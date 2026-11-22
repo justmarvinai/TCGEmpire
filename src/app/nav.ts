@@ -56,7 +56,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
   {
     group: 'freunde',
     items: [
-      item('toplists', 'trophy', 1),
+      item('toplists', 'trophy', UNLOCKS.toplists, true),
       item('players', 'people', 1),
       item('battles', 'swords', 16),
       item('darkside', 'skull', 35),
@@ -71,6 +71,7 @@ type Feature = keyof typeof UNLOCKS
 
 /** The page of every feature a level unlocks: its tour runs there and its nav entry shows NEU. */
 const FEATURE_PAGE: Record<Feature, string> = {
+  toplists: '/toplists',
   daily_quests: '/quests',
   stamps: '/quests',
   bunker: '/bunker',

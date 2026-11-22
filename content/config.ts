@@ -91,6 +91,9 @@ export const config = {
   'ads.offer_chance_pct': 35,
   'ads.max_offers': 3,
   'ads.chargeback_pct': 25,
+  // Toplists: rows shown; net worth snapshots stay hourly this long, then daily
+  'toplist.size': 50,
+  'snapshots.hourly_days': 7,
   // Cardmarket: seller fee, shipping time, places for listings and buy orders together
   'market.fee_bps': 500,
   'market.ship_min_minutes': 5,

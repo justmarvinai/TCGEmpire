@@ -168,6 +168,29 @@ export const texts = {
     ruf: 'Ruf',
   },
 
+  toplists: {
+    title: 'Toplisten',
+    subtitle: 'Wer hat, der hat. Wer nicht hat, steht hier unten.',
+    tip: 'Die Bestenlisten des Servers. Mit dabei: 40 erfundene Tycoons (NPC), die jeden Tag ein bisschen reicher werden. Du kannst sie ausblenden. Reicher als du sind sie trotzdem.',
+    tabs: { worth: 'Vermögen', level: 'Level', cash: 'Bargeld', collection: 'Sammlung' },
+    tips: {
+      worth: 'Bargeld, Bunker, Karten und Sealed zum Marktwert. Auch was gerade angeboten wird oder per Paket unterwegs ist.',
+      level: 'Das Karrierelevel. Bei gleichem Level steht vorne, wer mehr EP hat.',
+      cash: 'Nur das Bargeld. Für Leute, die gern auf ihrem Geld sitzen.',
+      collection: 'Wie viele verschiedene Karten du gerade besitzt. Verkaufte zählen nicht mehr.',
+    },
+    npcs: 'NPCs zeigen',
+    npc: 'NPC',
+    you: 'Du',
+    level: (n: number) => `Lv ${n}`,
+    cards: (n: number, total: number) => `${n} / ${total}`,
+    gap: (amount: string, rank: number) => `Noch ${amount} bis Platz ${rank}.`,
+    gapTie: (rank: number) => `Gleichauf mit Platz ${rank}. Ein bisschen mehr, und du bist vorbei.`,
+    top: 'Platz 1. Genieß es, lange bleibt das nicht so.',
+    rank: (n: number) => `Platz ${n}`,
+    empty: 'Niemand hier. Nicht mal du.',
+  },
+
   kleinanzeigen: {
     title: 'Kleinanzeigen',
     subtitle: 'Schnäppchen, Spinner und Betrüger. Keine Gebühren, kein Käuferschutz.',
@@ -216,7 +239,7 @@ export const texts = {
     subtitle: 'Wir berichten. Du verlierst.',
     empty: 'Noch keine Schlagzeilen. Mach halt was.',
     player_joined: (d: Record<string, unknown>) =>
-      `NEU IM GESCHÄFT: ${String(d.name)} will reich werden. Experten geben ihm zwei Wochen.`,
+      `NEU IM GESCHÄFT: ${String(d.name)} will reich werden. Experten geben dem Laden zwei Wochen.`,
     inflation: (d: Record<string, unknown>, doener: string) =>
       `INFLATION: Preise steigen um ${pct(Number(d.from), Number(d.to))} %. Döner jetzt ${doener}. Experten ratlos.`,
     pull_grail: (d: Record<string, unknown>, card: string) =>
@@ -228,6 +251,8 @@ export const texts = {
     restock: (store: string) => `LIEFERUNG: ${store} hat aufgefüllt. Die Schlange reicht bis zum Parkplatz.`,
     scalper_raid: (d: Record<string, unknown>, store: string) =>
       `${String(d.name)} räumt bei ${store} ${String(d.qty)} Booster ab. Die Rentner in der Schlange sind fassungslos.`,
+    overtake: (d: Record<string, unknown>) =>
+      `MACHTWECHSEL: ${String(d.name)} überholt ${String(d.other)} und ist jetzt Platz ${String(d.rank)} der Vermögensliste. ${String(d.other)} weint ins Sammelalbum.`,
     unknown: 'Irgendwas ist passiert. Die Redaktion schläft noch.',
   },
 
@@ -297,6 +322,14 @@ export const texts = {
           'Private Anzeigen: Dachbodenfunde, normale Leute und Träumer, die ihren Kram für Gold halten. Keine Gebühren.',
           'Du kannst feilschen. Wer zu frech bietet, wird blockiert. Kein Käuferschutz: Fakes, Knicke und Abtaucher gibt es gratis dazu.',
           'Eigene Anzeigen kosten nichts. Lars will alles für die Hälfte, Kevin (12) zahlt zu viel. Mit Mamas Karte. Rate mal, wie das endet.',
+        ],
+      },
+      toplists: {
+        name: 'Toplisten',
+        steps: [
+          'Hier siehst du, wer reicher ist als du. Also fast alle.',
+          'Wer ein NPC-Schild trägt, ist ein erfundener Tycoon. Die werden jeden Tag reicher, damit du nie zufrieden bist.',
+          'Oben steht, wie viel dir zum nächsten Platz fehlt. Überholst du jemanden, steht es in der KARTEN-BILD.',
         ],
       },
       lager: {
@@ -687,7 +720,11 @@ export const texts = {
     notesTip: 'Was sich mit dem letzten Update geändert hat. Verschwindet, sobald du es gelesen hast.',
     notesRead: 'Gelesen',
     notesAgain: 'Was ist neu?',
-    netWorthTip: 'Bargeld plus der aktuelle Wert all deiner Karten.',
+    netWorthTip: 'Bargeld, Bunker, Karten und Sealed zum Marktwert, auch was gerade angeboten wird oder unterwegs ist. Der Verlauf zeigt die letzten sieben Tage.',
+    today: 'heute',
+    historySoon: 'Der Verlauf startet zur nächsten vollen Stunde.',
+    historyLabel: 'Vermögen der letzten sieben Tage',
+    toplists: 'Zu den Toplisten',
     next: {
       recap: 'Du warst weg. Hol dir ab, was liegen geblieben ist.',
       bunkerFull: 'Der Geldbunker ist voll. Jede Minute ohne Leeren ist verschenktes Geld.',
@@ -702,7 +739,7 @@ export const texts = {
     cta: { recap: 'Einsammeln', bunkerFull: 'Zum Bunker', shiftDone: 'Abholen', stamp: 'Stempeln', sealed: 'Öffnen', quests: 'Abholen', pfand: 'Pfand sammeln', kiosk: 'Zum Kiosk', broke: 'Zur Sammlung' },
     questsTitle: 'Mini-Quests',
     cash: 'Bargeld',
-    cards: 'Karten',
+    cards: 'Ware und Bunker',
     lastHit: 'Letzter Hit',
     lastHitTip: 'Deine zuletzt gezogene Karte ab Holo aufwärts, mit ihrem aktuellen Wert.',
     value: 'Wert',

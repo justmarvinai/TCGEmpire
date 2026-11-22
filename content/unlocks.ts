@@ -1,6 +1,7 @@
 // Player level at which a feature opens. The server enforces these (config `unlock.<key>`),
 // the navigation shows them.
 export const UNLOCKS = {
+  toplists: 1,
   daily_quests: 2,
   stamps: 2,
   bunker: 3,
