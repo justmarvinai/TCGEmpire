@@ -16,6 +16,7 @@ import { errorText } from '@/lib/rpc.ts'
 import type { BinderCard } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { texts } from '@/texts/de.ts'
+import { PriceChart } from '@/features/market/PriceChart.tsx'
 import { duplicateStacks } from './sellDupes.ts'
 
 const T = texts.collection
@@ -215,6 +216,9 @@ function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }
             </div>
           )}
         </dl>
+      </div>
+      <div className="mt-5">
+        <PriceChart itemId={card.card_id} />
       </div>
     </Dialog>
   )

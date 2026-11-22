@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fillCount, formatAgo, formatDuration, formatFactor, formatMoney, formatStars } from './format.ts'
+import { fillCount, formatAgo, formatPercent, formatDuration, formatFactor, formatMoney, formatStars } from './format.ts'
 
 describe('format', () => {
   it('formats money on our price scale', () => {
@@ -32,5 +32,13 @@ describe('fillCount', () => {
     expect(fillCount('Gönn dir heute {n} [Snack|Snacks].', 1)).toBe('Gönn dir heute 1 Snack.')
     expect(fillCount('Gönn dir heute {n} [Snack|Snacks].', 2)).toBe('Gönn dir heute 2 Snacks.')
     expect(fillCount('Verkauf {n} Karten.', 1500)).toBe('Verkauf 1.500 Karten.')
+  })
+})
+
+describe('formatPercent', () => {
+  it('shows a signed change with one decimal', () => {
+    expect(formatPercent(0.023)).toBe('+2,3 %')
+    expect(formatPercent(-0.1)).toBe('-10,0 %')
+    expect(formatPercent(0)).toBe('0,0 %')
   })
 })

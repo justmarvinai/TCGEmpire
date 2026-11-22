@@ -100,6 +100,15 @@ export const texts = {
     version: (v: string) => `Version ${v}`,
   },
 
+  market: {
+    chart: 'Kursverlauf',
+    chartTip:
+      'Der Marktwert wird alle fünf Minuten neu berechnet: Grundwert, Preisniveau, Angebot des Sets, Hype des Spiels und der Karte, dazu Kauf- und Verkaufsdruck. Mehr als 18 % rauf oder 22 % runter pro Tag geht nicht.',
+    ranges: { day: '24 h', week: '7 T', month: '30 T', all: 'Alles' },
+    noData: 'Noch keine Kursdaten. Der Markt pennt noch.',
+    change: (pct: string, range: string) => `${pct} in ${range}`,
+  },
+
   palette: {
     title: 'Springen',
     placeholder: 'Wohin? Seite suchen …',

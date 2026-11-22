@@ -14,6 +14,7 @@ import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
 import { Ring } from '@/components/ui/Ring.tsx'
+import { Chart } from '@/components/ui/Chart.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { getBackend } from '@/lib/backend/index.ts'
@@ -91,6 +92,7 @@ export default function DevUiPage() {
             <Progress value={0.35} />
             <Progress value={0.7} tone="gold" />
             <Progress value={0.9} tone="gain" />
+            <Chart points={[[0, 100], [1, 140], [2, 120], [3, 180], [4, 170], [5, 230]]} tone="gain" height={72} label="Beispielkurs" />
             <div className="flex gap-4">
               <Ring value={0.65}>65 %</Ring>
               <Ring value={0.3} tone="accent" size={64} stroke={8}>

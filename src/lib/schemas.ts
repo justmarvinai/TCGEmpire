@@ -195,6 +195,27 @@ export const zJobs = z.object({
 })
 export type Jobs = z.infer<typeof zJobs>
 
+export const zMarketItem = z.object({
+  item_id: z.string(),
+  kind: z.enum(['card', 'sealed']),
+  set_id: z.string(),
+  value_cents: z.number(),
+  change_pct: z.number(),
+  phase: z.string(),
+  game_hype: z.number(),
+  hype: z.number(),
+  /** [unix seconds, cents] */
+  history: z.array(z.tuple([z.number(), z.number()])),
+})
+export type MarketItem = z.infer<typeof zMarketItem>
+
+export const zMarketOverview = z.object({
+  games: z.array(z.object({ game: z.string(), hype: z.number() })),
+  sets: z.array(z.object({ set_id: z.string(), phase: z.string(), packs_opened: z.number() })),
+  movers: z.array(z.object({ item_id: z.string(), kind: z.string(), value_cents: z.number(), change_pct: z.number() })),
+})
+export type MarketOverview = z.infer<typeof zMarketOverview>
+
 export const zHome = z.object({
   last_hit: z.object({ card_id: z.string(), tier: z.string(), value_cents: z.number(), pulled_at: z.string() }).nullable(),
 })
@@ -229,6 +250,8 @@ export const RPC_SCHEMAS = {
   stamp_claim: zQuests.extend({ bonus_booster: z.boolean(), ...withPlayer }),
   bunker_get: zBunker,
   home_get: zHome,
+  market_item: zMarketItem,
+  market_overview: zMarketOverview,
   bunker_collect: z.object({ collected_cents: z.number(), interest_cents: z.number(), bunker: zBunker, ...withPlayer }),
   upgrades_get: zUpgrades,
   upgrade_buy: zUpgrades.extend({ bunker: zBunker, ...withPlayer }),

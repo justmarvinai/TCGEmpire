@@ -67,3 +67,8 @@ export function formatClock(iso: string): string {
 export function fillCount(text: string, n: number): string {
   return text.replace(/\[([^|\]]*)\|([^\]]*)\]/g, (_, one: string, many: string) => (n === 1 ? one : many)).replace('{n}', formatNumber(n))
 }
+
+/** Relative change as a signed percentage: 0.023 -> +2,3 % */
+export function formatPercent(x: number): string {
+  return `${new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1, minimumFractionDigits: 1, signDisplay: 'exceptZero' }).format(x * 100)} %`
+}
