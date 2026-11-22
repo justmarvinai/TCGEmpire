@@ -41,6 +41,7 @@ export const texts = {
       cardmarket: 'Cardmarket',
       kleinanzeigen: 'Kleinanzeigen',
       auctions: 'Auktionen',
+      bares: 'Bares für Rares',
       trade: 'Tausch',
       jobs: 'Jobs',
       bunker: 'Geldbunker',
@@ -331,6 +332,11 @@ export const texts = {
     upcoming: 'Demnächst',
     startsIn: (when: string, time: string) => `${when} · in ${time}`,
     none: 'Gerade nichts Besonderes. Das ist auch mal schön.',
+    advent: 'Adventskalender',
+    openDoor: (n: number) => `Türchen ${n} öffnen`,
+    doorDone: (n: number) => `Türchen ${n}: schon offen`,
+    doorClosed: (n: number) => `Türchen ${n}: zu`,
+    doorOpened: (n: number, text: string) => `Türchen ${n}: ${text}`,
     weekdays: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
     at: (day: string, time: string) => `${day}, ${time} Uhr`,
     target: {
@@ -765,6 +771,8 @@ export const texts = {
   },
 
   feed: {
+    bares: (d: Record<string, unknown>, card: string, money: string, estimate: string) =>
+      `BARES FÜR RARES: ${String(d.name)} verkauft ${card} für ${money}. Der Experte hatte ${estimate} geschätzt und weint jetzt.`,
     attack: (kind: string, d: Record<string, unknown>, money: string, card: string) =>
       ({
         bunker: `BUNKER GEKNACKT! ${String(d.name)} räumt ${money} aus dem Bunker von ${String(d.other)}. Wachhund Rex hat geschlafen.`,
@@ -927,6 +935,13 @@ export const texts = {
         steps: [
           'Deine Firma darf jetzt beim Großhändler bestellen: Displays zum Händlerpreis, billiger als überall sonst.',
           'Jede Woche gibt es ein Kontingent. Je größer deine Rechtsform, desto mehr. Du findest den Großhandel im Büro deiner Firma.',
+        ],
+      },
+      bares: {
+        name: 'Bares für Rares',
+        steps: [
+          'Einmal am Tag darfst du ins Fernsehstudio: Bring einen Hit oder einen Slab mit, der Experte schätzt ihn.',
+          'Dann bieten die Händler. Einer bietet immer 80 €, egal was du bringst. Nimm ein Gebot an oder fahr mit der Karte wieder heim.',
         ],
       },
       darkside: {
@@ -1127,6 +1142,7 @@ export const texts = {
         group_orders: 'Mama: Ihr bestellt zusammen eine ganze Kiste? Wehe, die steht dann in meinem Flur.',
         wholesale: 'Mama: Jetzt kaufst du Kisten beim Großhändler? Wie Papa damals mit den Gartenzwergen. Die stehen heute noch im Keller.',
         darkside: 'Mama: Ich hab gehört, du beklaust jetzt deine Freunde? So hab ich dich nicht erzogen. Lass dich wenigstens nicht erwischen.',
+        bares: 'Mama: Du gehst ins Fernsehen? Zieh was Ordentliches an. Und sag Hallo, ich schau zu.',
         company: 'Mama: Eine eigene Firma? In der Garage? Papas Auto muss dann draußen stehen. Das sagst du ihm.',
         loans: 'Mama: Du verleihst jetzt Geld? An deine Freunde? Dann sieh es schon mal als Geschenk.',
         breaks: 'Mama: Du machst jetzt Live-Shows? Zieh dir wenigstens was Ordentliches an.',
@@ -1374,6 +1390,32 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  bares: {
+    title: 'Bares für Rares',
+    subtitle: 'Experte, Händler, Tränen. Einmal am Tag.',
+    tip: 'Einmal am Tag bringst du einen Hit oder einen Slab ins Studio. Der Experte schätzt, drei Händler bieten, und einer bietet immer 80 €. Ein Deal zahlt sofort, ohne Gebühren. Ohne Deal behältst du die Karte, aber die Sendung ist für heute gelaufen.',
+    locked: (n: number) => `Ins Fernsehen kommst du ab Level ${n}. Vorher castet dich keiner.`,
+    pick: 'Was bringst du mit?',
+    pickTip: 'Deine Hits und Slabs aus dem Inventar, die wertvollsten zuerst. Karten in der Vitrine, im Grading oder auf dem Markt bleiben, wo sie sind.',
+    empty: 'Keine Hits im Inventar. Erst ziehen, dann zeigen.',
+    raw: 'Ungegradet',
+    go: 'Ab ins Studio',
+    studio: 'Im Studio',
+    studioTip: 'Der Experte schaut sich die Karte an und nennt seinen Preis. Bezahlen tun am Ende die Händler, nicht er.',
+    estimate: 'Expertise',
+    estimateTip: 'Was der Experte meint, was die Karte wert ist. Er liegt mal drüber, mal drunter. Die Händler interessiert das wenig.',
+    value: 'Marktwert',
+    dealers: 'Händlerraum',
+    dealersTip: 'Drei Händler bieten, dazu der Mann, der immer 80 € bietet. Ein Deal und das Geld ist sofort da. Gebühren gibt es keine.',
+    deal: 'Deal!',
+    noDeal: 'Kein Deal',
+    dealDone: (name: string, money: string) => `Deal! ${name} zahlt ${money} bar auf die Hand.`,
+    noDealDone: 'Kein Deal. Die Karte fährt wieder mit nach Hause.',
+    sold: (name: string, money: string) => `Verkauft an ${name} für ${money}.`,
+    notSold: 'Kein Deal heute. Die Karte ist wieder zu Hause.',
+    tomorrow: 'Morgen gibt es eine neue Sendung.',
   },
 
   darkside: {

@@ -26,6 +26,7 @@ export const UNLOCKS = {
   group_orders: 18,
   breaks: 18,
   housing: 20,
+  bares: 28,
   company: 30,
   darkside: 35,
   wholesale: 40,

@@ -30,4 +30,6 @@ export const NPCS: readonly NpcDef[] = [
   { id: 'kevin', name: 'Kevin (12)', archetype: 'kid', ruf: 300, budgetBaseCents: 1_500_00, activity: 20, params: {} },
   { id: 'lars', name: 'Letzter-Preis-Lars', archetype: 'lowballer', ruf: 450, budgetBaseCents: 2_000_00, activity: 40, params: {} },
   { id: 'doris', name: 'Dachboden-Doris', archetype: 'attic', ruf: 550, budgetBaseCents: 0, activity: 30, params: {} },
+  // Sonntags-Flohmarkt (alpha_10): stocks a few cheap ads every Sunday
+  { id: 'horst', name: 'Flohmarkt-Horst', archetype: 'attic', ruf: 400, budgetBaseCents: 0, activity: 0, params: {} },
 ]

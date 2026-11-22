@@ -691,7 +691,8 @@ insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, pa
   ('ingo', 'Investor-Ingo', 'investor', 800, 800000, 25, '{"buyHypeBelowPct":97,"sellHypeAbovePct":108,"buyBelowPct":100,"sellMarkupPct":112}'::jsonb),
   ('kevin', 'Kevin (12)', 'kid', 300, 150000, 20, '{}'::jsonb),
   ('lars', 'Letzter-Preis-Lars', 'lowballer', 450, 200000, 40, '{}'::jsonb),
-  ('doris', 'Dachboden-Doris', 'attic', 550, 0, 30, '{}'::jsonb)
+  ('doris', 'Dachboden-Doris', 'attic', 550, 0, 30, '{}'::jsonb),
+  ('horst', 'Flohmarkt-Horst', 'attic', 400, 0, 0, '{}'::jsonb)
 on conflict (id) do update set name = excluded.name, archetype = excluded.archetype, ruf = excluded.ruf,
   budget_base_cents = excluded.budget_base_cents, activity = excluded.activity, params = excluded.params;
 insert into game.tutorial_steps (step, event, reward_booster, reward_base_cents, reward_ep) values

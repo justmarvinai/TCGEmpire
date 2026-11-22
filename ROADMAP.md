@@ -178,10 +178,10 @@ Goal: the world happens to you.
 |---|-------|---|
 | ☑ | Event engine with at least 25 events; **Tagesereignis** at 00:00, random events, 2–3 announced **Highlight-Events** per week | M |
 | ☑ | Schattenwirtschaft: Bunker knacken, Finanzamt, 1-Stern, Gerücht, Abwerben, resealed/gewogen, Kredit platzen lassen (Q-25), Rache; **attack roll with Abwehr upgrades and Angriff skills, blocked outcomes**; daily loss cap | M |
-| ☐ | Sonntags-Flohmarkt | S |
-| ☐ | eBay-Auktionen | S |
-| ☐ | Bares für Rares | S |
-| ☐ | Calendar event framework + first calendar event | S |
+| ☑ | Sonntags-Flohmarkt (Flohmarkt-Horst's Sunday ads in the Kleinanzeigen, decision 095) | S |
+| → | eBay-Auktionen: moved to alpha_11 (decision 095) | S |
+| ☑ | Bares für Rares | S |
+| ☑ | Calendar event framework + first calendar event (Adventskalender) | S |
 
 ### alpha_11 — Mogul
 
@@ -194,6 +194,7 @@ Goal: the endgame and the reason to start again.
 | ☐ | Luxus, Megaprojekte, Museum auctions | S |
 | ☐ | Streaming with Followers and sponsors | S |
 | ☐ | Höhle der Löwen | S |
+| ☐ | eBay-Auktionen (from alpha_10, decision 095) | S |
 
 ### alpha_12 — Feinschliff → **0.0.1**
 

@@ -41,6 +41,8 @@ export function feedText(f: FeedEntry, doener: string) {
     return texts.feed.attack_blocked(kind, f.data, formatMoney(Number(f.data.fine_cents ?? 0)), card, defence)
   }
   if (f.kind === 'resealed_caught') return texts.feed.resealed_caught(f.data)
+  if (f.kind === 'bares')
+    return texts.feed.bares(f.data, cardName(String(f.data.card_id)), formatMoney(Number(f.data.cents)), formatMoney(Number(f.data.estimate_cents)))
   if (f.kind === 'battle')
     return texts.feed.battle(f.data, texts.battles.modes[f.data.mode as BattleMode]?.name ?? String(f.data.mode), formatMoney(Number(f.data.pot)))
   if (f.kind === 'home') {

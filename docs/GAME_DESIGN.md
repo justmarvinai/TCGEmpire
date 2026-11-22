@@ -243,7 +243,7 @@ Four venues with different rules. Each is a real, named platform parody with its
 | **eBay-Auktionen** | 25 | Players and NPC bidders | 10 % | Timed auctions for high-end items, sniping, bidding wars. |
 | **Direkthandel** | 10 | A specific player | Gift tax above an allowance | Trade window; both confirm. Basis for helping and for deals between friends. |
 | **Bares für Rares** | 28 | NPC dealer panel | — | Once per day: expert appraisal, then dealers bid. One of them always bids 80 €. |
-| **Sonntags-Flohmarkt** | 18 | NPC stalls | 0 % | Every Sunday: random bargains and junk boxes, haggling. |
+| **Sonntags-Flohmarkt** | 4 | Flohmarkt-Horst in the Kleinanzeigen | 0 % | Every Sunday: cheap ads with the usual risks, haggling (decision 095). |
 
 ### 7.1 Market value (Marktwert)
 

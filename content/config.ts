@@ -366,6 +366,18 @@ export const config = {
   'events.personal_active_hours': 24,
   'events.random_per_hour': 0.05,
   'events.highlight_times': [[3, '20:00'], [5, '20:00'], [7, '18:00']],
+  // Sonntags-Flohmarkt: Flohmarkt-Horst's ads in the Kleinanzeigen, at a share of the Marktwert
+  'flohmarkt.stalls': 6,
+  'flohmarkt.price_min_pct': 35,
+  'flohmarkt.price_max_pct': 70,
+  // Bares für Rares (docs/GAME_DESIGN.md §7): once a day an appraisal and three dealer bids, plus the 80-€ man
+  'bares.estimate_min_pct': 85,
+  'bares.estimate_max_pct': 125,
+  'bares.bid_min_pct': 50,
+  'bares.bid_max_pct': 100,
+  'bares.dealers': 3,
+  'bares.fixed_base_cents': 80_00,
+  'bares.copies': 60,
   // Schattenwirtschaft (docs/ECONOMY.md §10): attack roll, limits, Rache, Präparierte Booster
   'darkside.angriff_per_skill': 5,
   'darkside.chance_min': 5,

@@ -794,8 +794,31 @@ export const zEvents = z.object({
   active: z.array(zGameEvent),
   upcoming: z.array(zGameEvent),
   mine: z.array(zGameEvent),
+  /** while the Adventskalender runs: today's door and the doors opened */
+  advent: z.object({ day: z.number(), opened: z.array(z.number()) }).nullable(),
 })
 export type Events = z.infer<typeof zEvents>
+
+// Bares für Rares (alpha_10)
+const zBaresCopy = z.object({
+  card_id: z.string(),
+  grader: z.string().nullable(),
+  grade: z.number().nullable(),
+  black_label: z.boolean().nullable(),
+  value_cents: z.number(),
+})
+export const zBares = z.object({
+  unlock_level: z.number(),
+  today: zBaresCopy
+    .extend({
+      estimate_cents: z.number(),
+      offers: z.array(z.object({ dealer: z.number().nullable(), cents: z.number() })),
+      sold: z.number().nullable(),
+    })
+    .nullable(),
+  copies: z.array(zBaresCopy.extend({ copy_id: z.string() })),
+})
+export type Bares = z.infer<typeof zBares>
 
 // Schattenwirtschaft (alpha_10)
 export const ATTACK_KINDS = ['bunker', 'finanzamt', 'bewertung', 'abwerben', 'geruecht', 'resealed', 'kredit'] as const
@@ -1268,6 +1291,10 @@ export const RPC_SCHEMAS = {
   company_research: zCompany,
   events_get: zEvents,
   darkside_get: zDarkside,
+  advent_open: zEvents.extend(withPlayer),
+  bares_get: zBares,
+  bares_appraise: zBares,
+  bares_deal: zBares.extend(withPlayer),
   attack: zDarkside.extend({ result: zAttackResult, ...withPlayer }),
   reseal: zDarkside.extend({
     prepared: z.object({ product_id: z.string(), qty: z.number(), fee_cents: z.number(), value_cents: z.number(), hits: z.number() }),

@@ -8,7 +8,9 @@
 //   cards     one-off, random cards of the player's favourite game
 //   pfandbons, energy   one-off
 // `slots` says when an event can happen; `hours` is how long a stat event runs (one-offs: 0).
-export type EventSlot = 'daily' | 'random' | 'highlight' | 'personal'
+// Calendar events (`when`) start by date: every week on a weekday (1 = Monday … 7 = Sunday) or every year
+// between two days (MM-DD, within one year). The Adventskalender's doors are personal calendar events.
+export type EventSlot = 'daily' | 'random' | 'highlight' | 'personal' | 'calendar'
 
 export interface EventEffect {
   stat?: { stat: string; op: 'flat' | 'pct'; value: number }
@@ -32,7 +34,36 @@ export interface EventDef {
   hours: number
   tone: 'good' | 'bad'
   effect: EventEffect
+  when?: { weekday: number } | { from: string; to: string }
 }
+
+/** Adventskalender: what is behind each door (1–24), a personal one-off like the personal events. */
+const ADVENT_DOORS: readonly { effect: EventEffect; text: string }[] = [
+  { effect: { money: 10 }, text: 'Schokolade vom letzten Jahr. Und ein bisschen Geld.' },
+  { effect: { pfandbons: 2 }, text: 'Pfandbons. Weihnachten ist ein Fest des Recyclings.' },
+  { effect: { cards: 3 }, text: 'Drei Karten. Mehr Liebe hat der Kalender nicht.' },
+  { effect: { energy: 30 }, text: 'Glühwein! Energie für heute, Kopfschmerzen für morgen.' },
+  { effect: { money: 15 }, text: 'Geld. Kauf dir was Schönes. Booster zum Beispiel.' },
+  { effect: { cards: 6 }, text: 'Der Nikolaus war da und hat Karten in deinen Stiefel gestopft. Der Stiefel riecht trotzdem.' },
+  { effect: { pfandbons: 3 }, text: 'Pfandbons vom Weihnachtsmarkt. Die Tassen hast du trotzdem eingesteckt.' },
+  { effect: { money: 15 }, text: 'Oma hat ins Türchen gespart.' },
+  { effect: { cards: 3 }, text: 'Drei Karten, liebevoll in Geschenkpapier geknickt.' },
+  { effect: { energy: 30 }, text: 'Lebkuchen. Zuckerschock, volle Energie.' },
+  { effect: { money: 20 }, text: 'Weihnachtsgeld vom Chef. Er hat sich verrechnet.' },
+  { effect: { pfandbons: 3 }, text: 'Leergut von der Weihnachtsfeier. Sehr viel Leergut.' },
+  { effect: { cards: 4 }, text: 'Wichtelgeschenk: vier Karten, die keiner wollte.' },
+  { effect: { money: 15 }, text: 'Ein Umschlag von Tante Gerda. Mit Glitzer. Jetzt ist überall Glitzer.' },
+  { effect: { energy: 30 }, text: 'Spekulatius. Energie und Krümel im Bett.' },
+  { effect: { cards: 4 }, text: 'Karten! Der Weihnachtsmann sammelt also auch.' },
+  { effect: { money: 20 }, text: 'Geld für Geschenke. Du kaufst trotzdem Booster für dich.' },
+  { effect: { pfandbons: 4 }, text: 'Pfandbons. Fröhliche Flaschen allerseits.' },
+  { effect: { cards: 5 }, text: 'Fünf Karten. Der Kalender gibt sich langsam Mühe.' },
+  { effect: { energy: 40 }, text: 'Eierpunsch. Danach kannst du alles. Glaubst du.' },
+  { effect: { money: 25 }, text: 'Geld im Türchen. Fast so viel wie im teuren Kalender aus der Drogerie.' },
+  { effect: { cards: 5 }, text: 'Karten! Hoffentlich keine Weihnachts-Promo mit Rentier.' },
+  { effect: { money: 30 }, text: 'Morgen ist Heiligabend. Hier, für die letzten Panikkäufe.' },
+  { effect: { money: 120, cards: 10 }, text: 'Frohe Weihnachten! Geld, zehn Karten und das Gefühl, dass Mama dich doch lieb hat.' },
+]
 
 export const EVENTS: readonly EventDef[] = [
   // Tagesereignisse and Highlights for everyone
@@ -67,6 +98,10 @@ export const EVENTS: readonly EventDef[] = [
   { key: 'nebenkosten', name: 'Nebenkostennachzahlung', text: 'Der Vermieter hat nachgerechnet. Mit einem sehr kreativen Taschenrechner.', slots: ['personal'], weight: 1, hours: 0, tone: 'bad', effect: { money: -20, needsHome: true } },
   { key: 'knoellchen', name: 'Knöllchen', text: 'Vor dem Kartenladen geparkt. Zehn Minuten. Das Ordnungsamt war schneller.', slots: ['personal'], weight: 2, hours: 0, tone: 'bad', effect: { money: -5 } },
   { key: 'kaffee', name: 'Kaffee auf der Tastatur', text: 'Die Tastatur klebt, du bist müde. Energie weg.', slots: ['personal'], weight: 2, hours: 0, tone: 'bad', effect: { energy: -20 } },
+  // Calendar
+  { key: 'flohmarkt', name: 'Sonntags-Flohmarkt', text: 'Flohmarkt-Horst hat seinen Stand aufgebaut: Karten zum Spottpreis in den Kleinanzeigen, nur heute. Fälschungen gratis dazu.', slots: ['calendar'], weight: 0, hours: 24, tone: 'good', effect: {}, when: { weekday: 7 } },
+  { key: 'advent', name: 'Adventskalender', text: 'Bis Heiligabend jeden Tag ein Türchen. Hinter manchen ist sogar was drin.', slots: ['calendar'], weight: 0, hours: 24, tone: 'good', effect: {}, when: { from: '12-01', to: '12-24' } },
+  ...ADVENT_DOORS.map((d, i) => ({ key: `advent_${i + 1}`, name: `Türchen ${i + 1}`, text: d.text, slots: ['calendar'] as const, weight: 0, hours: 0, tone: 'good' as const, effect: d.effect })),
 ]
 
 /** What the server needs (seeded as config `events.defs`). */
