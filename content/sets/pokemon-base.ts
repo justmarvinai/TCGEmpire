@@ -84,7 +84,7 @@ export const pokemonBase: SetData = {
     { id: 'pkm-base-074', no: 74, name: 'Doppel-Farblos-Energie', en: 'Double Colorless Energy', tier: 'uncommon', kind: 'energy', element: 'Farblos', d: 3 },
     { id: 'pkm-base-075', no: 75, name: 'Kampf-Energie', en: 'Fighting Energy', tier: 'common', kind: 'energy', element: 'Kampf', d: 1 },
     { id: 'pkm-base-076', no: 76, name: 'Feuer-Energie', en: 'Fire Energy', tier: 'common', kind: 'energy', element: 'Feuer', d: 1 },
-    { id: 'pkm-base-077', no: 77, name: 'Pflanzen-Energie', en: 'Grass Energy', tier: 'common', kind: 'energy', element: 'Pflanzen', d: 1 },
+    { id: 'pkm-base-077', no: 77, name: 'Pflanzen-Energie', en: 'Grass Energy', tier: 'common', kind: 'energy', element: 'Pflanze', d: 1 },
     { id: 'pkm-base-078', no: 78, name: 'Elektro-Energie', en: 'Lightning Energy', tier: 'common', kind: 'energy', element: 'Elektro', d: 1 },
     { id: 'pkm-base-079', no: 79, name: 'Psycho-Energie', en: 'Psychic Energy', tier: 'common', kind: 'energy', element: 'Psycho', d: 1 },
     { id: 'pkm-base-080', no: 80, name: 'Wasser-Energie', en: 'Water Energy', tier: 'common', kind: 'energy', element: 'Wasser', d: 1 },

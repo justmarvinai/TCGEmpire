@@ -18,8 +18,8 @@ export type { CreatureArt } from './creature.ts'
 export type { ItemArt } from './items.ts'
 
 export interface EnergyArt {
-  /** Two overlapping emblems (Doppel-Farblos-Energie). */
-  double?: boolean
+  /** Two overlapping emblems (Doppel-Farblos-Energie). Plain energies need no art spec. */
+  double: true
 }
 
 export interface CreatureCard extends CreatureArt {

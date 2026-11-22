@@ -1,8 +1,9 @@
 /**
  * Builds the art atlases into public/atlas/ (not committed, rebuilt on every build):
- *   <set>.png + <set>.json      all cards of a set in a grid: { cell: {w,h}, items: { id: {x,y} } }
+ *   <set>.png + <set>.json      all cards of a set, sorted by id, in a grid of 10 columns:
+ *                               { cell: {w,h}, size: {w,h}, items: { id: {x,y} } }
  *   <set>-foil.png              same grid, white where the card shines, transparent elsewhere
- *   products.png + .json        packed products: { items: { id: {x,y,w,h} } }
+ *   products.png + .json        packed products: { size: {w,h}, items: { id: {x,y,w,h} } }
  * Usage: pnpm art:build
  */
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -45,7 +46,7 @@ for (const set of SETS) {
   })
   save(`${set.id}.png`, atlas)
   save(`${set.id}-foil.png`, foil)
-  saveJson(`${set.id}.json`, { cell, items })
+  saveJson(`${set.id}.json`, { cell, size: { w: atlas.w, h: atlas.h }, items })
   console.log(`${set.id}: ${cards.length} cards, ${atlas.w}×${atlas.h}`)
 }
 
@@ -75,6 +76,6 @@ for (const set of SETS) {
     if (at) atlas.blit(art, at.x, at.y)
   }
   save('products.png', atlas)
-  saveJson('products.json', { items })
+  saveJson('products.json', { size: { w: atlas.w, h: atlas.h }, items })
   console.log(`products: ${products.length} items, ${atlas.w}×${atlas.h}`)
 }

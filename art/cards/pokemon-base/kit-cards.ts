@@ -1,26 +1,126 @@
-import type { KitSpec } from '../../kit/index.ts'
+import type { CreatureCard, KitSpec } from '../../kit/index.ts'
 import { kitCard } from '../../kit/index.ts'
 import type { CardDef } from '../types.ts'
 
 /**
- * Every card of the Basis-Set below Ultra that has no hand-made art, as compact kit specs
- * (format: art/kit/index.ts). Attacks: 'Name:COST:DAMAGE|…' with F W P E Y K C as energy letters.
+ * Every card of the Basis-Set below Ultra that has no hand-made art, as compact kit specs (format:
+ * art/kit/index.ts). Attacks: 'Name:COST:DAMAGE|…', energy letters F W P E Y K C; an empty cost
+ * marks a Pokémon-Power. Alternative cards reuse their base creature with another pose and scene.
  */
+const VULNONA: CreatureCard = { a: 'quad', c: 'f0d890 c8a860 fff4d8 f0a040', tail: 'fan9', ears: 'point', crest: 'mane', eyes: 'red', n: 9, scene: 'Farblos', v: 1 }
+const ARKANI: CreatureCard = { a: 'quad', c: 'f08a30 2a2430 f8e0b0', pat: 'stripes', crest: 'mane', tail: 'fluff', ears: 'point', x: ['muzzle'], n: 10, s: 1.15, pose: 1 }
+const GARADOS: CreatureCard = { a: 'serpent', c: '3a78d0 2a58a8 f0e0a0', crest: 'fins', eyes: 'angry', mouth: 'fang', s: 1.25, v: 1 }
+const SIMSALA: CreatureCard = { a: 'humanoid', c: 'd8b048 8a5a30 a06838', ears: 'point', belly: 'patch', x: ['moustache', 'spoons'], eyes: 'angry', n: 0.3 }
+const DRAGONIR: CreatureCard = { a: 'serpent', c: '5a90e0 3a6ac0 f4f0f8 3a5ad8', ears: 'fin', horn: 'nub', tail: 'ring', x: ['orbs'], s: 1.15, scene: 'Wasser' }
+
 const SPECS: readonly KitSpec[] = [
   { id: 'pkm-base-001', hp: 40, attacks: 'Egelsamen:PP:20', art: { a: 'quad', c: '78c8a8 4a9a48 a8e0c8 c8383c', back: 'bulb', ears: 'point', eyes: 'red', pat: 'spots', n: 5 } },
-  { id: 'pkm-base-003', hp: 40, attacks: 'Fadenschuss:P:10', art: { a: 'larva', c: '78b848 4a8a30 f0e070 e83a2a', ant: 'fork', s: 0.9 } },
+  { id: 'pkm-base-002', hp: 60, attacks: 'Rankenhieb:PCC:30|Giftpuder:PPP:20',
+    art: { a: 'quad', c: '5aa8a0 3a7a58 98d0c0 e8709a', back: 'bud', ears: 'point', eyes: 'red', pat: 'spots', n: 6, v: 1 } },
+  { id: 'pkm-base-003', hp: 40, attacks: 'Fadenschuss:P:10', art: { a: 'larva', c: '78b848 4a8a30 f0e070 e83a2a', ant: 'fork', s: 1.05 } },
   { id: 'pkm-base-004', hp: 70, attacks: 'Härtner:CC|Stachelspore:PP:20', art: { a: 'cocoon', c: '70b048', pose: 1, eyes: 'narrow', mouth: 'none' } },
+  { id: 'pkm-base-005', hp: 40, attacks: 'Giftstachel:P:10',
+    art: { a: 'larva', c: 'd89a48 a86a30 ece4dc f08a9a', horn: 'spike', tail: 'stinger', x: ['nose'], pose: 1, s: 1.05 } },
+  { id: 'pkm-base-006', hp: 80, attacks: 'Härtner:CC|Giftpuder:PP:20', art: { a: 'cocoon', c: 'e8c440 b08a20 f8e8a0', pose: 2, eyes: 'narrow', mouth: 'none', v: 1 } },
+  { id: 'pkm-base-007', hp: 80, attacks: 'Duonadel:CCC:30×|Giftstachel:PPP:40',
+    art: { a: 'insect', c: 'f0c838 2a2430 f4f4f8 d83a3a', wings: 'bug', eyes: 'red', ant: 'two', x: ['lances'], scene: 'Elektro' } },
+  { id: 'pkm-base-008', hp: 40, attacks: 'Hornattacke:P:30',
+    art: { a: 'quad', c: 'c07ab8 9a4a98 e8c8e8 4aa8a0', ears: 'big', horn: 'spike', back: 'spikes', pat: 'spots', n: 5, s: 0.95 } },
+  { id: 'pkm-base-009', hp: 60, attacks: 'Doppelkick:PCC:30×|Hornbohrer:PPCC:50',
+    art: { a: 'quad', c: 'a858b8 7a3a90 d8b0e0 4aa8a0', ears: 'big', horn: 'spike', back: 'spikes', eyes: 'angry', n: 6, pose: 1, scene: 'Kampf' } },
+  { id: 'pkm-base-010', hp: 90, attacks: 'Fuchtler:PCC:30+|Toxin:PPP:20',
+    art: { a: 'biped', c: '9a58b8 6a3890 e8d0a8', ears: 'big', horn: 'spike', back: 'spikes', tail: 'club', belly: 'patch', eyes: 'angry', mouth: 'fang', n: 1, s: 1.15, scene: 'Feuer', v: 1 } },
   { id: 'pkm-base-011', hp: 50, attacks: 'Smog:PP:10', art: { a: 'blob', c: '8a6cb8 6a4a98 f0e8c8 c8d860', pat: 'bumps', belly: 'skull', x: ['fumes'], mouth: 'fang' } },
   { id: 'pkm-base-012', hp: 50, attacks: 'Kratzer:C:10|Glut:FC:30', art: { a: 'biped', c: 'f08a3c c05a28 f8d888 f06a1e', tail: 'flame', belly: 'patch' } },
+  { id: 'pkm-base-013', hp: 80, attacks: 'Schlitzer:CCC:30|Flammenwerfer:FFC:50',
+    art: { a: 'biped', c: 'd8402e a8281e f0c890 f06a1e', tail: 'flame', horn: 'back', belly: 'patch', eyes: 'angry', n: 0.5, pose: 1 } },
   { id: 'pkm-base-014', hp: 50, attacks: 'Konfusstrahl:FF:10', art: { a: 'quad', c: 'd0683a a84a2a f0c890 f0904a', tail: 'fan6', ears: 'point', crest: 'curl', n: 6, s: 0.9 } },
+  { id: 'pkm-base-015', hp: 80, attacks: 'Lockruf:CC|Feuersturm:FFFF:80', art: VULNONA },
+  { id: 'pkm-base-016', hp: 60, attacks: 'Lodern:FC:20',
+    art: { a: 'quad', c: 'f08a30 2a2430 f8e0b0', pat: 'stripes', crest: 'mane', tail: 'fluff', ears: 'point', mouth: 'open', x: ['muzzle'], n: 7 } },
+  { id: 'pkm-base-017', hp: 100, attacks: 'Flammenwerfer:FFC:50|Bodycheck:FFCC:80', art: ARKANI },
+  { id: 'pkm-base-018', hp: 40, attacks: 'Tritt:CC:20|Flammenschweif:FF:30',
+    art: { a: 'quad', c: 'f8e8c0 c8b088 fff8e8 f06a1e', crest: 'flame', tail: 'flame', ears: 'point', n: 11, pose: 1, scene: 'Kampf', v: 1 } },
   { id: 'pkm-base-019', hp: 40, attacks: 'Blubber:W:10|Panzerschutz:WC', art: { a: 'biped', c: '78bce8 b07a3a f0d898', back: 'shell', tail: 'curl', belly: 'patch' } },
-  { id: 'pkm-base-024', hp: 40, attacks: 'Klaps:W:20', art: { a: 'star', c: 'c89848 a07030 f0d070 e8303c', scene: 'Wasser', v: 1 } },
+  { id: 'pkm-base-020', hp: 70, attacks: 'Panzerschutz:WC|Biss:WCC:40',
+    art: { a: 'biped', c: '7a90e0 a8703a f4ecf8', back: 'shell', ears: 'fluffy', tail: 'fluff', belly: 'patch', n: 0.4, pose: 1 } },
+  { id: 'pkm-base-021', hp: 40, attacks: 'Aquaknarre:W:10+', art: { a: 'blob', c: '4a70c8 2a4a98 f4f4f8', belly: 'spiral', tail: 'fin', pose: 1, s: 0.9 } },
+  { id: 'pkm-base-022', hp: 60, attacks: 'Amnesie:WW|Duplexhieb:WCC:30×', art: { a: 'blob', c: '4a6ac0 2a4a98 f4f4f8 f4f4f8', belly: 'spiral', x: ['gloves'], pose: 1 } },
+  { id: 'pkm-base-023', hp: 90, attacks: 'Aquaknarre:WWC:30+|Wirbler:WWCC:40',
+    art: { a: 'blob', c: '3a5ab0 2a3a88 f4f4f8 f4f4f8', belly: 'spiral', x: ['gloves'], eyes: 'angry', pose: 1, s: 1.2, v: 1 } },
+  { id: 'pkm-base-024', hp: 40, attacks: 'Klaps:W:20', art: { a: 'star', c: 'c89848 a07030 f0d070 e8303c', v: 1 } },
+  { id: 'pkm-base-025', hp: 60, attacks: 'Genesung:WW|Sternenschauer:WCC:20', art: { a: 'star', c: '8a68c0 6a4aa0 f0d070 e8303c', n: 2, pose: 1 } },
   { id: 'pkm-base-026', hp: 30, attacks: 'Tackle:C:10|Platscher:W:10×', art: { a: 'fish', c: 'e8603a c84a2a f8d0a0 f8e0a0', eyes: 'vacant', mouth: 'open', x: ['whiskers'] } },
+  { id: 'pkm-base-027', hp: 100, attacks: 'Drachenwut:WWW:50|Blubbstrahl:WWWW:40', art: GARADOS },
+  { id: 'pkm-base-029', hp: 80, attacks: 'Agilität:ECC:20|Donner:EEEC:60',
+    art: { a: 'biped', c: 'f0a030 6a4a30 f8e0b0 f8d838', ears: 'long', tail: 'bolt', belly: 'patch', x: ['cheeks'], n: 0.2 } },
+  { id: 'pkm-base-030', hp: 40, attacks: 'Donnerwelle:E:10|Finale:EC:40', art: { a: 'blob', c: 'a8b4c8 6a7890 e8f0f8', eyes: 'cyclops', mouth: 'none', x: ['magnets'], s: 0.9 } },
+  { id: 'pkm-base-031', hp: 60, attacks: 'Donnerwelle:EEC:30|Finale:EECC:80', art: { a: 'blob', c: 'a8b4c8 6a7890 e8f0f8', eyes: 'cyclops', mouth: 'none', x: ['magnets'], n: 3, v: 1 } },
+  { id: 'pkm-base-032', hp: 40, attacks: 'Tackle:C:10', art: { a: 'blob', c: 'e04848 a83030 f4f4f8', x: ['split'], eyes: 'angry', mouth: 'none' } },
+  { id: 'pkm-base-033', hp: 80, attacks: 'Kurzschluss:|Elektroschock:EEE:50', art: { a: 'blob', c: 'f0f0f4 b8b8c8 e04848', x: ['split'], eyes: 'angry', mouth: 'fang', s: 1.15, v: 1 } },
+  { id: 'pkm-base-034', hp: 70, attacks: 'Donnerschock:E:10|Donnerschlag:EC:30+',
+    art: { a: 'humanoid', c: 'f8d038 2a2430 f8e8a0', pat: 'stripes', ant: 'two', eyes: 'angry', n: 0.5, pose: 1, v: 1 } },
+  { id: 'pkm-base-035', hp: 90, attacks: 'Donner:EEEC:60|Blitz:EEEE:100',
+    art: { a: 'bird', c: 'f8d038 2a2430 f8d038 e88a20', wings: 'spiky', crest: 'spiky', eyes: 'angry', pose: 1, s: 1.2, v: 1 } },
+  { id: 'pkm-base-036', hp: 30, attacks: 'Psychoschock:Y:10', art: { a: 'humanoid', c: 'd8b048 8a5a30 a06838', ears: 'point', belly: 'patch', tail: 'plain', eyes: 'closed', mouth: 'none', pose: 2 } },
+  { id: 'pkm-base-037', hp: 60, attacks: 'Genesung:YY|Super-Psy:YYYC:50',
+    art: { a: 'humanoid', c: 'd8b048 8a5a30 a06838 e83a3a', ears: 'point', belly: 'patch', tail: 'plain', x: ['moustache', 'spoon', 'star'], eyes: 'angry', pose: 1 } },
+  { id: 'pkm-base-038', hp: 80, attacks: 'Schadenstausch:|Konfusstrahl:YYY:30', art: SIMSALA },
+  { id: 'pkm-base-039', hp: 30, attacks: 'Schlafgas:Y|Abgangsbund:YC', art: { a: 'blob', c: '3a2850 8a58c0 f4f4f8', x: ['aura'], eyes: 'vacant', mouth: 'fang', v: 1 } },
+  { id: 'pkm-base-040', hp: 60, attacks: 'Hypnose:Y|Traumfresser:YY:50', art: { a: 'blob', c: '8858b8 5a3888 f07a8a', crest: 'spiky', x: ['hands', 'wisp'], eyes: 'angry', mouth: 'open', v: 1 } },
+  { id: 'pkm-base-041', hp: 40, attacks: 'Sandwirbel:K:10', art: { a: 'biped', c: 'e0c068 b08a40 f8ecc0', ears: 'point', belly: 'patch', pat: 'spots', x: ['claws'], n: 0.2 } },
+  { id: 'pkm-base-042', hp: 30, attacks: 'Schaufler:K:10|Lehmschelle:KK:30', art: { a: 'cocoon', c: 'a87050 7a4a30 c89070 f090a0', x: ['nose', 'mound'], s: 0.95 } },
+  { id: 'pkm-base-043', hp: 70, attacks: 'Schlitzer:KKC:40|Erdbeben:KKKK:70', art: { a: 'cocoon', c: 'a87050 7a4a30 c89070 f090a0', x: ['nose', 'mound'], n: 3, v: 1 } },
   { id: 'pkm-base-044', hp: 50, attacks: 'Fußkick:K:20', art: { a: 'humanoid', c: '98a8c0 6a7890 c8d0dc', crest: 'ridge', eyes: 'angry', belly: 'patch' } },
-  { id: 'pkm-base-049', hp: 40, attacks: 'Wirbelwind:CC:10', art: { a: 'bird', c: 'b0804a 8a5a30 f0d8a8 e8a0a0', wings: 'bird', belly: 'patch', crest: 'plume' } },
+  { id: 'pkm-base-045', hp: 80, attacks: 'Karateschlag:KKC:50-|Überroller:KKCC:60',
+    art: { a: 'humanoid', c: '8a98b0 2a2430 c8d0dc e8c838', crest: 'ridge', x: ['belt'], eyes: 'angry', n: 0.6, pose: 1 } },
+  { id: 'pkm-base-046', hp: 100, attacks: 'Gegenschlag:|Geowurf:KKKC:60',
+    art: { a: 'humanoid', c: '7a88b0 2a2430 c8d0dc e8c838', crest: 'ridge', x: ['belt', 'arms4'], eyes: 'angry', mouth: 'open', n: 1, s: 1.1, v: 1 } },
+  { id: 'pkm-base-047', hp: 90, attacks: 'Steinwurf:K:10|Härtner:KK', art: { a: 'serpent', c: 'a8a8b0 787880 d0d0d8', x: ['rock'], horn: 'spike', eyes: 'angry', mouth: 'none', s: 1.1 } },
+  { id: 'pkm-base-048', hp: 70, attacks: 'Jab:K:20|Spezialschlag:KKC:40',
+    art: { a: 'humanoid', c: 'c89870 7a4aa0 7a4aa0 d83030', belly: 'patch', x: ['gloves'], eyes: 'angry', n: 0.4, pose: 1, v: 1 } },
+  { id: 'pkm-base-049', hp: 40, attacks: 'Wirbelwind:CC:10', art: { a: 'bird', c: 'b0804a 8a5a30 f0d8a8 e8a0a0', wings: 'bird', belly: 'patch' } },
+  { id: 'pkm-base-050', hp: 60, attacks: 'Wirbelwind:CC:20|Spiegeltrick:CCC',
+    art: { a: 'bird', c: 'b0804a 8a5a30 f0d8a8 e85a5a', wings: 'bird', belly: 'patch', crest: 'plume', pose: 1, s: 1.1, scene: 'Kampf' } },
+  { id: 'pkm-base-051', hp: 40, attacks: 'Gesang:C|Metronom:CCC',
+    art: { a: 'blob', c: 'f8b8c8 8a5a50 fff0f4 e88aa0', ears: 'long', wings: 'small', crest: 'curl', tail: 'curl', pose: 1, v: 1 } },
+  { id: 'pkm-base-052', hp: 50, attacks: 'Lauchschlag:C:30|Topfschlag:CCC:30',
+    art: { a: 'bird', c: 'a87848 6a4a30 f0e0c8 e8b030', wings: 'bird', belly: 'patch', x: ['leek'], eyes: 'angry', scene: 'Pflanze' } },
+  { id: 'pkm-base-053', hp: 120, attacks: 'Schutzschild:CC|Doppelkante:CCCC:80', art: { a: 'blob', c: 'f8b0c0 d88898 fff4f8', belly: 'pouch', ears: 'tuft', pose: 1, s: 1.15 } },
+  { id: 'pkm-base-054', hp: 30, attacks: 'Umwandlung 1:C|Psystrahl:CCC:20', art: { a: 'block', c: 'f07090 4aa0d8 f8f8f8', scene: 'Psycho' } },
   { id: 'pkm-base-055', hp: 40, attacks: 'Pfund:C:10', art: { a: 'serpent', c: '6aa0e8 4a70c0 f4f0f8', ears: 'fin', scene: 'Wasser' } },
+  { id: 'pkm-base-056', hp: 80, attacks: 'Slam:CC:30×|Hyperstrahl:CCCC:20', art: DRAGONIR },
+
+  { id: 'pkm-base-057', text: 'Wirf 2 Karten ab. Suche 1 beliebige Karte im Deck.', art: { item: 'computer', bg: '5a6a8a 6a4a30' } },
+  { id: 'pkm-base-058', text: 'Gegner mischt die Hand ins Deck, zieht 7 Karten.',
+    art: { item: 'person', c: 'e8ecf4 a6a2ae f1b688', bg: '4a5a5a 6a4a30', x: ['coat', 'moustache', 'grin'] } },
+  { id: 'pkm-base-059', text: 'Wirf 2 Karten ab. Nimm 1 Trainer vom Ablagestapel.', art: { item: 'device', c: 'e8b030', bg: 'e8d0a0 a07850', x: ['antenna'] } },
+  { id: 'pkm-base-060', text: 'Beide mischen alle Trainer-Karten der Hand ins Deck.', art: { item: 'person', c: 'e85a7a 8a4a2a f4c09a', bg: 'a8d8a0 6a9a48', x: ['long', 'pony'] } },
+  { id: 'pkm-base-061', text: 'Entwickle ein Basis-Pokémon direkt zu Phase 2.', art: { item: 'person', c: '6a9ad8 5a3a2a f1b688', bg: 'f0d8b0 8a6a4a', x: ['apron', 'egg'] } },
+  { id: 'pkm-base-062', text: 'Tausche 1 Pokémon der Hand gegen 1 im Deck.', art: { item: 'coins', bg: 'e8c890 8a5a3a', x: ['ball'] } },
+  { id: 'pkm-base-063', text: 'Wirf 1 eigene Energie ab, dann 2 des Gegners.', art: { item: 'gadget', c: '8a5ac8', bg: 'c8a0d8 4a3a5a', x: ['super'] } },
+  { id: 'pkm-base-064', text: 'Angriffe machen in diesem Zug 10 Schaden mehr.', art: { item: 'pill', c: 'd8344a', bg: 'f8c890 c87a40' } },
+  { id: 'pkm-base-065', text: 'Heile alle deine Pokémon und wirf ihre Energie ab.', art: { item: 'building', bg: '2a3a6a 4a4a5a', x: ['night'] } },
+  { id: 'pkm-base-066', text: 'Sieh die obersten 5 Karten an, ordne sie neu.', art: { item: 'device', c: 'd8344a', bg: 'a8c8e8 7a6a8a' } },
+  { id: 'pkm-base-068', text: 'Wirf 1 Energie ab und heile 40 Schaden.', art: { item: 'bottle', c: 'f08a30', bg: 'f8e8c0 b07a50', x: ['mist'] } },
+  { id: 'pkm-base-069', text: 'Ziehe 2 Karten.', art: { item: 'person', c: '3a6ab0 6a4a2a f1b688', bg: '4a7a8a 6a4a30', x: ['spiky'] } },
+  { id: 'pkm-base-070', text: 'Wirf 1 Energie eines Pokémon des Gegners ab.', art: { item: 'gadget', c: '5a8ad8', bg: 'b89ad8 5a4a6a' } },
+  { id: 'pkm-base-071', text: 'Tausche das aktive Pokémon des Gegners aus.', art: { item: 'gust', bg: 'c8e0f0 7ab060' } },
   { id: 'pkm-base-072', text: 'Heile 20 Schaden bei einem deiner Pokémon.', art: { item: 'bottle', c: '9a5ac8', bg: 'b8d8f0 5a9a40' } },
+  { id: 'pkm-base-073', text: 'Tausche dein aktives gegen ein Bank-Pokémon.', art: { item: 'balls', bg: '8ad0c0 3a8a7a', x: ['arrows'] } },
+
+  { id: 'pkm-base-074', art: { double: true } },
+  { id: 'pkm-base-075' },
+  { id: 'pkm-base-077' },
+  { id: 'pkm-base-078' },
+  { id: 'pkm-base-079' },
   { id: 'pkm-base-080' },
+
+  { id: 'pkm-base-081', hp: 80, attacks: 'Lockruf:CC|Feuersturm:FFFF', art: { ...VULNONA, pose: 1, flip: true, scene: 'Psycho' } },
+  { id: 'pkm-base-082', hp: 100, attacks: 'Flammenwerfer:FFC:50|Bodycheck:FFCC:80', art: { ...ARKANI, pose: 0, flip: true, mouth: 'open', scene: 'Farblos', v: 1 } },
+  { id: 'pkm-base-083', hp: 100, attacks: 'Drachenwut:WWW:50|Blubbstrahl:WWWW:40', art: { ...GARADOS, pose: 1, flip: true, scene: 'Elektro' } },
+  { id: 'pkm-base-085', hp: 80, attacks: 'Schadenstausch:|Konfusstrahl:YYY:30', art: { ...SIMSALA, pose: 2, flip: true, v: 1 } },
+  { id: 'pkm-base-086', hp: 80, attacks: 'Slam:CC:30×|Hyperstrahl:CCCC:20', art: { ...DRAGONIR, pose: 1, flip: true, v: 1 } },
 ]
 
 export const KIT_CARDS: readonly CardDef[] = SPECS.map(kitCard)

@@ -79,7 +79,7 @@ insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_bas
   ('pkm-base-074', 'pokemon-base', 74, 'Doppel-Farblos-Energie', 'uncommon', 'energy', 'Farblos', 127),
   ('pkm-base-075', 'pokemon-base', 75, 'Kampf-Energie', 'common', 'energy', 'Kampf', 20),
   ('pkm-base-076', 'pokemon-base', 76, 'Feuer-Energie', 'common', 'energy', 'Feuer', 20),
-  ('pkm-base-077', 'pokemon-base', 77, 'Pflanzen-Energie', 'common', 'energy', 'Pflanzen', 20),
+  ('pkm-base-077', 'pokemon-base', 77, 'Pflanzen-Energie', 'common', 'energy', 'Pflanze', 20),
   ('pkm-base-078', 'pokemon-base', 78, 'Elektro-Energie', 'common', 'energy', 'Elektro', 20),
   ('pkm-base-079', 'pokemon-base', 79, 'Psycho-Energie', 'common', 'energy', 'Psycho', 20),
   ('pkm-base-080', 'pokemon-base', 80, 'Wasser-Energie', 'common', 'energy', 'Wasser', 20),

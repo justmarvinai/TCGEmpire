@@ -1,4 +1,4 @@
-import { MICRO, drawText } from '../fonts.ts'
+import { MICRO, drawText, measure } from '../fonts.ts'
 import type { RGB } from '../toolkit/index.ts'
 import { Mask, Painter, colors, hex, mix } from '../toolkit/index.ts'
 import type { ProductDef } from './index.ts'
@@ -73,12 +73,13 @@ function drawLabel(p: Painter, grader: SlabGrader): void {
   p.fill(box({ x: brand.x - 1, y: label.y + 1, w: 1, h: label.h - 2 }), k.band)
   p.fill(box({ x: title.x, y: cert.y - 1, w: title.w, h: 1 }), mix(k.paper, k.band, 0.3))
 
-  // brand cell, with the wordmark in bold (every glyph twice, one pixel apart)
+  // brand cell, with the wordmark in bold: every glyph twice, one pixel apart, and spaced to match
   p.fill(box(brand), k.band)
-  if (k.brand !== '') {
-    const cx = brand.x + Math.floor(brand.w / 2)
-    drawText(p, k.brand, cx, brand.y + 1, MICRO, onBand, { align: 'center' })
-    drawText(p, k.brand, cx + 1, brand.y + 1, MICRO, onBand, { align: 'center' })
+  const glyphs = [...k.brand]
+  let gx = brand.x + Math.floor((brand.w - glyphs.reduce((sum, ch) => sum + measure(ch, MICRO) + 2, -1)) / 2)
+  for (const ch of glyphs) {
+    drawText(p, ch, gx + 1, brand.y + 1, MICRO, onBand)
+    gx += drawText(p, ch, gx, brand.y + 1, MICRO, onBand) + 2
   }
 
   // barcode left of the certificate number

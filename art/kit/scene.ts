@@ -1,13 +1,13 @@
 import type { PokemonType } from '../cards/types.ts'
 import type { Painter, Ramp } from '../toolkit/index.ts'
-import { INK } from './shape.ts'
 import { colors, hex, lightning, mix, rng, sky, sparks, stars } from '../toolkit/index.ts'
+import { INK } from './shape.ts'
 
-/**
- * Simple element scenes behind a kit subject: a dithered sky, a ground band and two or three
- * shapes. Variant 0 is the day scene, variant 1 the night (or storm) scene, so an Alternative
- * card can differ from its base card. Returns the ground line.
- */
+// Simple element scenes behind a kit subject: a dithered sky, a ground band and two or three
+// shapes. Variant 0 is the day scene, variant 1 the night (or storm) scene, so an Alternative card
+// can differ from its base card.
+
+/** Ground line of every scene; subjects stand 12 px below it. */
 export const HORIZON = 33
 
 interface Look {
@@ -196,14 +196,13 @@ const LOOKS: Readonly<Record<PokemonType, readonly [Look, Look]>> = {
 }
 
 /** Paint the scene of an element. */
-export function scene(p: Painter, element: PokemonType, variant: 0 | 1): number {
+export function scene(p: Painter, element: PokemonType, variant: 0 | 1): void {
   const look = LOOKS[element][variant]
   const g = HORIZON
   sky(p, look.sky, 0, g, 0.7)
   look.deco(p, g)
   p.dither(p.m().rect(0, g, p.w, p.h - g), look.ground, (_x, y) => (y - g) / (p.h - g - 1), 0.6)
   look.floor?.(p, g)
-  return g
 }
 
 /** Shadow of a subject on the ground. */

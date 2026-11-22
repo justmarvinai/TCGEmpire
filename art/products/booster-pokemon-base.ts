@@ -1,4 +1,6 @@
+import { bisaflor } from '../cards/pokemon-base/bisaflor.ts'
 import { glurak } from '../cards/pokemon-base/glurak.ts'
+import { turtok } from '../cards/pokemon-base/turtok.ts'
 import type { CardDef } from '../cards/types.ts'
 import { paintArtwork } from '../cards/types.ts'
 import { MICRO, REGULAR, drawText } from '../fonts.ts'
@@ -244,4 +246,31 @@ export const boosterGlurak = boosterPack({
   ),
   foil: colors('13102e', '271447', '541a44', '86222e', 'b83222', 'f0641a', 'fca82c', 'ffe45e'),
   burst: [36, 92],
+})
+
+const WATER = colors('1a4a94', '2c86cc', '62c2ea', 'b8ecfa', 'ffffff')
+/** Where Turtok's jets run in the card artwork; above it they would cross the set ribbon. */
+const JETS = [{ x: 0, y: 12, w: 56, h: 26 }]
+
+/** Turtok wrapper: storm-blue foil; the tortoise keeps its jets, which vanish behind the ribbon. */
+export const boosterTurtok = boosterPack({
+  id: 'booster-pkm-base-turtok',
+  hero: heroFromCard(turtok, 4, 31, (art) => {
+    // the jets with their dark rim, but not the mist dotted round them
+    const core = pick(art, WATER.slice(1), JETS)
+    return core
+      .grown(1)
+      .and(pick(art, WATER, JETS))
+      .or(core)
+  }),
+  foil: colors('0a0f2a', '12204e', '183a86', '2156b8', '2c86cc', '62c2ea', 'b8ecfa', 'f4fdff'),
+  burst: [44, 92],
+})
+
+/** Bisaflor wrapper: rainforest-green foil with the sun breaking through behind the flower. */
+export const boosterBisaflor = boosterPack({
+  id: 'booster-pkm-base-bisaflor',
+  hero: heroFromCard(bisaflor, 4, 31),
+  foil: colors('07150f', '0e2a18', '17442a', '256234', '3c8640', '6aac4c', 'b4d872', 'f6f8c8'),
+  burst: [44, 84],
 })

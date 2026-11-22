@@ -51,7 +51,7 @@ describe.each(cases)('$id', ({ set, def }) => {
 
 describe('bitmap fonts', () => {
   const required =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ÄÖÜäöüß.,:;!?-+/()%&\'"*♂♀×·'
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ÄÖÜäöüßé.,:;!?-+/()%&\'"*♂♀×·'
 
   it.each(FONTS.map((font) => ({ name: font.name, font })))(
     '$name covers the card character set',

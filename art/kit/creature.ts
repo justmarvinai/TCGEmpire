@@ -32,7 +32,12 @@ export type Belly = 'patch' | 'band' | 'spiral' | 'skull' | 'pouch'
 export type Pattern = 'stripes' | 'spots' | 'bumps'
 export type Eyes = 'round' | 'angry' | 'narrow' | 'closed' | 'vacant' | 'red' | 'cyclops'
 export type Mouth = 'smile' | 'open' | 'fang' | 'none'
-/** Props and special features: held items, gloves, markings. */
+/**
+ * Props and special features. Held: spoon(s), leek, lances (insect), gloves, claws. Head: moustache,
+ * star, whiskers, cheeks, nose, muzzle. Body: belt, arms4 (humanoid), magnets, split (two-tone
+ * ball), aura, fumes, hands (floating), wisp (ghost tail) on blobs; orbs, rock (boulder chain) on
+ * serpents; mound (dirt mound) on cocoons.
+ */
 export type Extra =
   | 'gloves'
   | 'belt'
@@ -53,6 +58,9 @@ export type Extra =
   | 'mound'
   | 'lances'
   | 'split'
+  | 'orbs'
+  | 'rock'
+  | 'wisp'
   | 'muzzle'
 
 export interface CreatureArt {
@@ -154,7 +162,7 @@ function face(k: Kit, a: A, eyes: readonly XY[], mouth?: XY, side = 1): void {
 
 // ── head ────────────────────────────────────────────────────────────────────
 
-export interface Head {
+interface Head {
   x: number
   y: number
   rx: number
@@ -192,7 +200,7 @@ function ears(k: Kit, a: A, h: Head): void {
         const ear = cone(k.m(), x, y + 1, deg, 11, 5.5)
         k.part(ear, body, { bias, bevel: 2 })
         const [tx, ty] = go(x, y + 1, deg, 11)
-        k.part(k.m().c(tx, ty, 4).and(ear), acc, { bevel: 1.5, line: 'none' })
+        k.part(k.m().c(tx, ty, 4).and(ear), k.pal.sec, { bevel: 1.5, line: 'none' })
         break
       }
       case 'round':
@@ -258,8 +266,8 @@ function onHead(k: Kit, a: A, h: Head): void {
   if (a.horn === 'nub') k.part(cone(k.m(), h.x + h.rx * 0.3 * h.side, top + 1.5, -80, 4, 3), belly, { bevel: 1.5 })
   if (a.crest === 'ridge') {
     const sh = k.m()
-    for (let i = -1; i <= 1; i++) sh.l([h.x + i * 2.6, top + 2, h.x + i * 3.2, top - 2 - (i === 0 ? 1 : 0)], 1.6)
-    k.part(sh, body, { bevel: 1.5 })
+    for (let i = -1; i <= 1; i++) sh.l([h.x + i * 2.4, top + 2.5, h.x + i * 3.6, top - 3 - (i === 0 ? 1.5 : 0)], 1.7)
+    k.part(sh, body, { bias: -1, bevel: 1.5 })
   }
   if (a.crest === 'curl') {
     k.part(k.m().l([h.x + 1, top + 1, h.x + 1.5, top - 2, h.x + 4, top - 2.5, h.x + 4, top - 0.5], 1.2), sec, { bevel: 1 })
@@ -276,7 +284,7 @@ function onHead(k: Kit, a: A, h: Head): void {
 }
 
 /** Paint a head with its ears, crest, horn, antennae and face. Returns the head shape. */
-export function head(k: Kit, a: A, h: Head, mouth = true): Shape {
+function head(k: Kit, a: A, h: Head, mouth = true): Shape {
   ears(k, a, h)
   behindHead(k, a, h)
   const sh = k.m().e(h.x, h.y, h.rx, h.ry, h.turn ?? 0)
@@ -314,7 +322,7 @@ export function head(k: Kit, a: A, h: Head, mouth = true): Shape {
 // ── tails, wings, backs ─────────────────────────────────────────────────────
 
 /** Tail from (x, y) in direction `deg` (180 = straight back, 270 = up) with length `len`. */
-export function tail(k: Kit, a: A, x: number, y: number, deg: number, len: number): void {
+function tail(k: Kit, a: A, x: number, y: number, deg: number, len: number): void {
   const { body, sec, belly, acc } = k.pal
   const kind = a.tail
   if (!kind) return
@@ -387,7 +395,7 @@ export function tail(k: Kit, a: A, x: number, y: number, deg: number, len: numbe
 }
 
 /** Wings at shoulder (x, y); `spread` raises them for flight. */
-export function wings(k: Kit, a: A, x: number, y: number, spread: boolean, near: boolean): void {
+function wings(k: Kit, a: A, x: number, y: number, spread: boolean, near: boolean): void {
   const { body, sec } = k.pal
   const bias = near ? 0 : -1
   const dx = near ? 0 : -3
@@ -589,7 +597,7 @@ function serpent(k: Kit, a: A): void {
   const hy = path[path.length - 1] ?? 0
   if (a.tail) tail(k, a, path[0] ?? 0, path[1] ?? 0, 190, 4)
   let body: Shape
-  if (has(a, 'mound')) {
+  if (has(a, 'rock')) {
     // a chain of boulders
     body = k.m()
     for (let i = 0; i < n; i++) {
@@ -600,7 +608,7 @@ function serpent(k: Kit, a: A): void {
   } else {
     body = k.part(k.m().l(path, radii), P.body)
     belly(k, { ...a, belly: a.belly ?? 'band' }, body, 0, 0, 0, 0)
-    if (has(a, 'split')) k.part(k.m().c(path[4] ?? 0, path[5] ?? 0, 1.8).c(path[8] ?? 0, (path[9] ?? 0) - 3, 1.8), P.acc, { bevel: 1.5 })
+    if (has(a, 'orbs')) k.part(k.m().c(path[4] ?? 0, path[5] ?? 0, 1.8).c(path[8] ?? 0, (path[9] ?? 0) - 3, 1.8), P.acc, { bevel: 1.5 })
   }
   head(k, a, { x: hx, y: hy, rx: 5.6, ry: 5, sn: [hx + 4.5, hy + 1.5, 4, 3], side: 1, turn: coil ? 15 : 0 })
 }
@@ -671,10 +679,10 @@ function blob(k: Kit, a: A): void {
       for (let i = 0; i < 9; i++) gas.c(...go(cx, cy, i * 40 + 10, r * 1.05), r * (i % 2 ? 0.42 : 0.55))
       k.part(gas, P.sec, { bevel: 3 })
     }
-    if (has(a, 'fumes')) for (const s of [-1, 1]) k.part(k.m().c(cx + s * r * 0.95, cy - r * 0.8, r * 0.28).c(cx + s * r * 1.2, cy - r * 1.15, r * 0.2), P.acc, { bevel: 2 })
+    if (has(a, 'fumes')) for (const s of [-1, 1]) k.part(k.m().c(...go(cx, cy, 90 - s * 55, r * 1.2), r * 0.24).c(...go(cx, cy, 90 - s * 40, r * 1.5), r * 0.16), P.acc, { bevel: 2 })
     tail(k, a, cx - r * 0.7, cy + r * 0.5, 160, r * 0.9)
     wings(k, a, cx - r * 0.6, cy - r * 0.3, false, false)
-    if (sit) k.part(k.m().e(cx - r * 0.45, -1.8, r * 0.35, 2.2).e(cx + r * 0.5, -1.8, r * 0.35, 2.2), P.body, { bias: -1, bevel: 2 })
+    if (sit) k.part(k.m().e(cx - r * 0.45, -2, r * 0.42, 2.6).e(cx + r * 0.5, -2, r * 0.42, 2.6), P.body, { bias: -1, bevel: 2 })
     if (has(a, 'magnets')) {
       for (const s of [-1, 1]) {
         const mx = cx + s * r * 1.25
@@ -691,7 +699,7 @@ function blob(k: Kit, a: A): void {
       for (let i = 0; i < 5; i++) cone(sh, cx - r * 0.7 + i * r * 0.35, cy - r * 0.55, -150 + i * 30, r * 0.8, r * 0.5)
       k.part(sh, P.body, { bevel: 2 })
     }
-    if (has(a, 'mound')) bodyShape.p(cx - r * 0.7, cy + r * 0.5, cx - r * 1.6, cy + r * 1.7, cx + r * 0.1, cy + r * 0.9)
+    if (has(a, 'wisp')) bodyShape.p(cx - r * 0.7, cy + r * 0.5, cx - r * 1.6, cy + r * 1.7, cx + r * 0.1, cy + r * 0.9)
     const body = k.part(bodyShape, P.body)
     if (has(a, 'split')) {
       k.part(k.m().c(cx, cy, r).and(k.m().p(cx - r - 2, cy + 0.5, cx + r + 2, cy + 0.5, cx + r + 2, cy + r + 2, cx - r - 2, cy + r + 2)), P.belly, { bevel: r * 0.7 })
@@ -700,12 +708,13 @@ function blob(k: Kit, a: A): void {
     belly(k, a, body, cx, cy + r * 0.3, r * 0.6, r * 0.55)
     if (a.crest === 'curl') onHead(k, a, { x: cx, y: cy, rx: r, ry: r, side: 0 })
     if (sit || has(a, 'gloves') || has(a, 'hands')) {
-      const reach = has(a, 'hands') ? 2.6 : 1
+      const hands = has(a, 'hands')
+      const gloves = has(a, 'gloves')
       for (const s of [-1, 1]) {
-        const hx = cx + s * r * (0.95 + (reach - 1) * 0.5)
-        const hy = cy + r * (has(a, 'hands') ? -0.1 : 0.25)
-        if (!has(a, 'hands')) k.part(k.m().l([cx + s * r * 0.75, cy + r * 0.1, hx, hy], r * 0.18), P.body, { bevel: 1.5 })
-        if (has(a, 'gloves') || has(a, 'hands')) k.part(k.m().c(hx, hy, r * 0.28), has(a, 'hands') ? P.body : P.acc, { bevel: 2 })
+        const hx = cx + s * r * (hands ? 1.75 : gloves ? 1.3 : 1.1)
+        const hy = cy + r * (hands ? -0.1 : gloves ? -0.4 : 0.3)
+        if (!hands) k.part(k.m().l([cx + s * r * 0.7, cy + r * 0.15, hx, hy], r * 0.17), P.body, { bevel: 1.5 })
+        if (gloves || hands) k.part(k.m().c(hx, hy, r * (gloves ? 0.33 : 0.28)), hands ? P.body : P.acc, { bevel: 2 })
       }
     }
     const eyeY = cy - r * (has(a, 'gloves') ? 0.55 : 0.15)
@@ -735,7 +744,7 @@ function humanoid(k: Kit, a: A): void {
     k.part(k.m().e(0, ty + 9, 9 + b * 2, 3.2).e(-7, ty + 9, 3, 2.2).e(7, ty + 9, 3, 2.2), P.body, { bias: -1, bevel: 2 })
   } else {
     const st = pose === 1 ? 2 : 0
-    k.part(k.m().l([-2.5, ty + 5, -3.5 - st, -6, -4.5 - st, -1.5], [2.6 + b, 2.3 + b, 2 + b]).e(-4.5 - st, -1.2, 3 + b, 1.6), P.body, { bias: -1, bevel: 2 })
+    k.part(k.m().l([-2.5, ty + 5, -3.5 - st, -6, -4.5 - st, -1.5], [3 + b, 2.7 + b, 2.4 + b]).e(-4.5 - st, -1.2, 3 + b, 1.6), P.body, { bias: -1, bevel: 2 })
   }
   const torso = k.part(k.m().e(0, ty, sw, 8 + b).e(0, ty + 5, sw * 0.7, 5), P.body)
   belly(k, a, torso, 1, ty + 1, sw * 0.6, 5.5)
@@ -746,11 +755,11 @@ function humanoid(k: Kit, a: A): void {
   }
   if (!sit) {
     const st = pose === 1 ? 2 : 0
-    k.part(k.m().l([2.5, ty + 5, 3.5 + st, -6, 4.5 + st, -1.5], [2.6 + b, 2.3 + b, 2 + b]).e(5.5 + st, -1.2, 3 + b, 1.6), P.body, { bevel: 2 })
+    k.part(k.m().l([2.5, ty + 5, 3.5 + st, -6, 4.5 + st, -1.5], [3 + b, 2.7 + b, 2.4 + b]).e(5.5 + st, -1.2, 3 + b, 1.6), P.body, { bevel: 2 })
   }
   if (four) hands.push(arm(k, a, sw - 2, ty + 1, reach0 === 1 ? 2 : 1, false, ar * 0.9, al))
   hands.push(arm(k, a, sw - 1, ty - 4, reach1, false, ar, al))
-  const hr = 6.2 - b
+  const hr = 7.4 - 1.6 * b
   const hy = ty - 8 - b - hr * 0.7
   head(k, a, { x: 1, y: hy, rx: hr, ry: hr * 0.95, sn: has(a, 'moustache') || a.ears === 'point' ? [4.5, hy + 2, 3, 2.4] : undefined, side: 1 })
   props(k, a, [hands[0] ?? [0, 0], hands[hands.length - 1] ?? [0, 0]])
@@ -795,13 +804,13 @@ function cocoon(k: Kit, a: A): void {
   for (const [cx, dy] of spots) {
     const s = count >= 3 ? 0.78 : 1
     const sh = k.m()
-    if (pose === 1) sh.e(cx + 2, -17, 7.5, 14.5).minus(k.m().e(cx - 7, -19, 6.5, 12.5)).e(cx + 3, -17, 6, 12)
+    if (pose === 1) sh.l([cx - 3, -1.5, cx + 3.5, -9, cx + 4.5, -19, cx + 1, -28, cx - 5, -33], [2, 7, 8.5, 6.5, 1.5])
     else if (pose === 2) sh.e(cx, -12, 8, 10).p(cx - 6.5, -15, cx - 1, -31, cx + 6.5, -15)
     else sh.l([cx, dy - 3, cx, dy - 18 * s], 7 * s)
     k.part(sh, P.body, { bevel: pose === 0 ? 5 : 4 })
     if (pose === 2) k.part(k.m().e(cx - 7.5, -12, 2.4, 3.6, 20).e(cx + 7.5, -12, 2.4, 3.6, -20), P.body, { bias: -1, bevel: 1.5 })
-    const ey = pose === 0 ? dy - 18 * s : pose === 1 ? -22 : -18
-    const ex = pose === 1 ? cx + 4 : cx
+    const ey = pose === 0 ? dy - 18 * s : pose === 1 ? -20 : -18
+    const ex = pose === 1 ? cx + 6 : cx
     const eyes: XY[] = [[ex - 2.6 * s, ey], [ex + 2.6 * s, ey]]
     if (has(a, 'nose')) {
       face(k, { ...a, mouth: 'none' }, eyes, undefined, 0)
