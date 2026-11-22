@@ -3,6 +3,34 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_09] — Firma (22 Nov 2026)
+
+The business sim: your own grading company.
+
+### Added
+
+- **Gewerbeanmeldung** (level 30): application, waiting time and the Passierschein A38 through the Amt's corridors,
+  then founding with name, slogan and a slab label in your colours with an 8×8 emblem.
+- **The company:** customers send cards, four stations (Annahme, Prüfung, Einschweißen, Versand) work them off, the
+  slowest one sets the pace. Customers come by Ruf, price, market hype, marketing and queue length. The company
+  runs while you are away (at half speed after 12 hours). **Wo es hakt** shows what costs money per hour and fixes
+  it with one click.
+- **Staff** from a new applicant pool every day (Praktikant Kevin, Rentner Heinz, Dr. Müller …) with Tempo,
+  Genauigkeit and Treue; train, raise, move or fire them. **Equipment** in five levels per station, from the Lupe
+  vom Flohmarkt to the KI-Scanner. **Seven legal forms** from Garagenfirma to SE.
+- **Company account:** deposits are free; payouts cost 25 % Kapitalertragsteuer. The company counts in net worth.
+- **Grading by friends:** other players' companies appear on the grading page. Their slabs carry the company's
+  colours, emblem and name; their value follows the owner's Ruf. Owners see incoming orders.
+- **VIP orders:** judge the four quality values yourself; the closer, the more money and Ruf.
+- **Decision cards** (Reklamation, a bribe, the press, a smoking welder, a Betriebsrat …), **marketing**
+  campaigns, the weekly **Umsatzsteuer-Voranmeldung** (or a Steuerberater), **reviews**, and **awards** for honest
+  companies (TÜV, Stiftung Warentest, DIN).
+- **Grauzone:** Schwarzarbeit, payouts past the Finanzamt, Gefälligkeitsgutachten and Mystery-Boxen, each with its
+  own way to blow up (Zoll, Steuerprüfung, scandals that devalue your slabs, angry reviews).
+- **Research** from the UG (UV-Schutz-Slab, Hologramm-Label, NFC-Zertifikat, your own Black Label) and the
+  **Großhandel** (level 40): displays at the dealer price every week.
+- A repaid loan now also earns Ruf.
+
 ## [0.0.1-alpha_08] — Freunde (22 Nov 2026)
 
 Playing together, live.

@@ -1,6 +1,20 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1-alpha_09',
+    title: 'Firma',
+    items: [
+      'Ab Level 30: deine eigene Grading-Firma. Erst die Gewerbeanmeldung, dann der Passierschein A38, dann gehört die Garage dir.',
+      'Name, Slogan und ein Etikett in deinen Farben mit eigenem Wappen. Jeder Slab deiner Firma trägt es.',
+      'Kunden schicken Karten, vier Stationen arbeiten sie ab. Die langsamste bremst alles. „Wo es hakt“ sagt dir, was dich gerade Geld kostet.',
+      'Stell Leute ein (Praktikant Kevin! Rentner Heinz!), kauf Werkzeug vom Flohmarkt-Lupe bis KI-Scanner und wachs von der Garagenfirma bis zur SE.',
+      'Freunde können ihre Karten bei deiner Firma graden lassen. Je besser dein Ruf, desto mehr ist dein Slab wert. VIP-Kunden gradest du selbst.',
+      'Entscheidungen, Werbung, Bewertungen, Auszeichnungen und jede Woche die Umsatzsteuer-Voranmeldung. Auszahlen kostet Kapitalertragsteuer.',
+      'Die Grauzone: Schwarzarbeit, Geld am Finanzamt vorbei, Gefälligkeitsgutachten, Mystery-Boxen. Lohnt sich. Bis es knallt.',
+      'Ab Level 40 der Großhandel: Displays zum Händlerpreis, jede Woche ein Kontingent. Und Forschung bis zum eigenen Black Label.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_08',
     title: 'Freunde',
     items: [

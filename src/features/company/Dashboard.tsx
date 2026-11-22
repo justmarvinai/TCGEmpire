@@ -326,7 +326,7 @@ function HaktPanel({ co, onTab }: { co: Company; onTab: (t: Tab) => void }) {
               key={`${h.key}-${i}`}
               className="flex flex-wrap items-center gap-3 rounded-xl bg-surface-2 p-3"
             >
-              <span className="min-w-0 flex-1 text-sm">
+              <span className="min-w-56 flex-1 text-sm">
                 {haktLine(h)}
                 <span className="nums ml-2 text-xs font-semibold text-loss">
                   {T.haktCost(money(h.cents_h))}
