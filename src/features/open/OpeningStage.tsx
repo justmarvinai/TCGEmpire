@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { useAct } from '@/lib/actions.ts'
-import { cardName, HIT_TIERS, productById, TIER_LABEL, TIER_TEXT, tierRank, type Tier } from '@/lib/catalog.ts'
+import { cardName, gameOf, HIT_TIERS, productById, TIER_LABEL, TIER_TEXT, tierRank, type Tier } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { hash01 } from '@/lib/pure.ts'
 import type { PackOpen, PulledCard } from '@/lib/schemas.ts'
@@ -51,7 +51,7 @@ export function OpeningStage({
   const [shown, setShown] = useState(0) // cards of the current pack that are face up
   const [charging, setCharging] = useState(false)
   const [burst, setBurst] = useState<{ tier: Tier; key: number } | null>(null)
-  const chat = useChat()
+  const chat = useChat(gameOf(productId))
   const pack = result.packs[packIdx]!
 
   // Level-up celebrations wait until the stage is closed.
@@ -467,16 +467,19 @@ function Stat({ label, value, tone }: { label: string; value: string; tone: stri
 // ----------------------------------------------------------------------------------------------
 type ChatMood = 'start' | 'charge' | Tier
 
-function useChat() {
+function useChat(game: string | undefined) {
   const [lines, setLines] = useState<{ id: number; name: string; text: string }[]>([])
   const id = useRef(0)
   const react = useCallback((mood: ChatMood) => {
+    const local = T.chatGame[game ?? ''] ?? {}
     const pool =
       mood === 'start' || mood === 'charge'
-        ? T.chat.start
+        ? [...T.chat.start, ...(local.start ?? [])]
         : mood === 'common' || mood === 'uncommon'
-          ? T.chat.bulk
-          : T.chat[mood as keyof typeof T.chat]
+          ? [...T.chat.bulk, ...(local.bulk ?? [])]
+          : mood === 'grail'
+            ? [...T.chat.grail, ...(local.grail ?? [])]
+            : T.chat[mood as keyof typeof T.chat]
     const n = mood === 'grail' ? 6 : mood === 'ultra' ? 4 : HIT_TIERS.has(mood) ? 3 : Math.random() < 0.5 ? 1 : 0
     const add = Array.from({ length: n }, () => ({
       id: id.current++,
@@ -484,7 +487,7 @@ function useChat() {
       text: pool[Math.floor(Math.random() * pool.length)]!,
     }))
     if (add.length) setLines((l) => [...l, ...add].slice(-40))
-  }, [])
+  }, [game])
   return useMemo(() => ({ lines, react }), [lines, react])
 }
 

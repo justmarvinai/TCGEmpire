@@ -52,4 +52,11 @@ describe('Sammelziele', () => {
     expect((await goal('runes'))).toMatchObject({ have: 0, done_at: null })
     expect(await stat('lager_units')).toBe(0)
   })
+
+  it('counts collector progress per game for the achievements', async () => {
+    for (const c of ['ygo-lob-001', 'ygo-lob-002', 'op01-004']) await own(c)
+    const counters = await t.sql<{ event: string; total: string }>(
+      `select event, total from game.counters where player_id = $1 and event like 'collect_%' order by event`, [id])
+    expect(counters.map((c) => [c.event, Number(c.total)])).toEqual([['collect_onepiece', 1], ['collect_yugioh', 2]])
+  })
 })

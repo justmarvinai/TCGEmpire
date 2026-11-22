@@ -447,7 +447,7 @@ on conflict (key) do update set price_base_cents = excluded.price_base_cents, pf
 insert into game.achievement_defs (key, event, tiers, titles) values
   ('packs', 'pack_opened', '[10,100,1000,10000]'::jsonb, '[null,null,"Folienschänder","Der Aufreißer"]'::jsonb),
   ('buyer', 'packs_bought', '[10,100,1000]'::jsonb, '[null,null,"Kiosk-Legende"]'::jsonb),
-  ('collector', 'card_new', '[30,60,90]'::jsonb, '[null,null,"Komplettist"]'::jsonb),
+  ('collector', 'card_new', '[30,90,200,354]'::jsonb, '[null,null,"Komplettist","Archivar"]'::jsonb),
   ('hits', 'hit_pulled', '[10,100,1000]'::jsonb, '[null,"Glückspilz","Glücksritter"]'::jsonb),
   ('ultra', 'pulled_ultra', '[1,10,50]'::jsonb, '[null,null,"Ultra-Bonze"]'::jsonb),
   ('grail', 'pulled_grail', '[1,5,25]'::jsonb, '["Gralsritter",null,"Der Auserwählte"]'::jsonb),
@@ -462,6 +462,12 @@ insert into game.achievement_defs (key, event, tiers, titles) values
   ('quests', 'quest_claimed', '[10,100,1000]'::jsonb, '[null,"Pflichtbewusst","Streber"]'::jsonb),
   ('stamps', 'stamp_claimed', '[7,30,100]'::jsonb, '[null,"Stammgast","Inventar"]'::jsonb),
   ('doener', 'doener_eaten', '[5,50,500]'::jsonb, '[null,"Dönerprinz","Spießkönig"]'::jsonb),
+  ('pokemon', 'collect_pokemon', '[10,45,90]'::jsonb, '[null,null,"Pokémon-Meister"]'::jsonb),
+  ('yugioh', 'collect_yugioh', '[10,43,86]'::jsonb, '[null,"Herz der Karten","König der Spiele"]'::jsonb),
+  ('onepiece', 'collect_onepiece', '[10,45,89]'::jsonb, '[null,"Supernova","Piratenkönig"]'::jsonb),
+  ('riftbound', 'collect_riftbound', '[10,45,89]'::jsonb, '[null,null,"Herausforderer"]'::jsonb),
+  ('licenses', 'license_bought', '[1,3]'::jsonb, '[null,"Vier-Spiele-Mogul"]'::jsonb),
+  ('goals', 'goal_done', '[1,5,12]'::jsonb, '[null,"Zwangssammler","Archivar des Wahnsinns"]'::jsonb),
   ('levels', 'level_up', '[9,24,49,99]'::jsonb, '[null,"Aufsteiger","Großkopferter","Endgegner"]'::jsonb)
 on conflict (key) do update set event = excluded.event, tiers = excluded.tiers, titles = excluded.titles;
 insert into game.store_defs (key, min_level, markup_bps, closed_sunday, restocks, stock_per_player, lim, lim_per_ruf100, products) values

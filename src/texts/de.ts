@@ -407,8 +407,14 @@ export const texts = {
       `NEU IM GESCHÄFT: ${String(d.name)} will reich werden. Experten geben dem Laden zwei Wochen.`,
     inflation: (d: Record<string, unknown>, doener: string) =>
       `INFLATION: Preise steigen um ${pct(Number(d.from), Number(d.to))} %. Döner jetzt ${doener}. Experten ratlos.`,
-    pull_grail: (d: Record<string, unknown>, card: string) =>
-      `SENSATION! ${String(d.name)} zieht ${card}! Die Nachbarn rufen die Polizei wegen Geschrei.`,
+    pull_grail: (d: Record<string, unknown>, card: string, game?: string) =>
+      game === 'yugioh'
+        ? `HERZ DER KARTEN! ${String(d.name)} zieht ${card}! Ein gewisser Kaiba zerreißt vor Wut eine Karte.`
+        : game === 'onepiece'
+          ? `SENSATION! ${String(d.name)} zieht ${card}! Ein Arm weniger, ein Vermögen mehr.`
+          : game === 'riftbound'
+            ? `1 ZU 700! ${String(d.name)} zieht ${card}! Faker hat angeblich angerufen.`
+            : `SENSATION! ${String(d.name)} zieht ${card}! Die Nachbarn rufen die Polizei wegen Geschrei.`,
     pull_ultra: (d: Record<string, unknown>, card: string) =>
       `${String(d.name)} zieht ${card}. Neid ist auch eine Form von Anerkennung.`,
     player_reset: (d: Record<string, unknown>) =>
@@ -698,12 +704,35 @@ export const texts = {
       [5.0, 'BANGER!'],
       [Infinity, 'Ruf die Presse an.'],
     ] as const,
+    /** Lines of the fake chat that only fit one game, mixed into the shared ones. */
+    chatGame: {
+      pokemon: {
+        start: ['GLURAK WANN', 'wieder nur energie oder was'],
+        bulk: ['energie lmao', 'noch ein Rattfratz'],
+        grail: ['OPA WEINT', 'GLURAK!!!!'],
+      },
+      yugioh: {
+        start: ['BLAUÄUGIGER WANN', 'herz der karten!!', 'exodia teile sammeln lol'],
+        bulk: ['wieder Dunkelgrau', 'Feuergras lmao', 'topf der gier, was macht der eigentlich'],
+        grail: ['KAIBA ZERREISST GERADE EINE KARTE', 'SCREW THE RULES'],
+      },
+      onepiece: {
+        start: ['MANGA SHANKS WANN', 'gum gum!!', 'zoro hat sich wieder verlaufen'],
+        bulk: ['nur Marines', 'Pacifista Nr. 7'],
+        grail: ['SHANKS!!!', 'DER ARM!!!', 'ODA IST GOTT'],
+      },
+      riftbound: {
+        start: ['AHRI WANN', 'noch eine rune wetten?', 'teemo nerft mich jetzt schon'],
+        bulk: ['RUNE. wieder.', 'noch eine rune lol', 'poro süß aber wertlos'],
+        grail: ['FAKER IST IM CHAT', 'AHRIIIII', '1 IN 700 PACKS!!!'],
+      },
+    } as Record<string, Partial<Record<'start' | 'bulk' | 'grail', readonly string[]>>>,
     chatNames: ['xX_Glurak_Xx', 'KartenKalle', 'PackRipper99', 'ScalperSven', 'Opa_Günther', 'Holo_Hanna', 'BulkBernd', 'LetzterPreisLars', 'Kevin2014', 'MamaGuckt'],
     chatTitle: 'Live-Chat',
     chatViewers: (n: number) => `${n} Zuschauer`,
     chat: {
-      start: ['los gehts', 'GLURAK WANN', 'wieder nur energie oder was', 'ich hab 3€ auf holo gesetzt', 'öffnen öffnen öffnen'],
-      bulk: ['L', 'müll', 'energie lmao', 'der nächste wird gut', 'scam', 'gähn', 'Kappa', 'bro hat pech gekauft'],
+      start: ['los gehts', 'ich hab 3€ auf holo gesetzt', 'öffnen öffnen öffnen'],
+      bulk: ['L', 'müll', 'der nächste wird gut', 'scam', 'gähn', 'Kappa', 'bro hat pech gekauft'],
       rare: ['ok', 'immerhin', 'geht klar', 'rare ist auch karte'],
       holo: ['HOLO', 'W', 'SHINY', 'nice!!', 'glänzt', 'clip das'],
       alternative: ['ALT ART!!', 'WAS', 'clip das clip das', 'W W W', 'der art ist krank'],

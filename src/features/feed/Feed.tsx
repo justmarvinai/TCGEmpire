@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { CONSUMABLES, cardName, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
+import { CONSUMABLES, cardName, gameOf, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
 import type { FeedEntry } from '@/lib/schemas.ts'
 import { serverNow, useWorld } from '@/lib/world.ts'
@@ -10,7 +10,7 @@ const DOENER_BASE_CENTS = CONSUMABLES.find((c) => c.key === 'doener')?.priceBase
 export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'player_joined') return texts.feed.player_joined(f.data)
   if (f.kind === 'inflation') return texts.feed.inflation(f.data, doener)
-  if (f.kind === 'pull_grail') return texts.feed.pull_grail(f.data, cardName(String(f.data.card_id)))
+  if (f.kind === 'pull_grail') return texts.feed.pull_grail(f.data, cardName(String(f.data.card_id)), gameOf(String(f.data.card_id)))
   if (f.kind === 'pull_ultra') return texts.feed.pull_ultra(f.data, cardName(String(f.data.card_id)))
   if (f.kind === 'player_reset') return texts.feed.player_reset(f.data)
   if (f.kind === 'overtake') return texts.feed.overtake(f.data)
