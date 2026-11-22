@@ -484,9 +484,9 @@ respec costs money. Four branches, each ending in a keystone:
 | Branch | Fantasy | Examples | Keystone |
 |--------|---------|----------|----------|
 | **Sammler** | Luck and eye | Pack-Glück, Vorprüfung precision, set bonus strength, quality of pulled hits | **God-Pack-Chance ×3** |
-| **Händler** | Deals | Fees, haggling, more and better offers, price trend preview, auction anti-snipe | **Insider:** see tomorrow's market event one hour early |
+| **Händler** | Deals | Fees, haggling, more and better offers, price trend preview, auction anti-snipe | **Stammkunden:** NPC collectors buy your listings up to full value (Insider follows with events, decision 073) |
 | **Unternehmer** | Scale | Company efficiency, staff, bunker, wages, tax advisor | **Too Big To Fail:** once per run the state bails you out |
-| **Schlitzohr** | More efficient attacks | Attack success, bigger loot share, lower cost, shorter cooldowns, detection resistance; a small defensive side line | **Der Pate:** attack cooldowns halved, one guaranteed bribe per day |
+| **Schlitzohr** | More efficient attacks | Attack success, bigger loot share, lower cost, shorter cooldowns, detection resistance; a small defensive side line | **Der Pate:** you see every Kleinanzeigen seller's minimum (attack perks join with the dark side, decision 073) |
 
 ---
 
@@ -746,10 +746,10 @@ At level 100 you can sell your empire.
 | 1 | Kinderzimmer, Pfandflaschen, Kiosk, Pack-Opening (×1/×5/×10, Sofort aufdecken), Sammlung, Mini-Quests, Stammtisch, Toplisten, Profil | 25 | eBay-Auktionen |
 | 2 | Tagesquests, Stempelkarte | 28 | 4. TCG-Lizenz, Bares für Rares |
 | 3 | Geldbunker | 30 | **Firma** |
-| 4 | Kleinanzeigen | 35 | Schattenwirtschaft (attacks, shady deals), Abwehr upgrades, insurance |
+| 4 | Kleinanzeigen | 35 | Schattenwirtschaft (attacks, shady deals), Abwehr upgrades |
 | 5 | Upgrades, Skillbaum | 40 | Großhandel (displays and cases at wholesale price) |
 | 7 | Schichten (idle jobs) | 45 | Streaming |
-| 10 | Cardmarket, Direkthandel, 2. TCG-Lizenz | 50 | Firma: research, second site |
+| 10 | Cardmarket, Direkthandel, 2. TCG-Lizenz, insurance | 50 | Firma: research, second site |
 | 13 | Grading, Wochenquests | 55 | Luxus |
 | 16 | Pack Battles | 60 | Höhle der Löwen (investors) |
 | 18 | Lager, displays, Sonntags-Flohmarkt | 65 | Megaprojekte, Museum auctions |

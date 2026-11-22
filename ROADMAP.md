@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_07` (Leben) in progress — owner go on 22 Nov 2026.**
+> **Current phase: `alpha_07` delivered (22 Nov 2026). Waiting for the owner's go for `alpha_08`.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -137,11 +137,11 @@ Goal: identity, build choices and the first big sinks.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Skill tree (4 branches, keystones, respec) | M |
-| ☐ | Housing ladder with furnishing slots (list UI, no room scenes), Wohnwert, storage, visits and Gästebuch | M |
-| ☐ | Cosmetics (titles, name colours, frames, sleeves, binder skins, pack effects); profile picture from owned cards | M |
-| ☐ | Profile pages; more toplists (Ruf, Bester Pull, joke lists); Wochenwertung | M |
-| ☐ | Insurance | M |
+| ☑ | Skill tree (4 branches, keystones, respec) | M |
+| ☑ | Housing ladder with furnishing slots (list UI, no room scenes), Wohnwert, storage, visits and Gästebuch | M |
+| ☑ | Cosmetics (titles, name colours, frames, sleeves, binder skins, pack effects); profile picture from owned cards | M |
+| ☑ | Profile pages; more toplists (Ruf, Bester Pull, joke lists); Wochenwertung | M |
+| ☑ | Insurance (Versand, Hausrat; Rechtsschutz and Betriebshaftpflicht with their risks in alpha_09/10) | M |
 
 ### alpha_08 — Freunde
 

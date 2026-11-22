@@ -1,6 +1,19 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1-alpha_07',
+    title: 'Leben',
+    items: [
+      'Skillbaum ab Level 5: ein Punkt pro Level, vier Zweige, vier Schlusssteine. Der Staat rettet dich einmal, der Pate kennt jede Schmerzgrenze. Umlernen kostet.',
+      'Wohnen ab Level 20: raus bei Mutti, rein in die WG, irgendwann auf die Privatinsel. Wohnungen bringen Lager, Vitrinenplätze und schnellere Energie.',
+      'Möbel: acht Plätze, fünf Stufen bis zur goldenen Kloschüssel. Kleine Boni, großer Wohnwert. Nebenkosten gibt es jetzt auch.',
+      'Besuch: Auf fremden Profilen siehst du Wohnung, Möbel, Vitrine und Pokale. Einmal am Tag darfst du ins Gästebuch schreiben.',
+      'Stil ab Level 5: Namensfarben, Profilrahmen, Kartenhüllen, Ordner-Skins, Effekte beim Aufreißen und Titel zum Kaufen. Dein Profilbild ist eine Karte aus deiner Sammlung.',
+      'Neue Toplisten: Ruf, Bester Pull, Pechvogel und die Wochenwertung. Wer seit Montag prozentual am meisten wächst, gewinnt Booster und einen Pokal. Geschenke zählen nicht.',
+      'Versicherungen ab Level 10: Pakete können verloren gehen, und in der eigenen Wohnung gibt es mal Wasser im Keller. Versand und Hausrat zahlen, wenn es passiert.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_06',
     title: 'Grading',
     items: [

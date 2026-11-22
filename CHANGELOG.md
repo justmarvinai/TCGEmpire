@@ -3,6 +3,27 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_07] — Leben (22 Nov 2026)
+
+Identity, build choices and the first big money sinks.
+
+### Added
+
+- **Skillbaum** (level 5): one point per level, four branches (Sammler, Händler, Unternehmer, Schlitzohr) with two
+  lines each and a keystone: God-Pack-Magnet, Stammkunden, Too Big To Fail (the state rescues you once per run)
+  and Der Pate (you see every Kleinanzeigen seller's minimum). Deeper skills cost more; respec costs 500 € per level.
+- **Wohnen** (level 20): twelve homes from Mutti's Kinderzimmer to the Privatinsel. Each brings storage, Vitrine
+  places, faster energy and furnishing slots; eight slots with five items each give small bonuses and Wohnwert.
+  Moving sells the old home for half its price; Nebenkosten are charged every day.
+- **Visits and Gästebuch:** other players' profiles show their home, furnishing, Vitrine and trophies; visitors
+  write one entry a day.
+- **Stil** (level 5): name colours, profile frames, card sleeves, binder skins, colours for the pack-opening burst
+  and joke titles. Your profile picture is any card you own.
+- **Toplists** Ruf, Bester Pull, Pechvogel and the **Wochenwertung**: growth since Monday in percent, gifts and
+  trades between players do not count; the best three win boosters and a trophy.
+- **Versicherungen** (level 10): parcels can now get lost (Versandversicherung pays them back), and players with a
+  home of their own can suffer a Wasserschaden in the bulk cards (Hausrat pays).
+
 ## [0.0.1-alpha_06] — Grading (22 Nov 2026)
 
 The gamble that multiplies value: send your best cards to the graders and pray.

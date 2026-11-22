@@ -141,6 +141,12 @@ RLS enabled on every table with no policies.
 | `game.grading_orders` | alpha_06 · one row per card at a grader: grader, service, fee, `submitted_at`, `due_at`, `notified`. Deleted at the reveal. |
 | `game.pop_report` | alpha_06 · slabs ever made per card, grader, grade and Black Label; never decremented (cracked slabs stay counted). |
 | `game.cert_seq`, `game.sales_log.slab` | alpha_06 · certificate numbers (scrambled per grader); slab sales are logged with their label and do not move the Marktwert. |
+| `game.skill_defs`, `game.skills_owned` | alpha_07 · Skillbaum from `content/skills.ts` (branch, tier, cost, requirements, stat); learned nodes book modifiers `skill:<key>`; a reset clears them. |
+| `game.home_defs`, `game.furniture_defs`, `game.homes`, `game.furnishings` | alpha_07 · Wohnen from `content/housing.ts`; the current home (paid price, Nebenkosten day, disaster day) and one item per furnishing slot (paid price). Modifiers `home` and `furniture:<slot>`. |
+| `game.guestbook` | alpha_07 · entries on a player's profile (host, author, body); one per visitor and host per day. |
+| `game.cosmetic_defs`, `game.cosmetics_owned`, `players.style`, `players.avatar_card` | alpha_07 · Stil from `content/cosmetics.ts`; equipped look per kind (jsonb) and the card used as profile picture. |
+| `players.best_pull_card`, `players.best_pull_cents`, `game.league` | alpha_07 · the most valuable card ever pulled (value then); Wochenwertung per week and player: start net worth, value moved to/from other players (`adjust_cents`), final growth and rank. |
+| `game.insurance` | alpha_07 · policies (versand, hausrat) with the day the premium was paid. |
 | `game.worth_snapshots` | alpha_04 · net worth per player, hourly for `snapshots.hourly_days`, then the last one per Berlin day; deleted on reset. |
 | `game.rivals` | alpha_04 · 40 NPC tycoons (seeded from `content/rivals.ts`); their numbers are pure functions of the days since `game.server.started_at`. `game.server.worth_ranking` remembers the last Vermögen order for overtake headlines. |
 | `game.leagues` | Wochenwertung. |
@@ -210,6 +216,12 @@ RLS enabled on every table with no policies.
 | `grading_reveal(orders)` | write | alpha_06 · due orders only (`not_ready`); rolls the grade (`private.grade_roll`), certificate, Pop Report, EP, events `graded`/`graded_10`/`black_label`, headline for 10s and Ultra/Grail disasters |
 | `slab_crack(copy)`, `pop_report_get(card)` | write/read | alpha_06 · cracking makes the copy raw again (chance to lose a corner point); the Pop Report lists every grade with its slab value |
 | `vitrine_set(copies)`, `profile_get(player)` | write/read | alpha_06 · the Vitrine holds up to `vitrine.slots` hits or slabs in order; any player's profile: level, net worth, counters, Vitrine |
+| `skills_get`, `skill_learn(key)`, `skills_respec`, `bailout_claim` | read/write | alpha_07 · points, owned nodes, respec price; Too Big To Fail pays a share of the net worth once per run when the cash is below a share of it |
+| `housing_get`, `home_buy(tier)`, `furniture_buy(key)` | read/write | alpha_07 · moving sells the old home for half; furnishing only in slots the home has; Nebenkosten by the `housing` tick |
+| `guestbook_sign(host, body)`, `guestbook_delete(entry)` | write | alpha_07 · visitors once a day, the host deletes |
+| `cosmetics_get`, `cosmetic_buy(key)`, `cosmetic_equip(kind, key)`, `avatar_set(card)` | read/write | alpha_07 · looks (CSS keys) and the card picture (only cards owned) |
+| `insurance_get`, `insurance_set(kind, on)` | read/write | alpha_07 · daily premiums by the `insurance` tick (no money ends the policy); lost parcels and Wasserschaden |
+| changed in alpha_07 | | `toplist_get` (lists ruf, best_pull, pechvogel, league; `look`, `card_id`, `week_ends_at`), `profile_get` (look, trophies, home, Gästebuch), `players_get` and `chat_doc` (look), `titles_of` (bought titles), `give_card` (best pull), `goods_move` (league adjustment), `shipment_deliver` (lost parcels), `net_worth` (half of housing and furnishing), plus the skill hooks in `roll_pack_cards`, `ankauf_sell`, `binder_get`, `sale_ship`, `ad_npc_offer`, `npc_buy_cheap`, `bunker_rate_base`, `gift_tax`, `gift_allowance_left`, `ads_doc` and a trigger on `chargebacks` |
 | changed in alpha_06 | | `net_worth`, `goods_value`/`goods_doc`, `trade_inventory`, `binder_get` (raw `copies` + `slabs`), `cardmarket_item_doc` (owned `slabs`, listing labels), `my_market_doc`, `seller_get`, `ads_doc` (`suspicious` with the Echt-oder-Fake buff), `ad_npc_offer`, `npc_buy_cheap` and `sale_ship` value slabs by `private.slab_value`; `order_fill` never takes a slab; `minigame_finish` grants a job's buff (`buff:mj_<game>`) for a good round |
 | `sync(after_notification, after_feed, after_chat)` | read | alpha_04 adds `chat_unread` (messages by others after the device's last seen id; 0 before the first visit) and `chat_last_id` |
 

@@ -1,10 +1,13 @@
 // Balancing simulation: a bot plays the real server SQL (in-memory Postgres) with a fast-forwarded clock.
 // It plays like an active player for N minutes a day and is away for the rest of the day.
 import { createTestDb, type TestDb } from '../supabase/tests/harness.ts'
+import { HOMES } from '../content/housing.ts'
+import { SKILL_COST, SKILLS } from '../content/skills.ts'
 
 const B = 'booster-pkm-base'
 const rid = () => crypto.randomUUID()
 const ASPECTS = ['centering', 'corners', 'edges', 'surface'] as const
+const BRANCH_ORDER = ['unternehmer', 'sammler', 'haendler', 'schlitzohr']
 /** Typical scores of a decent player per minijob (Basis-€ cents). */
 const SCORE: Record<string, number> = { pfand: 8_000, regale: 9_000, sortieren: 8_000, pakete: 12_000, fake: 14_000, praktikum: 16_000 }
 
@@ -121,6 +124,20 @@ async function step(t: TestDb, me: string): Promise<number> {
       await quietly(t, me, 'upgrade_buy', { p_key: ups[0].key })
       return 5
     }
+  }
+  // 4a. skill points are spent at once (income first: Unternehmer, then Sammler); a better home when it is cheap
+  if (p.level >= 5 && p.skill_points >= 2) {
+    const sk = await t.rpc(me, 'skills_get')
+    const owned = new Set(sk.owned)
+    const next = SKILLS.filter((s) => !owned.has(s.key) && s.requires.every((r) => owned.has(r)) && SKILL_COST[s.tier] <= sk.points)
+      .sort((a, b) => BRANCH_ORDER.indexOf(a.branch) - BRANCH_ORDER.indexOf(b.branch) || a.tier - b.tier)[0]
+    if (next && (await quietly(t, me, 'skill_learn', { p_key: next.key }))) return 5
+  }
+  if (p.level >= 20) {
+    const h = await t.rpc(me, 'housing_get')
+    const home = HOMES.find((x) => x.tier === h.tier + 1)
+    const price = h.homes.find((x) => x.tier === h.tier + 1)?.price_cents ?? Infinity
+    if (home && home.minLevel <= p.level && p.cash_cents >= price * 3 && (await quietly(t, me, 'home_buy', { p_tier: home.tier }))) return 10
   }
   // 4b. grading: reveal what is back, inspect new hits, send promising valuable ones (cash to spare)
   if (p.level >= 13) {

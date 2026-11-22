@@ -221,11 +221,11 @@ P2P trades, gifts and loans move money between players and are not sources.
 | Market fees | Cardmarket 5 %, eBay 10 %, auction listing fee |
 | Grading fees | Per card: PSA 360 / 700 / 1.600 €, BGS 280 / 550 / 1.300 €, CGC 150 / 300 / 700 € (Economy / Standard / Express), plus an upcharge on the card value above 10.000 € (PSA 3 %, BGS 2 %, CGC 1 %) |
 | Upgrades (incl. Abwehr) | Geometric ladders, factor 1.15–1.6 per level |
-| Skill respec | 10.000 € × level |
-| Housing | 100.000 € → 5 Mrd. € over 11 tiers; furnishing 400 € → 500 Mio. € per item |
+| Skill respec | 500 € × level (decision 073) |
+| Housing | 5.000 € → 5 Mrd. € over 11 tiers (decision 074); furnishing 400 € → 500 Mio. € per item; Nebenkosten 0,5 % of the home price per day |
 | Company | Stage costs 500.000 € → 10 Mrd. €; wages, rent, equipment, research, marketing |
 | Taxes | Kapitalertragsteuer 25 % on company payouts; Schenkungssteuer 20 % above the daily gift allowance; late fees |
-| Insurance, Nebenkosten | Recurring, scaled to what is insured |
+| Insurance, Nebenkosten | Versand 20 € per day; Hausrat 0,3 % of the bulk value per day (at least 5 €) |
 | Consumables | Döner 150 €, Club-Mate 50 €, Kaffee 35 € |
 | Cosmetics and luxury | 1.000 € → 100 Mrd. € |
 | Megaprojekte | 20 Mrd. € → 2 Bio. € shared server goals (tracked in Basis-€) |
