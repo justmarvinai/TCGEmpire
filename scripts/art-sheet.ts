@@ -73,7 +73,10 @@ function cardSheets(set: CardSet): void {
 
 /** The same artwork in every tier treatment, at ×2. */
 function tierSheet(set: CardSet): void {
-  const classic = set.cards.find((c) => c.kind === 'pokemon' && c.tier !== 'ultra' && c.tier !== 'grail')
+  // one character card of any game (Pokémon, monster, character, unit) shown through every tier
+  const classic = set.cards.find(
+    (c) => ['pokemon', 'monster', 'character', 'unit'].includes(c.kind) && c.tier !== 'ultra' && c.tier !== 'grail',
+  )
   const full = set.cards.find((c) => c.tier === 'ultra' || c.tier === 'grail')
   const sheet = new Painter(GAP + TIERS.length * (160 + GAP), GAP * 2 + 26 + 224).clear(BACKGROUND)
   TIERS.forEach((tier, i) => {
