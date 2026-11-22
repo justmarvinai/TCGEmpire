@@ -22,6 +22,7 @@ import { texts } from '@/texts/de.ts'
 import { ACHIEVEMENTS, CONSUMABLES, GOALS, itemName } from '@/lib/catalog.ts'
 import { FeedList } from '@/features/feed/Feed.tsx'
 import { personName } from '@/features/company/people.ts'
+import { eventDef } from '@/features/events/eventText.ts'
 import { AWARDS, DECISIONS, STAGES } from '../../content/company.ts'
 import { SNACK_ICON } from '@/features/shop/icons.ts'
 import { FeatureTour, Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
@@ -351,6 +352,10 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'company_audit') return texts.notifications.company_audit(formatMoney(Number(n.data.cents)))
   if (n.kind === 'company_scandal') return texts.notifications.company_scandal
   if (n.kind === 'company_award') return texts.notifications.company_award(AWARDS.find((x) => x.key === n.data.key)?.name ?? '')
+  if (n.kind === 'event') {
+    const def = eventDef(String(n.data.key))
+    return texts.notifications.event(def?.name ?? '', def?.text ?? '', n.data.cents ? formatMoney(Number(n.data.cents)) : null)
+  }
   if (n.kind === 'company_order') return texts.notifications.company_order(n.data)
   if (n.kind === 'company_stage') return texts.notifications.company_stage(STAGES.find((x) => x.stage === Number(n.data.stage))?.name ?? '')
   if (n.kind === 'company_broke') return texts.notifications.company_broke

@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { slabName } from '@/components/cards/Slab.tsx'
 import { HOMES } from '@/lib/catalog.ts'
 import { AWARDS } from '../../../content/company.ts'
+import { eventDef, eventTarget, eventWhen } from '@/features/events/eventText.ts'
 import { CONSUMABLES, cardName, gameOf, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
 import type { BattleMode, FeedEntry } from '@/lib/schemas.ts'
@@ -20,6 +21,11 @@ export function feedText(f: FeedEntry, doener: string) {
   if (f.kind === 'set_phase')
     return texts.feed.set_phase(String(f.data.phase), Boolean(f.data.reprint), SETS.find((s) => s.id === f.data.set_id)?.name ?? String(f.data.set_id))
   if (f.kind === 'league') return texts.feed.league(f.data, texts.toplists.percent(Number(f.data.bps)))
+  if (f.kind === 'event') {
+    const def = eventDef(String(f.data.key))
+    return texts.feed.event(String(f.data.slot), def?.name ?? String(f.data.key), def?.text ?? '', eventTarget(f.data))
+  }
+  if (f.kind === 'event_announce') return texts.feed.event_announce(eventDef(String(f.data.key))?.name ?? '', eventWhen(String(f.data.starts_at)))
   if (f.kind === 'company_founded') return texts.feed.company_founded(f.data)
   if (f.kind === 'scandal') return texts.feed.scandal(f.data)
   if (f.kind === 'zoll') return texts.feed.zoll(f.data)

@@ -205,6 +205,12 @@ export const texts = {
   },
 
   admin: {
+    events: 'Ereignisse',
+    eventsTip: 'Startet ein Ereignis sofort. Ereignisse für alle laufen für alle, persönliche nur für den gewählten Spieler.',
+    eventKey: 'Ereignis',
+    eventPlayer: 'Spieler (nur persönliche)',
+    eventStart: 'Starten',
+    eventStarted: 'Läuft. Steht schon in der Zeitung.',
     title: 'Admin-Konsole',
     subtitle: 'Hier drehst du an den Schrauben. Alles wirkt sofort für alle.',
     tip: 'Nur der Admin sieht diese Seite. Phasen, Lieferungen, Einladungscode, Balance-Werte, Geldfluss und der Server-Tick.',
@@ -313,6 +319,26 @@ export const texts = {
     kaffeeDone: (name: string) => `Kaffee und Kuchen mit ${name}. Ihr seid beide auf Zucker.`,
     doneToday: 'Heute schon',
     friendsLocked: (n: number) => `Aushelfen und Kaffee und Kuchen ab Level ${n}.`,
+  },
+
+  events: {
+    title: 'Was heute los ist',
+    tip: 'Jeden Tag um Mitternacht gibt es ein Tagesereignis für alle. Dazu passieren Dinge am Markt und dir persönlich, und zwei- bis dreimal die Woche steigt ein angekündigtes Highlight.',
+    today: 'Tagesereignis',
+    untilMidnight: (time: string) => `noch ${time}`,
+    running: 'Läuft gerade',
+    runningLeft: (time: string) => `noch ${time}`,
+    upcoming: 'Demnächst',
+    startsIn: (when: string, time: string) => `${when} · in ${time}`,
+    none: 'Gerade nichts Besonderes. Das ist auch mal schön.',
+    weekdays: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+    at: (day: string, time: string) => `${day}, ${time} Uhr`,
+    target: {
+      game: (name: string) => `Betrifft: ${name}`,
+      card: (name: string) => `Betrifft: ${name}`,
+      set: (name: string) => `Betrifft: ${name}`,
+      store: (name: string) => `Bei: ${name}`,
+    },
   },
 
   company: {
@@ -741,6 +767,13 @@ export const texts = {
     zoll: (d: Record<string, unknown>) => `RAZZIA! Der Zoll stürmt „${String(d.company)}“. Schwarzarbeit! ${String(d.name)} wird abgeführt. Fast.`,
     audit: (d: Record<string, unknown>) => `STEUERPRÜFUNG bei „${String(d.company)}“: ${String(d.name)} hatte Geld am Finanzamt vorbeigeschleust. Jetzt nicht mehr.`,
     award: (d: Record<string, unknown>, award: string) => `AUSGEZEICHNET: „${String(d.company)}“ von ${String(d.name)} erhält „${award}“. Die Konkurrenz schäumt.`,
+    event: (slot: string, name: string, text: string, target: string) =>
+      slot === 'daily'
+        ? `TAGESEREIGNIS: ${name}. ${text}${target ? ` ${target}.` : ''}`
+        : slot === 'highlight'
+          ? `ES GEHT LOS: ${name}! ${text}${target ? ` ${target}.` : ''}`
+          : `${name.toUpperCase()}: ${text}${target ? ` ${target}.` : ''}`,
+    event_announce: (name: string, when: string) => `ANGEKÜNDIGT: ${name} am ${when}. Wecker stellen!`,
     company_founded: (d: Record<string, unknown>) =>
       `GRÜNDERZEIT: ${String(d.name)} gründet „${String(d.company)}“. Die großen Grader lachen noch.`,
     loan_defaulted: (d: Record<string, unknown>, money: string) =>
@@ -1095,6 +1128,7 @@ export const texts = {
     company_audit: (money: string) => `Steuerprüfung! Die offene Steuer plus Zuschlag: ${money}. Der Prüfer hatte keinen Humor.`,
     company_scandal: 'Skandal! Ein geschönter Slab ist aufgeflogen. Ruf weg, deine Slabs sind eine Woche weniger wert.',
     company_award: (name: string) => `Auszeichnung: ${name}! Das Zertifikat hängt schon schief an der Wand.`,
+    event: (name: string, text: string, money: string | null) => `${name}: ${text}${money ? ` (${money})` : ''}`,
     company_order: (d: Record<string, unknown>) =>
       `${String(d.name)} schickt deiner Firma ${Number(d.n) === 1 ? 'eine Karte' : `${String(d.n)} Karten`}. Bezahlt ist schon. Jetzt nicht verkacken.`,
     company_stage: (name: string) => `Glückwunsch, ihr seid jetzt ${name}. Der Notar schickt die Rechnung nach.`,

@@ -15,6 +15,7 @@ import { errorText, rpc } from '@/lib/rpc.ts'
 import { SET_PHASES, type Admin, type RpcName } from '@/lib/schemas.ts'
 import { useMe, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
+import { EVENTS } from '../../../content/events.ts'
 
 const T = texts.admin
 const setName = (id: string) => SETS.find((s) => s.id === id)?.name ?? id
@@ -51,6 +52,7 @@ export function AdminPage() {
         <div className="grid gap-4 xl:grid-cols-2">
           <Sets d={q.data} />
           <Stores d={q.data} />
+          <EventsAdmin d={q.data} />
           <Economy d={q.data} />
           <Players d={q.data} />
           <Server />
@@ -382,6 +384,55 @@ function Config({ d }: { d: Admin }) {
           )
         })}
       </ul>
+    </Panel>
+  )
+}
+
+function EventsAdmin({ d }: { d: Admin }) {
+  const run = useAdminAct()
+  const [key, setKey] = useState(EVENTS[0]!.key)
+  const [player, setPlayer] = useState('')
+  const [busy, setBusy] = useState(false)
+  const personal = EVENTS.find((e) => e.key === key)?.slots.includes('personal') ?? false
+  return (
+    <Panel title={T.events} tip={T.eventsTip}>
+      <div className="flex flex-wrap items-end gap-3">
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="text-fg-3">{T.eventKey}</span>
+          <select className="panel-inset h-9 bg-transparent px-2 text-fg" value={key} onChange={(e) => setKey(e.target.value)}>
+            {EVENTS.map((e) => (
+              <option key={e.key} value={e.key}>
+                {e.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        {personal && (
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-fg-3">{T.eventPlayer}</span>
+            <select className="panel-inset h-9 bg-transparent px-2 text-fg" value={player} onChange={(e) => setPlayer(e.target.value)}>
+              <option value="">–</option>
+              {d.players.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        <Button
+          variant="primary"
+          loading={busy}
+          disabled={busy || (personal && !player)}
+          onClick={async () => {
+            setBusy(true)
+            await run('admin_event_start', { p_key: key, p_player: personal ? player : null }, T.eventStarted)
+            setBusy(false)
+          }}
+        >
+          {T.eventStart}
+        </Button>
+      </div>
     </Panel>
   )
 }

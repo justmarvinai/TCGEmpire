@@ -359,6 +359,13 @@ export const config = {
   'company.mystery_per_hour': 25,
   'company.award_ruf': 20,
   'loan.repaid_ruf': 5,
+  // Events: a personal event per hour (players seen in the last day), a random event on the market per hour, the
+  // weekly Highlight-Events (ISO weekday, Berlin time).
+  'events.enabled': true,
+  'events.personal_per_hour': 0.12,
+  'events.personal_active_hours': 24,
+  'events.random_per_hour': 0.05,
+  'events.highlight_times': [[3, '20:00'], [5, '20:00'], [7, '18:00']],
   // Research from this stage on. Großhandel (level 40, with a company): displays per week by company stage at
   // price_bps of the list price, delivered after delivery_minutes.
   'company.research_stage': 3,

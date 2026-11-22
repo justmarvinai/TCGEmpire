@@ -134,7 +134,7 @@ RLS enabled on every table with no policies.
 
 | Table | Purpose |
 |-------|---------|
-| `game.events_active` | Running global and personal events. |
+| `game.events`, global `game.modifiers` | alpha_10 · Every event: key (content/events.ts), slot (daily, random, highlight, personal, admin, calendar), player (personal) or none (everyone), start, end, what it hit (`data`: game, card, set, store, money) and whether it has started. Modifiers without a player count for everyone (`private.stat` sums both); events add them with the source `event:<id>`. `server.events_at` is the last events tick. |
 | `game.megaprojects`, `game.donations` | Server goals. |
 | `game.licenses` | alpha_05 · Händlerlizenzen per player and game; the first is the favourite (`game.players.fav_game`, free). Triggers on `store_purchases` and `store_buys` refuse unlicensed games (`no_license`). |
 | `game.goal_defs`, `game.goals_done` | alpha_05 · Sammelziele (card groups and a bonus, seeded from `content/goals.ts`) and reached goals; a trigger on `game.collection` checks them and books a permanent modifier `goal:<key>`. alpha_06 adds `goal_defs.min_grade` (Master Set: a group counts only with `collection.best_grade` at or above it). |

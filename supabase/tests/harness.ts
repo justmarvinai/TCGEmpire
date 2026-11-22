@@ -22,7 +22,7 @@ export async function createTestDb() {
   // Cheap password hashing keeps the tests fast.
   await db.exec(`insert into game.config_overrides (key, value, updated_at) values ('auth.bcrypt_cost', '4', now())`)
   // Random losses stay off unless a test switches them on (insurance.test.ts).
-  await db.exec(`insert into game.config_overrides (key, value, updated_at) values ('insurance.lost_parcel_bps', '0', now()), ('insurance.water_damage_pct', '0', now())`)
+  await db.exec(`insert into game.config_overrides (key, value, updated_at) values ('insurance.lost_parcel_bps', '0', now()), ('insurance.water_damage_pct', '0', now()), ('events.enabled', 'false', now())`)
 
   const sql = async <T = Record<string, unknown>>(query: string, params: unknown[] = []) =>
     (await db.query<T>(query, params)).rows

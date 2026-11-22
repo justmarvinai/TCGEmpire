@@ -176,7 +176,7 @@ Goal: the world happens to you.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Event engine with at least 25 events; **Tagesereignis** at 00:00, random events, 2–3 announced **Highlight-Events** per week | M |
+| ☑ | Event engine with at least 25 events; **Tagesereignis** at 00:00, random events, 2–3 announced **Highlight-Events** per week | M |
 | ☐ | Schattenwirtschaft: Bunker knacken, Finanzamt, 1-Stern, Gerücht, Abwerben, resealed/gewogen, Kredit platzen lassen (Q-25), Rache; **attack roll with Abwehr upgrades and Angriff skills, blocked outcomes**; daily loss cap | M |
 | ☐ | Sonntags-Flohmarkt | S |
 | ☐ | eBay-Auktionen | S |

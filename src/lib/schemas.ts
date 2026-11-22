@@ -779,6 +779,24 @@ export const zBattles = z.object({
 })
 export type Battles = z.infer<typeof zBattles>
 
+// Events (alpha_10)
+export const zGameEvent = z.object({
+  id: z.number(),
+  key: z.string(),
+  slot: z.enum(['daily', 'random', 'highlight', 'personal', 'admin', 'calendar']),
+  starts_at: z.string(),
+  ends_at: z.string(),
+  data: z.record(z.string(), z.unknown()),
+})
+export type GameEvent = z.infer<typeof zGameEvent>
+export const zEvents = z.object({
+  today: zGameEvent.nullable(),
+  active: z.array(zGameEvent),
+  upcoming: z.array(zGameEvent),
+  mine: z.array(zGameEvent),
+})
+export type Events = z.infer<typeof zEvents>
+
 // Firma (alpha_09)
 export const COMPANY_STATIONS = ['annahme', 'pruefung', 'slabbing', 'versand'] as const
 export type CompanyStation = (typeof COMPANY_STATIONS)[number]
@@ -1161,6 +1179,8 @@ export const RPC_SCHEMAS = {
   company_tax_advisor: zCompany,
   company_shady: zCompany.extend(withPlayer),
   company_research: zCompany,
+  events_get: zEvents,
+  admin_event_start: zAdmin,
   wholesale_buy: zCompany.extend(withPlayer),
   company_order_submit: z.object({ fee_cents: z.number(), grading: zGrading, ...withPlayer }),
   company_vip_grade: zCompany.extend({

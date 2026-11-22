@@ -10,6 +10,7 @@ import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
+import { EventsPanel } from '@/features/events/EventsPanel.tsx'
 import { Ring } from '@/components/ui/Ring.tsx'
 import { Skeleton } from '@/components/ui/States.tsx'
 import { useBunkerContent, useCollectBunker } from '@/features/bunker/BunkerPage.tsx'
@@ -81,6 +82,7 @@ export function HomePage({ me }: { me: Me & { player: Player } }) {
 
         <LastHit hit={home.data?.last_hit} loading={home.isPending} className="lg:col-span-12 xl:col-span-6 xl:row-span-2" />
 
+        <EventsPanel className="lg:col-span-12" />
         <Panel title={T.netWorth} tip={T.netWorthTip} className="lg:col-span-12 xl:col-span-6">
           <NumberTicker value={p.net_worth_cents} format={formatMoney} className="nums block text-5xl font-bold tracking-tight max-md:text-4xl" />
           <WorthTrend worth={home.data?.worth} now={p.net_worth_cents} />
