@@ -3,7 +3,34 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
-## [0.0.1-alpha_01] — Fundament (22 Nov 2026)
+## [0.0.1-alpha_02] — Rip (22 Nov 2026)
+
+The first real gameplay: earn a little, buy boosters, rip them, collect, sell.
+
+### Added
+
+- **Pokémon Basis-Set** with all 90 cards: Glurak, Turtok, Bisaflor and Mewtu in full detail, every other
+  card from the new reusable card model. One card back for every card in the game.
+- **Kiosk am Eck:** boosters ×1 / ×5 / ×10, 10 % Kioskzuschlag, daily limit.
+- **Booster öffnen:** tear the pack, reveal card by card, suspense on the hit slot (longer the rarer),
+  flashes and particles for hits, a fake live chat that roasts your pulls, ×5 / ×10 in one go, and
+  **Sofort aufdecken** for the impatient. Summary with verdict, profit or loss, top hits and bulk sell.
+  God Packs, Doppel-Hits and Pech-Schutz exist. Exact odds behind the "i" in the shop.
+- **Sammlung:** binder for the set with filters, progress, value, card detail with tilt and foil.
+- **Kartenladen-Ankauf:** sell single cards or all duplicates at 60 % of the value.
+- **Levels:** every level pays money, every fifth a booster; level-up celebration; **Level-Pfad** shows
+  what each level brings.
+- **Pfandflaschen sammeln:** 45-second minijob for money, EP and Pfandbons; costs energy.
+- **Mini-Quests:** always three, endless, every tenth gives a bonus booster.
+- **Mamas Tutorial:** Opa's booster, the first steps through the game; skippable after step 3.
+- **Big pulls** (Ultra, Grail) are announced to everyone and land in KARTEN-BILD.
+- Slab frames for PSA, BGS, CGC and player companies (used from the grading update on).
+
+### Changed
+
+- Prices follow the new price scale: a booster costs 100 € (110 € at the Kiosk).
+
+
 
 The foundation: no gameplay yet, but a real, running game shell.
 
