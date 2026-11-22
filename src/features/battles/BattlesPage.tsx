@@ -14,10 +14,17 @@ import { useAct } from '@/lib/actions.ts'
 import { itemName } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
-import { BATTLE_MODES, type BattleMode, type Battles, type BattleSummary, type Player } from '@/lib/schemas.ts'
+import {
+  BATTLE_MODES,
+  type BattleMode,
+  type Battles,
+  type BattleSummary,
+  type Player,
+} from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useMe } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
+import { BreakList, CreateBreak } from './Breaks.tsx'
 
 const T = texts.battles
 
@@ -41,6 +48,7 @@ export function BattlesPage() {
             <Panel title={T.lobby} tip={T.lobbyTip}>
               <BattleList list={d.open} empty={T.lobbyEmpty} player={player} />
             </Panel>
+            <BreakList player={player} />
             <Panel title={T.running}>
               <BattleList list={d.running} empty={T.runningEmpty} player={player} />
             </Panel>
@@ -48,7 +56,10 @@ export function BattlesPage() {
               <BattleList list={d.done} empty={T.doneEmpty} player={player} />
             </Panel>
           </div>
-          <CreateBattle d={d} player={player} />
+          <div className="flex flex-col gap-4 self-start xl:sticky xl:top-4">
+            <CreateBattle d={d} player={player} />
+            <CreateBreak player={player} />
+          </div>
         </div>
       )}
     </Page>
@@ -85,7 +96,10 @@ function BattleRow({ b, player }: { b: BattleSummary; player: Player }) {
       <Seats b={b} />
       <div className="flex flex-wrap gap-2">
         <BattleActions b={b} player={player} />
-        <Link to={`/battles/${b.id}`} className="btn btn-neutral inline-flex min-h-8 items-center px-3 text-sm font-semibold">
+        <Link
+          to={`/battles/${b.id}`}
+          className="btn btn-neutral inline-flex min-h-8 items-center px-3 text-sm font-semibold"
+        >
           {b.state === 'running' ? T.watch : T.view}
         </Link>
       </div>
@@ -118,17 +132,36 @@ export function BattleActions({ b, player }: { b: BattleSummary; player: Player 
   return (
     <>
       {!b.mine && (
-        <Button size="sm" variant="primary" loading={busy === 'battle_join'} disabled={busy !== null || player.cash_cents < b.stake_cents} onClick={() => void run('battle_join', T.joined)}>
+        <Button
+          size="sm"
+          variant="primary"
+          loading={busy === 'battle_join'}
+          disabled={busy !== null || player.cash_cents < b.stake_cents}
+          onClick={() => void run('battle_join', T.joined)}
+        >
           {T.join}
         </Button>
       )}
       {isHost && (
-        <Button size="sm" variant="primary" loading={busy === 'battle_start'} disabled={busy !== null} onClick={() => void run('battle_start', T.started)} title={T.startTip}>
+        <Button
+          size="sm"
+          variant="primary"
+          loading={busy === 'battle_start'}
+          disabled={busy !== null}
+          onClick={() => void run('battle_start', T.started)}
+          title={T.startTip}
+        >
           {T.start}
         </Button>
       )}
       {b.mine && (
-        <Button size="sm" variant={isHost ? 'danger' : 'neutral'} loading={busy === 'battle_leave'} disabled={busy !== null} onClick={() => void run('battle_leave', isHost ? T.dissolved : T.left)}>
+        <Button
+          size="sm"
+          variant={isHost ? 'danger' : 'neutral'}
+          loading={busy === 'battle_leave'}
+          disabled={busy !== null}
+          onClick={() => void run('battle_leave', isHost ? T.dissolved : T.left)}
+        >
           {isHost ? T.dissolve : T.leave}
         </Button>
       )}
@@ -146,7 +179,10 @@ function Seats({ b }: { b: BattleSummary }) {
             <Avatar name={p.name} look={p.look} size={28} className={clsx(p.bot && 'opacity-60 grayscale')} />
           </span>
         ) : (
-          <span key={i} className="grid size-7 place-items-center rounded-full border border-dashed border-line-strong text-[0.625rem] text-fg-3">
+          <span
+            key={i}
+            className="grid size-7 place-items-center rounded-full border border-dashed border-line-strong text-[0.625rem] text-fg-3"
+          >
             {T.free}
           </span>
         )
@@ -170,7 +206,11 @@ function CreateBattle({ d, player }: { d: Battles; player: Player }) {
 
   const create = async () => {
     setBusy(true)
-    const res = await act('battle_create', { p_mode: mode, p_product: product, p_packs: packs, p_seats: seatCount }, ['battles'])
+    const res = await act(
+      'battle_create',
+      { p_mode: mode, p_product: product, p_packs: packs, p_seats: seatCount },
+      ['battles'],
+    )
     setBusy(false)
     if (!res) return
     sfx('success')
@@ -180,7 +220,7 @@ function CreateBattle({ d, player }: { d: Battles; player: Player }) {
   }
 
   return (
-    <Panel title={T.create} tip={T.createTip} className="self-start xl:sticky xl:top-4">
+    <Panel title={T.create} tip={T.createTip}>
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={T.mode}>
           {BATTLE_MODES.map((m) => (
@@ -192,7 +232,9 @@ function CreateBattle({ d, player }: { d: Battles; player: Player }) {
               onClick={() => setMode(m)}
               className={clsx(
                 'rounded-xl p-2.5 text-left outline-2 -outline-offset-2 transition-colors focus-visible:outline-accent',
-                mode === m ? 'bg-surface-3 outline-accent' : 'bg-surface-2 outline-transparent hover:bg-surface-3',
+                mode === m
+                  ? 'bg-surface-3 outline-accent'
+                  : 'bg-surface-2 outline-transparent hover:bg-surface-3',
               )}
             >
               <span className="block text-sm font-bold">{T.modes[m].name}</span>
@@ -203,7 +245,11 @@ function CreateBattle({ d, player }: { d: Battles; player: Player }) {
 
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-fg-3">{T.booster}</span>
-          <select className="panel-inset h-9 bg-transparent px-2 text-fg" value={product} onChange={(e) => setProduct(e.target.value)}>
+          <select
+            className="panel-inset h-9 bg-transparent px-2 text-fg"
+            value={product}
+            onChange={(e) => setProduct(e.target.value)}
+          >
             {d.boosters.map((x) => (
               <option key={x.product_id} value={x.product_id}>
                 {itemName(x.product_id)} · {formatMoney(x.price_cents)}
@@ -215,7 +261,11 @@ function CreateBattle({ d, player }: { d: Battles; player: Player }) {
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-1 text-sm">
             <span className="text-fg-3">{T.packs}</span>
-            <select className="panel-inset h-9 bg-transparent px-2 text-fg" value={packs} onChange={(e) => setPacks(Number(e.target.value))}>
+            <select
+              className="panel-inset h-9 bg-transparent px-2 text-fg"
+              value={packs}
+              onChange={(e) => setPacks(Number(e.target.value))}
+            >
               {Array.from({ length: 10 }, (_, i) => (
                 <option key={i} value={i + 1}>
                   {i + 1}
@@ -236,7 +286,9 @@ function CreateBattle({ d, player }: { d: Battles; player: Player }) {
                   onClick={() => setSeats(n)}
                   className={clsx(
                     'h-9 flex-1 rounded-lg font-bold outline-2 -outline-offset-2 transition-colors focus-visible:outline-accent disabled:opacity-40',
-                    seatCount === n ? 'bg-surface-3 outline-accent' : 'bg-surface-2 outline-transparent hover:bg-surface-3',
+                    seatCount === n
+                      ? 'bg-surface-3 outline-accent'
+                      : 'bg-surface-2 outline-transparent hover:bg-surface-3',
                   )}
                 >
                   {n}
@@ -252,11 +304,15 @@ function CreateBattle({ d, player }: { d: Battles; player: Player }) {
           </span>
           <span className="nums text-xl font-bold text-gold">{formatMoney(stake)}</span>
         </div>
-        <Button variant="primary" loading={busy} disabled={busy || !product || player.cash_cents < stake} onClick={() => void create()}>
+        <Button
+          variant="primary"
+          loading={busy}
+          disabled={busy || !product || player.cash_cents < stake}
+          onClick={() => void create()}
+        >
           {T.open}
         </Button>
       </div>
     </Panel>
   )
 }
-

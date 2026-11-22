@@ -333,6 +333,7 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'trade_declined') return texts.notifications.trade_declined(String(n.data.name))
   if (n.kind === 'grading_back') return texts.notifications.grading_back(Number(n.data.n))
   if (n.kind === 'battle_done') return texts.notifications.battle_done(n.data, formatMoney(Number(n.data.pot)))
+  if (n.kind === 'break_done') return texts.notifications.break_done(n.data, formatMoney(Number(n.data.cents)))
   if (n.kind === 'helped') return texts.notifications.helped(n.data)
   if (n.kind === 'kaffee') return texts.notifications.kaffee(n.data)
   if (n.kind === 'group_order_done') return texts.notifications.group_order_done(n.data, itemName(String(n.data.product_id)))

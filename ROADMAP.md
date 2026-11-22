@@ -152,7 +152,7 @@ Goal: playing together, live.
 | ☑ | **Pack Battles**: lobby, modes, synced replay, spectators, emotes, bots | M |
 | ☑ | Realtime layer in full (world, player, battle channels) | M |
 | ☑ | Aushelfen, Kaffee und Kuchen, Sammelbestellung | M |
-| ☐ | Box Breaks | S |
+| ☑ | Box Breaks (spots by pack number; by card type dropped, decision 084) | S |
 | ☐ | Privatkredit, Ehre record | S |
 
 ### alpha_09 — Firma

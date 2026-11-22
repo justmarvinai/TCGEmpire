@@ -5,13 +5,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Card } from '@/components/cards/Card.tsx'
 import { ProductArt } from '@/components/pixel/ProductArt.tsx'
 import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
-import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
-import { toast } from '@/components/ui/toast.tsx'
 import { itemName } from '@/lib/catalog.ts'
 import { formatDuration, formatMoney } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
@@ -21,11 +19,10 @@ import type { Battle, Player } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { serverNow, useMe, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
-import { config } from '../../../content/config.ts'
 import { BattleActions } from './BattlesPage.tsx'
+import { Emotes } from './Emotes.tsx'
 
 const T = texts.battles
-const EMOTES: readonly string[] = config['battle.emotes']
 
 export function BattlePage() {
   const battleId = Number(useParams().id)
@@ -42,8 +39,14 @@ export function BattlePage() {
   // Every client asks for the next round when the server clock says it is due; nobody sees it earlier.
   useEffect(() => {
     if (!d || d.state !== 'running' || !d.started_at || !d.round_seconds || !d.ends_at) return
-    const next = d.round < d.packs ? new Date(d.started_at).getTime() + d.round * d.round_seconds * 1000 : new Date(d.ends_at).getTime()
-    const timer = setTimeout(() => void client.invalidateQueries({ queryKey: ['battle', battleId] }), Math.max(250, next - serverNow() + 200))
+    const next =
+      d.round < d.packs
+        ? new Date(d.started_at).getTime() + d.round * d.round_seconds * 1000
+        : new Date(d.ends_at).getTime()
+    const timer = setTimeout(
+      () => void client.invalidateQueries({ queryKey: ['battle', battleId] }),
+      Math.max(250, next - serverNow() + 200),
+    )
     return () => clearTimeout(timer)
   }, [d, client, battleId])
 
@@ -73,7 +76,9 @@ function Board({ d, player }: { d: Battle; player: Player }) {
   // Cards a seat shows: the best of the current pack while it runs, the best pulls at the end; the rest as a count.
   const limit = d.seats === 2 ? 8 : d.seats === 3 ? 6 : 4
   const shown = (seat: number) =>
-    d.pulls.filter((p) => p.seat === seat && (d.state === 'done' || p.round === d.round)).sort((a, b) => b.value_cents - a.value_cents)
+    d.pulls
+      .filter((p) => p.seat === seat && (d.state === 'done' || p.round === d.round))
+      .sort((a, b) => b.value_cents - a.value_cents)
 
   return (
     <div className="flex flex-col gap-4">
@@ -84,7 +89,8 @@ function Board({ d, player }: { d: Battle; player: Player }) {
             <span className="text-lg font-bold">{T.modes[d.mode].name}</span>
             <span className="text-sm text-fg-2">{T.modes[d.mode].text}</span>
             <span className="text-xs text-fg-3">
-              {T.packsOf(d.packs, itemName(d.product_id))} · {T.stake}: <span className="nums text-gold">{formatMoney(d.stake_cents)}</span>
+              {T.packsOf(d.packs, itemName(d.product_id))} · {T.stake}:{' '}
+              <span className="nums text-gold">{formatMoney(d.stake_cents)}</span>
             </span>
           </div>
           <div className="flex flex-col items-end gap-1">
@@ -103,7 +109,14 @@ function Board({ d, player }: { d: Battle; player: Player }) {
       </Panel>
 
       <div
-        className={clsx('grid gap-3', d.seats === 2 ? 'md:grid-cols-2' : d.seats === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 xl:grid-cols-4')}
+        className={clsx(
+          'grid gap-3',
+          d.seats === 2
+            ? 'md:grid-cols-2'
+            : d.seats === 3
+              ? 'md:grid-cols-3'
+              : 'md:grid-cols-2 xl:grid-cols-4',
+        )}
         onClick={() => setSkip(true)}
       >
         {Array.from({ length: d.seats }, (_, i) => {
@@ -118,14 +131,24 @@ function Board({ d, player }: { d: Battle; player: Player }) {
               aria-label={p?.name ?? T.free}
               className={clsx(
                 'panel flex min-h-60 flex-col gap-3 p-4 transition-opacity',
-                d.state === 'done' && d.mode !== 'freundschaft' && (won ? 'outline-2 -outline-offset-2 outline-gain' : 'opacity-70'),
+                d.state === 'done' &&
+                  d.mode !== 'freundschaft' &&
+                  (won ? 'outline-2 -outline-offset-2 outline-gain' : 'opacity-70'),
               )}
             >
               <header className="flex items-center gap-2">
-                {p ? <Avatar name={p.name} look={p.look} size={36} className={clsx(p.bot && 'grayscale')} /> : <span className="size-9 rounded-full border border-dashed border-line-strong" />}
+                {p ? (
+                  <Avatar name={p.name} look={p.look} size={36} className={clsx(p.bot && 'grayscale')} />
+                ) : (
+                  <span className="size-9 rounded-full border border-dashed border-line-strong" />
+                )}
                 <div className="flex min-w-0 flex-1 flex-col">
                   <span className="truncate font-bold">
-                    {p ? <PlayerName name={p.name} look={p.look} /> : <span className="text-fg-3">{T.free}</span>}
+                    {p ? (
+                      <PlayerName name={p.name} look={p.look} />
+                    ) : (
+                      <span className="text-fg-3">{T.free}</span>
+                    )}
                   </span>
                   <span className="flex gap-1.5 text-[0.6875rem] text-fg-3">
                     {d.mode === 'team' && <span>{T.team(seat % 2 === 1 ? 1 : 2)}</span>}
@@ -137,7 +160,11 @@ function Board({ d, player }: { d: Battle; player: Player }) {
                   <span className="flex items-center gap-1 text-[0.6875rem] text-fg-3">
                     {T.total} <InfoTip>{T.totalTip}</InfoTip>
                   </span>
-                  <NumberTicker value={p?.shown_cents ?? 0} format={formatMoney} className="nums font-bold text-gold" />
+                  <NumberTicker
+                    value={p?.shown_cents ?? 0}
+                    format={formatMoney}
+                    className="nums font-bold text-gold"
+                  />
                 </span>
               </header>
               <div className="flex flex-wrap gap-1.5">
@@ -153,14 +180,22 @@ function Board({ d, player }: { d: Battle; player: Player }) {
                 ))}
               </div>
               {rest.length > 0 && (
-                <p className="nums text-xs text-fg-3">{T.more(rest.length, formatMoney(rest.reduce((sum, c) => sum + c.value_cents, 0)))}</p>
+                <p className="nums text-xs text-fg-3">
+                  {T.more(rest.length, formatMoney(rest.reduce((sum, c) => sum + c.value_cents, 0)))}
+                </p>
               )}
             </section>
           )
         })}
       </div>
 
-      <Emotes d={d} />
+      {d.state !== 'cancelled' && (
+        <Emotes
+          list={d.emotes}
+          send={(e) => rpc('emote_send', { p_request_id: newRequestId(), p_battle: d.id, p_emote: e })}
+          queryKey={['battle', d.id]}
+        />
+      )}
     </div>
   )
 }
@@ -168,7 +203,8 @@ function Board({ d, player }: { d: Battle; player: Player }) {
 /** Round, countdown and the result, all on the server clock. */
 function Status({ d, mySeat }: { d: Battle; mySeat: number | undefined }) {
   const now = useNow() + useWorld((w) => w.clockOffsetMs)
-  const left = (iso: string | null, plus = 0) => formatDuration(Math.max(0, Math.ceil((new Date(iso ?? 0).getTime() + plus - now) / 1000)))
+  const left = (iso: string | null, plus = 0) =>
+    formatDuration(Math.max(0, Math.ceil((new Date(iso ?? 0).getTime() + plus - now) / 1000)))
   let line: string
   if (d.state === 'cancelled') line = T.cancelled
   else if (d.state === 'open') line = T.waiting
@@ -176,12 +212,24 @@ function Status({ d, mySeat }: { d: Battle; mySeat: number | undefined }) {
   else if (d.state === 'running')
     line = `${T.round(d.round, d.packs)} · ${d.round < d.packs ? T.nextIn(left(d.started_at, d.round * (d.round_seconds ?? 0) * 1000)) : T.resultIn(left(d.ends_at))}`
   else line = resultLine(d)
-  const won = d.state === 'done' && mySeat !== undefined && d.mode !== 'freundschaft' ? d.result?.winners.includes(mySeat) : undefined
+  const won =
+    d.state === 'done' && mySeat !== undefined && d.mode !== 'freundschaft'
+      ? d.result?.winners.includes(mySeat)
+      : undefined
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-line pt-3" aria-live="polite">
+    <div
+      className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-line pt-3"
+      aria-live="polite"
+    >
       <span className={clsx('font-semibold', d.state === 'done' ? 'text-fg' : 'text-fg-2')}>{line}</span>
-      {won !== undefined && <span className={clsx('text-sm font-bold', won ? 'text-gain' : 'text-loss')}>{won ? T.youWon : T.youLost}</span>}
-      {mySeat === undefined && d.state !== 'open' && <span className="text-xs text-fg-3">{T.spectating}</span>}
+      {won !== undefined && (
+        <span className={clsx('text-sm font-bold', won ? 'text-gain' : 'text-loss')}>
+          {won ? T.youWon : T.youLost}
+        </span>
+      )}
+      {mySeat === undefined && d.state !== 'open' && (
+        <span className="text-xs text-fg-3">{T.spectating}</span>
+      )}
     </div>
   )
 }
@@ -193,42 +241,4 @@ function resultLine(d: Battle) {
   if (d.mode === 'team') return T.winnerTeam(names.map((p) => p?.name ?? '?').join(' & '))
   const w = names[0]
   return w?.bot ? T.winnerBot(w.name) : T.winner(w?.name ?? '?')
-}
-
-function Emotes({ d }: { d: Battle }) {
-  const client = useQueryClient()
-  const [busy, setBusy] = useState(false)
-  if (d.state === 'cancelled') return null
-
-  const send = async (emote: string) => {
-    setBusy(true)
-    try {
-      await rpc('emote_send', { p_request_id: newRequestId(), p_battle: d.id, p_emote: emote })
-      void client.invalidateQueries({ queryKey: ['battle', d.id] })
-    } catch (e) {
-      toast('error', errorText(e))
-    }
-    setBusy(false)
-  }
-
-  return (
-    <Panel title={T.emotes} tip={T.emotesTip}>
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="flex gap-1" role="group" aria-label={T.emotes}>
-          {EMOTES.map((e) => (
-            <Button key={e} size="sm" disabled={busy} onClick={() => void send(e)} aria-label={e}>
-              <span className="text-lg leading-none">{e}</span>
-            </Button>
-          ))}
-        </span>
-        <ul className="flex min-w-0 flex-1 flex-wrap gap-1.5">
-          {d.emotes.slice(-10).map((e) => (
-            <li key={e.id} className="animate-pop rounded-full bg-surface-2 px-2 py-0.5 text-sm">
-              <span className="text-fg-3">{e.name}</span> {e.emote}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </Panel>
-  )
 }

@@ -239,6 +239,10 @@ export const config = {
   'battle.max_packs': 10,
   'battle.headline_base_cents': 300_00,
   'battle.emotes': ['🔥', '💀', '😂', '🤡', '💸', '😭', '👀', '🙏'],
+  // Box Breaks: seconds per revealed pack; spot prices between these shares of the booster's Marktwert (basis points)
+  'break.round_seconds': 3,
+  'break.min_price_bps': 8_000,
+  'break.max_price_bps': 15_000,
   // Aushelfen: share of the remaining time taken off a friend's grading orders and shift (at most this many minutes);
   // both get this many minutes of reference income and this much EP. Kaffee und Kuchen: EP bonus for both.
   'help.speedup_pct': 25,

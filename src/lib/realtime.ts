@@ -39,7 +39,10 @@ export function useRealtimeSync() {
   }
   useTopic(topics.data?.world, (_event, payload) => {
     // A lobby change only concerns the battle pages.
-    if (payload.area === 'battles') return void client.invalidateQueries({ queryKey: ['battles'] })
+    if (payload.area === 'battles') {
+      void client.invalidateQueries({ queryKey: ['battles'] })
+      return void client.invalidateQueries({ queryKey: ['breaks'] })
+    }
     if (payload.area === 'group_orders') return void client.invalidateQueries({ queryKey: ['group_orders'] })
     if (payload.area === 'chat') void client.invalidateQueries({ queryKey: ['chat'] })
     poke()

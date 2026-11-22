@@ -765,6 +765,39 @@ export const zBattles = z.object({
 })
 export type Battles = z.infer<typeof zBattles>
 
+// Box Breaks (alpha_08)
+const zBreakSummary = z.object({
+  id: z.number(),
+  product_id: z.string(),
+  packs: z.number(),
+  spot_cents: z.number(),
+  state: z.enum(['open', 'running', 'done', 'cancelled']),
+  host_id: z.string().nullable(),
+  host_name: z.string().nullable(),
+  started_at: z.string().nullable(),
+  ends_at: z.string().nullable(),
+  round_seconds: z.number().nullable(),
+  sold: z.number(),
+  mine: z.number(),
+})
+export type BreakSummary = z.infer<typeof zBreakSummary>
+export const zBreak = zBreakSummary.extend({
+  round: z.number(),
+  server_now: z.string(),
+  spots: z.array(z.object({ spot: z.number(), player_id: z.string(), name: z.string(), look: zLook })),
+  pulls: z.array(z.object({ spot: z.number(), card_id: z.string(), value_cents: z.number() })),
+  emotes: z.array(z.object({ id: z.number(), name: z.string(), emote: z.string(), at: z.string() })),
+})
+export type Break = z.infer<typeof zBreak>
+export const zBreaks = z.object({
+  unlock_level: z.number(),
+  displays: z.array(z.object({ product_id: z.string(), qty: z.number(), min_cents: z.number(), max_cents: z.number(), booster_cents: z.number() })),
+  open: z.array(zBreakSummary),
+  running: z.array(zBreakSummary),
+  done: z.array(zBreakSummary),
+})
+export type Breaks = z.infer<typeof zBreaks>
+
 // Sammelbestellung (alpha_08)
 const zGroupOrder = z.object({
   id: z.number(),
@@ -912,6 +945,13 @@ export const RPC_SCHEMAS = {
   emote_send: z.object({ ok: z.boolean() }),
   friend_act: z.object({ kind: z.enum(['aushelfen', 'kaffee']), minutes: z.number(), reward_cents: z.number(), ...withPlayer }),
   group_orders_get: zGroupOrders,
+  breaks_get: zBreaks,
+  break_get: zBreak,
+  break_create: z.object({ break: zBreak, ...withPlayer }),
+  break_buy: z.object({ break: zBreak, ...withPlayer }),
+  break_start: z.object({ break: zBreak, ...withPlayer }),
+  break_cancel: z.object(withPlayer),
+  break_emote_send: z.object({ ok: z.boolean() }),
   group_order_create: z.object({ orders: zGroupOrders, ...withPlayer }),
   group_order_join: z.object({ orders: zGroupOrders, ...withPlayer }),
   group_order_leave: z.object({ orders: zGroupOrders, ...withPlayer }),

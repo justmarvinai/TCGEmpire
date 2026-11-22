@@ -88,6 +88,7 @@ const FEATURE_PAGE: Record<Feature, string> = {
   battles: '/battles',
   friends: '/players',
   group_orders: '/players',
+  breaks: '/battles',
   shifts: '/jobs',
   cardmarket: '/cardmarket',
   stores: '/shop',

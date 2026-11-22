@@ -134,6 +134,9 @@ insert into game.config (key, value) values
   ('battle.max_packs', '10'::jsonb),
   ('battle.headline_base_cents', '30000'::jsonb),
   ('battle.emotes', '["🔥","💀","😂","🤡","💸","😭","👀","🙏"]'::jsonb),
+  ('break.round_seconds', '3'::jsonb),
+  ('break.min_price_bps', '8000'::jsonb),
+  ('break.max_price_bps', '15000'::jsonb),
   ('help.speedup_pct', '25'::jsonb),
   ('help.max_minutes', '60'::jsonb),
   ('help.reward_minutes', '3'::jsonb),
@@ -212,5 +215,6 @@ insert into game.config (key, value) values
   ('unlock.battles', '16'::jsonb),
   ('unlock.lager', '18'::jsonb),
   ('unlock.group_orders', '18'::jsonb),
+  ('unlock.breaks', '18'::jsonb),
   ('unlock.housing', '20'::jsonb)
 on conflict (key) do update set value = excluded.value;

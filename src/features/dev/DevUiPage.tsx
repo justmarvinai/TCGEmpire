@@ -184,6 +184,9 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
         >
           +Kumpel
         </Button>
+        <Button size="sm" onClick={() => run(`select private.sealed_add($1, (select id from game.product_defs where kind = 'display' order by id limit 1), 1)`, [id])}>
+          +Display
+        </Button>
         <Button
           size="sm"
           onClick={() =>

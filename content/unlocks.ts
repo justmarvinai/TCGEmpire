@@ -23,5 +23,6 @@ export const UNLOCKS = {
   battles: 16,
   lager: 18,
   group_orders: 18,
+  breaks: 18,
   housing: 20,
 } as const

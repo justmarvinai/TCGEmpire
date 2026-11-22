@@ -123,7 +123,7 @@ RLS enabled on every table with no policies.
 | `game.feed` | KARTEN-BILD entries: template key + params (text is rendered on the client). alpha_04 adds `overtake`, `big_deal` (trigger on `game.shipments`), `price_move` (tick `headlines`, once per day and direction). |
 | `game.notifications` | Personal messages. |
 | `game.battles`, `game.battle_seats`, `game.battle_pulls`, `game.battle_emotes` | alpha_08 · Pack Battles: lobby (mode, booster, packs, seats, stake per seat = Marktwert × packs, state open/running/done/cancelled, `started_at`, `round_seconds`, `ends_at`, `result` with winning seats and totals); seats (player or NPC bot, paid stake, total); every card rolled at the start (seat, round, value then, quality of hits); emotes. Clients only get rounds whose time has come. Settled by the tick `battles` or the first `battle_get` after `ends_at`. |
-| `game.breaks`, `game.break_spots` | Box breaks. |
+| `game.breaks`, `game.break_spots`, `game.break_pulls`, `game.break_emotes` | alpha_08 · Box Breaks: the display on the table (taken from the host's shelf, given back on cancel), its booster and pack count, spot price, state and timeline; sold spots per pack number with the escrowed payment; every card rolled at the start per pack; emotes. Settled by the tick `battles` or the first `break_get` after `ends_at`. |
 | `game.loans`, `game.gifts`, `game.honor` | Loans, gift allowance, kept/broken deals. |
 | `game.attacks` | Every attack: kind, attacker, target, roll, outcome (success / blocked), loot, cooldown. |
 | `game.insurance` | Active policies. |

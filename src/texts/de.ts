@@ -579,6 +579,13 @@ export const texts = {
           'Keiner darf die ganze Kiste allein nehmen, und pro Woche ist die Menge begrenzt. Ist die Kiste voll, kommt das Paket.',
         ],
       },
+      breaks: {
+        name: 'Box Breaks',
+        steps: [
+          'Bei Box Breaks legt einer ein Display auf den Tisch und verkauft die Packs einzeln. Ihr kauft Packs nach Nummer.',
+          'Beim Start wird alles geöffnet, Pack für Pack, für alle gleichzeitig. Jeder kriegt die Karten seiner Packs.',
+        ],
+      },
       battles: {
         name: 'Pack Battles',
         steps: [
@@ -727,6 +734,7 @@ export const texts = {
         style: 'Mama: Du kaufst dir jetzt einen goldenen Namen? Für das Geld hätte ich dir Socken gekauft.',
         friends: 'Mama: Hilf deinen Freunden mal. Und nimm Kuchen mit, man kommt nicht mit leeren Händen.',
         group_orders: 'Mama: Ihr bestellt zusammen eine ganze Kiste? Wehe, die steht dann in meinem Flur.',
+        breaks: 'Mama: Du machst jetzt Live-Shows? Zieh dir wenigstens was Ordentliches an.',
         battles: 'Mama: Glücksspiel mit Pappkarten? Dein Onkel hat so angefangen. Jetzt wohnt er im Wohnwagen.',
         insurance: 'Mama: Du verschickst jetzt Pakete? Versicher die bloß. Dein Onkel hat mal einen Toaster verloren. Die Familie redet nicht drüber.',
       }
@@ -768,6 +776,8 @@ export const texts = {
     group_order_done: (d: Record<string, unknown>, name: string) =>
       `Sammelbestellung voll: ${String(d.qty)}× ${name} sind unterwegs. Der Großhändler hat gegrinst.`,
     group_order_cancelled: (name: string) => `Sammelbestellung für ${name} geplatzt. Dein Geld ist zurück.`,
+    break_done: (d: Record<string, unknown>, money: string) =>
+      `Box Break vorbei: ${String(d.packs)} ${Number(d.packs) === 1 ? 'Pack' : 'Packs'} mit Karten im Wert von ${money} gehören dir.`,
     battle_done: (d: Record<string, unknown>, pot: string) =>
       d.mode === 'freundschaft'
         ? 'Freundschaftsspiel vorbei. Deine Karten liegen in der Sammlung. Freundschaft gerettet. Vorerst.'
@@ -1043,6 +1053,42 @@ export const texts = {
     back: 'Zur Lobby',
     cancelled: 'Dieses Battle wurde abgesagt. Die Einsätze sind zurück.',
     more: (n: number, money: string) => `+${n} weitere · ${money}`,
+  },
+
+  breaks: {
+    title: 'Box Breaks',
+    subtitle: 'Einer reißt auf, alle zittern mit.',
+    tip: 'Ein Gastgeber legt ein Display auf den Tisch und verkauft die Packs einzeln nach Packnummer. Beim Start öffnet der Server alles, ihr seht Pack für Pack. Jeder bekommt die Karten seiner Packs, unverkaufte Packs bleiben beim Gastgeber.',
+    locked: (n: number) => `Box Breaks gibt es ab Level ${n}.`,
+    create: 'Break veranstalten',
+    createTip: 'Leg ein Display aus deinem Lager auf den Tisch. Der Preis pro Pack liegt nahe am Marktwert eines Boosters. Das Geld der Käufer bekommst du beim Start.',
+    display: 'Display',
+    noDisplay: 'Du hast kein Display im Lager. Kauf eins im Laden oder per Sammelbestellung.',
+    price: 'Preis pro Pack',
+    priceTip: (min: string, max: string) => `Erlaubt sind ${min} bis ${max}. Mehr wäre Abzocke, weniger ein Geschenk am Finanzamt vorbei.`,
+    open: 'Break eröffnen',
+    opened: 'Break eröffnet. Jetzt verkauf die Packs.',
+    empty: 'Gerade breakt keiner. Langweilig.',
+    host: (name: string) => `von ${name}`,
+    sold: (n: number, max: number) => `${n}/${max} Packs verkauft`,
+    spot: (n: number) => `Pack ${n}`,
+    buy: 'Kaufen',
+    bought: (n: number) => `Pack ${n} gehört dir. Daumen drücken.`,
+    free: 'frei',
+    start: 'Break starten',
+    startTip: 'Jetzt wird geöffnet. Nicht verkaufte Packs behältst du, das Geld der Käufer bekommst du sofort.',
+    started: 'Messer raus, Folie runter!',
+    cancel: 'Absagen',
+    cancelled: 'Break abgesagt. Geld und Display sind zurück.',
+    packOf: (n: number, max: number) => `Pack ${n} von ${max}`,
+    owner: (name: string) => `für ${name}`,
+    hostKeeps: 'für den Gastgeber',
+    done: 'Alle Packs sind offen, die Karten verteilt.',
+    waiting: 'Die Packs werden verkauft …',
+    stateCancelled: 'Dieser Break wurde abgesagt. Geld und Display sind zurück.',
+    yours: (n: number) => `Deine Packs: ${n}`,
+    spots: 'Die Packs',
+    spotsTip: 'Jede Kachel ist ein Pack. Klick auf ein freies Pack, um es zu kaufen. Während des Breaks leuchtet das Pack, das gerade offen ist.',
   },
 
   style: {
@@ -1576,6 +1622,7 @@ export const texts = {
     not_found: 'Gibt es nicht (mehr). Jemand war schneller.',
     lager_full: 'Lager voll. Öffnen, verkaufen oder das Lagerregal ausbauen.',
     already_done: 'Heute schon erledigt. Morgen wieder.',
+    spot_taken: 'Das Pack hat schon wer. Such dir ein anderes.',
     group_alone: 'Die ganze Kiste allein? Das ist keine Sammelbestellung, das ist Großhandel. Lass den anderen was übrig.',
     group_week_limit: 'Diese Woche hast du genug Displays bestellt. Nächste Woche wieder.',
     store_closed: 'Heute zu. Sonntags gibt es nur den Flohmarkt.',
