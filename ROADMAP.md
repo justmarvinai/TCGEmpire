@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: new site layout (mockups → owner's pick → build), then `alpha_04` (owner's go on 22 Nov 2026; alpha_03 accepted).**
+> **Current phase: `alpha_04` delivered (22 Nov 2026). Waiting for the owner's go for `alpha_05`.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -92,15 +92,21 @@ Goal: a living market with NPCs, and stores worth racing for.
 
 | | Scope | |
 |---|-------|---|
-| ☐ | Price model, tick, history, charts; Hype-Index per game; daily Preisniveau update with feed line | M |
-| ☐ | **Cardmarket**: listings, buy orders, fees, shipping timers, seller pages | M |
-| ☐ | **Kleinanzeigen**: NPC ads, haggling, own ads, lowballers, fakes | M |
-| ☐ | NPC traders v1 (scalper, collector, investor, bulk buyer, Kevin) | M |
-| ☐ | Retail stores with shared stock, restock schedule, limits; displays; Lager capacity | M |
-| ☐ | Set lifecycle + admin console v1 (phases, restocks, invite code, config, job log) | M |
-| ☐ | Net worth; toplists (Vermögen, Level, Bargeld, Sammlung) with NPC rivals | M |
-| ☐ | Direkthandel and gifts with allowance | M |
-| ☐ | KARTEN-BILD feed and Stammtisch chat; presence | M |
+| ☑ | Price model, tick, history, charts; Hype-Index per game; daily Preisniveau update with feed line | M |
+| ☑ | **Cardmarket**: listings, buy orders, fees, shipping timers, seller pages | M |
+| ☑ | **Kleinanzeigen**: NPC ads, haggling, own ads, lowballers, fakes | M |
+| ☑ | NPC traders v1 (scalper, collector, investor, bulk buyer, Kevin) | M |
+| ☑ | Retail stores with shared stock, restock schedule, limits; displays; Lager capacity | M |
+| ☑ | Set lifecycle + admin console v1 (phases, restocks, invite code, config, job log) | M |
+| ☑ | Net worth; toplists (Vermögen, Level, Bargeld, Sammlung) with NPC rivals | M |
+| ☑ | Direkthandel and gifts with allowance | M |
+| ☑ | KARTEN-BILD feed and Stammtisch chat; presence | M |
+
+Kept lean or moved (alpha_04): Kaufland and Pokémon Center Online come with the event engine (alpha_10),
+Großhandel with the company (alpha_09); shipping insurance and lost parcels with alpha_10; the display hit
+guarantee is left to the Pech-Schutz; Kleinanzeigen deals are picked up at once; the Lager limits store
+purchases only; the `preorder` phase only stops sales (no preorder mechanics yet). Chat, presence and
+feed still poll: the Realtime spike needs the deployed Supabase project.
 
 ### alpha_05 — Vier Spiele
 

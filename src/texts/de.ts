@@ -326,7 +326,7 @@ export const texts = {
     cards: (n: number, total: number) => `${n} / ${total}`,
     gap: (amount: string, rank: number) => `Noch ${amount} bis Platz ${rank}.`,
     gapTie: (rank: number) => `Gleichauf mit Platz ${rank}. Ein bisschen mehr, und du bist vorbei.`,
-    top: 'Platz 1. Genieß es, lange bleibt das nicht so.',
+    top: 'Genieß es, lange bleibt das nicht so.',
     rank: (n: number) => `Platz ${n}`,
     empty: 'Niemand hier. Nicht mal du.',
   },

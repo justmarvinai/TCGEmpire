@@ -3,7 +3,36 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
-## [0.0.1-alpha_04] — Flip (in progress)
+## [0.0.1-alpha_04] — Flip (22 Nov 2026)
+
+The market is alive: prices move, NPC traders compete with you, stores run out, and your friends can
+trade with you, chat with you and overtake you on the toplists.
+
+### Added
+
+- **Marktwert** for every card and sealed product, updated every five minutes: hype per game, supply and
+  demand, daily limits, price charts (day, week, month, all).
+- **Cardmarket** (from level 10): fixed-price listings and buy orders with money held in escrow, parcels
+  that take a few minutes, a 5 % seller fee, seller pages, ten places (more with the Verkaufsfläche upgrade).
+- **NPC traders:** Scalper-Sven empties stores and flips on the Cardmarket; collectors, investors and a bulk
+  buyer trade with you; Kevin (12) pays too much.
+- **Stores** (from level 4): Müller and Smyths restock at fixed times with stock shared by everybody,
+  limits per player, closed on Sundays; the Würfelbude keeps a weekly allocation that grows with your Ruf.
+  **Displays** with 36 boosters. **Lager** (from level 18): stores only sell you what you can store.
+- **Kleinanzeigen** (from level 4): attic finds, normal sellers and dreamers; haggle, get blocked, buy
+  fakes or bent cards, sellers who vanish after payment. Your own ads are free; Lars lowballs, Kevin
+  overpays and his mum may book it back.
+- **Toplisten:** Vermögen, Level, Bargeld and Sammlung, with 40 NPC tycoons who grow every day (you can
+  hide them) and "noch X bis Platz N". Overtakes make the news.
+- **Net worth** now counts everything you own at Marktwert, also listed, shipped or advertised cards; the
+  home page shows its last seven days.
+- **Tausch and gifts** (from level 10): offer goods and money to a friend, both sides confirm; gifts and
+  lopsided trades are free up to a daily allowance, above it 20 % Schenkungssteuer. New accounts wait an
+  hour.
+- **Spieler** page with who is online; **Stammtisch** chat with card links and emotes; KARTEN-BILD now
+  reports big deals and the day's biggest price moves.
+- **Admin console:** set phases (out of print, reprint), instant restocks, invite code, live balance
+  values, money flow, players, compensation and announcements.
 
 ### Changed
 
@@ -12,6 +41,11 @@ the first full release will be `0.0.1`.
   with Strg+K, and KARTEN-BILD as a news button. The home page shows your last big pull, net worth, the
   next step, the bunker, quests, the Stempelkarte and the latest headlines at a glance. Cards and boosters
   look exactly as before.
+
+### Fixed
+
+- Unlock messages named some features by their internal key ("Neu freigeschaltet: cardmarket"); they now
+  use the real name.
 
 ## [0.0.1-alpha_03] — Grind (22 Nov 2026)
 

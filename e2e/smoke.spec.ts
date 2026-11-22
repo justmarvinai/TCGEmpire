@@ -28,8 +28,8 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
 
   // Locked and not-yet-built features are visible, not hidden.
   await expect(page.getByTitle('Firma: Ab Level 30')).toBeVisible()
-  await page.getByRole('link', { name: 'Toplisten' }).click()
-  await expect(page.getByText('Kommt bald')).toBeVisible()
+  await page.getByRole('link', { name: 'Toplisten', exact: true }).click()
+  await expect(page.getByText(/^Platz \d+$/)).toBeVisible()
 
   // Every stat explains itself.
   await page.getByRole('button', { name: 'Ruf, Pfandbons und Preisniveau' }).click()
@@ -47,7 +47,7 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByRole('button', { name: 'Rein da' }).click()
   // Signed in again, still on the page where we left.
-  await expect(page.getByText('Kommt bald')).toBeVisible()
+  await expect(page.getByText(/^Platz \d+$/)).toBeVisible()
   await page.getByRole('link', { name: 'Übersicht' }).click()
   await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
 })

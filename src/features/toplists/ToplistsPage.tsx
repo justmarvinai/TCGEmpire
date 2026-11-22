@@ -80,7 +80,7 @@ function Board({ d }: { d: Toplist }) {
                 </li>
               )}
               <li className={clsx('flex items-center gap-3 rounded-xl px-3 py-2.5', r.me ? 'bg-surface-3 ring-1 ring-accent' : 'odd:bg-surface-2')}>
-                <span className={clsx('nums w-9 shrink-0 text-right font-bold', r.rank <= 3 ? 'text-gold' : 'text-fg-3')}>{r.rank}</span>
+                <span className={clsx('nums w-7 shrink-0 text-right font-bold sm:w-9', r.rank <= 3 ? 'text-gold' : 'text-fg-3')}>{r.rank}</span>
                 <span className="flex min-w-0 flex-1 items-center gap-2">
                   <span className={clsx('truncate font-semibold', r.kind === 'npc' && 'text-fg-2')}>{r.name}</span>
                   {r.kind === 'npc' && <span className="rounded-md bg-surface-3 px-1.5 py-0.5 text-[0.65rem] font-bold tracking-wider text-fg-3">{T.npc}</span>}
@@ -88,7 +88,7 @@ function Board({ d }: { d: Toplist }) {
                   {r.title && <span className="truncate text-xs text-accent max-sm:hidden">{r.title}</span>}
                 </span>
                 {d.list !== 'level' && <span className="nums shrink-0 text-xs text-fg-3 max-sm:hidden">{T.level(r.level)}</span>}
-                <span className="nums w-36 shrink-0 text-right font-semibold">{value(r.value)}</span>
+                <span className="nums shrink-0 text-right font-semibold sm:w-36">{value(r.value)}</span>
               </li>
             </Fragment>
           ))}
