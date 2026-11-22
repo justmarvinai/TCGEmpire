@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_08` (Freunde) delivered as `0.0.1-alpha_08` — waiting for the owner's go for `alpha_09` (Firma).**
+> **Current phase: `alpha_09` (Firma) in progress — owner go on 22 Nov 2026.**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -177,7 +177,7 @@ Goal: the world happens to you.
 | | Scope | |
 |---|-------|---|
 | ☐ | Event engine with at least 25 events; **Tagesereignis** at 00:00, random events, 2–3 announced **Highlight-Events** per week | M |
-| ☐ | Schattenwirtschaft: Bunker knacken, Finanzamt, 1-Stern, Gerücht, Abwerben, resealed/gewogen, Rache; **attack roll with Abwehr upgrades and Angriff skills, blocked outcomes**; daily loss cap | M |
+| ☐ | Schattenwirtschaft: Bunker knacken, Finanzamt, 1-Stern, Gerücht, Abwerben, resealed/gewogen, Kredit platzen lassen (Q-25), Rache; **attack roll with Abwehr upgrades and Angriff skills, blocked outcomes**; daily loss cap | M |
 | ☐ | Sonntags-Flohmarkt | S |
 | ☐ | eBay-Auktionen | S |
 | ☐ | Bares für Rares | S |

@@ -33,6 +33,8 @@ New questions are appended at the bottom with a recommended default.
 | Q-22 | Daily reset | **00:00 German time**; weekly reset Monday 00:00. | owner |
 | Q-23 | Additions | See below. | owner |
 | Q-24 | Riftbound hero art | Keep our own archetypes ("your current take on the art is fine"). | owner |
+| Q-25 | Kredit platzen lassen | An explicit button comes with the dark side in alpha_10; until then a loan bursts only when the money is missing on the due date. | owner |
+| Q-26 | Pack Battles against bots | Keep: bots pay nothing, what they win is gone. | owner |
 
 ## Additional owner requirements (21 Nov 2026)
 
@@ -61,9 +63,3 @@ changes.
 
 - Deployment still needs (see Q-2) the Supabase project, the Vercel project and three GitHub secrets — exact steps
   are given when deployment is wanted; coding and local testing work without them.
-- **Q-25 Kredit platzen lassen (alpha_08):** today the server collects a loan on its due date whenever the borrower
-  has the money; a loan only bursts when the cash is not there (so betraying means spending it first). Should the
-  dark side (level 35) add an explicit "Kredit platzen lassen" button? **Recommended default: yes, with the dark
-  side in alpha_10; until then the automatic rule stays.**
-- **Q-26 Pack Battles against bots (alpha_08):** bots pay nothing and their winnings vanish, so a battle against
-  bots is worth the same as opening the packs yourself, just with more swing. **Recommended default: keep it.**
