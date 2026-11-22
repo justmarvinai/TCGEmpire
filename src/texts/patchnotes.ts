@@ -1,6 +1,21 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1-alpha_06',
+    title: 'Grading',
+    items: [
+      'Grading ab Level 13: Karte mit der Lupe prüfen, an PSA, BGS oder CGC schicken, warten, Daumen drücken. Economy, Standard oder Express.',
+      'PSA und CGC geben die schlechteste der vier Stellen. BGS vergibt halbe Noten und vier Unternoten. Vier glatte 10er: das Black Label, zwanzigfacher Wert.',
+      'Das Paket kommt zurück, du reißt es auf, Trommelwirbel, Note. Slabs tragen das Etikett ihres Graders: PSA rot, CGC blau, BGS gold, silber oder schwarz.',
+      'Eine 10 vervielfacht den Wert, die ersten 10er einer Karte am meisten. Unter 7 bist du ärmer als vorher. Slabs zählen voll ins Vermögen, beim Tausch und am Markt.',
+      'Pop Report für jede Karte. Slabs kannst du knacken und neu einschicken. Manchmal leidet dabei eine Ecke.',
+      'Vitrine auf deinem Profil: drei Plätze für deine schönsten Slabs. Fremde Profile kannst du jetzt besuchen.',
+      'Master Set pro Set: jede Holo und besser als Slab mit 9 oder höher. Belohnung: zwei Einsende-Slots mehr.',
+      'Neue Minijobs: Echt oder Fake? bei Cardmarket (Level 18) und das Grading-Praktikum bei PSA (Level 24). Gute Runden schärfen drei Stunden lang deinen Blick.',
+      'Gesuche am Cardmarket nehmen nur noch rohe Karten. Dein Slab landet nie versehentlich für den Rohpreis beim Käufer.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_05',
     title: 'Vier Spiele',
     items: [

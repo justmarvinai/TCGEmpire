@@ -3,6 +3,36 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_06] — Grading (22 Nov 2026)
+
+The gamble that multiplies value: send your best cards to the graders and pray.
+
+### Added
+
+- **Grading** (from level 13): inspect a hit with the **Lupe** (ranges for centering, corners, edges and
+  surface), send it to **PSA**, **BGS** or **CGC** with Economy, Standard or Express service, and wait. Bulk
+  cards can be inspected too; they become single copies with their own condition.
+- **The graders judge differently:** PSA and CGC give the worst of the four values (and slip by one now and
+  then); BGS gives half-point sub-grades and an overall grade near their average, and four perfect sub-grades
+  make the rare **Black Label**.
+- **The reveal:** the parcel comes back, you tear it open, drum roll, grade. Slabs show their label in the
+  grader's style: PSA red, CGC blue, BGS gold, silver or black.
+- **Slab values:** Marktwert × grade × rarity of the grade × the grader's brand. A 10 multiplies the value,
+  the first 10s of a card most of all; below 7 the slab is worth less than the raw card. Slabs count fully in
+  net worth, trades, the Cardmarket and Kleinanzeigen. NPC collectors buy slabs listed below their value.
+- **Pop Report** for every card, **crack** a slab to send it again (sometimes a corner pays for it).
+- **Vitrine** on your profile with three places for your best slabs and hits; other players' profiles show
+  theirs.
+- **Master Set** goal per set (every Holo or better as a slab of 9 or better): +2 grading slots.
+- Upgrades **Prüfwerkzeug** (narrower Lupe ranges) and **Einsende-Slots**; achievements, daily and weekly
+  grading quests, headlines for 10s, Black Labels and expensive disasters.
+- **Minijobs Echt oder Fake?** (level 18, Cardmarket) and **Grading-Praktikum** (level 24, PSA), each with
+  shifts; a good round sharpens your eye for fakes in Kleinanzeigen or your Lupe for three hours.
+
+### Changed
+
+- Buy orders on the Cardmarket are filled with raw cards only; the binder sells raw cards only.
+
 ## [0.0.1-alpha_05] — Vier Spiele (22 Nov 2026)
 
 All four games are in, each with its own look.
