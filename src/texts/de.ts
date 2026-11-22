@@ -612,6 +612,7 @@ export const texts = {
         trade: 'Mama: Jetzt kannst du mit deinen Freunden tauschen und ihnen was schenken. Lass dich nicht übers Ohr hauen.',
         licenses: 'Mama: Du darfst jetzt ein zweites Kartenspiel verkaufen. Noch mehr Pappe im Haus. Toll.',
         lager: 'Mama: Jetzt gibt es Displays. Und nein, die stellst du nicht in mein Wohnzimmer.',
+        grading: 'Mama: Du bezahlst Leute dafür, dass sie deine Karten in Plastik schweißen? Dein Vater hat für so was nicht studiert.',
       }
       return lines[f] ?? `Neu freigeschaltet: ${name}`
     },
