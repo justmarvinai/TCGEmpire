@@ -4,6 +4,7 @@ import { createTestDb, type TestDb } from '../supabase/tests/harness.ts'
 
 const B = 'booster-pkm-base'
 const rid = () => crypto.randomUUID()
+const ASPECTS = ['centering', 'corners', 'edges', 'surface'] as const
 /** Typical scores of a decent player per minijob (Basis-€ cents). */
 const SCORE: Record<string, number> = { pfand: 8_000, regale: 9_000, sortieren: 8_000, pakete: 12_000 }
 
@@ -14,6 +15,8 @@ export interface SimResult {
   netWorthCents: number
   /** Basis-€ income per ledger reason over the whole run */
   income: Record<string, number>
+  /** grader and grade of every slab at the end */
+  slabs: string[]
 }
 
 export async function simulate(opts: { days: number; activeMinPerDay: number; seed?: number }): Promise<SimResult> {
@@ -53,7 +56,8 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   ))
     income[r.reason] = Number(r.sum)
   const p = (await t.rpc(me, 'me_get')).player!
-  return { levels, finalLevel: p.level, netWorthCents: p.net_worth_cents, income }
+  const slabs = await t.sql<{ grader: string; grade: string }>(`select grader, grade from game.card_copies where owner_id = $1 and grader is not null`, [id])
+  return { levels, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`) }
 }
 
 /** Seconds the current step already moved the clock (a minijob round has to really last). */
@@ -116,6 +120,30 @@ async function step(t: TestDb, me: string): Promise<number> {
     if (ups[0]) {
       await quietly(t, me, 'upgrade_buy', { p_key: ups[0].key })
       return 5
+    }
+  }
+  // 4b. grading: reveal what is back, inspect new hits, send promising valuable ones (cash to spare)
+  if (p.level >= 13) {
+    const g = await t.rpc(me, 'grading_get')
+    const now = Date.parse((await t.sql<{ n: string }>(`select private.now() as n`))[0]!.n)
+    const due = g.orders.filter((o) => Date.parse(o.due_at) <= now).map((o) => o.id)
+    if (due.length) {
+      await quietly(t, me, 'grading_reveal', { p_orders: due })
+      return 15
+    }
+    const fresh = g.copies.find((c) => !c.ranges)
+    if (fresh) {
+      await quietly(t, me, 'grading_inspect', { p_copy: fresh.copy_id, p_card: null })
+      return 5
+    }
+    // every aspect could still be a 10: send it (PSA for valuable cards, CGC for the rest)
+    const top = (c: (typeof g.copies)[number]) => ASPECTS.every((a) => c.ranges![a][1] === 10)
+    const psa = g.graders.psa.fees_cents.economy
+    const cgc = g.graders.cgc.fees_cents.economy
+    const send = g.copies.find((c) => top(c) && (c.value_cents >= 2 * psa || c.value_cents * 2 >= cgc))
+    if (send && g.used < g.slots && p.cash_cents >= 3 * psa) {
+      await quietly(t, me, 'grading_submit', { p_copies: [send.copy_id], p_grader: send.value_cents >= 2 * psa ? 'psa' : 'cgc', p_service: 'economy' })
+      return 10
     }
   }
   // 5. a minijob round when there is energy
