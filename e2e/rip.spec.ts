@@ -38,7 +38,7 @@ test('core loop: tutorial booster, opening, summary, binder, kiosk, sell, quests
 
   // Binder shows 11 of 90 at least.
   await page.getByRole('link', { name: 'Sammlung' }).click()
-  await expect(page.getByText('/ 90')).toBeVisible()
+  await expect(page.getByText('/ 90', { exact: true })).toBeVisible()
   await page.screenshot({ path: shot('binder'), animations: 'disabled' })
 
   // Buy at the kiosk and open with instant reveal.
