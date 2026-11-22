@@ -3,8 +3,9 @@ import { colors, hex } from '../toolkit/index.ts'
 import type { ProductDef } from './index.ts'
 
 /**
- * Card back of the Pokémon game: a blue vortex around a capsule, in the spirit of the original
- * but our own design. Like the original it reads the same upside down (except the capsule).
+ * The one card back for every card in the game, whatever the TCG: a blue vortex around a capsule,
+ * in the spirit of the classic back but our own design. It reads the same upside down (except the
+ * capsule).
  */
 const BLUE = colors('0e1c52', '16307e', '2150b0', '3478d8', '62a8f0')
 const GOLD = colors('8a5a0e', 'e9b62a', 'ffe272')
@@ -12,8 +13,8 @@ const RED = colors('8e1424', 'd8323a', 'ff8c84')
 const WHITE = colors('9aa8c8', 'dfe6f6', 'ffffff')
 const INK = hex('0a0f2c')
 
-export const pokemonCardBack: ProductDef = {
-  id: 'pkm-card-back',
+export const cardBack: ProductDef = {
+  id: 'card-back',
   w: 80,
   h: 112,
   draw(p) {

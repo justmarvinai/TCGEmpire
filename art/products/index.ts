@@ -1,7 +1,7 @@
 import type { Painter } from '../toolkit/index.ts'
 import { boosterGlurak } from './booster-pokemon-base.ts'
-import { pokemonCardBack } from './card-back.ts'
-import { SLAB_SAMPLES } from './slab-samples.ts'
+import { cardBack } from './card-back.ts'
+import { SLAB_FRAMES } from './slab.ts'
 
 export interface ProductDef {
   id: string
@@ -10,4 +10,4 @@ export interface ProductDef {
   draw(p: Painter): void
 }
 
-export const PRODUCTS: readonly ProductDef[] = [pokemonCardBack, boosterGlurak, ...SLAB_SAMPLES]
+export const PRODUCTS: readonly ProductDef[] = [cardBack, boosterGlurak, ...SLAB_FRAMES]
