@@ -318,6 +318,7 @@ function notificationText(n: FeedEntry) {
   if (n.kind === 'chargeback') return texts.notifications.chargeback(formatMoney(Number(n.data.cents)))
   if (n.kind === 'daily_bonus') return texts.notifications.daily_bonus
   if (n.kind === 'weekly_chest') return texts.notifications.weekly_chest
+  if (n.kind === 'admin_grant') return texts.notifications.admin_grant(formatMoney(Number(n.data.cents)))
   if (n.kind === 'gift_received') return texts.notifications.gift_received(String(n.data.name), formatMoney(Number(n.data.cents)))
   if (n.kind === 'trade_offer') return texts.notifications.trade_offer(String(n.data.name))
   if (n.kind === 'trade_accepted') return texts.notifications.trade_accepted(String(n.data.name))
@@ -376,9 +377,16 @@ function YouMenu({ me }: { me: SignedIn }) {
             <Progress value={pct / 100} label={texts.hud.ep} />
             <p className="mt-2 text-xs leading-snug text-fg-3">{texts.hud.epTip}</p>
           </div>
-          <Link to="/profile" className="mt-3 inline-flex text-sm font-semibold text-accent hover:underline">
-            {texts.hud.profile} →
-          </Link>
+          <span className="mt-3 flex gap-4">
+            <Link to="/profile" className="inline-flex text-sm font-semibold text-accent hover:underline">
+              {texts.hud.profile} →
+            </Link>
+            {p.is_admin && (
+              <Link to="/admin" className="inline-flex text-sm font-semibold text-gold hover:underline">
+                {texts.admin.link} →
+              </Link>
+            )}
+          </span>
           <div className="my-4 h-px bg-line" />
           <p className="mb-3 eyebrow">{texts.hud.settings}</p>
           <label className="mb-3 flex items-center gap-3 text-sm">

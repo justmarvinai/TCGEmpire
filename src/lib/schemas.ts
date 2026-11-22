@@ -437,6 +437,48 @@ export const zChat = z.object({
 })
 export type Chat = z.infer<typeof zChat>
 
+export const SET_PHASES = ['announced', 'preorder', 'print', 'last_wave', 'oop', 'vintage'] as const
+export const zAdmin = z.object({
+  sets: z.array(
+    z.object({
+      id: z.string(),
+      phase: z.enum(SET_PHASES),
+      phase_at: z.string().nullable(),
+      oop_at: z.string().nullable(),
+      packs_opened: z.number(),
+      sealed_left: z.number(),
+      sealed_at_oop: z.number().nullable(),
+    }),
+  ),
+  stores: z.array(
+    z.object({
+      key: z.string(),
+      due_at: z.string().nullable(),
+      waves: z.array(z.object({ product_id: z.string(), wave_at: z.string(), qty_total: z.number(), qty_left: z.number() })),
+    }),
+  ),
+  price_level: z.number(),
+  config: z.array(z.object({ key: z.string(), value: z.unknown(), override: z.unknown().nullable() })),
+  systems: z.array(
+    z.object({ name: z.string(), every_seconds: z.number(), last_run_at: z.string().nullable(), enabled: z.boolean(), failed_24h: z.number() }),
+  ),
+  job_runs: z.array(z.object({ name: z.string(), started_at: z.string(), ms: z.number(), ok: z.boolean(), error: z.string().nullable() })),
+  economy: z.array(z.object({ day: z.string(), reason: z.string(), cents: z.number(), n: z.number() })),
+  players: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      level: z.number(),
+      cash_cents: z.number(),
+      net_worth_cents: z.number(),
+      created_at: z.string(),
+      last_seen_at: z.string(),
+      is_admin: z.boolean(),
+    }),
+  ),
+})
+export type Admin = z.infer<typeof zAdmin>
+
 export const TOPLISTS = ['worth', 'level', 'cash', 'collection'] as const
 export type ToplistId = (typeof TOPLISTS)[number]
 export const zToplist = z.object({
@@ -490,6 +532,13 @@ export const RPC_SCHEMAS = {
   toplist_get: zToplist,
   players_get: zPlayers,
   chat_get: zChat,
+  admin_get: zAdmin,
+  admin_set_phase: zAdmin,
+  admin_restock: zAdmin,
+  admin_invite_set: zAdmin,
+  admin_config_set: zAdmin,
+  admin_grant: zAdmin,
+  admin_announce: zAdmin,
   chat_send: zChat.extend({ player: zPlayer }),
   trade_inventory: zTradeInventory,
   trade_quote: zTradeQuote,

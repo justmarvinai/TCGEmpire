@@ -195,6 +195,7 @@ RLS enabled on every table with no policies.
 | `players_get`, `trade_inventory(player)`, `trade_quote(to, give, take)` | read | alpha_04 · players with presence and trade lock; tradeable goods of any player; values and Schenkungssteuer of a planned gift or trade |
 | `gift_send`, `trade_offer`, `trade_answer(trade, accept)` | write | alpha_04 · gifts move at once; trades on acceptance (both sides re-checked, players locked by id); the side giving more value books the difference against its allowance and pays 20 % above it; the offerer withdraws with `accept = false` |
 | `chat_get`, `chat_send(body, item)` | read/write | alpha_04 · last 100 messages plus who is online; the chat page polls every 5 s until Realtime |
+| `admin_get`, `admin_set_phase`, `admin_restock`, `admin_invite_set`, `admin_config_set`, `admin_grant`, `admin_announce` | read/write | alpha_04 · admin only (`forbidden`); every write returns the console document. Out of Print stores `oop_at` and `sealed_at_oop`; a step back from OOP/Vintage is a reprint and clears both |
 | `sync(after_notification, after_feed, after_chat)` | read | alpha_04 adds `chat_unread` (messages by others after the device's last seen id; 0 before the first visit) and `chat_last_id` |
 
 
