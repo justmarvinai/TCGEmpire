@@ -180,6 +180,7 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
         <Button size="sm" onClick={() => run(`select private.money_add($1, 10000000, 'dev')`, [id])}>+100.000 €</Button>
         <Button size="sm" onClick={() => run(`select private.ep_grant($1, 50)`, [id])}>+EP</Button>
         <Button size="sm" onClick={() => run(`select private.ep_grant($1, 5000)`, [id])}>+viel EP</Button>
+        <Button size="sm" onClick={() => run(`update game.players set level = 100, skill_points = skill_points + 99 where id = $1`, [id])}>Level 100</Button>
         <Button size="sm" onClick={() => run(`update game.server set clock_offset = clock_offset + interval '1 day' where id; select private.tick()`)}>+1 Tag</Button>
         <Button size="sm" onClick={() => run(`update game.server set clock_offset = clock_offset + interval '1 hour' where id; select private.tick()`)}>+1 Stunde</Button>
         <Button size="sm" onClick={() => run(`update game.players set tutorial_step = -1 where id = $1`, [id])}>Tutorial aus</Button>

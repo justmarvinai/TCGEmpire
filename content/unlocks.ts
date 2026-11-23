@@ -30,4 +30,5 @@ export const UNLOCKS = {
   company: 30,
   darkside: 35,
   wholesale: 40,
+  prestige: 100,
 } as const

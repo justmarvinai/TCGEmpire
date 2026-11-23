@@ -50,7 +50,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
       item('path', 'path', 1, true),
       item('upgrades', 'upgrade', UNLOCKS.upgrades, true),
       item('skills', 'skills', UNLOCKS.skills, true),
-      item('prestige', 'crown', 100),
+      item('prestige', 'crown', UNLOCKS.prestige, true),
     ],
   },
   { group: 'leben', items: [item('housing', 'house', UNLOCKS.housing, true), item('style', 'sparkle', UNLOCKS.style, true), item('insurance', 'shield', UNLOCKS.insurance, true), item('luxury', 'diamond', 55)] },
@@ -94,6 +94,7 @@ const FEATURE_PAGE: Record<Feature, string> = {
   company: '/company',
   darkside: '/darkside',
   bares: '/bares',
+  prestige: '/prestige',
   wholesale: '/company',
   shifts: '/jobs',
   cardmarket: '/cardmarket',
@@ -111,3 +112,6 @@ export const FEATURES = (Object.keys(FEATURE_PAGE) as Feature[])
 /** Unlocked features whose tour this device has not finished yet (never during Mutti's tutorial). */
 export const unseenFeatures = (p: { id: string; level: number; tutorial_step: number }, seen: string[]) =>
   p.tutorial_step >= 0 ? [] : FEATURES.filter((f) => f.level <= p.level && !seen.includes(`${p.id}:${f.key}`))
+
+/** The level the navigation compares with: after a first exit the prestige page stays open. */
+export const navLevel = (item: NavItem, p: { level: number; prestige: number }) => (item.id === 'prestige' && p.prestige > 0 ? Infinity : p.level)

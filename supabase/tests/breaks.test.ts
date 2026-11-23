@@ -52,7 +52,11 @@ describe('Box Breaks', () => {
 
     const started = (await t.rpc(host, 'break_start', { p_request_id: rid(), p_break: br.id })).break
     expect(started).toMatchObject({ state: 'running', round: 0, pulls: [], sold: 2 })
-    expect((await cash(idHost)) - cashHost).toBe(2 * d.booster_cents)
+    // (starting may also level the host up through an achievement, so look at the payout itself)
+    expect(Number((await t.sql<{ v: string }>(`select sum(delta_cents) as v from game.ledger where player_id = $1 and reason = 'break_sales'`, [idHost]))[0]!.v)).toBe(
+      2 * d.booster_cents,
+    )
+    expect(await cash(idHost)).toBeGreaterThanOrEqual(cashHost + 2 * d.booster_cents)
     await t.advance('4 seconds')
     const first = await t.rpc(fan, 'break_get', { p_break: br.id })
     expect(first.round).toBe(1)

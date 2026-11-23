@@ -28,7 +28,7 @@ import { ATTACKS } from '../../content/darkside.ts'
 import { SNACK_ICON } from '@/features/shop/icons.ts'
 import { FeatureTour, Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
 import { CommandPalette } from './CommandPalette.tsx'
-import { NAV, type NavItem, unseenFeatures } from './nav.ts'
+import { NAV, type NavItem, unseenFeatures, navLevel } from './nav.ts'
 
 type SignedIn = Me & { player: Player }
 
@@ -94,7 +94,7 @@ function Sidebar({ player }: { player: Player }) {
                 <SidebarItem
                   key={item.id}
                   item={item}
-                  level={player.level}
+                  level={navLevel(item, player)}
                   badge={badges[item.id]}
                   isNew={fresh.some((f) => f.path === item.path)}
                   onPick={close}

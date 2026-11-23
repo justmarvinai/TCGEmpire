@@ -7,7 +7,7 @@ import type { Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
-import { NAV } from './nav.ts'
+import { NAV, navLevel } from './nav.ts'
 
 const ENTRIES = NAV.flatMap((g) => g.items.map((item) => ({ item, group: texts.nav.groups[g.group], label: texts.nav.items[item.id] })))
 
@@ -36,20 +36,20 @@ export function CommandPalette({ player }: { player: Player }) {
           className="panel-float fixed top-[14vh] left-1/2 z-50 w-[min(92vw,34rem)] -translate-x-1/2 overflow-hidden p-0 animate-fade-up"
         >
           <Radix.Title className="sr-only">{texts.palette.title}</Radix.Title>
-          {open && <Search level={player.level} onDone={() => apply({ paletteOpen: false })} />}
+          {open && <Search player={player} onDone={() => apply({ paletteOpen: false })} />}
         </Radix.Content>
       </Radix.Portal>
     </Radix.Root>
   )
 }
 
-function Search({ level, onDone }: { level: number; onDone: () => void }) {
+function Search({ player, onDone }: { player: { level: number; prestige: number }; onDone: () => void }) {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
   const q = query.trim().toLowerCase()
   const hits = ENTRIES.filter((e) => !q || e.label.toLowerCase().includes(q) || e.group.toLowerCase().includes(q))
-  const usable = (e: (typeof ENTRIES)[number]) => level >= e.item.level
+  const usable = (e: (typeof ENTRIES)[number]) => navLevel(e.item, player) >= e.item.level
   const go = (e: (typeof ENTRIES)[number] | undefined) => {
     if (!e || !usable(e)) return
     sfx('click')

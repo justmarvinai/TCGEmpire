@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
+import { useQuery } from '@tanstack/react-query'
 import { Card, TiltCard } from '@/components/cards/Card.tsx'
 import { SlabOf, slabName } from '@/components/cards/Slab.tsx'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
@@ -16,7 +17,7 @@ import { useAct, useBinder, useCosmetics } from '@/lib/actions.ts'
 import { SetGoals } from './Goals.tsx'
 import { cardById, HIT_TIERS, SETS, TIER_LABEL, TIER_TEXT, TIERS, UNLOCKS, type Tier } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
-import { errorText } from '@/lib/rpc.ts'
+import { errorText, rpc } from '@/lib/rpc.ts'
 import type { BinderCard } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useMe } from '@/lib/world.ts'
@@ -67,6 +68,7 @@ export function CollectionPage() {
 
   return (
     <Page icon="binder" title={T.title} subtitle={T.subtitle}>
+      <AtticHint />
       <div className="mb-4 flex flex-wrap gap-1 rounded-xl bg-surface-2 p-1" role="tablist" aria-label={T.sets}>
         {SETS.map((s) => (
           <button
@@ -295,5 +297,22 @@ function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }
         <PriceChart itemId={card.card_id} />
       </div>
     </Dialog>
+  )
+}
+
+/** After an exit: what still waits on Omas Dachboden. */
+function AtticHint() {
+  const prestiged = (useMe().data?.player?.prestige ?? 0) > 0
+  const q = useQuery({ queryKey: ['prestige'], queryFn: () => rpc('prestige_get'), enabled: prestiged })
+  const n = q.data ? q.data.attic.copies.length + q.data.attic.items.reduce((s, i) => s + i.qty, 0) : 0
+  if (!prestiged || n === 0) return null
+  return (
+    <p className="mb-4 flex flex-wrap items-center gap-2 rounded-xl bg-gold/10 px-3 py-2 text-sm">
+      <PixelIcon name="house" className="text-gold" />
+      <span className="flex-1">{texts.prestige.atticHint(n)}</span>
+      <Link to="/prestige" className="font-semibold text-accent hover:underline">
+        {texts.prestige.atticLink}
+      </Link>
+    </p>
   )
 }

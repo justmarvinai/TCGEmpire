@@ -799,6 +799,40 @@ export const zEvents = z.object({
 })
 export type Events = z.infer<typeof zEvents>
 
+// Prestige (alpha_11)
+const zAtticCopy = z.object({
+  copy_id: z.string(),
+  card_id: z.string(),
+  grader: z.string().nullable(),
+  grade: z.number().nullable(),
+  black_label: z.boolean().nullable(),
+  value_cents: z.number(),
+})
+export const zPrestige = z.object({
+  unlock_level: z.number(),
+  prestige: z.number(),
+  stars: z.number(),
+  preview: z.object({
+    stars: z.number(),
+    base: z.number(),
+    value_cents: z.number(),
+    unit_cents: z.number(),
+    start_cents: z.number(),
+    ruf_after: z.number(),
+  }),
+  blockers: z.record(z.string(), z.number()),
+  perks: z.record(z.string(), z.object({ level: z.number(), cost: z.number().nullable() })),
+  attic: z.object({
+    limit_cents: z.number(),
+    used_cents: z.number(),
+    items: z.array(z.object({ kind: z.enum(['card', 'sealed']), item_id: z.string(), qty: z.number(), value_cents: z.number() })),
+    copies: z.array(zAtticCopy),
+  }),
+  history: z.array(z.object({ n: z.number(), stars: z.number(), value_cents: z.number(), started_at: z.string(), at: z.string() })),
+})
+export type Prestige = z.infer<typeof zPrestige>
+export type AtticCopy = z.infer<typeof zAtticCopy>
+
 // Bares für Rares (alpha_10)
 const zBaresCopy = z.object({
   card_id: z.string(),
@@ -1291,6 +1325,10 @@ export const RPC_SCHEMAS = {
   company_research: zCompany,
   events_get: zEvents,
   darkside_get: zDarkside,
+  prestige_get: zPrestige,
+  prestige_exit: zPrestige.extend(withPlayer),
+  perk_buy: zPrestige.extend(withPlayer),
+  attic_retrieve: zPrestige,
   advent_open: zEvents.extend(withPlayer),
   bares_get: zBares,
   bares_appraise: zBares,

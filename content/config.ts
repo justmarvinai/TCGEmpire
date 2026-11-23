@@ -366,6 +366,12 @@ export const config = {
   'events.personal_active_hours': 24,
   'events.random_per_hour': 0.05,
   'events.highlight_times': [[3, '20:00'], [5, '20:00'], [7, '18:00']],
+  // Prestige (docs/ECONOMY.md §11): Sterne = per exit + √(empire value in units of 1 Mio. Basis-€); Ruf keeps half of its
+  // distance from 500; Omas Dachboden gives back items worth some minutes of reference income per day
+  'prestige.stars_base': 10,
+  'prestige.value_unit_base_cents': 100_000_000,
+  'prestige.ruf_keep_pct': 50,
+  'attic.daily_minutes': 120,
   // Sonntags-Flohmarkt: Flohmarkt-Horst's ads in the Kleinanzeigen, at a share of the Marktwert
   'flohmarkt.stalls': 6,
   'flohmarkt.price_min_pct': 35,

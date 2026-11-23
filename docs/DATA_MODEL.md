@@ -135,6 +135,8 @@ RLS enabled on every table with no policies.
 | Table | Purpose |
 |-------|---------|
 | `game.bares` | alpha_10 · Bares für Rares, one row per player and German day: the copy shown (card, grader, grade, Black Label as shown), Marktwert, the expert's estimate, the offers (`[{dealer, cents}]`, dealer null = the 80-€ man), `sold` (offer index, -1 = no deal, null = open). |
+| `game.attic`, `game.attic_days` | alpha_11 · Omas Dachboden: bulk cards and sealed product after an exit (hits stay copies with location `attic`); counted in net worth and kept out of the attack cap; the value brought back per German day. |
+| `game.perks_owned` | alpha_11 · Empire-Perk levels (content/prestige.ts); each level is a modifier with the source `perk:<key>`, which an exit keeps. |
 | `game.sealed_marks` | alpha_10 · Präparierte Booster: of player_id's sealed stock of product_id, `qty` were prepared by by_id. Marks move first in gifts and trades (`private.goods_move`); opening uses up others' marks first (bulk, attack roll against the Prüfgerät) and one's own only when the normal boosters are gone; a deferred constraint trigger on `game.sealed` trims marks that left any other way and charges their value to the preparer (Käuferschutz). |
 | `game.events`, global `game.modifiers` | alpha_10 · Every event: key (content/events.ts), slot (daily, random, highlight, personal, admin, calendar; calendar events start by date through the `calendar` tick, Adventskalender doors are personal calendar events), player (personal) or none (everyone), start, end, what it hit (`data`: game, card, set, store, money) and whether it has started. Modifiers without a player count for everyone (`private.stat` sums both); events add them with the source `event:<id>`. `server.events_at` is the last events tick. |
 | `game.megaprojects`, `game.donations` | Server goals. |
@@ -156,7 +158,7 @@ RLS enabled on every table with no policies.
 | `game.worth_snapshots` | alpha_04 · net worth per player, hourly for `snapshots.hourly_days`, then the last one per Berlin day; deleted on reset. |
 | `game.rivals` | alpha_04 · 40 NPC tycoons (seeded from `content/rivals.ts`); their numbers are pure functions of the days since `game.server.started_at`. `game.server.worth_ranking` remembers the last Vermögen order for overtake headlines. |
 | `game.leagues` | Wochenwertung. |
-| `game.prestige_history` | Past runs. |
+| `game.prestiges` | alpha_11 · Every exit: number, Sterne, the value given up, when the run started and ended. |
 | `game.tick_schedule`, `game.job_runs` | Tick systems with intervals; run log. |
 | `game.admin_audit` | Admin actions. |
 | `game.versions` | State-area version counters per player for `sync`. |
@@ -252,7 +254,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 | Battles | `battles_get`, `battle_get`, `break_get` | `battle_create/join/leave/start`, `break_create/buy_spot/start`, `emote_send` |
 | Dark side | `darkside_get` (own Angriff and Abwehr, cap, per target and kind: chance, cost, loot, reason, Rache; rumour cards; booster stock; log) | `attack` (kind + target, or `geruecht` + card + direction), `reseal`, `loan_burst` |
 | Events / world | `events_get`, `megaprojects_get` | `event_claim`, `megaproject_donate`, `insurance_buy/cancel`, `lotto_buy` |
-| Prestige | `prestige_get` | `prestige_do`, `perk_buy` |
+| Prestige | `prestige_get` (Sterne preview, blockers, perks, Omas Dachboden with today's limit, exits) | `prestige_exit` (typed confirmation), `perk_buy`, `attic_retrieve` |
 | Admin | `admin_dashboard`, `admin_players`, `admin_jobs` | `admin_set_phase`, `admin_restock`, `admin_event_start/stop`, `admin_config_set`, `admin_invite_set`, `admin_grant`, `admin_announce`, `admin_auction_create` |
 
 ## 4. Engines (internal)

@@ -771,6 +771,8 @@ export const texts = {
   },
 
   feed: {
+    prestige: (d: Record<string, unknown>, rank: string) =>
+      `EXIT! ${String(d.name)} verkauft das komplette Imperium und fängt von vorn an. Neuer Rang: ${rank}, +${String(d.stars)} Sterne.`,
     bares: (d: Record<string, unknown>, card: string, money: string, estimate: string) =>
       `BARES FÜR RARES: ${String(d.name)} verkauft ${card} für ${money}. Der Experte hatte ${estimate} geschätzt und weint jetzt.`,
     attack: (kind: string, d: Record<string, unknown>, money: string, card: string) =>
@@ -935,6 +937,13 @@ export const texts = {
         steps: [
           'Deine Firma darf jetzt beim Großhändler bestellen: Displays zum Händlerpreis, billiger als überall sonst.',
           'Jede Woche gibt es ein Kontingent. Je größer deine Rechtsform, desto mehr. Du findest den Großhandel im Büro deiner Firma.',
+        ],
+      },
+      prestige: {
+        name: 'Der Exit',
+        steps: [
+          'Level 100! Jetzt darfst du alles verkaufen: Bargeld, Firma, Bunker, Wohnung. Dafür gibt es Empire-Sterne.',
+          'Mit Sternen kaufst du Perks, die für immer bleiben. Deine Sammlung wartet so lange auf Omas Dachboden.',
         ],
       },
       bares: {
@@ -1143,6 +1152,7 @@ export const texts = {
         wholesale: 'Mama: Jetzt kaufst du Kisten beim Großhändler? Wie Papa damals mit den Gartenzwergen. Die stehen heute noch im Keller.',
         darkside: 'Mama: Ich hab gehört, du beklaust jetzt deine Freunde? So hab ich dich nicht erzogen. Lass dich wenigstens nicht erwischen.',
         bares: 'Mama: Du gehst ins Fernsehen? Zieh was Ordentliches an. Und sag Hallo, ich schau zu.',
+        prestige: 'Mama: Du verkaufst alles und fängst von vorn an? Wie dein Onkel nach der dritten Scheidung. Dein Zimmer ist übrigens noch frei.',
         company: 'Mama: Eine eigene Firma? In der Garage? Papas Auto muss dann draußen stehen. Das sagst du ihm.',
         loans: 'Mama: Du verleihst jetzt Geld? An deine Freunde? Dann sieh es schon mal als Geschenk.',
         breaks: 'Mama: Du machst jetzt Live-Shows? Zieh dir wenigstens was Ordentliches an.',
@@ -1390,6 +1400,72 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  prestige: {
+    title: 'Der Exit',
+    subtitle: 'Verkauf dein Imperium. Fang von vorn an. Diesmal schneller.',
+    tip: 'Ab Level 100 verkaufst du alles, was nicht Sammlung ist: Bargeld, Firma, Bunker, Wohnung. Dafür gibt es Empire-Sterne für Perks, die für immer bleiben. Level, Upgrades, Skills und Firma fangen von vorn an, deine Karten und dein Sealed wandern auf Omas Dachboden.',
+    locked: (n: number) => `Der Exit kommt ab Level ${n}. Erst ein Imperium haben, dann verkaufen.`,
+    lockedText: 'Wer Level 100 schafft, darf alles verkaufen und neu anfangen: mit Sternen, Perks und einem Rang, den jeder sieht.',
+    rank: 'Rang',
+    rankTip: 'Dein Rang steigt mit jedem Exit. Jeder am Stammtisch sieht ihn.',
+    noRank: 'Noch kein Exit',
+    exits: (n: number) => (n === 0 ? 'Noch nie ausgestiegen.' : n === 1 ? 'Einmal ausgestiegen.' : `${n}× ausgestiegen.`),
+    stars: 'Empire-Sterne',
+    starsTip: 'Gibt es bei jedem Exit. Damit kaufst du Perks, die für immer bleiben.',
+    exit: 'Imperium verkaufen',
+    exitTip:
+      'Sterne für den Exit: ein fester Sockel plus die Wurzel aus dem, was du aufgibst (Bargeld, Firma, Bunker, Wohnung), gemessen in Millionen. Die Sammlung zählt nicht, die behältst du ja.',
+    nextExit: (n: number) => `Der nächste Exit geht wieder ab Level ${n}.`,
+    preview: 'Sterne für den Exit',
+    previewBreakdown: (base: number, fromValue: number, value: string, unit: string) =>
+      `${base} für den Exit, ${fromValue} für ${value} Imperiumswert (Wurzel aus dem Wert in Einheiten von ${unit}).`,
+    resets: 'Fängt von vorn an',
+    resetsList: 'Level, Bargeld, Upgrades, Skills, Jobs, Geldbunker, Firma, Wohnung und Möbel, Quests.',
+    keeps: 'Bleibt',
+    keepsList: (start: string, ruf: number) =>
+      `Karten und Sealed (auf Omas Dachboden), Erfolge, Titel, Stil, Freunde, Ehre und Perks. Du startest mit ${start}, Ruf danach ${ruf}.`,
+    blocked: 'Erst aufräumen:',
+    blockers: {
+      listings: (n: number) => `${n} ${n === 1 ? 'Angebot' : 'Angebote'} am Cardmarket`,
+      buy_orders: (n: number) => `${n} ${n === 1 ? 'Gesuch' : 'Gesuche'} am Cardmarket`,
+      shipments: (n: number) => `${n} ${n === 1 ? 'Paket' : 'Pakete'} unterwegs`,
+      ads: (n: number) => `${n} ${n === 1 ? 'Kleinanzeige' : 'Kleinanzeigen'}`,
+      grading: (n: number) => `${n} ${n === 1 ? 'Karte' : 'Karten'} beim Grading`,
+      company_orders: (n: number) => `${n} ${n === 1 ? 'Kundenauftrag' : 'Kundenaufträge'} in deiner Firma`,
+      loans: (n: number) => `${n} ${n === 1 ? 'laufender Kredit' : 'laufende Kredite'}`,
+      battles: (n: number) => `${n} ${n === 1 ? 'offenes Pack Battle' : 'offene Pack Battles'}`,
+      breaks: (n: number) => `${n} ${n === 1 ? 'offener Box Break' : 'offene Box Breaks'}`,
+      group_orders: (n: number) => `${n} ${n === 1 ? 'offene Sammelbestellung' : 'offene Sammelbestellungen'}`,
+    } as Record<string, (n: number) => string>,
+    confirmLabel: (name: string) => `Zum Bestätigen „${name}“ eintippen`,
+    go: 'Gedrückt halten: Imperium verkaufen',
+    done: (stars: number, rank: string) => `Verkauft! +${stars} Sterne. Willkommen als ${rank}. Oma hat deine Sammlung auf den Dachboden geschleppt.`,
+    perks: 'Empire-Perks',
+    perksTip: 'Mit Sternen gekauft, bleiben für immer, auch nach dem nächsten Exit. Jede Stufe kostet mehr als die davor.',
+    perkLevel: (level: number, max: number) => `Stufe ${level}/${max}`,
+    perkMax: 'Voll ausgebaut',
+    perkBuy: (cost: number) => `Kaufen für ${cost} ${cost === 1 ? 'Stern' : 'Sterne'}`,
+    perkBought: (name: string) => `${name}: eine Stufe mehr. Für immer.`,
+    attic: 'Omas Dachboden',
+    atticTip:
+      'Hier liegt deine Sammlung nach dem Exit. Sie zählt fürs Vermögen und für Sammelziele. Verkaufen, tauschen oder graden kannst du sie erst, wenn du sie runterholst. Oma rückt pro Tag nur Sachen bis zu einem bestimmten Wert raus; das Erste am Tag darf mehr wert sein.',
+    atticEmpty: 'Der Dachboden ist leer. Oma hat endlich Platz für die Weihnachtsdeko.',
+    atticLeft: (left: string, limit: string) => `Heute noch ${left} von ${limit}`,
+    atticFresh: 'das Erste heute darf mehr wert sein',
+    atticQty: (n: number, each: string) => `${n} Stück · je ${each}`,
+    raw: 'Ungegradet',
+    fetch: 'Runterholen',
+    fetchQty: 'Anzahl',
+    atticDone: 'Runtergeholt. Oma hat geschimpft, aber geholfen.',
+    atticHint: (n: number) => `${n} ${n === 1 ? 'Sache liegt' : 'Sachen liegen'} noch auf Omas Dachboden.`,
+    atticLink: 'Zum Dachboden',
+    history: 'Bisherige Exits',
+    historyTip: 'Jeder Exit mit Datum, Dauer des Laufs, Sternen und dem verkauften Imperium.',
+    historyLine: (n: number, rank: string) => `Exit ${n}: ${rank}`,
+    historyMeta: (date: string, days: number, stars: number, value: string) =>
+      `${date} · ${days} ${days === 1 ? 'Tag' : 'Tage'} · +${stars} Sterne · ${value}`,
   },
 
   bares: {
@@ -2155,6 +2231,9 @@ export const texts = {
   },
 
   errors: {
+    prestige_busy: 'Erst aufräumen: Es läuft noch was (Angebote, Pakete, Grading …).',
+    not_enough_stars: 'Nicht genug Sterne.',
+    attic_limit: 'Oma sagt: Für heute reicht es. Morgen wieder.',
     attack_cooldown: 'Nicht so hastig. Zwischen zwei Aktionen gegen dasselbe Opfer vergeht eine Stunde.',
     attack_limit: 'Für heute hast du das Opfer damit genug gerupft.',
     attack_cap: 'Das Opfer hat heute schon genug geblutet. Mehr gibt der Tagesdeckel nicht her.',

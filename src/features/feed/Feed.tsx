@@ -3,6 +3,7 @@ import { slabName } from '@/components/cards/Slab.tsx'
 import { HOMES } from '@/lib/catalog.ts'
 import { AWARDS } from '../../../content/company.ts'
 import { ATTACKS } from '../../../content/darkside.ts'
+import { rankName } from '@/features/prestige/PrestigePage.tsx'
 import { eventDef, eventTarget, eventWhen } from '@/features/events/eventText.ts'
 import { CONSUMABLES, cardName, gameOf, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
@@ -41,6 +42,7 @@ export function feedText(f: FeedEntry, doener: string) {
     return texts.feed.attack_blocked(kind, f.data, formatMoney(Number(f.data.fine_cents ?? 0)), card, defence)
   }
   if (f.kind === 'resealed_caught') return texts.feed.resealed_caught(f.data)
+  if (f.kind === 'prestige') return texts.feed.prestige(f.data, rankName(Number(f.data.n)) ?? '')
   if (f.kind === 'bares')
     return texts.feed.bares(f.data, cardName(String(f.data.card_id)), formatMoney(Number(f.data.cents)), formatMoney(Number(f.data.estimate_cents)))
   if (f.kind === 'battle')
