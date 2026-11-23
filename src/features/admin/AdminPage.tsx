@@ -57,6 +57,7 @@ export function AdminPage() {
           <EventsAdmin d={q.data} />
           <MuseumAdmin />
           <Health />
+          <Pace />
           <Economy d={q.data} />
           <Players d={q.data} />
           <Server />
@@ -493,6 +494,44 @@ function MuseumAdmin() {
             {T.museumGo}
           </Button>
         </div>
+      )}
+    </Panel>
+  )
+}
+
+/** Each player's pace in the current run, against the target of level 100 in 2–3 weeks. */
+function Pace() {
+  const q = useQuery({ queryKey: ['admin-health'], queryFn: () => rpc('admin_health') })
+  return (
+    <Panel title={T.pace} tip={T.paceTip}>
+      {!q.data ? (
+        <Skeleton className="h-24 w-full" />
+      ) : (
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="text-left text-fg-3">
+              <th className="pb-1 font-semibold">{T.pacePlayer}</th>
+              <th className="pb-1 text-right font-semibold">{T.paceLevel}</th>
+              <th className="pb-1 text-right font-semibold">{T.paceDays}</th>
+              <th className="pb-1 text-right font-semibold">{T.pacePerDay}</th>
+              <th className="pb-1 text-right font-semibold">{T.paceWorth}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {q.data.pace.map((p) => (
+              <tr key={p.username} className="border-t border-line">
+                <td className="py-1">
+                  {p.username}
+                  <span className="text-fg-3">{T.paceExits(p.prestige)}</span>
+                </td>
+                <td className="nums py-1 text-right">{p.level}</td>
+                <td className="nums py-1 text-right">{formatNumber(p.days)}</td>
+                <td className="nums py-1 text-right">{formatNumber(Math.round((p.level / Math.max(p.days, 0.1)) * 10) / 10)}</td>
+                <td className="nums py-1 text-right">{formatMoney(p.net_worth_cents)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </Panel>
   )

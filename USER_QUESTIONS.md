@@ -65,3 +65,11 @@ changes.
 
 - Deployment still needs (see Q-2) the Supabase project, the Vercel project and three GitHub secrets — exact steps
   are given when deployment is wanted; coding and local testing work without them.
+- **Q-29 Data at 0.0.1 (alpha_12):** what happens to the playtest's data when `0.0.1` goes live?
+  **Recommended: keep the logins, reset all progress** — on release day every account starts fresh like after the
+  Gefahrenzone reset (level 1, start money, no items, no company), usernames, passwords, the invite code and the admin
+  stay; NPCs, market and Preisniveau start over. Fair toplists, nobody has to register again, and nothing from the
+  alpha balance or the dev tools carries over. Alternatives: (b) keep everything from the playtest; (c) wipe
+  everything including the accounts (everyone registers again).
+- **Q-30 Playtest:** the group playtest needs the deployment (Q-2) first; `docs/PLAYTEST.md` is the one-page checklist
+  for the group. Recommended: one week, everyone at least once a day, bugs to the owner with a screenshot.

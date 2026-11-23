@@ -896,6 +896,8 @@ export const zAdminHealth = z.object({
   active_24h: z.number(),
   active_7d: z.number(),
   median_level: z.number(),
+  /** each player's current run: since joining, the last reset or the last exit */
+  pace: z.array(z.object({ username: z.string(), level: z.number(), prestige: z.number(), days: z.number(), net_worth_cents: z.number() })),
 })
 export type AdminHealth = z.infer<typeof zAdminHealth>
 
