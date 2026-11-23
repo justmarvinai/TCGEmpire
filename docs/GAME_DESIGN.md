@@ -515,9 +515,9 @@ respec costs money. Four branches, each ending in a keystone:
 | Type | Count | Reset | Reward size | Notes |
 |------|-------|-------|-------------|-------|
 | **Kapitel (story/tutorial)** | Chain | — | Unlocks, packs, money | Mutti and Opa guide you through every new system. |
-| **Mini-Quests** | 3 always active, endless | Replaced instantly | Tiny: a little money, EP, 1 Pfandbon | "Öffne 3 Booster", "Sammle den Bunker ein". Every 10th gives a small bonus chest. |
-| **Tagesquests** | 5 | Daily 00:00 | Medium | One free reroll per day; never impossible for your level or wallet. |
-| **Wochenquests** | 5 | Monday 00:00 | Large + weekly chest (pack/display of choice) | One of them is social (trade, battle, help). |
+| **Mini-Quests** | 3 always active, endless | Replaced instantly | Tiny: EP, 1 Pfandbon (no money since 0.0.6) | "Öffne 3 Booster", "Sammle den Bunker ein". Every 10th gives a small bonus chest. |
+| **Tagesquests** | 5 | Daily 00:00 | Medium: EP and Pfandbons; all five give bonus EP (no money since 0.0.6) | One free reroll per day; never impossible for your level or wallet. |
+| **Wochenquests** | 5 | Monday 00:00 | Large: money, EP, Pfandbons + weekly chest (pack/display of choice) | The only quests that pay money (0.0.6). One of them is social (trade, battle, help). |
 | **Erfolge (achievements)** | ~200 in tiers | — | Titles, cosmetics, Skillpunkte at milestones | Includes joke achievements for failures ("Pechvogel", "Auf Fake reingefallen"). |
 | **Sammelziele** | Per set | — | Permanent bonuses | §6. |
 | **Event-Quests** | During events | — | Event rewards | §19. |

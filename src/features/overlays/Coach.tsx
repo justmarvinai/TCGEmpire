@@ -20,14 +20,21 @@ const topDialog = () => {
   return all.length ? all[all.length - 1]! : null
 }
 
-/** The element `id` marks: on screen, inside the open dialog if there is one, and clickable if asked. */
-function findTarget(id: string, enabled: boolean) {
+/** The button that opens the menu drawer on phones (data-tour in the Shell header). */
+export const MENU_BUTTON = 'nav-menu'
+
+/**
+ * The element `id` marks: on screen, inside the open dialog if there is one, and clickable if asked. A closed menu
+ * drawer lies beside the screen, so its entries do not count; `nav:` entries are then reached through MENU_BUTTON.
+ */
+function findTarget(id: string, enabled: boolean): [string, HTMLElement] | null {
   const scope: ParentNode = topDialog() ?? document
   for (const el of scope.querySelectorAll<HTMLElement>(`[data-tour="${id}"]`)) {
     const r = el.getBoundingClientRect()
-    if (r.width > 0 && r.height > 0 && !(enabled && el.matches(':disabled, [aria-disabled="true"]'))) return el
+    const onScreen = r.width > 0 && r.height > 0 && r.right > 0 && r.left < window.innerWidth
+    if (onScreen && !(enabled && el.matches(':disabled, [aria-disabled="true"]'))) return [id, el]
   }
-  return null
+  return id.startsWith('nav:') ? findTarget(MENU_BUTTON, enabled) : null
 }
 
 /**
@@ -47,13 +54,14 @@ export function useSpot(ids: readonly string[], enabled = false) {
     const tick = () => {
       let spot: Spot | null = null
       for (let i = list.length - 1; i >= 0 && !spot; i--) {
-        const el = findTarget(list[i]!, enabled)
-        if (!el) continue
+        const found = findTarget(list[i]!, enabled)
+        if (!found) continue
+        const [id, el] = found
         const r = el.getBoundingClientRect()
         const rect = { x: r.left, y: r.top, w: r.width, h: r.height }
-        if (!anchor || list[i] !== lastId || moved(anchor, rect)) anchor = rect
-        spot = { id: list[i]!, rect, anchor }
-        if (list[i] !== lastId && (r.top < 0 || r.bottom > window.innerHeight)) {
+        if (!anchor || id !== lastId || moved(anchor, rect)) anchor = rect
+        spot = { id, rect, anchor }
+        if (id !== lastId && (r.top < 0 || r.bottom > window.innerHeight)) {
           el.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' })
         }
       }

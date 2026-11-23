@@ -5,7 +5,7 @@
 type Json = string | number | boolean | null | readonly Json[] | { readonly [k: string]: Json }
 
 export const config = {
-  version: '0.0.5',
+  version: '0.0.6',
 
   // Login
   'auth.bcrypt_cost': 10,
@@ -463,15 +463,16 @@ export const config = {
 
   // Quests: money in minutes of reference income, EP as a share of the current level
   'quest.mini_slots': 3,
-  'quest.mini_reward_minutes': 1,
+  // 0.0.6: only weekly quests pay money (mini and daily quests and the daily bonus pay EP and Pfandbons)
+  'quest.mini_reward_minutes': 0,
   'quest.mini_pfandbons': 1,
   'quest.mini_ep_share': 0.03,
   'quest.bonus_every': 10,
   'quest.daily_slots': 5,
-  'quest.daily_reward_minutes': 20,
+  'quest.daily_reward_minutes': 0,
   'quest.daily_ep_share': 0.2,
   'quest.daily_pfandbons': 2,
-  'quest.daily_bonus_minutes': 60,
+  'quest.daily_bonus_minutes': 0,
   'quest.daily_bonus_ep_share': 0.5,
   'quest.weekly_slots': 5,
   'quest.weekly_reward_minutes': 180,

@@ -15,7 +15,7 @@ import { formatDuration, formatMoney } from '@/lib/format.ts'
 import { hash01, useNow } from '@/lib/pure.ts'
 import type { Player } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
-import { Coach, useSpot } from './Coach.tsx'
+import { Coach, MENU_BUTTON, useSpot } from './Coach.tsx'
 import { TOUR_TARGETS } from './tourTargets.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useWorld } from '@/lib/world.ts'
@@ -272,6 +272,7 @@ function TutorialCoach({ step }: { step: number }) {
   if (def.pick) return dialog ? null : <Coach spot={null} block label={texts.tutorial.from} head={head} text={def.text} actions={<StarterButtons />} />
   // Dialogs (the booster opening, a level-up) stay usable; inside one, only a target in it is marked.
   if (dialog && !spot) return null
-  const hint = (guide.find((g) => g.target === spot?.id) ?? guide[0])?.hint
+  // on a phone a menu entry first needs the menu
+  const hint = spot?.id === MENU_BUTTON ? texts.tutorial.openMenu : (guide.find((g) => g.target === spot?.id) ?? guide[0])?.hint
   return <Coach spot={spot} block={!!spot && !dialog} label={texts.tutorial.from} head={head} text={def.text} hint={hint} />
 }

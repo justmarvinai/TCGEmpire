@@ -17,8 +17,9 @@ export const CONSUMABLES: readonly ConsumableDef[] = [
   { key: 'doener', name: 'Döner', text: '+50 Energie. Fettige Finger für 10 Minuten: frisch gezogene Hits haben schlechtere Oberflächen.', where: 'kiosk', priceBaseCents: 150_00, energy: 50, buff: { stat: 'fettfinger', op: 'flat', value: 1, minutes: 10, name: 'Fettfinger', text: 'Frisch gezogene Hits haben schlechtere Oberflächen. Erst Hände waschen, dann aufreißen.' } },
   { key: 'mate', name: 'Club-Mate', text: '+20 Energie. Schmeckt wie ein Bierdeckel, wirkt wie ein Wecker.', where: 'kiosk', priceBaseCents: 50_00, energy: 20 },
   { key: 'kaffee', name: 'Kaffee', text: '+12 Energie. Filterkaffee aus der Thermoskanne vom Kioskbesitzer.', where: 'kiosk', priceBaseCents: 35_00, energy: 12 },
-  { key: 'energiebon', name: 'Energie-Bon', text: '+30 Energie. Ohne Fettfinger, ohne Würde.', where: 'pfandautomat', pfandbons: 3, energy: 30 },
-  { key: 'lernbon', name: 'Lern-Bon', text: '+25 % EP für 30 Minuten.', where: 'pfandautomat', pfandbons: 4, buff: { stat: 'ep', op: 'pct', value: 25, minutes: 30, name: 'Lern-Bon', text: '+25 % EP auf alles.' } },
-  { key: 'gluecksbon', name: 'Glücks-Bon', text: '+10 % Pack-Glück für 30 Minuten.', where: 'pfandautomat', pfandbons: 5, buff: { stat: 'pack_luck', op: 'flat', value: 10, minutes: 30, name: 'Glücks-Bon', text: '+10 % Pack-Glück.' } },
-  { key: 'kioskbon', name: 'Kiosk-Gutschein', text: 'Ein Booster. Der Kioskbesitzer guckt komisch, nimmt ihn aber.', where: 'pfandautomat', pfandbons: 8, booster: 1 },
+  { key: 'energiebon', name: 'Energie-Bon', text: '+30 Energie. Ohne Fettfinger, ohne Würde.', where: 'pfandautomat', pfandbons: 5, energy: 30 },
+  { key: 'lernbon', name: 'Lern-Bon', text: '+25 % EP für 30 Minuten.', where: 'pfandautomat', pfandbons: 6, buff: { stat: 'ep', op: 'pct', value: 25, minutes: 30, name: 'Lern-Bon', text: '+25 % EP auf alles.' } },
+  // 0.0.6: dearer and weaker (was 5 Pfandbons for +10 % over 30 minutes)
+  { key: 'gluecksbon', name: 'Glücks-Bon', text: '+5 % Pack-Glück für 5 Minuten. Schnell aufreißen.', where: 'pfandautomat', pfandbons: 10, buff: { stat: 'pack_luck', op: 'flat', value: 5, minutes: 5, name: 'Glücks-Bon', text: '+5 % Pack-Glück.' } },
+  { key: 'kioskbon', name: 'Kiosk-Gutschein', text: 'Ein Booster. Der Kioskbesitzer guckt komisch, nimmt ihn aber.', where: 'pfandautomat', pfandbons: 12, booster: 1 },
 ]

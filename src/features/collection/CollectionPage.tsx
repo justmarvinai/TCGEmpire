@@ -37,6 +37,7 @@ export function CollectionPage() {
   const act = useAct()
   const [filter, setFilter] = useState<Filter>('all')
   const [tier, setTier] = useState<Tier | null>(null)
+  const [sort, setSort] = useState<'no' | 'value'>('no')
   const [open, setOpen] = useState<string | null>(null)
   const [selling, setSelling] = useState(false)
 
@@ -44,15 +45,15 @@ export function CollectionPage() {
   const owned = cards.filter((c) => c.qty > 0)
   // Slabs count with their own value, everything else at Marktwert.
   const value = owned.reduce((s, c) => s + c.value_cents * (c.qty - c.slabs.length) + c.slabs.reduce((t, x) => t + x.value_cents, 0), 0)
-  const shown = useMemo(
-    () =>
-      cards.filter(
-        (c) =>
-          (filter === 'all' || (filter === 'owned' ? c.qty > 0 : c.qty === 0)) &&
-          (!tier || cardById.get(c.card_id)?.tier === tier),
-      ),
-    [cards, filter, tier],
-  )
+  const shown = useMemo(() => {
+    const list = cards.filter(
+      (c) =>
+        (filter === 'all' || (filter === 'owned' ? c.qty > 0 : c.qty === 0)) &&
+        (!tier || cardById.get(c.card_id)?.tier === tier),
+    )
+    // the server's Marktwert, highest first; the binder order is the set number
+    return sort === 'value' ? [...list].sort((a, b) => b.value_cents - a.value_cents) : list
+  }, [cards, filter, tier, sort])
   const dupes = duplicateStacks(cards)
   const selected = cards.find((c) => c.card_id === open)
 
@@ -118,9 +119,15 @@ export function CollectionPage() {
             </Chip>
           ))}
           <span className="mx-1 w-px bg-line" />
-          {TIERS.map((t) => (
+          {TIERS.filter((t) => set.cards.some((c) => c.tier === t)).map((t) => (
             <Chip key={t} active={tier === t} onClick={() => setTier(tier === t ? null : t)} className={TIER_TEXT[t]}>
               {TIER_LABEL[t]}
+            </Chip>
+          ))}
+          <span className="mx-1 w-px bg-line" />
+          {(['no', 'value'] as const).map((k) => (
+            <Chip key={k} active={sort === k} onClick={() => setSort(k)}>
+              {k === 'no' ? T.sortNo : T.sortValue}
             </Chip>
           ))}
         </div>

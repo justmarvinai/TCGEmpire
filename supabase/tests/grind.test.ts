@@ -131,16 +131,30 @@ describe('quests', () => {
     if (after.level === 50) expect(Number(after.ep) - Number(before)).toBe(d.reward_ep)
   })
 
+  it('pays money only for weekly quests (0.0.6)', async () => {
+    await setLevel(30)
+    const q = await t.rpc(me, 'quests_get')
+    expect(q.weekly.length).toBeGreaterThan(0)
+    expect(q.weekly.every((w) => w.reward_cents > 0)).toBe(true)
+    expect([...q.mini, ...q.daily].every((x) => x.reward_cents === 0)).toBe(true)
+  })
+
   it('pays a bonus for all five dailies, expires old ones at midnight', async () => {
     await setLevel(5)
     const q = await t.rpc(me, 'quests_get')
+    // 0.0.6: mini and daily quests and the daily bonus pay EP and Pfandbons, no money
+    expect(q.daily.every((d) => d.reward_cents === 0 && d.reward_ep > 0)).toBe(true)
+    expect(q.daily_bonus_cents).toBe(0)
+    expect(q.daily_bonus_ep).toBeGreaterThan(0)
     for (const d of q.daily) await t.sql(`update game.quests set progress = target where id = $1`, [d.id])
-    const before = (await player()).cash_cents
+    const before = await player()
     let last
     for (const d of q.daily) last = await t.rpc(me, 'quest_claim', { p_request_id: rid(), p_quest: d.id })
     expect(last!.daily_bonus_done).toBe(true)
-    const paid = q.daily.reduce((s, d) => s + d.reward_cents, 0)
-    expect(last!.player.cash_cents).toBeGreaterThan(before + paid) // + bonus
+    const [quest] = await t.sql<{ cents: number }>(
+      `select coalesce(sum(delta_cents), 0)::int as cents from game.ledger where player_id = $1 and reason in ('quest', 'quest_bonus')`, [id])
+    expect(quest!.cents).toBe(0) // the level-ups on the way still pay their level rewards
+    expect(last!.player.level).toBeGreaterThan(before.level)
     const notes = (await t.rpc(me, 'sync')).notifications.map((n) => n.kind)
     expect(notes).toContain('daily_bonus')
 
@@ -228,13 +242,14 @@ describe('minijobs, snacks and the Pfandautomat', () => {
     expect(res.player.buffs.map((b) => b.key)).toEqual(['doener'])
     expect(res.player.cash_cents).toBe(400_00 - 150_00)
     await expect(t.rpc(me, 'consumable_use', { p_request_id: rid(), p_key: 'kioskbon' })).rejects.toThrow('not_enough_pfandbons')
-    await t.sql(`update game.players set pfandbons = 20 where id = $1`, [id])
+    await t.sql(`update game.players set pfandbons = 30 where id = $1`, [id])
     const bon = await t.rpc(me, 'consumable_use', { p_request_id: rid(), p_key: 'kioskbon' })
-    expect(bon.player).toMatchObject({ pfandbons: 12, sealed_total: 1 })
+    expect(bon.player).toMatchObject({ pfandbons: 18, sealed_total: 1 })
     const luck = await t.rpc(me, 'consumable_use', { p_request_id: rid(), p_key: 'gluecksbon' })
+    expect(luck.player).toMatchObject({ pfandbons: 8 })
     expect(luck.player.buffs.map((b) => b.key).sort()).toEqual(['doener', 'gluecksbon'])
-    await t.advance('11 minutes')
-    expect((await player()).buffs.map((b) => b.key)).toEqual(['gluecksbon'])
+    await t.advance('6 minutes') // the Glücks-Bon lasts 5 minutes, the Döner's Fettfinger 10
+    expect((await player()).buffs.map((b) => b.key)).toEqual(['doener'])
     await t.assertLedgerMatches()
   })
 })

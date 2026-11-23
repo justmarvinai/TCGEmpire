@@ -1249,7 +1249,7 @@ export const texts = {
     unlock: (d: Record<string, unknown>, name: string) => {
       const f = String(d.feature)
       const lines: Record<string, string> = {
-        daily_quests: 'Mama: Ab jetzt gibt es Tagesquests. Wie Hausaufgaben, nur mit Geld.',
+        daily_quests: 'Mama: Ab jetzt gibt es Tagesquests. Wie Hausaufgaben, nur mit EP. Geld gibt es erst bei den Wochenquests.',
         stamps: 'Mama: Am Kiosk gibt es jetzt eine Stempelkarte. Komm jeden Tag vorbei. Wie früher zum Essen.',
         bunker: 'Mama: Du hast jetzt einen Geldbunker. Ich nenn es Sparschwein. Leer ihn regelmäßig, sonst klaut ihn wer.',
         upgrades: 'Mama: Upgrades sind freigeschaltet. Investier in dich, sagt Opa. Opa hat in Telefonkarten investiert.',
@@ -1514,6 +1514,8 @@ export const texts = {
     filterAll: 'Alle',
     filterOwned: 'Besessen',
     filterMissing: 'Fehlend',
+    sortNo: 'Nach Nummer',
+    sortValue: 'Nach Wert',
     missing: 'Fehlt',
     owned: (n: number) => `${n}× im Besitz`,
     cardValue: 'Wert',
@@ -2270,13 +2272,14 @@ export const texts = {
   },
 
   quests: {
-    reward: (money: string, ep: number, bons: number) => `${money} · ${ep} EP · ${bons} ${bons === 1 ? 'Pfandbon' : 'Pfandbons'}`,
+    reward: (money: string | null, ep: number, bons: number) =>
+      [money, `${ep} EP`, `${bons} ${bons === 1 ? 'Pfandbon' : 'Pfandbons'}`].filter(Boolean).join(' · '),
     title: 'Quests',
-    subtitle: 'Kleine Aufgaben für kleines Geld. Hören nie auf. Wie das Leben.',
+    subtitle: 'Kleine Aufgaben für EP und Pfandbons. Geld gibt es nur für die Wochenquests. Hören nie auf. Wie das Leben.',
     daily: 'Tagesquests',
     dailyTip: 'Fünf Aufgaben pro Tag, neu um 00:00. Alle fünf geschafft gibt einen Bonus. Eine darfst du pro Tag kostenlos neu würfeln.',
     dailyLocked: (level: number) => `Tagesquests ab Level ${level}.`,
-    dailyBonus: (money: string) => `Alle fünf: +${money}`,
+    dailyBonus: (money: string | null, ep: number) => `Alle fünf: +${[money, `${ep} EP`].filter(Boolean).join(' und ')}`,
     weekly: 'Wochenquests',
     weeklyTip: 'Fünf große Aufgaben pro Woche, neu am Montag. Alle fünf geschafft öffnet die Wochentruhe mit Boostern.',
     weeklyLocked: (level: number) => `Wochenquests ab Level ${level}.`,
@@ -2319,6 +2322,7 @@ export const texts = {
   tutorial: {
     from: 'Mama',
     done: 'Mama ist stolz. Ein bisschen.',
+    openMenu: 'Tipp oben links auf das Menü.',
   },
 
   bunker: {

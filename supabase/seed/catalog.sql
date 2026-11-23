@@ -707,10 +707,10 @@ insert into game.consumable_defs (key, price_base_cents, pfandbons, energy, boos
   ('doener', 15000, null, 50, 0, 'fettfinger', 'flat', 1, 10),
   ('mate', 5000, null, 20, 0, null, null, null, null),
   ('kaffee', 3500, null, 12, 0, null, null, null, null),
-  ('energiebon', null, 3, 30, 0, null, null, null, null),
-  ('lernbon', null, 4, 0, 0, 'ep', 'pct', 25, 30),
-  ('gluecksbon', null, 5, 0, 0, 'pack_luck', 'flat', 10, 30),
-  ('kioskbon', null, 8, 0, 1, null, null, null, null)
+  ('energiebon', null, 5, 30, 0, null, null, null, null),
+  ('lernbon', null, 6, 0, 0, 'ep', 'pct', 25, 30),
+  ('gluecksbon', null, 10, 0, 0, 'pack_luck', 'flat', 5, 5),
+  ('kioskbon', null, 12, 0, 1, null, null, null, null)
 on conflict (key) do update set price_base_cents = excluded.price_base_cents, pfandbons = excluded.pfandbons, energy = excluded.energy,
   booster = excluded.booster, buff_stat = excluded.buff_stat, buff_op = excluded.buff_op, buff_value = excluded.buff_value,
   buff_minutes = excluded.buff_minutes;

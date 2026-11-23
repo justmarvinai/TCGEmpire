@@ -193,7 +193,7 @@ function TopBar({ me }: { me: SignedIn }) {
   const apply = useWorld((s) => s.apply)
   return (
     <header className="sticky top-0 z-30 flex h-19 items-center gap-3 bg-ink/45 px-8 backdrop-blur-xl max-lg:px-4">
-      <button type="button" onClick={() => apply({ navOpen: true })} className={clsx(roundBtn, 'lg:hidden')} aria-label={texts.hud.menu}>
+      <button type="button" onClick={() => apply({ navOpen: true })} className={clsx(roundBtn, 'lg:hidden')} aria-label={texts.hud.menu} data-tour="nav-menu">
         <PixelIcon name="menu" />
       </button>
       <button

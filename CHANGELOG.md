@@ -3,6 +3,23 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.6] — Dritte Runde Feedback (23 Nov 2026)
+
+### Changed
+
+- **Quests pay money only weekly:** mini quests, daily quests and the bonus for all five dailies now give EP and
+  Pfandbons only; the weekly quests keep their money. Fewer boosters bought means slower levelling too, which
+  answers "you level up a little too quickly" on its own.
+- **Pfandautomat is dearer:** Energie-Bon 5 Pfandbons (was 3), Lern-Bon 6 (was 4), Kiosk-Gutschein 12 (was 8). The
+  Glücks-Bon costs 10 (was 5) and gives +5 % Pack-Glück for 5 minutes (was +10 % for 30 minutes).
+- **Sammlung sorted by value:** sort by number or by value, highest first; the rarity filter shows only the tiers a
+  set has.
+
+### Fixed
+
+- **Phones:** the tutorial pointed at the side menu, which on a phone is hidden, and dimmed everything else, so you
+  could not get anywhere. Now it first points at the menu button, then at the entry.
+
 ## [0.0.5] — Empiremon (23 Nov 2026)
 
 ### Added

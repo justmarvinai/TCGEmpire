@@ -82,7 +82,7 @@ export function QuestList({ quests, list, reroll, compact }: { quests: Quests; l
                 <span className="nums text-xs text-fg-3">
                   {q.progress}/{q.target}
                 </span>
-                <span className="nums text-xs text-fg-3">{T.reward(formatMoney(q.reward_cents), q.reward_ep, q.reward_pfandbons)}</span>
+                <span className="nums text-xs text-fg-3">{T.reward(q.reward_cents > 0 ? formatMoney(q.reward_cents) : null, q.reward_ep, q.reward_pfandbons)}</span>
               </div>
             </div>
             {q.claimed ? (
@@ -207,7 +207,7 @@ export function QuestsPage() {
                 <QuestList quests={q} list={q.daily} reroll />
                 <p className={clsx('mt-3 text-sm', q.daily_bonus_done ? 'text-gain' : 'text-fg-2')}>
                   <PixelIcon name="gift" className="mr-1 inline text-gold" />
-                  {q.daily_bonus_done ? T.bonusDone : T.dailyBonus(formatMoney(q.daily_bonus_cents))}
+                  {q.daily_bonus_done ? T.bonusDone : T.dailyBonus(q.daily_bonus_cents > 0 ? formatMoney(q.daily_bonus_cents) : null, q.daily_bonus_ep)}
                 </p>
               </>
             )}
