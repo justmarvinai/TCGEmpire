@@ -120,6 +120,12 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
       note((await t.rpc(me, 'me_get')).player!.level)
     }
     await t.sql(`select private.tick_events(), private.tick_calendar(), private.tick_battles()`)
+    if (process.env.SIM_TRACE) {
+      const pl = (await t.rpc(me, 'me_get')).player!
+      const top = [...doneToday].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k, n]) => `${k} ${n}`).join(', ')
+      console.log(`day ${day}: level ${pl.level}, cash ${(pl.cash_cents / 100).toFixed(0)} €, energy ${pl.energy}, sealed ${pl.sealed_total} | ${top}`)
+    }
+    doneToday.clear()
     const run = runs.at(-1)!
     const worth = (await t.rpc(me, 'me_get')).player!.net_worth_cents
     run.peakNetWorthCents = Math.max(run.peakNetWorthCents, worth)
@@ -212,9 +218,13 @@ function bestShift(jobs: Awaited<ReturnType<TestDb['rpc']>> & { jobs: { key: str
 /** Calls an RPC and ignores game errors (the bot simply tries the next thing). */
 /** Failed bot actions by RPC and error (a bot stuck on one failing action shows up here). */
 const failures = new Map<string, number>()
+/** Successful bot actions of the current day (SIM_TRACE prints them). */
+const doneToday = new Map<string, number>()
 async function quietly(t: TestDb, me: string, fn: Parameters<TestDb['rpc']>[1], args: Record<string, unknown>) {
   try {
-    return await t.rpc(me, fn, { p_request_id: rid(), ...args })
+    const res = await t.rpc(me, fn, { p_request_id: rid(), ...args })
+    doneToday.set(fn, (doneToday.get(fn) ?? 0) + 1)
+    return res
   } catch (e) {
     const key = `${fn}: ${String((e as Error).message).slice(0, 40)}`
     failures.set(key, (failures.get(key) ?? 0) + 1)
