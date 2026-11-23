@@ -38,3 +38,4 @@ if (r.jobErrors.length) console.log(`\nFailed tick jobs:\n${r.jobErrors.join('\n
 console.log(`\nEvents: ${Object.entries(r.events).map(([k, n]) => `${k} ${n}`).join(', ') || 'none'}`)
 console.log(`\nNotifications: ${Object.entries(r.notes).filter(([k]) => k.startsWith('company') || k.startsWith('staff')).map(([k, n]) => `${k} ${n}`).join(', ')}`)
 console.log(`\nDatabase at the end: ${r.db.mb} MB (${r.db.tables})`)
+if (r.failures.length) console.log(`\nFailed bot actions: ${r.failures.join('; ')}`)

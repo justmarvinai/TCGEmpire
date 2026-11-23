@@ -191,10 +191,11 @@ PGlite runs in WebAssembly, so the times are an upper bound for Supabase):
   (≈ 45 MB for the four sets), then grows by one row per item and day (≈ 20 MB a year). Each new set adds about 25 %.
 - **Job runs:** about 4.150 rows a day, kept 7 days (≈ 3 MB). Without vacuum the `prices` table bloats quickly
   (60 MB in two days in PGlite); Supabase's autovacuum keeps it at a few MB.
-- **Per player** (`pnpm sim 3`, one bot playing 150 minutes a day, no retention jobs): +5 MB in three days, mostly the
-  request journal (≈ 0,7 MB a day, kept 3 days, so ≈ 2 MB standing per active player); ledger, cards and quests stay
-  well under 1 MB a week. **Estimate after a year at 10 active players:** ≈ 45 MB price history + 20 MB growth + < 50 MB
-  for the players ≈ 120 MB, a quarter of the free 500 MB.
+- **Per player** (`pnpm sim 20`, one bot playing 150 minutes a day, no retention jobs): the request journal is by far
+  the biggest table, about 4 MB a day for this very busy bot (it keeps the replay answer of every write). Since alpha_12
+  it is kept one day instead of three (decision 108), so ≈ 4 MB standing per very active player; ledger, cards and
+  quests stay well under 1 MB a week. **Estimate after a year at 10 active players:** ≈ 45 MB price history + 20 MB
+  growth + ≈ 40 MB journal + < 20 MB other player data ≈ 125 MB, a quarter of the free 500 MB.
 - **Frontend:** about 270 kB of JavaScript (gzip) at start: React, Radix and the UI kit ≈ 100 kB, texts, content and
   contracts ≈ 150 kB. Every other page loads its own chunk (≤ 10 kB). The local mode's in-browser Postgres (≈ 290 kB)
   only loads without Supabase keys. Card atlases load per set on demand (135–175 kB each, products 46 kB);

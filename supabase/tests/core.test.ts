@@ -157,6 +157,17 @@ describe('requests', () => {
     await expect(begin('sell')).rejects.toThrow('invalid_request')
   })
 
+  it('keeps replay answers for a day', async () => {
+    const p = await t.playerId(await t.player('Journal'))
+    await t.sql(`select private.request_begin($1, $2, 'buy'), private.request_done($1, $2, '{"ok":true}'::jsonb)`, [p, crypto.randomUUID()])
+    await t.advance('23 hours')
+    await t.sql(`select private.tick_cleanup()`)
+    expect((await t.sql(`select 1 from game.requests where player_id = $1`, [p])).length).toBe(1)
+    await t.advance('2 hours')
+    await t.sql(`select private.tick_cleanup()`)
+    expect((await t.sql(`select 1 from game.requests where player_id = $1`, [p])).length).toBe(0)
+  })
+
   it('rate limits per bucket and window', async () => {
     const p = await t.playerId(await t.player('Spammer'))
     for (let i = 0; i < 3; i++) await t.sql(`select private.rate_limit($1, 'x', 3, 60)`, [p])

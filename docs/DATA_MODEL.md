@@ -286,5 +286,5 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 | Chat | Last 5.000 messages |
 | Feed | Last 2.000 entries (highlights forever) |
 | Notifications | 30 days |
-| Requests journal, rate limits | 3 days / 1 day |
+| Requests journal, rate limits | 1 day / 1 day |
 | Openings | Last 200 per player (best pulls forever) |

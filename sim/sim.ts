@@ -32,6 +32,8 @@ export interface SimResult {
   notes: Record<string, number>
   /** events that happened, by slot */
   events: Record<string, number>
+  /** the bot's failed actions, most frequent first */
+  failures: string[]
   /** database size at the end (one player, no tick retention jobs: an upper bound) and the biggest tables */
   db: { mb: number; tables: string }
   /** the company at the end (if founded): stage, value, and per German day its profit and the player's other income */
@@ -74,6 +76,11 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   const me = await t.player('Bot')
   const id = await t.playerId(me)
   await t.sql(`update game.players set tutorial_step = -1 where id = $1`, [id])
+  // SIM_LEVEL=70: start later in the game with some money (to look at the late game quickly)
+  if (process.env.SIM_LEVEL) {
+    await t.sql(`update game.players set level = $2 where id = $1`, [id, Number(process.env.SIM_LEVEL)])
+    await t.sql(`select private.money_add($1, 5000000000, 'admin_grant', 'sim')`, [id])
+  }
   const levels: SimResult['levels'] = {}
   const runs: SimResult['runs'] = [{ startDay: 1, levels: {}, peakNetWorthCents: 0 }]
   let active = 0
@@ -90,7 +97,7 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   for (; day <= opts.days; day++) {
     let spent = 0
     await quietly(t, me, 'recap_collect', {})
-    await quietly(t, me, 'sync', {}) // online: personal events can find the bot
+    await t.rpc(me, 'sync', {}) // online: personal events can find the bot
     await t.sql(`select private.tick_events(), private.tick_calendar(), private.tick_battles()`) // the only tick systems the sim runs
     // the exit at level 100 (planned prestiges): perks first, then a new run
     const lvl = await level(t, me)
@@ -187,7 +194,8 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
        order by pg_total_relation_size(c.oid) desc limit 6`,
     )).map((x) => x.t).join(', '),
   }
-  return { levels, runs, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`), company, jobErrors, notes, events, db }
+  const failed = [...failures].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, n]) => `${k} ${n}×`)
+  return { failures: failed, levels, runs, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`), company, jobErrors, notes, events, db }
 }
 
 /** Seconds the current step already moved the clock (a minijob round has to really last). */
@@ -202,10 +210,14 @@ function bestShift(jobs: Awaited<ReturnType<TestDb['rpc']>> & { jobs: { key: str
 }
 
 /** Calls an RPC and ignores game errors (the bot simply tries the next thing). */
+/** Failed bot actions by RPC and error (a bot stuck on one failing action shows up here). */
+const failures = new Map<string, number>()
 async function quietly(t: TestDb, me: string, fn: Parameters<TestDb['rpc']>[1], args: Record<string, unknown>) {
   try {
     return await t.rpc(me, fn, { p_request_id: rid(), ...args })
-  } catch {
+  } catch (e) {
+    const key = `${fn}: ${String((e as Error).message).slice(0, 40)}`
+    failures.set(key, (failures.get(key) ?? 0) + 1)
     return undefined
   }
 }
@@ -217,12 +229,12 @@ async function step(t: TestDb, me: string): Promise<number> {
   const q = await t.rpc(me, 'quests_get')
   const ready = [...q.mini, ...q.daily, ...q.weekly].filter((x) => !x.claimed && x.progress >= x.target)
   if (ready.length) {
-    for (const x of ready) await quietly(t, me, 'quest_claim', { p_quest: x.id })
-    return 10
+    let claimed = 0
+    for (const x of ready) if (await quietly(t, me, 'quest_claim', { p_quest: x.id })) claimed++
+    if (claimed) return 10
   }
   if (q.stamps.unlocked && !q.stamps.today_done) {
-    await quietly(t, me, 'stamp_claim', { p_joker: false })
-    return 5
+    if (await quietly(t, me, 'stamp_claim', { p_joker: false })) return 5
   }
   // open quests steer what an active player does next; the daily grading quest needs days, so it is rerolled
   const open = new Set([...q.mini, ...q.daily, ...q.weekly].filter((x) => !x.claimed && x.progress < x.target).map((x) => x.template))
@@ -231,18 +243,15 @@ async function step(t: TestDb, me: string): Promise<number> {
   // 2. idle income: a finished shift, a half-full bunker
   const jobs = await t.rpc(me, 'jobs_get')
   if (jobs.shift?.done) {
-    await quietly(t, me, 'shift_claim', {})
-    return 5
+    if (await quietly(t, me, 'shift_claim', {})) return 5
   }
   if (!jobs.shift && p.level >= jobs.unlock_shifts) {
-    await quietly(t, me, 'shift_start', { p_job: bestShift(jobs, p.level), p_hours: 4 })
-    return 5
+    if (await quietly(t, me, 'shift_start', { p_job: bestShift(jobs, p.level), p_hours: 4 })) return 5
   }
   const bunker = await t.rpc(me, 'bunker_get')
   const bunkerQuest = ['bunker', 'd_bunker', 'w_bunker'].some((k) => open.has(k))
   if (bunker.unlocked && (bunker.content_cents ?? 0) > (bunkerQuest ? 0 : (bunker.rate_cents ?? 0) * (bunker.capacity_h ?? 0) * 0.5)) {
-    await quietly(t, me, 'bunker_collect', {})
-    return 5
+    if (await quietly(t, me, 'bunker_collect', {})) return 5
   }
   // 2a. the company (level 30): founding, staff, tools, prices, stages, decisions, VIP, taxes, payouts
   if (p.level >= 30) {
@@ -267,8 +276,7 @@ async function step(t: TestDb, me: string): Promise<number> {
       .filter((u) => u.cost_cents !== null && u.need_level <= p.level && u.cost_cents * (open.has('d_upgrade') || open.has('w_upgrade') ? 1 : 3) <= p.cash_cents)
       .sort((a, b) => a.cost_cents! - b.cost_cents!)
     if (ups[0]) {
-      await quietly(t, me, 'upgrade_buy', { p_key: ups[0].key })
-      return 5
+      if (await quietly(t, me, 'upgrade_buy', { p_key: ups[0].key })) return 5
     }
   }
   // 4a. skill points are spent at once (income first: Unternehmer, then Sammler); a better home when it is cheap
@@ -291,13 +299,11 @@ async function step(t: TestDb, me: string): Promise<number> {
     const now = Date.parse((await t.sql<{ n: string }>(`select private.now() as n`))[0]!.n)
     const due = g.orders.filter((o) => Date.parse(o.due_at) <= now).map((o) => o.id)
     if (due.length) {
-      await quietly(t, me, 'grading_reveal', { p_orders: due })
-      return 15
+      if (await quietly(t, me, 'grading_reveal', { p_orders: due })) return 15
     }
     const fresh = g.copies.find((c) => !c.ranges)
     if (fresh) {
-      await quietly(t, me, 'grading_inspect', { p_copy: fresh.copy_id, p_card: null })
-      return 5
+      if (await quietly(t, me, 'grading_inspect', { p_copy: fresh.copy_id, p_card: null })) return 5
     }
     // every aspect could still be a 10: send it (PSA for valuable cards, CGC for the rest)
     const top = (c: (typeof g.copies)[number]) => ASPECTS.every((a) => c.ranges![a][1] === 10)
@@ -308,8 +314,7 @@ async function step(t: TestDb, me: string): Promise<number> {
       : (g.copies.find((c) => top(c) && (c.value_cents >= 2 * psa || c.value_cents * 2 >= cgc)) ??
         (open.has('w_graded') ? g.copies.find((c) => c.ranges && c.value_cents * 2 >= cgc) : undefined))
     if (send && g.used < g.slots && p.cash_cents >= 3 * psa) {
-      await quietly(t, me, 'grading_submit', { p_copies: [send.copy_id], p_grader: send.value_cents >= 2 * psa ? 'psa' : 'cgc', p_service: 'economy' })
-      return 10
+      if (await quietly(t, me, 'grading_submit', { p_copies: [send.copy_id], p_grader: send.value_cents >= 2 * psa ? 'psa' : 'cgc', p_service: 'economy' })) return 10
     }
   }
   // 5. a minijob round when there is energy
@@ -399,35 +404,30 @@ async function companyStep(t: TestDb, me: string, p: { cash_cents: number }): Pr
   const fixedPerHour = co.costs.wages + co.costs.rent + co.costs.power
   // keep a day of running costs in the company account
   if (co.cash_cents < fixedPerHour * 24 && p.cash_cents > fixedPerHour * 48) {
-    await quietly(t, me, 'company_money', { p_cents: Math.round(fixedPerHour * 24), p_payout: false })
-    return 5
+    if (await quietly(t, me, 'company_money', { p_cents: Math.round(fixedPerHour * 24), p_payout: false })) return 5
   }
   if (co.decision) {
     // an honest owner: no bribes, Ruf first, then money
     const def = DECISIONS.find((x) => x.key === co.decision!.key)
     const score = (e: DecisionEffect) => (e.ruf ?? 0) * 10 + (e.rufAccuracy ?? 0) * 5 + (e.cash ?? 0) / 10_000 - (e.bump ?? 0) * 100 - (e.downgrade ? 50 : 0) + (e.loyalty ?? 0)
     const choice = def ? def.choices.map((c, i) => [score(c.effect), i] as const).sort((a, b) => b[0] - a[0])[0]![1] : 0
-    await quietly(t, me, 'company_decide', { p_decision: co.decision.id, p_choice: choice })
-    return 10
+    if (await quietly(t, me, 'company_decide', { p_decision: co.decision.id, p_choice: choice })) return 10
   }
   if (co.vip) {
     const r = co.vip.ranges
     const mid = (a: [number, number]) => Math.round((a[0] + a[1]) / 2)
-    await quietly(t, me, 'company_vip_grade', { p_vip: co.vip.id, p_values: [mid(r.centering), mid(r.corners), mid(r.edges), mid(r.surface)] })
-    return 20
+    if (await quietly(t, me, 'company_vip_grade', { p_vip: co.vip.id, p_values: [mid(r.centering), mid(r.corners), mid(r.edges), mid(r.surface)] })) return 20
   }
   if (!co.tax.advisor) {
     if (co.cash_cents >= co.tax.advisor_cost_cents * 3) {
-      await quietly(t, me, 'company_tax_advisor', {})
-      return 5
+      if (await quietly(t, me, 'company_tax_advisor', {})) return 5
     }
     const now = Date.parse((await t.sql<{ n: string }>(`select private.now() as n`))[0]!.n)
     if (Date.parse(co.tax.due_at) - now < 86400_000) {
       const today = (await t.sql<{ d: string }>(`select private.today()::text as d`))[0]!.d
       const week = co.days.filter((x) => x.day < today).reduce((sum, x) => sum + x.revenue_cents, 0)
       if (co.tax.options.includes(week)) {
-        await quietly(t, me, 'company_tax_file', { p_amount: week })
-        return 20
+        if (await quietly(t, me, 'company_tax_file', { p_amount: week })) return 20
       }
     }
   }
@@ -437,52 +437,44 @@ async function companyStep(t: TestDb, me: string, p: { cash_cents: number }): Pr
     return x && Math.abs(x.price_cents - x.fair_cents) > x.fair_cents * 0.05
   })
   if (off) {
-    await quietly(t, me, 'company_prices_set', { p_prices: Object.fromEntries(co.services.map((s) => [s, co.demand.services[s]!.fair_cents])) })
-    return 10
+    if (await quietly(t, me, 'company_prices_set', { p_prices: Object.fromEntries(co.services.map((s) => [s, co.demand.services[s]!.fair_cents])) })) return 10
   }
   // people for the slowest station, accurate ones for the Prüfung
   const neck = STATIONS.reduce((a, b) => (co.caps[b] < co.caps[a] ? b : a))
   if (co.staff.length < co.staff_cap && co.applicants.length) {
     const station = co.accuracy < 88 ? 'pruefung' : neck
     const best = [...co.applicants].sort((a, b) => (station === 'pruefung' ? b.accuracy - a.accuracy : b.tempo - a.tempo))[0]!
-    await quietly(t, me, 'company_hire', { p_applicant: best.id, p_station: station })
-    return 10
+    if (await quietly(t, me, 'company_hire', { p_applicant: best.id, p_station: station })) return 10
   }
   // a full team: someone moves from the station with the most room to the bottleneck
   if (co.staff.length >= co.staff_cap && !co.staff.some((x) => x.station === neck)) {
     const roomy = STATIONS.filter((s) => s !== neck && co.staff.some((x) => x.station === s)).sort((a, b) => co.caps[b] - co.caps[a])[0]
     const mover = roomy && co.staff.find((x) => x.station === roomy)
     if (mover && co.caps[roomy!] > co.caps[neck] * 1.5) {
-      await quietly(t, me, 'company_staff_act', { p_staff: mover.id, p_action: 'move', p_arg: neck })
-      return 5
+      if (await quietly(t, me, 'company_staff_act', { p_staff: mover.id, p_action: 'move', p_arg: neck })) return 5
     }
   }
   // tools for the bottleneck, then stages, research, marketing
   const next = co.equipment_next[neck]
   // tools only help while customers wait; with too few customers the money goes into growth
   if (next && co.capacity < co.demand.total * 1.1 && co.cash_cents >= next.cost_cents * 1.5) {
-    await quietly(t, me, 'company_equipment_buy', { p_station: neck })
-    return 5
+    if (await quietly(t, me, 'company_equipment_buy', { p_station: neck })) return 5
   }
   if (co.next_stage && !co.stage_pending && co.cash_cents >= co.next_stage.cost_cents * 1.3) {
-    await quietly(t, me, 'company_stage_up', {})
-    return 10
+    if (await quietly(t, me, 'company_stage_up', {})) return 10
   }
   const research = Object.entries(co.research.costs).find(([k, c]) => !co.research.owned.includes(k) && co.stage >= co.research.stage && co.cash_cents >= c * 3)
   if (research) {
-    await quietly(t, me, 'company_research', { p_key: research[0] })
-    return 5
+    if (await quietly(t, me, 'company_research', { p_key: research[0] })) return 5
   }
   const campaign = Object.entries(co.campaigns).filter(([, c]) => c.open && co.cash_cents >= c.cost_cents * 5).sort((a, b) => b[1].cost_cents - a[1].cost_cents)[0]
   if (!co.marketing && campaign && co.demand.total < co.capacity * 0.8) {
-    await quietly(t, me, 'company_marketing', { p_key: campaign[0] })
-    return 5
+    if (await quietly(t, me, 'company_marketing', { p_key: campaign[0] })) return 5
   }
   // pay out what is beyond two days of costs and the next stage
   const keep = fixedPerHour * 48 + (co.next_stage?.cost_cents ?? 0) * 1.3
   if (co.cash_cents > keep * 1.5 && co.cash_cents - keep > 100_000) {
-    await quietly(t, me, 'company_money', { p_cents: Math.round((co.cash_cents - keep) / 2), p_payout: true })
-    return 5
+    if (await quietly(t, me, 'company_money', { p_cents: Math.round((co.cash_cents - keep) / 2), p_payout: true })) return 5
   }
   return 0
 }
