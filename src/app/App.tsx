@@ -6,13 +6,14 @@ import { ToastViewport } from '@/components/ui/toast.tsx'
 import { AuthPage } from '@/features/auth/AuthPage.tsx'
 import { ComingSoonPage } from '@/features/common/ComingSoonPage.tsx'
 import { HomePage } from '@/features/home/HomePage.tsx'
+import { QuestsPage } from '@/features/quests/QuestsPage.tsx' // the home page shows quests, so it is loaded anyway
 import { errorText } from '@/lib/rpc.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { useMe } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { Shell } from './Shell.tsx'
 
-// Every page but the home page loads on demand (the shell shows a skeleton meanwhile).
+// Every page but the home page (and the quests it shows) loads on demand (the shell shows a skeleton meanwhile).
 const CardmarketPage = lazy(() => import('@/features/cardmarket/CardmarketPage.tsx').then((m) => ({ default: m.CardmarketPage })))
 const CardmarketItemPage = lazy(() => import('@/features/cardmarket/ItemPage.tsx').then((m) => ({ default: m.CardmarketItemPage })))
 const SellerPage = lazy(() => import('@/features/cardmarket/SellerPage.tsx').then((m) => ({ default: m.SellerPage })))
@@ -43,7 +44,6 @@ const PlayerProfilePage = lazy(() => import('@/features/profile/PlayerProfilePag
 const JobsPage = lazy(() => import('@/features/jobs/JobsPage.tsx').then((m) => ({ default: m.JobsPage })))
 const OpenPage = lazy(() => import('@/features/open/OpenPage.tsx').then((m) => ({ default: m.OpenPage })))
 const PathPage = lazy(() => import('@/features/path/PathPage.tsx').then((m) => ({ default: m.PathPage })))
-const QuestsPage = lazy(() => import('@/features/quests/QuestsPage.tsx').then((m) => ({ default: m.QuestsPage })))
 const ShopPage = lazy(() => import('@/features/shop/ShopPage.tsx').then((m) => ({ default: m.ShopPage })))
 const BunkerPage = lazy(() => import('@/features/bunker/BunkerPage.tsx').then((m) => ({ default: m.BunkerPage })))
 const UpgradesPage = lazy(() => import('@/features/upgrades/UpgradesPage.tsx').then((m) => ({ default: m.UpgradesPage })))

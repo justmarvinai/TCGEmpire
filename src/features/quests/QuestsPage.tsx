@@ -167,7 +167,8 @@ export function Stamps({ q, compact }: { q: Quests; compact?: boolean }) {
                 <PixelIcon name={i === 6 ? 'pack' : 'coin'} className="text-fg-3" />
               </>
             )}
-            {!compact && <span className="nums text-xs whitespace-nowrap text-gold">{formatMoney(cents)}</span>}
+            {/* on phones the amounts would overlap; the next one is shown next to the button */}
+            {!compact && <span className="nums text-xs whitespace-nowrap text-gold max-sm:hidden">{formatMoney(cents)}</span>}
           </div>
         ))}
       </div>

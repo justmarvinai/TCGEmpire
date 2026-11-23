@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { Popover } from 'radix-ui'
-import { Suspense, type CSSProperties } from 'react'
-import { Link, NavLink, Outlet } from 'react-router'
+import { Suspense, useEffect, useRef, type CSSProperties } from 'react'
+import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Avatar } from '@/components/ui/Avatar.tsx'
@@ -38,10 +38,16 @@ type SignedIn = Me & { player: Player }
 export function Shell({ me }: { me: SignedIn }) {
   useSync(true)
   useRealtimeSync()
+  // a new page starts at the top, not where the last one was scrolled to
+  const { pathname } = useLocation()
+  const main = useRef<HTMLElement>(null)
+  useEffect(() => {
+    main.current?.scrollTo(0, 0)
+  }, [pathname])
   return (
     <div className="app-bg flex h-dvh">
       <Sidebar player={me.player} />
-      <main className="min-w-0 flex-1 overflow-y-auto" id="scroll-root">
+      <main ref={main} className="min-w-0 flex-1 overflow-y-auto" id="scroll-root">
         <TopBar me={me} />
         <div className="mx-auto max-w-[80rem] px-8 pt-3 pb-14 max-lg:px-4">
           <TutorialBanner player={me.player} />
