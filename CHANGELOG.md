@@ -3,6 +3,35 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_12] — Feinschliff (23 Nov 2026)
+
+The last alpha before 0.0.1: explained, balanced, polished.
+
+### Added
+
+- **Hilfe & Lexikon** in the Start menu: the rules in plain words and a searchable TCG-Lexikon with 33 hobby terms.
+  Every panel now has its "i".
+- **Animated Grails:** the rainbow foil sweeps over every Grail and little stars twinkle on it.
+- **New sounds:** a till when something sells, a sad falling line when you are outbid, a siren when someone attacks
+  you, a fanfare for quests and achievements; tearing a pack crinkles first.
+- **Admin console:** Server-Gesundheit (database size against the free plan, the largest tables) and Tempo (how many
+  levels a day every player makes).
+
+### Changed
+
+- **Balance:** quests, the stamp card and achievements give about half the EP, and from level 50 on every level takes
+  a little longer. Level 100 now takes two to three weeks of active play.
+- Quests you cannot do are no longer handed out (a finished set, all upgrades bought), and the quest list shows the
+  EP you really get.
+- One action, one sound: an action and its message no longer both play a sound.
+- Faster start: pages load when you open them.
+- Reduced motion also stops endless animations.
+
+### Fixed
+
+- A new page opened scrolled down when the last one had been.
+- On phones the amounts on the stamp card ran into each other.
+
 ## [0.0.1-alpha_11] — Mogul (23 Nov 2026)
 
 The endgame and the reason to start again.

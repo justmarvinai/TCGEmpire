@@ -1,6 +1,18 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1-alpha_12',
+    title: 'Feinschliff',
+    items: [
+      'Neu im Start-Menü: Hilfe & Lexikon. Die Regeln in klaren Worten und 33 Begriffe aus dem Hobby, von Pull bis Slab. Jedes Feld hat jetzt sein „i“, keine Ausreden mehr.',
+      'Grails leben: Die Regenbogenfolie läuft über jede Grail, und kleine Sterne funkeln drauf. Angeben war nie schöner.',
+      'Neue Töne: Kasse beim Verkauf, ein trauriges Tröten, wenn dich jemand überbietet, Sirene bei Angriffen, Fanfare für Quests und Erfolge. Und jede Aktion klingt nur noch einmal.',
+      'Balance: Quests, Stempelkarte und Erfolge geben etwa halb so viel EP, und ab Level 50 wird jedes Level ein Stück zäher. Level 100 dauert jetzt zwei bis drei Wochen. Wer schneller ist, hat kein Leben.',
+      'Quests, die du nicht schaffen kannst, gibt es nicht mehr (fertiges Set, alle Upgrades gekauft). Und die Quests zeigen die EP, die du wirklich kriegst.',
+      'Schnellerer Start: Seiten laden erst, wenn du sie aufmachst. Neue Seiten öffnen oben und nicht irgendwo in der Mitte.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_11',
     title: 'Mogul',
     items: [
