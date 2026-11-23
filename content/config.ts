@@ -5,7 +5,7 @@
 type Json = string | number | boolean | readonly Json[] | { readonly [k: string]: Json }
 
 export const config = {
-  version: '0.0.1',
+  version: '0.0.2',
 
   // Login
   'auth.bcrypt_cost': 10,
@@ -151,7 +151,7 @@ export const config = {
   'ankauf.rate_bps': 6_000,
 
   // Minijob Pfandflaschen: score = collected deposit in Basis-€ cents
-  'minigame.pfand': { energy: 10, duration_s: 45, cap_base_cents: 300_00, pfandbon_at_base_cents: 120_00 },
+  'minigame.pfand': { energy: 10, duration_s: 15, cap_base_cents: 300_00, pfandbon_at_base_cents: 120_00 },
   'minigame.regale': { energy: 10, duration_s: 45, cap_base_cents: 450_00, pfandbon_at_base_cents: 200_00 },
   'minigame.sortieren': { energy: 12, duration_s: 45, cap_base_cents: 600_00, pfandbon_at_base_cents: 260_00 },
   'minigame.pakete': { energy: 15, duration_s: 40, cap_base_cents: 900_00, pfandbon_at_base_cents: 400_00 },
@@ -180,7 +180,7 @@ export const config = {
     psa: {
       brand_bps: 10_000,
       fees_base_cents: { economy: 360_00, standard: 700_00, express: 1_600_00 },
-      minutes: { economy: 360, standard: 120, express: 20 },
+      minutes: { economy: 60, standard: 30, express: 10 },
       upcharge_bps: 300,
       down_pct: 12,
       up_pct: 3,
@@ -188,7 +188,7 @@ export const config = {
     bgs: {
       brand_bps: 9_500,
       fees_base_cents: { economy: 280_00, standard: 550_00, express: 1_300_00 },
-      minutes: { economy: 240, standard: 80, express: 15 },
+      minutes: { economy: 40, standard: 20, express: 8 },
       upcharge_bps: 200,
       half_down_pct: 45,
       half_up_pct: 15,
@@ -196,7 +196,7 @@ export const config = {
     cgc: {
       brand_bps: 8_500,
       fees_base_cents: { economy: 150_00, standard: 300_00, express: 700_00 },
-      minutes: { economy: 120, standard: 45, express: 10 },
+      minutes: { economy: 20, standard: 12, express: 5 },
       upcharge_bps: 100,
       down_pct: 8,
       up_pct: 8,

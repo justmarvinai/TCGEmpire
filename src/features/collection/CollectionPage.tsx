@@ -261,6 +261,11 @@ function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }
               )}
             </div>
           )}
+          {level >= UNLOCKS.cardmarket && sellable > 0 && (
+            <Link to={`/cardmarket/${card.card_id}?sell=1`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline">
+              <PixelIcon name="market" /> {T.toCardmarket}
+            </Link>
+          )}
           {level >= UNLOCKS.grading && sellable > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               {hit ? (

@@ -209,6 +209,12 @@ Goal: it feels finished.
 | ☑ | Owner requests from the first live test (23 Nov 2026): selling fixed on the live server (decision 113); guided, unskippable tutorial and feature tours with a spotlight (decision 114); Upgrades and Skillbaum layouts fixed; "Stil" renamed "Cosmetics" (decision 115) | M |
 | ☑ | Release `0.0.1` (23 Nov 2026, owner decision; decision 116) | M |
 
+## Updates after 0.0.1
+
+| | Version | Content |
+|---|---------|---------|
+| ☑ | `0.0.2` | The group's first wishes: faster grading, a Verkaufen tab on the Cardmarket, Pfandflaschen in 15 s, an easier Pakete minijob (decision 117) |
+
 ## After 0.0.1 (not planned in detail)
 
 More sets (admin-released), further business units (Kartenladen, Automaten, Auktionshaus), drawn room

@@ -10,8 +10,8 @@ import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { useAct } from '@/lib/actions.ts'
-import { itemName } from '@/lib/catalog.ts'
+import { useAct, useShop } from '@/lib/actions.ts'
+import { itemName, SETS } from '@/lib/catalog.ts'
 import { formatDuration, formatMoney, formatPercent } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
@@ -69,6 +69,7 @@ export function CardmarketPage() {
                 type="button"
                 role="tab"
                 aria-selected={tab === k}
+                data-tour={k === 'sell' ? 'cardmarket-sell-tab' : undefined}
                 onClick={() => setTab(k)}
                 className={clsx('rounded-lg px-4 py-2 text-sm font-semibold', tab === k ? 'bg-grad text-white' : 'text-fg-2 hover:text-fg')}
               >
@@ -79,6 +80,7 @@ export function CardmarketPage() {
           </div>
 
           {tab === 'market' && <MarketList items={d.items} />}
+          {tab === 'sell' && <SellList items={d.items} />}
           {tab === 'listings' && <MyListings mine={d.mine} />}
           {tab === 'orders' && <MyOrders mine={d.mine} />}
           {tab === 'parcels' && <Parcels mine={d.mine} />}
@@ -153,6 +155,50 @@ function MarketList({ items }: { items: Cardmarket['items'] }) {
             </tbody>
           </table>
         </div>
+      )}
+    </Panel>
+  )
+}
+
+/** Everything the player owns that the Cardmarket trades, the most valuable first; "Anbieten" opens the item's sell form. */
+function SellList({ items }: { items: Cardmarket['items'] }) {
+  const binders = useQuery({ queryKey: ['binder', 'all-sets'], queryFn: () => Promise.all(SETS.map((s) => rpc('binder_get', { p_set: s.id }))) })
+  const shop = useShop()
+  const rows = useMemo(() => {
+    const value = new Map(items.map((i) => [i.item_id, i.value_cents]))
+    const owned = [
+      ...(binders.data ?? []).flatMap((b) => b.cards.map((c) => ({ id: c.card_id, qty: c.qty }))),
+      ...(shop.data?.sealed ?? []).map((s) => ({ id: s.product_id, qty: s.qty })),
+    ]
+    return owned
+      .filter((o) => o.qty > 0 && value.has(o.id))
+      .map((o) => ({ ...o, value: value.get(o.id)! }))
+      .sort((a, b) => b.value - a.value)
+  }, [items, binders.data, shop.data])
+  return (
+    <Panel title={T.sellTitle} tip={T.sellTip}>
+      {binders.isPending || shop.isPending ? (
+        <Skeleton className="h-40 w-full" />
+      ) : binders.isError || shop.isError ? (
+        <ErrorState message={errorText(binders.error ?? shop.error)} onRetry={() => void (binders.refetch(), shop.refetch())} />
+      ) : rows.length === 0 ? (
+        <EmptyState icon="tag" title={T.sellNone} />
+      ) : (
+        <ul className="flex flex-col gap-1.5">
+          {rows.map((r) => (
+            <li key={r.id} className="flex flex-wrap items-center gap-3 rounded-xl bg-surface-2 px-3 py-2">
+              <span className="min-w-40 flex-1 font-semibold">
+                {itemName(r.id)}
+                <ItemTier id={r.id} className="ml-2 text-xs" />
+              </span>
+              <span className="nums text-sm text-fg-3">×{r.qty}</span>
+              <span className="nums w-28 text-right font-semibold">{formatMoney(r.value)}</span>
+              <Link to={`/cardmarket/${r.id}?sell=1`} className="btn btn-primary inline-flex min-h-8 items-center px-3 text-sm font-semibold">
+                {T.list}
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
     </Panel>
   )

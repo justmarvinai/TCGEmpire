@@ -3,6 +3,22 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.2] — Erste Runde Feedback (23 Nov 2026)
+
+### Added
+
+- **Cardmarket → Verkaufen:** a new tab lists everything you own, the most valuable first, each with an "Anbieten"
+  button that opens the card's sell form. The card window in the collection has "Auf dem Cardmarket verkaufen" too.
+
+### Changed
+
+- **Grading is much faster:** PSA 1 h / 30 min / 10 min, BGS 40 / 20 / 8 min, CGC 20 / 12 / 5 min (Economy /
+  Standard / Express).
+- **Pfandflaschen sammeln** takes 15 seconds instead of 45; every bottle is worth three times as much, so a round
+  pays about the same. Bottle quests and the Flaschensammler achievement need fewer bottles.
+- **Pakete ausliefern** is easier: the marker swings slower and stays one clear bar, the delivery windows are wider,
+  and a good drop pays a little more.
+
 ## [0.0.1] — Release (23 Nov 2026)
 
 The first full version. From here on every update counts up by one: 0.0.2, 0.0.3, …

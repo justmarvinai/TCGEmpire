@@ -194,7 +194,8 @@ slab_value = marktwert(card) × grade_factor(grade) × pop_factor × brand_facto
   is worth (up to ×2.5).
 - `brand_factor`: PSA 1.00, BGS 0.95, CGC 0.85, player companies 0.40–1.10 from their Ruf.
 - The lowest of the four hidden quality values dominates the grade; BGS shows all four (decision 066).
-- Waiting times: PSA 6 h / 2 h / 20 min, BGS 4 h / 80 min / 15 min, CGC 2 h / 45 min / 10 min. Three cards at the
+- Waiting times (Economy / Standard / Express): PSA 60 / 30 / 10 min, BGS 40 / 20 / 8 min, CGC 20 / 12 / 5 min
+  (0.0.2, owner request after the first live days; were up to 6 h, which felt like waiting, not playing). Three cards at the
   graders at once at the start; the Einsende-Slots upgrade and each Master Set add more.
 - The first 10s are worth the most: with `pop_ref` 5 the first 10 of a card at a grader gets ×2,25, the tenth ×1,5.
 
@@ -215,7 +216,7 @@ print it follows `set_factor` for sealed; a display also carries its guaranteed-
 | Source | Size (minutes of reference income unless stated) | Cap / gate |
 |--------|---------------------------------------------------|------------|
 | Start capital | 400 € from Mutti | Once |
-| Minijob round (45 s) | 0.6–2.0 by performance | Energy |
+| Minijob round (15–45 s) | 0.6–2.0 by performance | Energy |
 | Shift | 55 % of reference income per hour × rank bonus | One at a time, max 8 h |
 | Geldbunker | Base 120 €/h; Ertrag level k: `120 × 1.12^k` €/h; cost `500 × 1.17^k` € | Capacity 4–24 h |
 | Mini-quest | 1 + 1 Pfandbon | Endless, deliberately tiny |

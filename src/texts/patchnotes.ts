@@ -1,6 +1,16 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.2',
+    title: 'Erste Runde Feedback',
+    items: [
+      'Grading geht jetzt flott: PSA 1 Std / 30 Min / 10 Min, BGS 40 / 20 / 8 Min, CGC 20 / 12 / 5 Min. Jetzt wartest du nur noch auf dein Glück. Das kann dauern.',
+      'Cardmarket: Neuer Reiter „Verkaufen“. Da liegt alles, was du hast, das Teuerste oben, mit „Anbieten“ daneben. Und in der Sammlung steht bei jeder Karte „Auf dem Cardmarket verkaufen“.',
+      'Pfandflaschen sammeln dauert nur noch 15 Sekunden. Dafür ist jede Flasche dreimal so viel wert, unterm Strich gleich viel Geld. Flaschen-Quests und der Flaschensammler brauchen weniger Flaschen.',
+      'Pakete ausliefern ist leichter: Der Balken schwingt langsamer und bleibt ein Balken, die Lieferfenster sind breiter, und ein guter Wurf bringt etwas mehr.',
+    ],
+  },
+  {
     version: '0.0.1',
     title: 'Release',
     items: [
