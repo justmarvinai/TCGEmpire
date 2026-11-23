@@ -5,7 +5,7 @@
 type Json = string | number | boolean | null | readonly Json[] | { readonly [k: string]: Json }
 
 export const config = {
-  version: '0.0.3',
+  version: '0.0.4',
 
   // Login
   'auth.bcrypt_cost': 10,
@@ -136,8 +136,8 @@ export const config = {
   'energy.regen_seconds': 180,
 
   // Boosters
-  // per booster's hit slot; Ultra 1:200 and Grail 1:2.000 since 0.0.3 (were 1:72 and 1:720)
-  'pack.hit_odds_ppm': { holo: 200_000, alternative: 41_667, ultra: 5_000, grail: 500 },
+  // per booster's hit slot: Holo 1:5, Alternative 1:50, Ultra 1:1.000, Grail 1:3.500 since 0.0.4 (0.0.3: 1:24, 1:200, 1:2.000)
+  'pack.hit_odds_ppm': { holo: 200_000, alternative: 20_000, ultra: 1_000, grail: 285.7 },
   'pack.god_pack_ppm': 200,
   'pack.double_hit_ppm': 25_000,
   'pack.pity_after': 12,

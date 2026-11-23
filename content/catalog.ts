@@ -118,10 +118,11 @@ export const TIER_VALUE: Record<Tier, [lo: number, hi: number]> = {
   uncommon: [80, 700],
   rare: [300, 2_400],
   holo: [2_400, 16_000],
-  alternative: [12_000, 60_000],
-  // 0.0.3: Ultra and Grail 2,78× rarer and 2,78× more valuable, so their share of the pack value stays
-  ultra: [139_000, 444_000],
-  grail: [1_667_000, 2_778_000],
+  // A rarer tier is worth more by the same factor, so its share of the pack value (and every other card's value)
+  // stays: 0.0.3 Ultra and Grail ×2,78; 0.0.4 Alternative ×2,08, Ultra ×5, Grail ×1,75.
+  alternative: [25_000, 125_000],
+  ultra: [695_000, 2_220_000],
+  grail: [2_917_000, 4_862_000],
 }
 
 /** Target: an average booster is worth this share of its list price. */

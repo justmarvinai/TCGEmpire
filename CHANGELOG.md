@@ -3,6 +3,14 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.4] — Seltener (23 Nov 2026)
+
+### Changed
+
+- **Rarer hits:** Alternative 1 in 50 boosters (was 1 in 24), Ultra 1 in 1.000 (was 1 in 200), Grail 1 in 3.500 (was
+  1 in 2.000). Each is worth more by the same factor (Alternative ×2,08, Ultra ×5, Grail ×1,75), so a booster is worth
+  the same on average and every other card keeps its value.
+
 ## [0.0.3] — Zweite Runde Feedback (23 Nov 2026)
 
 ### Added
