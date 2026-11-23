@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fillCount, formatAgo, formatPercent, formatDuration, formatFactor, formatMoney, formatStars } from './format.ts'
+import { fillCount, formatAgo, formatPercent, formatDuration, formatShare, formatFactor, formatMoney, formatStars } from './format.ts'
 
 describe('format', () => {
   it('formats money on our price scale', () => {
@@ -11,6 +11,15 @@ describe('format', () => {
     expect(formatMoney(8.9e15)).toBe('89,00 Bio. €')
     expect(formatMoney(-1500)).toBe('−15,00 €')
   })
+  it('formats shares without rounding up to 100 %', () => {
+    expect(formatShare(0.2)).toBe('20 %')
+    expect(formatShare(0.000_02)).toBe('0,002 %')
+    expect(formatShare(0.778_714)).toBe('78 %')
+    expect(formatShare(0.999_88)).toBe('99,99 %')
+    expect(formatShare(0.999_999)).toBe('99,99 %')
+    expect(formatShare(1)).toBe('100 %')
+  })
+
   it('formats factors, stars and durations', () => {
     expect(formatFactor(1)).toBe('×1,00')
     expect(formatFactor(4.17)).toBe('×4,17')

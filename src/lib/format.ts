@@ -30,7 +30,10 @@ export function formatNumber(n: number): string {
 
 /** A chance or share without a sign: 20 %, 4,2 %, 0,05 % */
 export function formatShare(x: number): string {
-  return `${new Intl.NumberFormat('de-DE', { maximumSignificantDigits: 2 }).format(x * 100)} %`
+  // two significant digits, but never round a share below 100 % up to "100 %" (99,99 %)
+  const digits = x < 1 && x >= 0.99 ? { maximumFractionDigits: 2 } : { maximumSignificantDigits: 2 }
+  const pct = x < 1 && x >= 0.99 ? Math.min(99.99, Math.round(x * 10000) / 100) : x * 100
+  return `${new Intl.NumberFormat('de-DE', digits).format(pct)} %`
 }
 
 /** Preisniveau and other multipliers: ×1,00 */
