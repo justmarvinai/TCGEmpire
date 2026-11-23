@@ -182,6 +182,24 @@ Limits as checked in November 2026 (re-verified in the alpha_01 spike):
 
 A size report (table sizes, row counts) is part of the admin console, with warnings at 60 % of any limit.
 
+**Measured in alpha_12** (`pnpm tsx sim/size.ts 3`: 10 players, a tick every 5 minutes, hourly vacuum like autovacuum;
+PGlite runs in WebAssembly, so the times are an upper bound for Supabase):
+
+- **Tick:** 150 ms on average, p95 220 ms, max 330 ms. The market system takes 134 ms of it (362 prices and their
+  history rows every 5 minutes), every other system stays under 25 ms. One tick a minute leaves plenty of room.
+- **Price history:** 120–160 bytes per row with its index. With the thinning it levels off at about 860 rows per item
+  (≈ 45 MB for the four sets), then grows by one row per item and day (≈ 20 MB a year). Each new set adds about 25 %.
+- **Job runs:** about 4.150 rows a day, kept 7 days (≈ 3 MB). Without vacuum the `prices` table bloats quickly
+  (60 MB in two days in PGlite); Supabase's autovacuum keeps it at a few MB.
+- **Per player** (`pnpm sim 3`, one bot playing 150 minutes a day, no retention jobs): +5 MB in three days, mostly the
+  request journal (≈ 0,7 MB a day, kept 3 days, so ≈ 2 MB standing per active player); ledger, cards and quests stay
+  well under 1 MB a week. **Estimate after a year at 10 active players:** ≈ 45 MB price history + 20 MB growth + < 50 MB
+  for the players ≈ 120 MB, a quarter of the free 500 MB.
+- **Frontend:** about 270 kB of JavaScript (gzip) at start: React, Radix and the UI kit ≈ 100 kB, texts, content and
+  contracts ≈ 150 kB. Every other page loads its own chunk (≤ 10 kB). The local mode's in-browser Postgres (≈ 290 kB)
+  only loads without Supabase keys. Card atlases load per set on demand (135–175 kB each, products 46 kB);
+  re-encoding them as palette PNGs saved only 3 %, so they stay as they are.
+
 ## 10. Testing and local development
 
 | Level | Tool | What it proves |

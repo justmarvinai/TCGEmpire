@@ -73,9 +73,9 @@ ref_income(n) = 900 × 1.08^n   Basis-€ per hour
 |--------|----|-----|
 | Minijob round | 40–120 level-1 units by score | Drives the first hour (energy-limited) |
 | Booster | 15 + 3 per new card | The core action; money-limited |
-| Mini / daily / weekly quest | 0.1 / 0.4 / 1.5 **of the current level** each; all five dailies +1 level | Proportional at every level, so quests never flood early levels and stay worth it late |
-| Stempel | 0.3 of a level | Daily return |
-| Achievement tier | 0.25 / 0.5 / 1 / 2 of a level | Milestones feel big |
+| Mini / daily / weekly quest | 0.03 / 0.2 / 0.8 **of the current level** each; all five dailies +0.5 level | Proportional at every level, so quests never flood early levels and stay worth it late (halved in alpha_12, see below) |
+| Stempel | 0.2 of a level | Daily return |
+| Achievement tier | 0.1 / 0.2 / 0.4 / 0.8 of a level | Milestones feel big; 199 tiers add up |
 | Shift hour | 150 level-1 units | Idle progress |
 | Bunker collect, sale | 15, 5 | Small acknowledgement |
 
