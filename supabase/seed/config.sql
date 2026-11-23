@@ -237,6 +237,9 @@ insert into game.config (key, value) values
   ('prestige.value_unit_base_cents', '100000000'::jsonb),
   ('prestige.ruf_keep_pct', '50'::jsonb),
   ('attic.daily_minutes', '120'::jsonb),
+  ('mega.min_base_cents', '100000'::jsonb),
+  ('museum.raise_pct', '5'::jsonb),
+  ('museum.snipe_minutes', '5'::jsonb),
   ('flohmarkt.stalls', '6'::jsonb),
   ('flohmarkt.price_min_pct', '35'::jsonb),
   ('flohmarkt.price_max_pct', '70'::jsonb),
@@ -335,6 +338,9 @@ insert into game.config (key, value) values
   ('darkside.attacks', '{"bunker":{"base":45,"costMinutes":10,"defence":"def_bunker"},"finanzamt":{"base":50,"costMinutes":10,"defence":"def_finanzamt"},"bewertung":{"base":55,"costMinutes":5,"defence":"def_bewertung"},"abwerben":{"base":40,"costMinutes":20,"defence":"def_abwerben"},"geruecht":{"base":50,"costMinutes":5,"defence":"def_geruecht"},"resealed":{"base":55,"costMinutes":0,"defence":"def_resealed"}}'::jsonb),
   ('bares.dealer_count', '8'::jsonb),
   ('prestige.perks', '{"lohn":{"stat":"wage_pct","op":"flat","per":5,"max":10,"costBase":3,"growth":1.4},"zinsen":{"stat":"bunker_rate_pct","op":"flat","per":10,"max":10,"costBase":3,"growth":1.4},"ep":{"stat":"ep","op":"pct","per":5,"max":10,"costBase":3,"growth":1.4},"glueck":{"stat":"pack_luck","op":"flat","per":2,"max":10,"costBase":4,"growth":1.5},"erbe":{"stat":"start_cash_base","op":"flat","per":250000,"max":10,"costBase":2,"growth":1.4},"oma":{"stat":"attic_pct","op":"flat","per":25,"max":8,"costBase":2,"growth":1.4}}'::jsonb),
+  ('luxury.items', '{"golf":{"group":"auto","level":55,"priceBaseCents":5000000,"stat":"wage_pct","op":"flat","value":1},"amg":{"group":"auto","level":70,"priceBaseCents":50000000,"stat":"wage_pct","op":"flat","value":2},"lambo":{"group":"auto","level":80,"priceBaseCents":500000000,"stat":"wage_pct","op":"flat","value":3},"rolex":{"group":"uhr","level":55,"priceBaseCents":2000000,"stat":"ep","op":"pct","value":1},"patek":{"group":"uhr","level":70,"priceBaseCents":50000000,"stat":"ep","op":"pct","value":2},"mille":{"group":"uhr","level":90,"priceBaseCents":500000000,"stat":"ep","op":"pct","value":3},"yacht":{"group":"yacht","level":80,"priceBaseCents":2000000000,"stat":"bunker_rate_pct","op":"flat","value":3},"superyacht":{"group":"yacht","level":90,"priceBaseCents":20000000000,"stat":"bunker_rate_pct","op":"flat","value":6},"jet":{"group":"jet","level":90,"priceBaseCents":5000000000,"stat":"pack_luck","op":"flat","value":1},"jumbo":{"group":"jet","level":90,"priceBaseCents":50000000000,"stat":"pack_luck","op":"flat","value":2}}'::jsonb),
+  ('mega.projects', '[{"key":"ber","goalBaseCents":2000000000,"stat":"wage_pct","op":"flat","value":2},{"key":"s21","goalBaseCents":5000000000,"stat":"ep","op":"pct","value":2},{"key":"schalke","goalBaseCents":10000000000,"stat":"bunker_rate_pct","op":"flat","value":5},{"key":"elphi","goalBaseCents":25000000000,"stat":"pack_luck","op":"flat","value":1}]'::jsonb),
+  ('museum.trophies', '["illustrator","luster","gold_luffy","prototype"]'::jsonb),
   ('unlock.toplists', '1'::jsonb),
   ('unlock.players', '1'::jsonb),
   ('unlock.stammtisch', '1'::jsonb),
@@ -364,5 +370,7 @@ insert into game.config (key, value) values
   ('unlock.company', '30'::jsonb),
   ('unlock.darkside', '35'::jsonb),
   ('unlock.wholesale', '40'::jsonb),
+  ('unlock.luxury', '55'::jsonb),
+  ('unlock.megaprojects', '65'::jsonb),
   ('unlock.prestige', '100'::jsonb)
 on conflict (key) do update set value = excluded.value;

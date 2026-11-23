@@ -342,6 +342,13 @@ Mutti sends pocket money.
   with rising Sterne cost. Each run is faster, not trivial.
 - Simulation target: after a prestige, reaching the previous run's peak net worth takes at least 50 % of
   the previous run's time.
+- **Built in alpha_11 (decision 098):** Sterne per exit = 10 + ⌊√(value given up / 1 Mio. Basis-€)⌋, where the value
+  given up is net worth without the collection. The 20-day simulation (150 active minutes a day) ends at level 68
+  with 17,9 Mio. € net worth (company 7,1 Mio. €); extrapolated to level 100 a first exit gives about 17–20 Sterne,
+  enough for +15 % wage and +5 % EP (Fleißiges Erbe 3, Schnellstarter 1). Perk cost per level: `costBase ×
+  growth^level` (3 × 1,4ⁿ for most, 4 × 1,5ⁿ for Pack-Glück).
+- **Pace finding for the alpha_12 balance pass:** past level 50 the bot slows down (level 50 on day 7, 60 on day 12,
+  68 on day 20) and shifts carry 75 % of its income; level 100 in 2–3 weeks needs a faster late game.
 
 ## 12. Anti-exploit rules
 

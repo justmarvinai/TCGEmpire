@@ -72,7 +72,7 @@ describe('toplists', () => {
     const me = short.rows.find((r) => r.me)!
     expect(short.rows.map((r) => r.rank)).toEqual([1, 2, 3, me.rank - 1, me.rank])
 
-    await expect(t.rpc(a, 'toplist_get', { p_list: 'luxus', p_npcs: true })).rejects.toThrow('invalid_request')
+    await expect(t.rpc(a, 'toplist_get', { p_list: 'gibtsnicht', p_npcs: true })).rejects.toThrow('invalid_request')
   })
 
   it('lets the rivals grow with the days since the world started', async () => {

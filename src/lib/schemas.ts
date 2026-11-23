@@ -564,7 +564,7 @@ export const zGoals = z.object({
 })
 export type Goals = z.infer<typeof zGoals>
 
-export const TOPLISTS = ['worth', 'level', 'cash', 'collection', 'ruf', 'best_pull', 'league', 'pechvogel'] as const
+export const TOPLISTS = ['worth', 'level', 'cash', 'collection', 'ruf', 'best_pull', 'league', 'pechvogel', 'luxus'] as const
 export type ToplistId = (typeof TOPLISTS)[number]
 export const zToplist = z.object({
   list: z.enum(TOPLISTS),
@@ -832,6 +832,45 @@ export const zPrestige = z.object({
 })
 export type Prestige = z.infer<typeof zPrestige>
 export type AtticCopy = z.infer<typeof zAtticCopy>
+
+// Luxus, Megaprojekte, Museum (alpha_11)
+export const zLuxury = z.object({
+  unlock_level: z.number(),
+  owned: z.array(z.object({ key: z.string(), at: z.string() })),
+  paid_cents: z.number(),
+  prices: z.record(z.string(), z.number()).nullable(),
+})
+export type Luxury = z.infer<typeof zLuxury>
+export const zMega = z.object({
+  unlock_level: z.number(),
+  min_cents: z.number(),
+  active: z.string().nullable(),
+  projects: z.array(
+    z.object({
+      key: z.string(),
+      goal_cents: z.number(),
+      donated_cents: z.number(),
+      done_at: z.string().nullable(),
+      mine_cents: z.number(),
+      donors: z.array(z.object({ name: z.string(), cents: z.number() })),
+    }),
+  ),
+  auctions: z.array(
+    z.object({
+      id: z.number(),
+      key: z.string(),
+      start_cents: z.number(),
+      bid_cents: z.number().nullable(),
+      bidder: z.string().nullable(),
+      mine: z.boolean().nullable(),
+      min_cents: z.number(),
+      ends_at: z.string(),
+    }),
+  ),
+  hall: z.array(z.object({ key: z.string(), owner: z.string().nullable(), paid_cents: z.number(), at: z.string() })),
+  trophies_left: z.array(z.string()),
+})
+export type Mega = z.infer<typeof zMega>
 
 // Bares für Rares (alpha_10)
 const zBaresCopy = z.object({
@@ -1326,6 +1365,12 @@ export const RPC_SCHEMAS = {
   events_get: zEvents,
   darkside_get: zDarkside,
   prestige_get: zPrestige,
+  luxury_get: zLuxury,
+  luxury_buy: zLuxury.extend(withPlayer),
+  megaprojects_get: zMega,
+  megaproject_donate: zMega.extend(withPlayer),
+  museum_bid: zMega.extend(withPlayer),
+  admin_museum_start: z.object({ ok: z.boolean() }),
   prestige_exit: zPrestige.extend(withPlayer),
   perk_buy: zPrestige.extend(withPlayer),
   attic_retrieve: zPrestige,

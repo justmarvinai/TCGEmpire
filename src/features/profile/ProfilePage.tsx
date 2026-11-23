@@ -1,7 +1,8 @@
 import clsx from 'clsx'
 import { useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
+import { LUXURY } from '../../../content/mogul.ts'
 import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
 import { Field } from '@/components/ui/Field.tsx'
 import { HoldButton } from '@/components/ui/HoldButton.tsx'
@@ -13,7 +14,7 @@ import { toast } from '@/components/ui/toast.tsx'
 import { useAct, useStats } from '@/lib/actions.ts'
 import { ACHIEVEMENTS, STAT_LABELS } from '@/lib/catalog.ts'
 import { fillCount, formatMoney, formatNumber } from '@/lib/format.ts'
-import { errorText } from '@/lib/rpc.ts'
+import { errorText, rpc } from '@/lib/rpc.ts'
 import type { Player } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useMe, useSetMe, useWorld } from '@/lib/world.ts'
@@ -86,6 +87,7 @@ export function ProfilePage() {
           {profile.data && <Trophies p={profile.data} />}
           {profile.data && <HomeCard p={profile.data} />}
           {profile.data && <VitrinePanel profile={profile.data} />}
+          {profile.data && <LuxuryPanel id={profile.data.id} />}
           {profile.data && <Guestbook p={profile.data} />}
 
           <Panel title={T.stats} tip={T.statsTip}>
@@ -169,6 +171,27 @@ function DangerZone({ player }: { player: Player }) {
           </div>
         ))}
       </div>
+    </Panel>
+  )
+}
+
+/** Luxus on the profile: what the player has blown money on. */
+function LuxuryPanel({ id }: { id: string }) {
+  const q = useQuery({ queryKey: ['luxury', id], queryFn: () => rpc('luxury_get', { p_player: id }) })
+  if (!q.data) return null
+  return (
+    <Panel title={texts.luxury.profile} tip={texts.luxury.tip}>
+      {q.data.owned.length === 0 ? (
+        <p className="text-sm text-fg-3">{texts.luxury.profileEmpty}</p>
+      ) : (
+        <ul className="flex flex-wrap gap-2">
+          {q.data.owned.map((o) => (
+            <li key={o.key} className="flex items-center gap-1.5 rounded-lg bg-surface-2 px-2.5 py-1.5 text-sm font-semibold">
+              <PixelIcon name="diamond" className="text-gold" /> {LUXURY.find((l) => l.key === o.key)?.name ?? o.key}
+            </li>
+          ))}
+        </ul>
+      )}
     </Panel>
   )
 }

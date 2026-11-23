@@ -37,7 +37,7 @@ describe('Toplisten', () => {
     expect(ruf.rows.some((r) => r.kind === 'npc')).toBe(true)
     await t.sql(`insert into game.counters (player_id, event, total) values ($1, 'pechvogel', 2)`, [bid])
     expect((await list(a, 'pechvogel')).rows[0]).toMatchObject({ name: 'Bernd', value: 2 })
-    await expect(list(a, 'luxus')).rejects.toThrow('invalid_request')
+    await expect(list(a, 'gibtsnicht')).rejects.toThrow('invalid_request')
   })
 })
 

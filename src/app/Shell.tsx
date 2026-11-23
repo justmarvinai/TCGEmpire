@@ -25,6 +25,7 @@ import { personName } from '@/features/company/people.ts'
 import { eventDef } from '@/features/events/eventText.ts'
 import { AWARDS, DECISIONS, STAGES } from '../../content/company.ts'
 import { ATTACKS } from '../../content/darkside.ts'
+import { TROPHIES } from '../../content/mogul.ts'
 import { SNACK_ICON } from '@/features/shop/icons.ts'
 import { FeatureTour, Overlays, TutorialBanner } from '@/features/overlays/Overlays.tsx'
 import { CommandPalette } from './CommandPalette.tsx'
@@ -353,6 +354,9 @@ function notificationText(n: FeedEntry) {
       ATTACKS.find((a) => a.key === n.data.kind)?.name ?? '',
     )
   if (n.kind === 'resealed_caught') return texts.notifications.resealed_caught(n.data, formatMoney(Number(n.data.cents)))
+  if (n.kind === 'museum_outbid')
+    return texts.notifications.museum_outbid(n.data, TROPHIES.find((t) => t.key === n.data.key)?.name ?? '', formatMoney(Number(n.data.cents)))
+  if (n.kind === 'museum_won') return texts.notifications.museum_won(TROPHIES.find((t) => t.key === n.data.key)?.name ?? '', formatMoney(Number(n.data.cents)))
   if (n.kind === 'loan_defaulted_self') return texts.notifications.loan_defaulted_self(n.data, formatMoney(Number(n.data.cents)))
   if (n.kind === 'break_done') return texts.notifications.break_done(n.data, formatMoney(Number(n.data.cents)))
   if (n.kind === 'company_decision') return texts.notifications.company_decision(DECISIONS.find((x) => x.key === n.data.key)?.title ?? '')

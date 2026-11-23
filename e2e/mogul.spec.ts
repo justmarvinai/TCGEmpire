@@ -42,3 +42,43 @@ test('der exit: sell the empire, buy a perk, bring a card down from the attic', 
   await expect(page.getByText('Runtergeholt. Oma hat geschimpft, aber geholfen.')).toBeVisible()
   await page.screenshot({ path: shot('prestige-after'), animations: 'disabled', fullPage: true })
 })
+
+test('mogul: a Golf GTI, a donation for the BER, a museum auction from the admin console', async ({ page }) => {
+  test.setTimeout(120_000)
+  await page.goto('/')
+  await page.getByLabel('Benutzername').fill('Bonze')
+  await page.getByLabel('Passwort').fill('passwort1')
+  await page.getByLabel('Einladungscode').fill('geheim123')
+  await page.getByRole('button', { name: 'Imperium gründen' }).click()
+  await expect(page.getByRole('heading', { name: 'Moin, Bonze.' })).toBeVisible()
+  const levelUp = page.getByRole('dialog', { name: 'LEVEL UP!' })
+  await page.addLocatorHandler(levelUp, () => levelUp.getByRole('button', { name: 'Weiter' }).click())
+
+  await page.goto('/dev/ui')
+  await page.getByRole('button', { name: 'Tutorial aus' }).click()
+  for (let i = 0; i < 3; i++) await page.getByRole('button', { name: '+100.000 €' }).click()
+  await page.getByRole('button', { name: 'Level 100' }).click()
+
+  await page.getByRole('link', { name: /^Luxus/ }).click()
+  await finishTour(page, 'Luxus')
+  await page.getByRole('listitem').filter({ hasText: 'Golf GTI' }).getByRole('button', { name: 'Kaufen' }).click()
+  await expect(page.getByText('Golf GTI gehört dir. Die Nachbarn tuscheln schon.')).toBeVisible()
+  await page.screenshot({ path: shot('luxury'), animations: 'disabled' })
+
+  // the first account is the admin
+  await page.getByRole('button', { name: 'Einstellungen' }).click()
+  await page.getByRole('link', { name: /Admin-Konsole/ }).click()
+  await page.keyboard.press('Escape')
+  await page.getByRole('button', { name: 'Versteigern' }).click()
+  await expect(page.getByText('Die Auktion läuft. Die Schlagzeile ist raus.')).toBeVisible()
+
+  await page.getByRole('link', { name: /^Megaprojekte/ }).click()
+  await finishTour(page, 'Megaprojekte')
+  await page.getByLabel('Spende in €').fill('5000')
+  await page.getByRole('button', { name: 'Spenden' }).click()
+  await expect(page.getByText(/gespendet\. Das Land dankt\./)).toBeVisible()
+  await page.getByRole('button', { name: 'Bieten' }).click()
+  await expect(page.getByText(/^Geboten: /)).toBeVisible()
+  await expect(page.getByText(/^Höchstgebot .+ von dir/)).toBeVisible()
+  await page.screenshot({ path: shot('megaprojects'), animations: 'disabled' })
+})

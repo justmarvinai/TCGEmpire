@@ -696,7 +696,7 @@ At level 100 you can sell your empire.
 
 - **You get Empire-Sterne** based on what you earned in this run plus company value and achievements.
 - **Reset:** level, money (you restart with a seed capital), upgrades, skills, job ranks, bunker, company,
-  housing. Ruf carries over at 50 %.
+  housing. Ruf keeps half of its distance from the neutral 500 (decision 098).
 - **Kept:** your card collection and sealed product — moved to **Omas Dachboden**. Items in the attic
   count for collection goals and net worth; to sell or trade them you bring them back into your (reset,
   small) storage. Also kept: cosmetics, titles, achievements, Followers (50 %), friends, statistics.

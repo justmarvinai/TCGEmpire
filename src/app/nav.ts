@@ -53,7 +53,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
       item('prestige', 'crown', UNLOCKS.prestige, true),
     ],
   },
-  { group: 'leben', items: [item('housing', 'house', UNLOCKS.housing, true), item('style', 'sparkle', UNLOCKS.style, true), item('insurance', 'shield', UNLOCKS.insurance, true), item('luxury', 'diamond', 55)] },
+  { group: 'leben', items: [item('housing', 'house', UNLOCKS.housing, true), item('style', 'sparkle', UNLOCKS.style, true), item('insurance', 'shield', UNLOCKS.insurance, true), item('luxury', 'diamond', UNLOCKS.luxury, true)] },
   {
     group: 'freunde',
     items: [
@@ -62,7 +62,7 @@ export const NAV: { group: GroupId; items: NavItem[] }[] = [
       item('players', 'people', UNLOCKS.players, true),
       item('battles', 'swords', UNLOCKS.battles, true),
       item('darkside', 'skull', UNLOCKS.darkside, true),
-      item('megaprojects', 'crane', 65),
+      item('megaprojects', 'crane', UNLOCKS.megaprojects, true),
     ],
   },
 ]
@@ -95,6 +95,8 @@ const FEATURE_PAGE: Record<Feature, string> = {
   darkside: '/darkside',
   bares: '/bares',
   prestige: '/prestige',
+  luxury: '/luxury',
+  megaprojects: '/megaprojects',
   wholesale: '/company',
   shifts: '/jobs',
   cardmarket: '/cardmarket',

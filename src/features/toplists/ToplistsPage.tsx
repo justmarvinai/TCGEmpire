@@ -62,7 +62,7 @@ export function ToplistsPage() {
 
 /** How a list shows its numbers (money, cards, level, stars, percent, count). */
 function formatValue(list: ToplistId, v: number, cardsTotal: number) {
-  if (list === 'worth' || list === 'cash' || list === 'best_pull') return formatMoney(v)
+  if (list === 'worth' || list === 'cash' || list === 'best_pull' || list === 'luxus') return formatMoney(v)
   if (list === 'collection') return T.cards(v, cardsTotal)
   if (list === 'ruf') return T.stars(formatStars(v))
   if (list === 'league') return T.percent(v)

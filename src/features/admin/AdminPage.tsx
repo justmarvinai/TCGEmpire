@@ -16,6 +16,7 @@ import { SET_PHASES, type Admin, type RpcName } from '@/lib/schemas.ts'
 import { useMe, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { EVENTS } from '../../../content/events.ts'
+import { TROPHIES } from '../../../content/mogul.ts'
 
 const T = texts.admin
 const setName = (id: string) => SETS.find((s) => s.id === id)?.name ?? id
@@ -53,6 +54,7 @@ export function AdminPage() {
           <Sets d={q.data} />
           <Stores d={q.data} />
           <EventsAdmin d={q.data} />
+          <MuseumAdmin />
           <Economy d={q.data} />
           <Players d={q.data} />
           <Server />
@@ -433,6 +435,63 @@ function EventsAdmin({ d }: { d: Admin }) {
           {T.eventStart}
         </Button>
       </div>
+    </Panel>
+  )
+}
+
+/** Put a 1-of-1 trophy up for auction in the Museum. */
+function MuseumAdmin() {
+  const act = useAct()
+  const client = useQueryClient()
+  const q = useQuery({ queryKey: ['mega'], queryFn: () => rpc('megaprojects_get') })
+  const left = q.data?.trophies_left ?? []
+  const [key, setKey] = useState('')
+  const [start, setStart] = useState('100000')
+  const [hours, setHours] = useState('24')
+  const [busy, setBusy] = useState(false)
+  const pick = key || left[0] || ''
+  return (
+    <Panel title={T.museum} tip={T.museumTip}>
+      {left.length === 0 ? (
+        <p className="text-sm text-fg-3">{T.museumNone}</p>
+      ) : (
+        <div className="flex flex-wrap items-end gap-3">
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-fg-3">{T.museumTrophy}</span>
+            <select className="panel-inset h-9 bg-transparent px-2 text-fg" value={pick} onChange={(e) => setKey(e.target.value)}>
+              {left.map((k) => (
+                <option key={k} value={k}>
+                  {TROPHIES.find((t) => t.key === k)?.name ?? k}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-fg-3">{T.museumStart}</span>
+            <input className="panel-inset h-9 w-32 bg-transparent px-2 text-fg" inputMode="decimal" value={start} onChange={(e) => setStart(e.target.value)} />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-fg-3">{T.museumHours}</span>
+            <input className="panel-inset h-9 w-20 bg-transparent px-2 text-fg" inputMode="numeric" value={hours} onChange={(e) => setHours(e.target.value)} />
+          </label>
+          <Button
+            variant="primary"
+            loading={busy}
+            disabled={busy || !(eurosToCents(start) > 0) || !(Number(hours) >= 1)}
+            onClick={async () => {
+              setBusy(true)
+              const res = await act('admin_museum_start', { p_key: pick, p_start_cents: eurosToCents(start), p_hours: Number(hours) })
+              setBusy(false)
+              if (!res) return
+              toast('success', T.museumStarted)
+              setKey('')
+              void client.invalidateQueries({ queryKey: ['mega'] })
+            }}
+          >
+            {T.museumGo}
+          </Button>
+        </div>
+      )}
     </Panel>
   )
 }

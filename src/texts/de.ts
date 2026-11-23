@@ -211,6 +211,14 @@ export const texts = {
     eventKey: 'Ereignis',
     eventPlayer: 'Spieler (nur persönliche)',
     eventStart: 'Starten',
+    museum: 'Museum',
+    museumTip: 'Bring eine einmalige Trophäe unter den Hammer. Startpreis in Euro, Dauer in Stunden (1 bis 168). Jede Trophäe gibt es nur einmal.',
+    museumNone: 'Alle Trophäen sind vergeben oder werden gerade versteigert.',
+    museumTrophy: 'Trophäe',
+    museumStart: 'Startpreis in €',
+    museumHours: 'Dauer in Stunden',
+    museumGo: 'Versteigern',
+    museumStarted: 'Die Auktion läuft. Die Schlagzeile ist raus.',
     eventStarted: 'Läuft. Steht schon in der Zeitung.',
     title: 'Admin-Konsole',
     subtitle: 'Hier drehst du an den Schrauben. Alles wirkt sofort für alle.',
@@ -696,7 +704,7 @@ export const texts = {
     title: 'Toplisten',
     subtitle: 'Wer hat, der hat. Wer nicht hat, steht hier unten.',
     tip: 'Die Bestenlisten des Servers. Mit dabei: 40 erfundene Tycoons (NPC), die jeden Tag ein bisschen reicher werden. Du kannst sie ausblenden. Reicher als du sind sie trotzdem.',
-    tabs: { worth: 'Vermögen', level: 'Level', cash: 'Bargeld', collection: 'Sammlung', ruf: 'Ruf', best_pull: 'Bester Pull', league: 'Wochenwertung', pechvogel: 'Pechvogel' },
+    tabs: { worth: 'Vermögen', level: 'Level', cash: 'Bargeld', collection: 'Sammlung', ruf: 'Ruf', best_pull: 'Bester Pull', league: 'Wochenwertung', pechvogel: 'Pechvogel', luxus: 'Luxus' },
     tips: {
       worth: 'Bargeld, Bunker, Karten und Sealed zum Marktwert. Auch was gerade angeboten wird oder per Paket unterwegs ist.',
       level: 'Das Karrierelevel. Bei gleichem Level steht vorne, wer mehr EP hat.',
@@ -706,6 +714,7 @@ export const texts = {
       best_pull: 'Die wertvollste Karte, die du je selbst aus einem Booster gezogen hast, zum Wert von damals.',
       league: 'Wie viel Prozent dein Vermögen seit Montag 00:00 gewachsen ist. Geschenke und Tausch unter Spielern zählen nicht. Die besten drei bekommen Booster und einen Pokal fürs Profil.',
       pechvogel: 'Wie oft du 20 Booster am Stück ohne Holo aufgerissen hast. Ein Platz, auf den niemand stolz ist.',
+      luxus: 'Was du für Autos, Uhren, Yachten und Jets ausgegeben hast. Angeben in Euro.',
     },
     stars: (ruf: string) => `${ruf} ★`,
     percent: (bps: number) => `${bps >= 0 ? '+' : ''}${(bps / 100).toFixed(1).replace('.', ',')} %`,
@@ -771,6 +780,12 @@ export const texts = {
   },
 
   feed: {
+    luxury: (d: Record<string, unknown>, item: string, money: string) => `PROTZ-ALARM: ${String(d.name)} kauft ${item} für ${money}. Die Neider schärfen schon die Schlüssel.`,
+    megaproject_done: (d: Record<string, unknown>, name: string) =>
+      `GESCHAFFT! Der Stammtisch hat „${name}“ finanziert. Alle bekommen einen Bonus. Größter Spender: ${String(d.name)}.`,
+    museum_open: (name: string, money: string) => `MUSEUM: „${name}“ kommt unter den Hammer. Startpreis ${money}. Wer hat, der bietet.`,
+    museum_sold: (d: Record<string, unknown>, name: string, money: string) =>
+      `ZUSCHLAG! ${String(d.name)} ersteigert „${name}“ für ${money}. Ein Platz in der Hall of Fame, ein Loch im Konto.`,
     prestige: (d: Record<string, unknown>, rank: string) =>
       `EXIT! ${String(d.name)} verkauft das komplette Imperium und fängt von vorn an. Neuer Rang: ${rank}, +${String(d.stars)} Sterne.`,
     bares: (d: Record<string, unknown>, card: string, money: string, estimate: string) =>
@@ -937,6 +952,20 @@ export const texts = {
         steps: [
           'Deine Firma darf jetzt beim Großhändler bestellen: Displays zum Händlerpreis, billiger als überall sonst.',
           'Jede Woche gibt es ein Kontingent. Je größer deine Rechtsform, desto mehr. Du findest den Großhandel im Büro deiner Firma.',
+        ],
+      },
+      luxury: {
+        name: 'Luxus',
+        steps: [
+          'Du hast es geschafft: Geld für Dinge, die keiner braucht. Autos, Uhren, Yachten, Jets.',
+          'Jedes Teil gibt einen winzigen Bonus für immer und steht auf deinem Profil. Die Luxus-Toplist zeigt, wer am meisten verprasst.',
+        ],
+      },
+      megaprojects: {
+        name: 'Megaprojekte',
+        steps: [
+          'Der ganze Stammtisch spendet für ein Projekt nach dem anderen: BER, Stuttgart 21, Schalke. Ist es fertig, bekommen alle einen Bonus für immer.',
+          'Im Museum werden einmalige Trophäen versteigert. Wer sie ersteigert, kommt in die Hall of Fame.',
         ],
       },
       prestige: {
@@ -1109,6 +1138,9 @@ export const texts = {
   },
 
   notifications: {
+    museum_outbid: (d: Record<string, unknown>, name: string, money: string) =>
+      `Überboten! ${String(d.name)} bietet ${money} für „${name}“. Dein Geld ist zurück.`,
+    museum_won: (name: string, money: string) => `Zuschlag! „${name}“ gehört dir für ${money}. Die Hall of Fame wartet.`,
     attacked: (kind: string, d: Record<string, unknown>, money: string) =>
       ({
         bunker: `${String(d.name)} hat deinen Bunker geknackt und ${money} mitgenommen. Rache ist 24 Stunden lang billiger.`,
@@ -1153,6 +1185,8 @@ export const texts = {
         darkside: 'Mama: Ich hab gehört, du beklaust jetzt deine Freunde? So hab ich dich nicht erzogen. Lass dich wenigstens nicht erwischen.',
         bares: 'Mama: Du gehst ins Fernsehen? Zieh was Ordentliches an. Und sag Hallo, ich schau zu.',
         prestige: 'Mama: Du verkaufst alles und fängst von vorn an? Wie dein Onkel nach der dritten Scheidung. Dein Zimmer ist übrigens noch frei.',
+        luxury: 'Mama: Ein Sportwagen? Du hast nicht mal einen Führerschein. Und denk an die Versicherung.',
+        megaprojects: 'Mama: Du spendest jetzt für Flughäfen? Für meine neue Küche hat es nie gereicht.',
         company: 'Mama: Eine eigene Firma? In der Garage? Papas Auto muss dann draußen stehen. Das sagst du ihm.',
         loans: 'Mama: Du verleihst jetzt Geld? An deine Freunde? Dann sieh es schon mal als Geschenk.',
         breaks: 'Mama: Du machst jetzt Live-Shows? Zieh dir wenigstens was Ordentliches an.',
@@ -1400,6 +1434,53 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  luxury: {
+    title: 'Luxus',
+    subtitle: 'Geld ausgeben, das man nicht braucht, für Dinge, die keiner braucht. Um Leute zu beeindrucken, die man nicht mag.',
+    tip: 'Autos, Uhren, Yachten und Jets. Jedes Teil gibt einen winzigen Bonus für immer, steht auf deinem Profil und zählt für die Luxus-Toplist. Zum Vermögen zählt es nicht: Das Geld ist weg. Beim Exit behältst du alles.',
+    locked: (n: number) => `Luxus ab Level ${n}. Bis dahin reicht der Golf vom Papa.`,
+    groups: { auto: 'Autos', uhr: 'Uhren', yacht: 'Yachten', jet: 'Jets' } as Record<string, string>,
+    groupTip: 'Jedes Teil kaufst du einmal. Die teuren gibt es erst ab höherem Level.',
+    owned: 'Gehört dir',
+    fromLevel: (n: number) => `Ab Level ${n}`,
+    buy: 'Kaufen',
+    bought: (name: string) => `${name} gehört dir. Die Nachbarn tuscheln schon.`,
+    profile: 'Luxus',
+    profileEmpty: 'Noch kein Luxus. Bescheiden. Oder pleite.',
+  },
+
+  mega: {
+    title: 'Megaprojekte',
+    subtitle: 'Was die Politik nicht schafft, schafft der Stammtisch.',
+    tip: 'Alle Spieler spenden gemeinsam für ein Projekt nach dem anderen. Ist das Ziel erreicht, bekommen alle einen Bonus für immer, und die größten Spender stehen auf der Plakette. Daneben das Museum: einmalige Trophäen-Karten, versteigert vom Admin.',
+    locked: (n: number) => `Megaprojekte und Museum ab Level ${n}. Erst reich werden, dann Gutes tun.`,
+    projects: 'Megaprojekte',
+    projectsTip: 'Immer ein Projekt nach dem anderen. Jede Spende ist weg, ein Vermögen bringt sie nicht. Dafür gibt es den Bonus für alle und deinen Namen auf der Plakette.',
+    done: (date: string) => `Fertig am ${date}`,
+    later: 'Kommt danach',
+    progress: (donated: string, goal: string, mine: string) => `${donated} von ${goal} · von dir ${mine}`,
+    donors: 'Größte Spender',
+    plaque: 'Auf der Plakette',
+    amount: 'Spende in €',
+    min: (money: string) => `Mindestens ${money}`,
+    donate: 'Spenden',
+    donated: (money: string) => `${money} gespendet. Das Land dankt. Ein bisschen.`,
+    museum: 'Museum',
+    museumTip: 'Einmalige Trophäen, die es nur ein einziges Mal gibt. Wer mitbietet, legt das Geld hin; wer überboten wird, bekommt es sofort zurück. Ein Gebot in den letzten Minuten verlängert die Auktion. Der Gewinner kommt in die Hall of Fame, das Geld ist weg.',
+    noAuction: 'Gerade läuft keine Auktion. Der Admin entscheidet, wann die nächste Trophäe unter den Hammer kommt.',
+    endsIn: (time: string) => `noch ${time}`,
+    highest: (money: string, name: string) => `Höchstgebot ${money} von ${name}`,
+    start: (money: string) => `Startpreis ${money}`,
+    you: 'dir',
+    yourBid: 'Dein Gebot in €',
+    minBid: (money: string) => `Mindestens ${money}`,
+    bid: 'Bieten',
+    bidDone: (money: string) => `Geboten: ${money}. Das Geld liegt beim Auktionator.`,
+    hall: 'Hall of Fame',
+    hallEmpty: 'Noch keine Trophäe vergeben.',
+    owner: (name: string, money: string, date: string) => `${name} · ${money} · ${date}`,
   },
 
   prestige: {
@@ -2231,6 +2312,7 @@ export const texts = {
   },
 
   errors: {
+    bid_too_low: 'Zu wenig geboten. Schau aufs Mindestgebot.',
     prestige_busy: 'Erst aufräumen: Es läuft noch was (Angebote, Pakete, Grading …).',
     not_enough_stars: 'Nicht genug Sterne.',
     attic_limit: 'Oma sagt: Für heute reicht es. Morgen wieder.',

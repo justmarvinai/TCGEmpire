@@ -24,6 +24,8 @@ import { InsurancePage } from '@/features/insurance/InsurancePage.tsx'
 import { DarksidePage } from '@/features/darkside/DarksidePage.tsx'
 import { BaresPage } from '@/features/bares/BaresPage.tsx'
 import { PrestigePage } from '@/features/prestige/PrestigePage.tsx'
+import { LuxuryPage } from '@/features/mogul/LuxuryPage.tsx'
+import { MegaprojectsPage } from '@/features/mogul/MegaprojectsPage.tsx'
 import { BattlePage } from '@/features/battles/BattlePage.tsx'
 import { BattlesPage } from '@/features/battles/BattlesPage.tsx'
 import { BreakPage } from '@/features/battles/BreakPage.tsx'
@@ -96,6 +98,8 @@ function Game() {
           <Route path="darkside" element={<DarksidePage />} />
           <Route path="bares" element={<BaresPage />} />
           <Route path="prestige" element={<PrestigePage />} />
+          <Route path="luxury" element={<LuxuryPage />} />
+          <Route path="megaprojects" element={<MegaprojectsPage />} />
           <Route path="battles" element={<BattlesPage />} />
           <Route path="battles/:id" element={<BattlePage />} />
           <Route path="battles/break/:id" element={<BreakPage />} />
