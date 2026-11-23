@@ -150,11 +150,13 @@
 [data-reduced-motion='true'] *::before,
 [data-reduced-motion='true'] *::after {
   animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
   transition-duration: 1ms !important;
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
   }
 }
@@ -253,6 +255,33 @@
 [data-tier='grail'] {
   --foil-grad: repeating-linear-gradient(115deg, rgb(255 80 80 / 0.55) 0%, rgb(255 210 80 / 0.6) 5%, rgb(120 255 140 / 0.55) 10%, rgb(80 200 255 / 0.6) 15%, rgb(200 120 255 / 0.6) 20%, rgb(255 80 80 / 0.55) 25%);
   --foil-o: 0.85;
+}
+/* Grails are alive: the rainbow foil always sweeps and four stars twinkle over the card. */
+[data-tier='grail'] .card-foil > i {
+  animation: foil-sweep 2.4s linear infinite;
+}
+.grail-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.grail-sparkles > b {
+  position: absolute;
+  width: 7%;
+  aspect-ratio: 1;
+  background: rgb(255 255 255 / 0.95);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  opacity: 0;
+  transform: scale(0.3);
+  animation: twinkle 2.4s var(--ease-out) infinite;
+}
+.grail-sparkles > b:nth-child(1) { left: 12%; top: 16%; }
+.grail-sparkles > b:nth-child(2) { left: 80%; top: 28%; animation-delay: 0.6s; }
+.grail-sparkles > b:nth-child(3) { left: 22%; top: 66%; animation-delay: 1.2s; }
+.grail-sparkles > b:nth-child(4) { left: 72%; top: 82%; animation-delay: 1.8s; }
+@keyframes twinkle {
+  0%, 40%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  15% { opacity: 1; transform: scale(1) rotate(45deg); }
 }
 
 .tilt {

@@ -217,3 +217,5 @@ deliberate reveals (which can always be skipped).
 - Visual changes are checked with one Playwright screenshot at 1440 px per feature; 390 px once per
   milestone.
 - Card and product art is always reviewed on its contact sheet before it is committed.
+
+**Animated Grails (alpha_12):** Grail cards always sweep their rainbow foil and show four twinkling stars; both are CSS layers on top of the card art (transform and opacity only, off with reduced motion).

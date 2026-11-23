@@ -9,7 +9,7 @@ const H = 112
 
 /**
  * A card from its set atlas at an integer scale (1 = 80x112). Hits carry their foil: animated sweep
- * (`foil="sweep"`) or pointer-driven inside a <TiltCard>.
+ * (`foil="sweep"`) or pointer-driven inside a <TiltCard>. Grails always sweep and sparkle.
  */
 export function Card({
   id,
@@ -47,6 +47,14 @@ export function Card({
         <div className={clsx('card-foil', foil === 'sweep' && 'sweep')} style={maskStyle(atlas.data, rect, scale, `${set}-foil`)}>
           <i />
         </div>
+      )}
+      {shiny && tier === 'grail' && (
+        <span className="grail-sparkles" aria-hidden>
+          <b />
+          <b />
+          <b />
+          <b />
+        </span>
       )}
     </div>
   )
