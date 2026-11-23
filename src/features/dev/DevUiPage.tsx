@@ -210,8 +210,9 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
           onClick={() =>
             run(
               `insert into game.card_copies (owner_id, card_id, q_centering, q_corners, q_edges, q_surface, pulled_at)
-               select $1, id, private.roll_quality(), private.roll_quality(), private.roll_quality(), private.roll_quality(), private.now()
-               from game.card_defs where tier in ('holo', 'alternative', 'ultra', 'grail') order by random() limit 5`,
+               select $1, c.id, private.roll_quality(), private.roll_quality(), private.roll_quality(), private.roll_quality(), private.now()
+               from game.card_defs c join game.set_defs s on s.id = c.set_id
+               where c.tier in ('holo', 'alternative', 'ultra', 'grail') and not s.house order by random() limit 5`,
               [id],
             )
           }
