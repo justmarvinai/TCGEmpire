@@ -5,48 +5,49 @@ import { ErrorState } from '@/components/ui/States.tsx'
 import { ToastViewport } from '@/components/ui/toast.tsx'
 import { AuthPage } from '@/features/auth/AuthPage.tsx'
 import { ComingSoonPage } from '@/features/common/ComingSoonPage.tsx'
-import { CardmarketPage } from '@/features/cardmarket/CardmarketPage.tsx'
-import { CardmarketItemPage } from '@/features/cardmarket/ItemPage.tsx'
-import { SellerPage } from '@/features/cardmarket/SellerPage.tsx'
-import { KleinanzeigenPage } from '@/features/kleinanzeigen/KleinanzeigenPage.tsx'
-import { ToplistsPage } from '@/features/toplists/ToplistsPage.tsx'
-import { PlayersPage } from '@/features/players/PlayersPage.tsx'
-import { StammtischPage } from '@/features/stammtisch/StammtischPage.tsx'
-import { AdminPage } from '@/features/admin/AdminPage.tsx'
-import { TradePage } from '@/features/trade/TradePage.tsx'
 import { HomePage } from '@/features/home/HomePage.tsx'
-import { CollectionPage } from '@/features/collection/CollectionPage.tsx'
-import { GradingPage } from '@/features/grading/GradingPage.tsx'
-import { SkillsPage } from '@/features/skills/SkillsPage.tsx'
-import { HousingPage } from '@/features/housing/HousingPage.tsx'
-import { StylePage } from '@/features/style/StylePage.tsx'
-import { InsurancePage } from '@/features/insurance/InsurancePage.tsx'
-import { DarksidePage } from '@/features/darkside/DarksidePage.tsx'
-import { BaresPage } from '@/features/bares/BaresPage.tsx'
-import { PrestigePage } from '@/features/prestige/PrestigePage.tsx'
-import { LuxuryPage } from '@/features/mogul/LuxuryPage.tsx'
-import { MegaprojectsPage } from '@/features/mogul/MegaprojectsPage.tsx'
-import { StreamingPage } from '@/features/streaming/StreamingPage.tsx'
-import { HelpPage } from '@/features/help/HelpPage.tsx'
-import { BattlePage } from '@/features/battles/BattlePage.tsx'
-import { BattlesPage } from '@/features/battles/BattlesPage.tsx'
-import { BreakPage } from '@/features/battles/BreakPage.tsx'
-import { CompanyPage } from '@/features/company/CompanyPage.tsx'
-import { PlayerProfilePage } from '@/features/profile/PlayerProfilePage.tsx'
-import { JobsPage } from '@/features/jobs/JobsPage.tsx'
-import { OpenPage } from '@/features/open/OpenPage.tsx'
-import { PathPage } from '@/features/path/PathPage.tsx'
-import { QuestsPage } from '@/features/quests/QuestsPage.tsx'
-import { ShopPage } from '@/features/shop/ShopPage.tsx'
-import { BunkerPage } from '@/features/bunker/BunkerPage.tsx'
-import { UpgradesPage } from '@/features/upgrades/UpgradesPage.tsx'
-import { ProfilePage } from '@/features/profile/ProfilePage.tsx'
 import { errorText } from '@/lib/rpc.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { useMe } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { Shell } from './Shell.tsx'
 
+// Every page but the home page loads on demand (the shell shows a skeleton meanwhile).
+const CardmarketPage = lazy(() => import('@/features/cardmarket/CardmarketPage.tsx').then((m) => ({ default: m.CardmarketPage })))
+const CardmarketItemPage = lazy(() => import('@/features/cardmarket/ItemPage.tsx').then((m) => ({ default: m.CardmarketItemPage })))
+const SellerPage = lazy(() => import('@/features/cardmarket/SellerPage.tsx').then((m) => ({ default: m.SellerPage })))
+const KleinanzeigenPage = lazy(() => import('@/features/kleinanzeigen/KleinanzeigenPage.tsx').then((m) => ({ default: m.KleinanzeigenPage })))
+const ToplistsPage = lazy(() => import('@/features/toplists/ToplistsPage.tsx').then((m) => ({ default: m.ToplistsPage })))
+const PlayersPage = lazy(() => import('@/features/players/PlayersPage.tsx').then((m) => ({ default: m.PlayersPage })))
+const StammtischPage = lazy(() => import('@/features/stammtisch/StammtischPage.tsx').then((m) => ({ default: m.StammtischPage })))
+const AdminPage = lazy(() => import('@/features/admin/AdminPage.tsx').then((m) => ({ default: m.AdminPage })))
+const TradePage = lazy(() => import('@/features/trade/TradePage.tsx').then((m) => ({ default: m.TradePage })))
+const CollectionPage = lazy(() => import('@/features/collection/CollectionPage.tsx').then((m) => ({ default: m.CollectionPage })))
+const GradingPage = lazy(() => import('@/features/grading/GradingPage.tsx').then((m) => ({ default: m.GradingPage })))
+const SkillsPage = lazy(() => import('@/features/skills/SkillsPage.tsx').then((m) => ({ default: m.SkillsPage })))
+const HousingPage = lazy(() => import('@/features/housing/HousingPage.tsx').then((m) => ({ default: m.HousingPage })))
+const StylePage = lazy(() => import('@/features/style/StylePage.tsx').then((m) => ({ default: m.StylePage })))
+const InsurancePage = lazy(() => import('@/features/insurance/InsurancePage.tsx').then((m) => ({ default: m.InsurancePage })))
+const DarksidePage = lazy(() => import('@/features/darkside/DarksidePage.tsx').then((m) => ({ default: m.DarksidePage })))
+const BaresPage = lazy(() => import('@/features/bares/BaresPage.tsx').then((m) => ({ default: m.BaresPage })))
+const PrestigePage = lazy(() => import('@/features/prestige/PrestigePage.tsx').then((m) => ({ default: m.PrestigePage })))
+const LuxuryPage = lazy(() => import('@/features/mogul/LuxuryPage.tsx').then((m) => ({ default: m.LuxuryPage })))
+const MegaprojectsPage = lazy(() => import('@/features/mogul/MegaprojectsPage.tsx').then((m) => ({ default: m.MegaprojectsPage })))
+const StreamingPage = lazy(() => import('@/features/streaming/StreamingPage.tsx').then((m) => ({ default: m.StreamingPage })))
+const HelpPage = lazy(() => import('@/features/help/HelpPage.tsx').then((m) => ({ default: m.HelpPage })))
+const BattlePage = lazy(() => import('@/features/battles/BattlePage.tsx').then((m) => ({ default: m.BattlePage })))
+const BattlesPage = lazy(() => import('@/features/battles/BattlesPage.tsx').then((m) => ({ default: m.BattlesPage })))
+const BreakPage = lazy(() => import('@/features/battles/BreakPage.tsx').then((m) => ({ default: m.BreakPage })))
+const CompanyPage = lazy(() => import('@/features/company/CompanyPage.tsx').then((m) => ({ default: m.CompanyPage })))
+const PlayerProfilePage = lazy(() => import('@/features/profile/PlayerProfilePage.tsx').then((m) => ({ default: m.PlayerProfilePage })))
+const JobsPage = lazy(() => import('@/features/jobs/JobsPage.tsx').then((m) => ({ default: m.JobsPage })))
+const OpenPage = lazy(() => import('@/features/open/OpenPage.tsx').then((m) => ({ default: m.OpenPage })))
+const PathPage = lazy(() => import('@/features/path/PathPage.tsx').then((m) => ({ default: m.PathPage })))
+const QuestsPage = lazy(() => import('@/features/quests/QuestsPage.tsx').then((m) => ({ default: m.QuestsPage })))
+const ShopPage = lazy(() => import('@/features/shop/ShopPage.tsx').then((m) => ({ default: m.ShopPage })))
+const BunkerPage = lazy(() => import('@/features/bunker/BunkerPage.tsx').then((m) => ({ default: m.BunkerPage })))
+const UpgradesPage = lazy(() => import('@/features/upgrades/UpgradesPage.tsx').then((m) => ({ default: m.UpgradesPage })))
+const ProfilePage = lazy(() => import('@/features/profile/ProfilePage.tsx').then((m) => ({ default: m.ProfilePage })))
 const DevUiPage = lazy(() => import('@/features/dev/DevUiPage.tsx'))
 const LOCAL_MODE = !import.meta.env.VITE_SUPABASE_URL
 

@@ -15,7 +15,7 @@ import type { PackOpen } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { texts } from '@/texts/de.ts'
 import { OpeningStage } from './OpeningStage.tsx'
-import { LiveBar, useStream } from '@/features/streaming/StreamingPage.tsx'
+import { LiveBar, useStream } from '@/features/streaming/live.tsx'
 
 const T = texts.open
 const SIZES = [1, 5, 10] as const

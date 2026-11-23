@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { Popover } from 'radix-ui'
-import type { CSSProperties } from 'react'
+import { Suspense, type CSSProperties } from 'react'
 import { Link, NavLink, Outlet } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
@@ -9,6 +9,7 @@ import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
 import { Button } from '@/components/ui/Button.tsx'
+import { Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { formatAgo, formatClock, formatFactor, formatMoney, formatNumber, formatStars } from '@/lib/format.ts'
 import { useCosmetics } from '@/lib/actions.ts'
@@ -45,7 +46,9 @@ export function Shell({ me }: { me: SignedIn }) {
         <div className="mx-auto max-w-[80rem] px-8 pt-3 pb-14 max-lg:px-4">
           <TutorialBanner player={me.player} />
           <FeatureTour player={me.player} />
-          <Outlet />
+          <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+            <Outlet />
+          </Suspense>
         </div>
       </main>
       <Overlays awayS={me.away_s} player={me.player} />

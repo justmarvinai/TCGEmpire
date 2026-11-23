@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { PERKS, PRESTIGE_RANKS } from '../../../content/prestige.ts'
+import { PERKS } from '../../../content/prestige.ts'
+import { rankName } from './rank.ts'
 import { slabName } from '@/components/cards/Slab.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Field } from '@/components/ui/Field.tsx'
@@ -21,9 +22,6 @@ import { texts } from '@/texts/de.ts'
 
 const T = texts.prestige
 
-/** The rank after n exits (beyond the list the last one counts up). */
-export const rankName = (n: number) =>
-  n <= 0 ? null : n <= PRESTIGE_RANKS.length ? PRESTIGE_RANKS[n - 1]! : `${PRESTIGE_RANKS[PRESTIGE_RANKS.length - 1]} ${n - PRESTIGE_RANKS.length + 1}`
 
 export function PrestigePage() {
   const q = useQuery({ queryKey: ['prestige'], queryFn: () => rpc('prestige_get') })
