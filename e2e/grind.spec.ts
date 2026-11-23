@@ -49,7 +49,8 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   await expect(tour).toBeHidden()
   await expect(page.getByRole('link', { name: 'Geldbunker NEU' })).toBeHidden()
   await page.getByRole('button', { name: 'Abholen' }).click()
-  await expect(page.getByText(/12\d,\d\d € abgeholt\. Riecht nach Geld/)).toBeVisible() // one hour at 120 €/h
+  // one hour at 120 €/h; a daily event (a new one when the hour crosses midnight) can add to it
+  await expect(page.getByText(/1\d\d,\d\d € abgeholt\. Riecht nach Geld/)).toBeVisible()
   await page.screenshot({ path: shot('bunker'), animations: 'disabled' })
 
   // Upgrades: buy one.

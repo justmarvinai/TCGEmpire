@@ -140,12 +140,14 @@ base_value = lo × (hi / lo)^((d − 1) / 9)
 | Uncommon | 0,80 € | 7 € |
 | Rare | 3 € | 24 € |
 | Holo | 24 € | 160 € |
-| Alternative | 120 € | 600 € |
-| Ultra | 1.390 € | 4.440 € |
-| Grail | 16.670 € | 27.780 € |
+| Alternative | 250 € | 1.250 € |
+| Ultra | 6.950 € | 22.200 € |
+| Grail | 29.170 € | 48.620 € |
 
-Since `0.0.3` Ultra and Grail are 2,78× rarer (1:200 and 1:2.000 per booster) and their range 2,78× higher, so their
-share of a booster's value, and with it every other card's value, stayed the same (were 500–1.600 € and 6.000–10.000 €).
+A rarer tier is worth more by the same factor, so its share of a booster's value, and with it every other card's
+value, stays: `0.0.3` Ultra 1:200 and Grail 1:2.000 (×2,78; were 1:72 and 1:720), `0.0.4` Alternative 1:50 (×2,08;
+was 1:24), Ultra 1:1.000 (×5) and Grail 1:3.500 (×1,75). The ranges before: Alternative 120–600 €, Ultra 500–1.600 €,
+Grail 6.000–10.000 €.
 
 The same Glurak is worth a multiple as a PSA 10 (§5.3) and again a multiple once the set is out of print
 (§5.2) — that is where the big numbers come from.

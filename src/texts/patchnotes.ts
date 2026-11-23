@@ -1,6 +1,13 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.4',
+    title: 'Seltener',
+    items: [
+      'Die dicken Karten sind jetzt richtig selten: Alternative 1 in 50 Boostern (war 1 in 24), Ultra 1 in 1.000 (war 1 in 200), Grail 1 in 3.500 (war 1 in 2.000). Dafür sind sie entsprechend mehr wert, eine Ultra das Fünffache. Alle anderen Karten bleiben, wie sie sind. Wer schon eine hat: Glückwunsch, du bist reicher. Alle anderen: weiter aufreißen.',
+    ],
+  },
+  {
     version: '0.0.3',
     title: 'Zweite Runde Feedback',
     items: [
