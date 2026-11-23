@@ -214,6 +214,7 @@ Goal: it feels finished.
 | | Version | Content |
 |---|---------|---------|
 | ☑ | `0.0.2` | The group's first wishes: faster grading, a Verkaufen tab on the Cardmarket, Pfandflaschen in 15 s, an easier Pakete minijob (decision 117) |
+| ☑ | `0.0.3` | Unlimited Kiosk, rarer and more valuable Ultras and Grails with visible pull rates, players online in the menu, more store restocks (decision 118) |
 
 ## After 0.0.1 (not planned in detail)
 

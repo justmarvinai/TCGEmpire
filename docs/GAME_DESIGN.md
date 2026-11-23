@@ -168,8 +168,9 @@ Angekündigt → Vorbestellung → Im Druck (Restock-Wellen) → Letzte Welle �
 
 Each booster has filler slots (Common/Uncommon) and one **Hit-Slot** that always holds at least a Rare
 and can upgrade to Holo / Alternative / Ultra / Grail with set-specific odds (starting values:
-Holo 1:5, Alternative 1:24, Ultra 1:72, Grail 1:720 — auto-calibrated per set so that the average pack
-is worth about 72 % of its price). The larger One Piece and Riftbound boosters have one extra fixed Rare
+Holo 1:5, Alternative 1:24, Ultra 1:200, Grail 1:2.000 since 0.0.3 (were 1:72 and 1:720) — auto-calibrated per
+set so that the average pack is worth about 72 % of its price). The **Pull-Raten** panel on the opening page shows
+them, with Doppel-Hit, God Pack and Pech-Schutz. The larger One Piece and Riftbound boosters have one extra fixed Rare
 slot. Exact structure per set: `SETS.md`.
 
 - **Pech-Schutz (pity):** an invisible counter raises hit odds slightly after a long dry streak.
@@ -286,9 +287,9 @@ In-print sealed product is bought at list price in **stores** — and stock is l
 
 | Store | Flavour | Mechanic |
 |-------|---------|----------|
-| **Kiosk am Eck** | Always open, tiny range, slightly overpriced | Small personal daily allowance. Also sells Rubbellose, Club-Mate. |
-| **Müller** | "Maximal 2 pro Kunde" | Shared stock, restock twice a day, per-customer limit. |
-| **Smyths Toys** | Big deliveries, queue at the door | Shared stock, one big restock per day, first come first served. |
+| **Kiosk am Eck** | Always open, tiny range, slightly overpriced | As many boosters as you can pay for (0.0.3; was a daily allowance). Also sells Rubbellose, Club-Mate. |
+| **Müller** | "Maximal 2 pro Kunde" | Shared stock, restock every two hours from 8 to 20 o'clock (0.0.3), per-customer limit. |
+| **Smyths Toys** | Big deliveries, queue at the door | Shared stock, big restocks at 10, 14 and 18 o'clock (0.0.3), first come first served. |
 | **Kaufland** | Random pallets | Unannounced restocks (event), cheap. |
 | **Pokémon Center Online** | "Sie befinden sich im Warteraum" | Queue mini-interaction; exclusive pack artworks. |
 | **Local Game Store "Würfelbude"** | Fair, knows you by name | Personal allocation that grows with Ruf; preorders for new sets. |

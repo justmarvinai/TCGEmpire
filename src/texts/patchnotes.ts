@@ -1,6 +1,17 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.3',
+    title: 'Zweite Runde Feedback',
+    items: [
+      'Der Kiosk verkauft dir jetzt so viele Booster, wie du bezahlen kannst. Kein Tageslimit mehr. Deine Bank wird das lieben.',
+      'Ultras und Grails sind deutlich seltener: Ultra 1 in 200 Boostern (war 1 in 72), Grail 1 in 2.000 (war 1 in 720). Dafür sind sie jetzt 2,78-mal so viel wert. Alle anderen Karten behalten ihren Wert.',
+      'Pull-Raten: Unter „Booster öffnen“ steht jetzt schwarz auf weiß, wie oft was kommt. Ausreden gibt es keine mehr.',
+      'Neben „Spieler“ im Menü zeigt ein grüner Punkt, wie viele gerade online sind. Und wer sich lieber versteckt.',
+      'Die Läden füllen öfter auf: Müller alle zwei Stunden von 8 bis 20 Uhr, Smyths um 10, 14 und 18 Uhr. Scalper-Sven freut sich auch.',
+    ],
+  },
+  {
     version: '0.0.2',
     title: 'Erste Runde Feedback',
     items: [

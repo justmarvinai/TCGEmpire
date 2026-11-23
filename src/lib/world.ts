@@ -19,6 +19,8 @@ interface World {
   unread: number
   /** Stammtisch messages by others since this device last read the chat */
   chatUnread: number
+  /** players online right now, you included */
+  online: number
   /** server time minus device time, in ms: countdowns never trust the device clock */
   clockOffsetMs: number
   /** level-ups waiting for their celebration */
@@ -34,7 +36,7 @@ interface World {
   reset: () => void
 }
 
-const EMPTY = { feed: [], notifications: [], unread: 0, chatUnread: 0, clockOffsetMs: 0, levelUps: [], bigPulls: [], stageOpen: false, paletteOpen: false, navOpen: false }
+const EMPTY = { feed: [], notifications: [], unread: 0, chatUnread: 0, online: 0, clockOffsetMs: 0, levelUps: [], bigPulls: [], stageOpen: false, paletteOpen: false, navOpen: false }
 
 export const useWorld = create<World>((set) => ({
   ...EMPTY,
@@ -116,6 +118,7 @@ export function useSync(enabled: boolean) {
           notifications: [...w.notifications, ...res.notifications].slice(-60),
           unread: firstLoad ? 0 : w.unread + fresh.length,
           chatUnread: res.chat_unread,
+          online: res.online,
           levelUps: [...w.levelUps, ...levelUps],
           bigPulls: [...w.bigPulls, ...bigPulls],
         })

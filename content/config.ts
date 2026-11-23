@@ -2,10 +2,10 @@
 // -> game.config (admins can override single keys live). Money values are Basis-€ cents (`*_base_cents`),
 // multiplied by the Preisniveau when charged or paid (docs/ECONOMY.md §4). Odds are parts per million.
 
-type Json = string | number | boolean | readonly Json[] | { readonly [k: string]: Json }
+type Json = string | number | boolean | null | readonly Json[] | { readonly [k: string]: Json }
 
 export const config = {
-  version: '0.0.2',
+  version: '0.0.3',
 
   // Login
   'auth.bcrypt_cost': 10,
@@ -136,7 +136,8 @@ export const config = {
   'energy.regen_seconds': 180,
 
   // Boosters
-  'pack.hit_odds_ppm': { holo: 200_000, alternative: 41_667, ultra: 13_889, grail: 1_389 },
+  // per booster's hit slot; Ultra 1:200 and Grail 1:2.000 since 0.0.3 (were 1:72 and 1:720)
+  'pack.hit_odds_ppm': { holo: 200_000, alternative: 41_667, ultra: 5_000, grail: 500 },
   'pack.god_pack_ppm': 200,
   'pack.double_hit_ppm': 25_000,
   'pack.pity_after': 12,
@@ -147,7 +148,8 @@ export const config = {
 
   // Stores
   'kiosk.markup_bps': 11_000,
-  'kiosk.daily_limit': 50,
+  // null: as many as you like (0.0.3); a number caps the boosters per product and day
+  'kiosk.daily_limit': null,
   'ankauf.rate_bps': 6_000,
 
   // Minijob Pfandflaschen: score = collected deposit in Basis-€ cents

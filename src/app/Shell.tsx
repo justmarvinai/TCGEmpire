@@ -70,6 +70,7 @@ function Sidebar({ player }: { player: Player }) {
   const open = useWorld((s) => s.navOpen)
   const apply = useWorld((s) => s.apply)
   const chatUnread = useWorld((w) => w.chatUnread)
+  const online = useWorld((w) => w.online)
   const badges: Partial<Record<NavItem['id'], number>> = { open: player.sealed_total, quests: player.quests_ready, stammtisch: chatUnread }
   const fresh = unseenFeatures(player, useSettings((s) => s.seenTours))
   const close = () => apply({ navOpen: false })
@@ -107,6 +108,7 @@ function Sidebar({ player }: { player: Player }) {
                   item={item}
                   level={navLevel(item, player)}
                   badge={badges[item.id]}
+                  online={item.id === 'players' ? online : 0}
                   isNew={fresh.some((f) => f.path === item.path)}
                   onPick={close}
                 />
@@ -119,7 +121,22 @@ function Sidebar({ player }: { player: Player }) {
   )
 }
 
-function SidebarItem({ item, level, badge, isNew, onPick }: { item: NavItem; level: number; badge?: number; isNew: boolean; onPick: () => void }) {
+function SidebarItem({
+  item,
+  level,
+  badge,
+  online,
+  isNew,
+  onPick,
+}: {
+  item: NavItem
+  level: number
+  badge?: number
+  /** players online, shown as a green dot with the number (the Spieler entry) */
+  online: number
+  isNew: boolean
+  onPick: () => void
+}) {
   const label = texts.nav.items[item.id]
   const base = 'flex h-9 items-center gap-3 rounded-xl px-2.5 text-[0.9rem] font-medium'
   if (level < item.level) {
@@ -151,6 +168,12 @@ function SidebarItem({ item, level, badge, isNew, onPick }: { item: NavItem; lev
         <span className="rounded-md bg-surface-2 px-1.5 py-0.5 text-[0.625rem] font-bold tracking-wide text-fg-3 uppercase">{texts.nav.soon}</span>
       )}
       {isNew && <span className="rounded-md bg-gain px-1.5 py-0.5 text-[0.625rem] font-bold tracking-wide text-ink uppercase">{texts.nav.new}</span>}
+      {online > 0 && (
+        <span className="nums flex items-center gap-1 text-xs font-semibold text-gain" title={texts.nav.online(online)} aria-label={texts.nav.online(online)}>
+          <i className="size-2 rounded-full bg-gain" aria-hidden />
+          {online}
+        </span>
+      )}
       {!!badge && <span className="nums min-w-5 rounded-full bg-accent-hi px-1.5 text-center text-xs leading-5 font-bold text-white">{badge}</span>}
     </NavLink>
   )

@@ -52,6 +52,13 @@ describe('kiosk', () => {
     await expect(t.rpc(me, 'store_buy', { p_request_id: rid(), p_product: B, p_qty: 1 })).rejects.toThrow('product_unavailable')
   })
 
+  it('sells as many boosters as you can pay for (no daily limit by default)', async () => {
+    await t.sql(`select private.money_add($1, 100000000, 'admin_grant')`, [await t.playerId(me)])
+    for (let i = 0; i < 6; i++) await t.rpc(me, 'store_buy', { p_request_id: rid(), p_product: B, p_qty: 10 })
+    const kiosk = (await t.rpc(me, 'shop_get')).kiosk.find((k) => k.product_id === B)!
+    expect(kiosk).toMatchObject({ bought_today: 60, daily_limit: null })
+  })
+
   it('charges only once for a repeated request', async () => {
     const id = rid()
     await t.rpc(me, 'store_buy', { p_request_id: id, p_product: B, p_qty: 1 })

@@ -3,6 +3,21 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.3] — Zweite Runde Feedback (23 Nov 2026)
+
+### Added
+
+- **Pull-Raten** on the Booster öffnen page: the chance for every rarity in a booster's hit slot, plus Doppel-Hit,
+  God Pack and Pech-Schutz.
+- **Who's online:** a green dot with the number of players online right now next to "Spieler" in the menu.
+
+### Changed
+
+- **The Kiosk sells as many boosters as you can pay for** (no daily limit any more).
+- **Ultras and Grails are much rarer:** Ultra 1 in 200 boosters (was 1 in 72), Grail 1 in 2.000 (was 1 in 720). To
+  make up for it they are worth 2,78× as much; every other card keeps its value.
+- **Stores restock more often:** Müller every two hours from 8 to 20 o'clock, Smyths at 10, 14 and 18 o'clock.
+
 ## [0.0.2] — Erste Runde Feedback (23 Nov 2026)
 
 ### Added

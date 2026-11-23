@@ -26,7 +26,7 @@ export const STORES: readonly StoreDef[] = [
     minLevel: 4,
     markupBps: 10000,
     closedSunday: true,
-    restocks: ['10:00', '16:00'],
+    restocks: ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
     stockPerPlayer: 4,
     limit: 2,
     products: [{ id: 'booster-pkm-base' }, { id: 'booster-ygo-lob' }],
@@ -58,7 +58,7 @@ export const STORES: readonly StoreDef[] = [
     minLevel: 12,
     markupBps: 9800,
     closedSunday: true,
-    restocks: ['14:00'],
+    restocks: ['10:00', '14:00', '18:00'],
     stockPerPlayer: 12,
     limit: 12,
     products: [
