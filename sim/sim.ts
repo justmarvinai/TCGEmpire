@@ -459,7 +459,8 @@ async function companyStep(t: TestDb, me: string, p: { cash_cents: number }): Pr
   }
   // a full team: someone moves from the station with the most room to the bottleneck
   if (co.staff.length >= co.staff_cap && !co.staff.some((x) => x.station === neck)) {
-    const roomy = STATIONS.filter((s) => s !== neck && co.staff.some((x) => x.station === s)).sort((a, b) => co.caps[b] - co.caps[a])[0]
+    // only from a station that keeps someone (moving its only worker just moves the bottleneck back and forth)
+    const roomy = STATIONS.filter((s) => s !== neck && co.staff.filter((x) => x.station === s).length >= 2).sort((a, b) => co.caps[b] - co.caps[a])[0]
     const mover = roomy && co.staff.find((x) => x.station === roomy)
     if (mover && co.caps[roomy!] > co.caps[neck] * 1.5) {
       if (await quietly(t, me, 'company_staff_act', { p_staff: mover.id, p_action: 'move', p_arg: neck })) return 5
