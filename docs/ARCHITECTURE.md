@@ -234,8 +234,8 @@ logic stays in SQL either way.
   separately and survive deploys.
 - **Order:** database first, then frontend; RPC changes are backwards compatible for one release, and the
   client shows "Neue Version verfügbar — neu laden" when the server's version is newer.
-- **Owner setup, once** (Q-2): `docs/SETUP.md` — Supabase project (Frankfurt, anonymous sign-ins on),
-  Vercel project, three GitHub secrets.
+- **Owner setup, once** (Q-2): `docs/SETUP.md` — Supabase project (Frankfurt, anonymous sign-ins on, Cron enabled,
+  Realtime "Allow public access" off), Vercel project, three GitHub secrets (publishable key, not the secret key).
 - **Alpha data policy** (Q-21): during alphas a migration may reset game data when needed; it is announced
   in the changelog.
 
