@@ -81,10 +81,12 @@ repositories. When it is used up, the jobs above do not start ("The job was not 
 resets; Settings → Billing and licensing shows the date. Nothing has to be paid:
 
 - **Website:** Vercel builds it on its own servers, so it keeps deploying.
-- **Database:** Claude applies the same migrations over Supabase's HTTPS API (`scripts/db-migrate-api.sh`), each
-  time after your go. For that, create an access token once: supabase.com → your account → Access Tokens → generate
-  a new token (if it offers permissions: only Database read-write, only this project). Enter it in the secure form
-  Claude shows, never in the chat, and delete it when the jobs run again; they skip what was already applied.
+- **Database:** simplest is to make the repository public for one run: Settings → General → Danger Zone → Change
+  visibility → Public, then Actions → Deploy database → Run workflow (branch `main`), and back to Private once it is
+  green (about 10 minutes). Actions are free for public repositories; the repository holds no secrets, and the
+  repository secrets stay hidden. Without going public, Claude can apply the same migrations over Supabase's HTTPS
+  API (`scripts/db-migrate-api.sh`) with an access token saved as a network secret of the Claude environment (host
+  `api.supabase.com`); each way skips what the other already applied.
 - **Keep-alive:** only matters if nobody plays for a week.
 - **Checks:** Claude runs the same tests before every commit.
 
