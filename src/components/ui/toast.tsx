@@ -17,7 +17,7 @@ let nextId = 1
 export function toast(kind: Kind, text: string) {
   const id = nextId++
   useToasts.setState((s) => ({ items: [...s.items, { id, kind, text }].slice(-4) }))
-  sfx(kind === 'error' ? 'error' : kind === 'success' ? 'success' : 'notify')
+  sfx(kind === 'error' ? 'error' : kind === 'success' ? 'success' : 'notify', true)
   setTimeout(() => useToasts.setState((s) => ({ items: s.items.filter((t) => t.id !== id) })), 4500)
 }
 

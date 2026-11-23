@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect } from 'react'
 import { rpc } from './rpc.ts'
 import { useSettings } from './settings.ts'
-import { sfx } from './sfx.ts'
+import { sfx, type SfxName } from './sfx.ts'
 import type { FeedEntry, Me, Player } from './schemas.ts'
 
 export interface LevelUp {
@@ -109,7 +109,7 @@ export function useSync(enabled: boolean) {
             booster: Boolean(n.data.booster),
           }))
         const bigPulls = firstLoad ? [] : res.feed.filter((f) => f.kind === 'pull_grail' || f.kind === 'pull_ultra')
-        if (fresh.some((n) => n.kind !== 'level_up')) sfx('notify')
+        if (fresh.some((n) => n.kind !== 'level_up')) sfx(noteSound(fresh.map((n) => n.kind)))
         useWorld.getState().apply({
           clockOffsetMs: new Date(res.server.time).getTime() - Date.now(),
           feed: [...w.feed, ...res.feed].slice(-60),
@@ -141,4 +141,15 @@ export function useSync(enabled: boolean) {
       document.removeEventListener('visibilitychange', run)
     }
   }, [enabled, setMe])
+}
+
+// The loudest news decides the sound of a sync round: trouble first, then money, then progress.
+const NOTE_SOUNDS: [SfxName, string[]][] = [
+  ['alarm', ['attacked', 'resealed_caught', 'chargeback', 'company_scandal', 'company_audit', 'company_zoll', 'company_broke', 'loan_defaulted']],
+  ['outbid', ['museum_outbid']],
+  ['sold', ['sale_paid', 'stream_sponsor', 'loan_repaid', 'gift_received']],
+  ['quest', ['achievement', 'goal_done', 'league_done', 'museum_won', 'weekly_chest', 'company_award']],
+]
+function noteSound(kinds: string[]): SfxName {
+  return NOTE_SOUNDS.find(([, ks]) => ks.some((k) => kinds.includes(k)))?.[0] ?? 'notify'
 }

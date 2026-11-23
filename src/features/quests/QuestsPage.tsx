@@ -43,7 +43,7 @@ export function QuestList({ quests, list, reroll, compact }: { quests: Quests; l
     setBusy(key)
     const res = await run(fn, { p_quest: id })
     setBusy(null)
-    if (res) sfx(fn === 'quest_claim' ? 'stamp' : 'toggle')
+    if (res) sfx(fn === 'quest_claim' ? 'quest' : 'toggle')
   }
 
   return (

@@ -207,6 +207,8 @@ deliberate reveals (which can always be skipped).
 - Sound families: UI ticks, coins, pack (crinkle, tear), reveal ladder by tier (2 notes → fanfare with
   drum → long Grail sequence), level-up, quest, market (sold, outbid), company (stamp, printer), alarms
   (heist, restock), mini-games.
+- One action, one sound: a toast stays silent when the action already played its own. News from the server sounds
+  by importance (alarm → outbid → sold → quest → notify), see decision 106.
 - Throttling and slight pitch variation prevent fatigue. Separate volume sliders for effects and (later)
   music; default on at moderate volume (Q-15).
 

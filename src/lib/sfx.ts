@@ -44,8 +44,12 @@ const PRESETS = {
   ],
   flip: [{ f: 900, to: 1400, d: 0.035, type: 'triangle', v: 0.35 }],
   tear: [
-    { f: 3200, to: 900, d: 0.22, type: 'noise', v: 0.55 },
-    { f: 1800, to: 500, at: 0.08, d: 0.18, type: 'noise', v: 0.4 },
+    // foil crinkle, then the rip
+    { f: 6000, d: 0.03, type: 'noise', v: 0.3 },
+    { f: 5200, at: 0.05, d: 0.03, type: 'noise', v: 0.25 },
+    { f: 6400, at: 0.09, d: 0.03, type: 'noise', v: 0.3 },
+    { f: 3200, to: 900, at: 0.13, d: 0.22, type: 'noise', v: 0.55 },
+    { f: 1800, to: 500, at: 0.21, d: 0.18, type: 'noise', v: 0.4 },
   ],
   newcard: [{ f: G5, d: 0.05, type: 'triangle', v: 0.25 }],
   rare: [
@@ -93,6 +97,30 @@ const PRESETS = {
     { f: 2400, to: 800, d: 0.06, type: 'noise', v: 0.3 },
   ],
   bottle: [{ f: 1400, to: 2100, d: 0.06, type: 'triangle', v: 0.3 }],
+  sold: [
+    { f: 2600, to: 1200, d: 0.05, type: 'noise', v: 0.3 },
+    { f: G5, at: 0.04, d: 0.07, type: 'square', v: 0.25 },
+    { f: G6, at: 0.1, d: 0.35, type: 'triangle', v: 0.3 },
+    { f: C6, at: 0.1, d: 0.35, type: 'sine', v: 0.2 },
+  ],
+  outbid: [
+    { f: G5, d: 0.12, type: 'square', v: 0.22 },
+    { f: D5, at: 0.13, d: 0.12, type: 'square', v: 0.22 },
+    { f: C5, to: C5 * 0.92, at: 0.26, d: 0.4, type: 'square', v: 0.22 },
+  ],
+  alarm: [
+    { f: 700, to: 1100, d: 0.25, type: 'square', v: 0.18 },
+    { f: 1100, to: 700, at: 0.25, d: 0.25, type: 'square', v: 0.18 },
+    { f: 700, to: 1100, at: 0.5, d: 0.25, type: 'square', v: 0.18 },
+    { f: 1100, to: 700, at: 0.75, d: 0.25, type: 'square', v: 0.18 },
+  ],
+  quest: [
+    { f: 140, to: 60, d: 0.1, type: 'square', v: 0.4 },
+    { f: G5, at: 0.06, d: 0.07, type: 'square', v: 0.26 },
+    { f: C6, at: 0.13, d: 0.07, type: 'square', v: 0.26 },
+    { f: E6, at: 0.2, d: 0.07, type: 'square', v: 0.26 },
+    { f: G6, at: 0.27, d: 0.3, type: 'triangle', v: 0.28 },
+  ],
   shard: [{ f: 5000, to: 1500, d: 0.15, type: 'noise', v: 0.45 }],
   levelup: [
     { f: C5, d: 0.09, type: 'square', v: 0.3 },
@@ -109,14 +137,18 @@ export const SFX_NAMES = Object.keys(PRESETS) as SfxName[]
 
 let ctx: AudioContext | undefined
 const lastPlayed = new Map<SfxName, number>()
+let lastAny = -1e9
 
-export function sfx(name: SfxName) {
+/** Plays a preset. `soft` sounds (toasts) stay silent when another sound just started: one action, one sound. */
+export function sfx(name: SfxName, soft = false) {
   const volume = useSettings.getState().volume
   if (volume <= 0 || typeof AudioContext === 'undefined') return
   // Throttle repeats so fast clicking never turns into noise.
   const nowMs = performance.now()
+  if (soft && nowMs - lastAny < 250) return
   if (nowMs - (lastPlayed.get(name) ?? -1e9) < 40) return
   lastPlayed.set(name, nowMs)
+  lastAny = nowMs
 
   ctx ??= new AudioContext()
   if (ctx.state === 'suspended') void ctx.resume()
