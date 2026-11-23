@@ -372,6 +372,9 @@ export const config = {
   'prestige.value_unit_base_cents': 100_000_000,
   'prestige.ruf_keep_pct': 50,
   'attic.daily_minutes': 120,
+  // Platform budget (docs/ARCHITECTURE.md §9): Supabase Free database size and the admin warning threshold
+  'platform.db_limit_mb': 500,
+  'platform.warn_pct': 60,
   // Streaming (content/streaming.ts): viewers, donations per hit in minutes of reference income per 100 viewers,
   // Followers per hit as a share of the viewers, a daily donation cap
   'stream.start_viewers': 5,

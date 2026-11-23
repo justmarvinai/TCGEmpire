@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/Button.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
+import { Progress } from '@/components/ui/Progress.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { eurosToCents } from '@/features/cardmarket/common.tsx'
@@ -55,6 +56,7 @@ export function AdminPage() {
           <Stores d={q.data} />
           <EventsAdmin d={q.data} />
           <MuseumAdmin />
+          <Health />
           <Economy d={q.data} />
           <Players d={q.data} />
           <Server />
@@ -490,6 +492,55 @@ function MuseumAdmin() {
           >
             {T.museumGo}
           </Button>
+        </div>
+      )}
+    </Panel>
+  )
+}
+
+/** Server health: database size against the free plan, the largest tables, money and players. */
+function Health() {
+  const q = useQuery({ queryKey: ['admin-health'], queryFn: () => rpc('admin_health') })
+  const h = q.data
+  const mb = (b: number) => T.mb((b / 1048576).toFixed(1).replace('.', ','))
+  return (
+    <Panel title={T.health} tip={T.healthTip}>
+      {!h ? (
+        <Skeleton className="h-32 w-full" />
+      ) : (
+        <div className="flex flex-col gap-3 text-sm">
+          <div>
+            <p className="flex justify-between gap-2">
+              <span>{T.dbSize}</span>
+              <span className="nums font-semibold">{T.of(mb(h.db_bytes), mb(h.limit_bytes))}</span>
+            </p>
+            <Progress
+              className="mt-1"
+              value={h.db_bytes / h.limit_bytes}
+              tone={(h.db_bytes / h.limit_bytes) * 100 >= h.warn_pct ? 'loss' : 'gain'}
+              label={T.dbSize}
+            />
+            {(h.db_bytes / h.limit_bytes) * 100 >= h.warn_pct && <p className="mt-1 text-xs font-semibold text-loss">{T.dbWarn(h.warn_pct)}</p>}
+          </div>
+          <p className="nums text-fg-2">{T.healthLine(h.players, h.active_24h, h.active_7d, Math.round(h.median_level), formatMoney(h.cash_cents))}</p>
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="text-left text-fg-3">
+                <th className="pb-1 font-semibold">{T.table}</th>
+                <th className="pb-1 text-right font-semibold">{T.rows}</th>
+                <th className="pb-1 text-right font-semibold">{T.size}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {h.tables.map((t) => (
+                <tr key={t.name} className="border-t border-line">
+                  <td className="py-1 font-mono">{t.name}</td>
+                  <td className="nums py-1 text-right">{formatNumber(t.rows)}</td>
+                  <td className="nums py-1 text-right">{mb(t.bytes)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </Panel>

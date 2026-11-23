@@ -237,6 +237,8 @@ insert into game.config (key, value) values
   ('prestige.value_unit_base_cents', '100000000'::jsonb),
   ('prestige.ruf_keep_pct', '50'::jsonb),
   ('attic.daily_minutes', '120'::jsonb),
+  ('platform.db_limit_mb', '500'::jsonb),
+  ('platform.warn_pct', '60'::jsonb),
   ('stream.start_viewers', '5'::jsonb),
   ('stream.follower_viewers_pct', '2'::jsonb),
   ('stream.viewers_per_pack', '2'::jsonb),

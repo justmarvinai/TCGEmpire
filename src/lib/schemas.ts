@@ -885,6 +885,20 @@ export const zStream = z.object({
 })
 export type Stream = z.infer<typeof zStream>
 
+// Admin: server health (alpha_12)
+export const zAdminHealth = z.object({
+  db_bytes: z.number(),
+  limit_bytes: z.number(),
+  warn_pct: z.number(),
+  tables: z.array(z.object({ name: z.string(), bytes: z.number(), rows: z.number() })),
+  cash_cents: z.number(),
+  players: z.number(),
+  active_24h: z.number(),
+  active_7d: z.number(),
+  median_level: z.number(),
+})
+export type AdminHealth = z.infer<typeof zAdminHealth>
+
 // Höhle der Löwen (alpha_11)
 export const zLoewen = z.object({
   unlock_level: z.number(),
@@ -1392,6 +1406,7 @@ export const RPC_SCHEMAS = {
   prestige_get: zPrestige,
   luxury_get: zLuxury,
   stream_get: zStream,
+  admin_health: zAdminHealth,
   loewen_get: zLoewen,
   loewen_pitch: zLoewen,
   loewen_deal: zLoewen,
