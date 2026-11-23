@@ -17,7 +17,7 @@ export const MINI_QUESTS: readonly QuestTemplate[] = [
   { key: 'buy', event: 'packs_bought', min: 2, max: 5, text: 'Kauf {n} Booster am Kiosk.', path: '/shop' },
   { key: 'new', event: 'card_new', min: 2, max: 6, text: 'Entdecke {n} neue Karten.', path: '/open' },
   { key: 'sell', event: 'cards_sold', min: 5, max: 20, text: 'Verkauf {n} Karten im Kartenladen.', path: '/collection' },
-  { key: 'bottles', event: 'bottles', min: 15, max: 40, text: 'Sammle {n} Pfandflaschen.', path: '/jobs' },
+  { key: 'bottles', event: 'bottles', min: 5, max: 13, text: 'Sammle {n} Pfandflaschen.', path: '/jobs' },
   { key: 'rounds', event: 'minigame_round', min: 1, max: 2, text: 'Arbeite {n}× einen Minijob.', path: '/jobs' },
   { key: 'hit', event: 'hit_pulled', min: 1, max: 1, text: 'Zieh ein Holo oder besser.', path: '/open' },
   { key: 'energy', event: 'energy_pulled', min: 4, max: 10, text: 'Zieh {n} Energiekarten. Ja, wirklich.', path: '/open' },

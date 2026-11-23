@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { PATCH_NOTES } from '../src/texts/patchnotes.ts'
 import { finishTours } from './tours.ts'
 
 const shot = (name: string) => `e2e/.shots/${name}.png`
@@ -27,10 +28,11 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
 
   // Patch notes of this version on the home page, until read.
   await page.getByRole('link', { name: 'Übersicht' }).click()
-  await expect(page.getByText(/^Neu in 0\.0\.1(?!-)/)).toBeVisible()
+  const notes = page.getByText(`Neu in ${PATCH_NOTES[0]!.version}`)
+  await expect(notes).toBeVisible()
   await page.screenshot({ path: shot('home-notes'), animations: 'disabled' })
   await page.getByRole('button', { name: 'Gelesen' }).click()
-  await expect(page.getByText(/^Neu in 0\.0\.1(?!-)/)).toBeHidden()
+  await expect(notes).toBeHidden()
 
   // Geldbunker: an hour of income is waiting.
   await expect(page.getByRole('link', { name: 'Geldbunker NEU' })).toBeVisible()

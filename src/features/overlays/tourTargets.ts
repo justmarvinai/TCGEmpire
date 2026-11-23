@@ -22,7 +22,7 @@ export const TOUR_TARGETS: Record<FeatureKey, readonly (string | null)[]> = {
   licenses: ['licenses', 'licenses'],
   stores: ['stores', 'stores', 'stores'],
   lager: ['stores', 'lager'],
-  cardmarket: ['cardmarket-slots', 'cardmarket-parcels', null],
+  cardmarket: ['cardmarket-slots', 'cardmarket-parcels', 'cardmarket-sell-tab'],
   kleinanzeigen: ['kleinanzeigen-board', 'kleinanzeigen-board', 'kleinanzeigen-post'],
   grading: ['grading-copies', 'grading-grader', 'grading-slabs'],
   skills: ['skills-points', 'skills-branch', 'skills-respec'],

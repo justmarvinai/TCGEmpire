@@ -24,6 +24,14 @@ test('flip: Cardmarket, Kleinanzeigen, toplists, Stammtisch, players, trade and 
   // Cardmarket: every card has a Marktwert and a page with its chart.
   await page.getByRole('link', { name: /^Cardmarket/ }).click()
   await finishTour(page, 'Cardmarket')
+  // Selling: the Verkaufen tab lists what you own and leads to the item's sell form.
+  await page.getByRole('tab', { name: 'Verkaufen' }).click()
+  const offer = page.getByRole('link', { name: 'Anbieten' }).first()
+  await expect(offer).toBeVisible()
+  await page.screenshot({ path: shot('cardmarket-sell'), animations: 'disabled' })
+  await offer.click()
+  await expect(page.getByRole('heading', { name: 'Verkaufen', exact: true })).toBeInViewport()
+  await page.getByRole('link', { name: /^Cardmarket/ }).click()
   await page.getByLabel('Karte oder Produkt suchen …').fill('Glurak')
   await page.getByRole('link', { name: 'Glurak', exact: true }).click()
   await expect(page.getByRole('heading', { name: /Glurak/ })).toBeVisible()

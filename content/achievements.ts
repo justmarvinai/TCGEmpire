@@ -20,7 +20,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   { key: 'energy', event: 'energy_pulled', name: 'Energiesparer', text: 'Zieh {n} Energiekarten.', tiers: [100, 1000, 10000], titles: [null, 'Energiewende', 'Kraftwerk'] },
   { key: 'pech', event: 'pechvogel', name: 'Pechvogel', text: 'Öffne 20 Booster am Stück ohne Holo.', tiers: [1, 5], titles: ['Pechvogel', 'Schwarze Katze'] },
   { key: 'sold', event: 'cards_sold', name: 'Ausverkauf', text: 'Verkauf {n} Karten.', tiers: [100, 1000, 10000, 100000], titles: [null, 'Ramschkönig', 'Großhändler', 'Ausverkaufskönig'] },
-  { key: 'bottles', event: 'bottles', name: 'Flaschensammler', text: 'Sammle {n} Pfandflaschen.', tiers: [100, 1000, 10000, 100000], titles: [null, 'Pfandbaron', 'Flaschenkönig', 'Pfandimperator'] },
+  { key: 'bottles', event: 'bottles', name: 'Flaschensammler', text: 'Sammle {n} Pfandflaschen.', tiers: [40, 400, 4000, 40000], titles: [null, 'Pfandbaron', 'Flaschenkönig', 'Pfandimperator'] },
   { key: 'rounds', event: 'minigame_round', name: 'Malocher', text: 'Arbeite {n} Minijob-Runden.', tiers: [10, 100, 1000], titles: [null, 'Malocher', 'Arbeitstier'] },
   { key: 'shifts', event: 'shift_hours', name: 'Schichtarbeiter', text: 'Arbeite {n} Schichtstunden.', tiers: [10, 100, 1000], titles: [null, 'Werktätiger', 'Held der Arbeit'] },
   { key: 'bunker', event: 'bunker_collected', name: 'Bunkerwart', text: 'Leer den Geldbunker {n}×.', tiers: [10, 100, 1000], titles: [null, 'Dagobert', 'Fort Knox'] },

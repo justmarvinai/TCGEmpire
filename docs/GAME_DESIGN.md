@@ -431,10 +431,10 @@ Cost energy, pay immediately by performance, give Pfandbons for great rounds.
 
 | Minijob | Unlock | Game | Perk (a timed buff after a good round, decision 069) |
 |---------|--------|------|-------------------------------------|
-| **Pfandflaschen sammeln** | 1 | Catch/click bottles; Einweg 5 €, Mehrweg 3 €, Bierflasche 1,60 € | — |
+| **Pfandflaschen sammeln** | 1 | Catch/click bottles for 15 s; Einweg 15 €, Mehrweg 9 €, Bierflasche 4,80 € (0.0.2: a third of the time, three times the deposit) | — |
 | **Regale einräumen (Müller)** | 3 | Sort products to the right shelf under time pressure | You hear about Müller restocks 5 min early |
 | **Karten sortieren (Würfelbude)** | 6 | Sort cards by tier/set fast | Better Ankauf prices |
-| **Pakete ausliefern (DHL)** | 10 | Timing/route game; don't leave it "beim Nachbarn" | Faster shipping for your sales |
+| **Pakete ausliefern (DHL)** | 10 | Timing game: press while the swinging marker is in the delivery window (0.0.2: slower swing, wider windows); don't leave it "beim Nachbarn" | Faster shipping for your sales |
 | **Kasse (Smyths Toys)** | 14 | Change and barcode memory | Staff discount on sealed |
 | **Echt oder Fake?** (Cardmarket-Prüfer) | 18 | Spot the fake card | Fake warning on Kleinanzeigen (3 h after a good round) |
 | **Grading-Praktikum (PSA)** | 24 | Judge card quality | Narrower Vorprüfung ranges (3 h after a good round); prepares for the Firma |

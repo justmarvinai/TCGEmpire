@@ -1,6 +1,6 @@
 import clsx from 'clsx'
-import { useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { slabName } from '@/components/cards/Slab.tsx'
 import { Button } from '@/components/ui/Button.tsx'
@@ -64,6 +64,12 @@ export function CardmarketItemPage() {
 }
 
 function Detail({ d }: { d: CardmarketItem }) {
+  // "Anbieten" from the Verkaufen tab or the collection lands on the sell form
+  const [params] = useSearchParams()
+  const sell = params.has('sell')
+  useEffect(() => {
+    if (sell) document.querySelector('[data-tour="cardmarket-sell"]')?.scrollIntoView({ block: 'center' })
+  }, [sell])
   const { busy, run } = useMarketAct(d.item_id)
   // Slabs never fill a raw buy order; they are only listed on purpose.
   const owned = d.owned.qty + d.owned.copies.length
@@ -216,7 +222,7 @@ function ListForm({ d, busy, run }: { d: CardmarketItem; busy: string | null; ru
       p_price: cents,
     }, T.listed)
   return (
-    <Panel title={T.listTitle} tip={T.listTip} className="lg:col-span-6">
+    <Panel tour="cardmarket-sell" title={T.listTitle} tip={T.listTip} className="lg:col-span-6">
       <p className="mb-3 text-sm text-fg-2">{owned > 0 ? T.owned(owned) : T.ownedNone}</p>
       <div className="flex flex-wrap items-end gap-3">
         {hit && choices.length > 1 && (

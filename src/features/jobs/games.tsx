@@ -55,13 +55,13 @@ function Hud({ left, score, extra }: { left: number; score: number; extra: strin
 }
 
 // ----------------------------------------------------------------------------------------------
-// Pfandflaschen: click the bottles, leave the shards
+// Pfandflaschen: click the bottles, leave the shards. A round is 15 s, so a bottle is worth three of the old 45 s round.
 // ----------------------------------------------------------------------------------------------
 const ITEMS = {
-  einweg: { cents: 500, weight: 20, icon: 'bottle', tone: 'text-info' },
-  mehrweg: { cents: 300, weight: 28, icon: 'bottle', tone: 'text-gain' },
-  bier: { cents: 160, weight: 45, icon: 'bottle', tone: 'text-warn' },
-  scherbe: { cents: -200, weight: 7, icon: 'sparkle', tone: 'text-fg-2' },
+  einweg: { cents: 1500, weight: 20, icon: 'bottle', tone: 'text-info' },
+  mehrweg: { cents: 900, weight: 28, icon: 'bottle', tone: 'text-gain' },
+  bier: { cents: 480, weight: 45, icon: 'bottle', tone: 'text-warn' },
+  scherbe: { cents: -600, weight: 7, icon: 'sparkle', tone: 'text-fg-2' },
 } satisfies Record<string, { cents: number; weight: number; icon: IconName; tone: string }>
 type Kind = keyof typeof ITEMS
 interface Item {
@@ -255,10 +255,11 @@ function SortGame({ game, duration, onDone }: { game: 'regale' | 'sortieren'; du
 }
 
 // ----------------------------------------------------------------------------------------------
-// Pakete ausliefern: press while the marker is inside the delivery window
+// Pakete ausliefern: press while the marker is inside the delivery window. The marker swings slowly enough to be
+// seen as one bar (a full swing takes 2.5 s at the start, a little faster later); windows start wide.
 // ----------------------------------------------------------------------------------------------
 function newWindow(n: number) {
-  const width = Math.max(0.1, 0.24 - n * 0.006)
+  const width = Math.max(0.16, 0.3 - n * 0.005)
   return { start: 0.05 + Math.random() * (0.9 - width), width }
 }
 
@@ -277,7 +278,7 @@ function TimingGame({ duration, onDone }: { duration: number; onDone: Done }) {
     const start = performance.now()
     const loop = (now: number) => {
       const t = (now - start) / 1000
-      const speed = 1.6 + t * 0.03
+      const speed = 0.8 + t * 0.012
       pos.current = (Math.sin(t * speed * Math.PI) + 1) / 2
       if (marker.current) marker.current.style.transform = `translateX(${pos.current * 100}%)`
       frame = requestAnimationFrame(loop)
@@ -291,7 +292,7 @@ function TimingGame({ duration, onDone }: { duration: number; onDone: Done }) {
     const x = pos.current
     const inside = x >= win.start && x <= win.start + win.width
     const perfect = inside && Math.abs(x - (win.start + win.width / 2)) < win.width * 0.2
-    const gain = perfect ? 800 : inside ? 500 : 0
+    const gain = perfect ? 1000 : inside ? 650 : 0
     s.score += gain
     s.parcels += 1
     setScore(s.score)
@@ -317,9 +318,12 @@ function TimingGame({ duration, onDone }: { duration: number; onDone: Done }) {
       <Hud left={left} score={score} extra={T.parcels(parcels)} />
       <button type="button" onPointerDown={drop} className="block w-full rounded-2xl border border-line bg-surface-2 p-8 select-none">
         <div className="relative h-14 overflow-hidden rounded-xl border border-line bg-ink">
-          <div className="absolute inset-y-0 bg-gain/40 outline-2 outline-gain" style={{ left: `${win.start * 100}%`, width: `${win.width * 100}%` }} />
-          <div ref={marker} className="absolute inset-y-[-6px] left-0 w-full">
-            <div className="h-full w-1.5 bg-gold" />
+          {/* marker and window share an inset track, so the marker is fully visible at both ends */}
+          <div className="absolute inset-y-0 right-3 left-3">
+            <div className="absolute inset-y-0 bg-gain/40 outline-2 outline-gain" style={{ left: `${win.start * 100}%`, width: `${win.width * 100}%` }} />
+            <div ref={marker} className="absolute inset-y-[-6px] left-0 w-full will-change-transform">
+              <div className="h-full w-2.5 -translate-x-1/2 rounded-full bg-gold shadow-[0_0_12px_var(--color-gold)]" />
+            </div>
           </div>
         </div>
         <div className="mt-4 flex h-8 items-center justify-center gap-2">
