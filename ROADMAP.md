@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_12` (Feinschliff → 0.0.1) in progress — owner go on 23 Nov 2026.**
+> **Released: `0.0.1` (23 Nov 2026).** Updates follow as `0.0.2`, `0.0.3`, … when the owner asks for them.
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a
@@ -205,9 +205,9 @@ Goal: it feels finished.
 | ☑ | Balance pass with the simulation over levels 1–100 and two prestiges; admin economy dashboard (Geldfluss, Server-Gesundheit, Tempo) | M |
 | ☑ | Art pass (cards and products only): Ultra and Grail hero art reviewed once more; animated Grails | M |
 | ☑ | Sound pass; performance pass (bundle, atlas loading, tick duration); database size report | M |
-| ◐ | Full playtest by the group; bug bash; final data policy decision (wipe or keep) — bug bash done (page sweep, fixes); playtest checklist ready (`docs/PLAYTEST.md`); database deployed to the owner's Supabase project on 23 Nov 2026 (the repository public for one Actions run, decision 112), the website and the playtest are next; data policy is Q-29 | M |
+| ◐ | Full playtest by the group; bug bash; final data policy decision (wipe or keep) — bug bash done (page sweep, fixes); playtest checklist ready (`docs/PLAYTEST.md`); database deployed to the owner's Supabase project on 23 Nov 2026 (the repository public for one Actions run, decision 112), the website is live and the group plays it; nothing was reset at release, data policy Q-29 stays open | M |
 | ☑ | Owner requests from the first live test (23 Nov 2026): selling fixed on the live server (decision 113); guided, unskippable tutorial and feature tours with a spotlight (decision 114); Upgrades and Skillbaum layouts fixed; "Stil" renamed "Cosmetics" (decision 115) | M |
-| ☐ | Release `0.0.1` | M |
+| ☑ | Release `0.0.1` (23 Nov 2026, owner decision; decision 116) | M |
 
 ## After 0.0.1 (not planned in detail)
 
@@ -221,6 +221,8 @@ Moved here from alpha milestones: Stille Teilhaberschaft (alpha_09, decision 091
 
 - **Lean:** the smallest implementation that meets the design; no extras nobody asked for. If a planned
   item turns out to be expensive for little fun, it is cut or simplified and noted here.
+- After `0.0.1` there are no milestones: each update the owner asks for is one version (`0.0.2`, `0.0.3`, …) with its
+  own changelog entry and patch notes.
 - One milestone at a time; inside a milestone small commits that each pass typecheck, lint and tests.
 - Each milestone starts with a short task breakdown in this file and ends with: changelog entry, version
   bump, deploy, a "what to try" list for the group, and open questions for the owner.

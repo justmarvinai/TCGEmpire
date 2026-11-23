@@ -72,5 +72,7 @@ changes.
   stay; NPCs, market and Preisniveau start over. Fair toplists, nobody has to register again, and nothing from the
   alpha balance or the dev tools carries over. Alternatives: (b) keep everything from the playtest; (c) wipe
   everything including the accounts (everyone registers again).
+  **Status 23 Nov 2026:** `0.0.1` is released and nothing was reset; a fresh start would now be a one-time step on the
+  owner's explicit go.
 - **Q-30 Playtest:** the group playtest needs the deployment (Q-2) first; `docs/PLAYTEST.md` is the one-page checklist
   for the group. Recommended: one week, everyone at least once a day, bugs to the owner with a screenshot.

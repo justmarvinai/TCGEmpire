@@ -1,7 +1,28 @@
 # Changelog
 
-All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
-the first full release will be `0.0.1`.
+All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
+by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
+
+## [0.0.1] — Release (23 Nov 2026)
+
+The first full version. From here on every update counts up by one: 0.0.2, 0.0.3, …
+
+### Added
+
+- **Guided tutorial:** Mama now marks the exact thing to click, first the menu entry, then the button, and dims the
+  rest of the page until the step is done. It can no longer be skipped. Every new feature's first tour does the same:
+  each step lights up the part of the page it explains.
+
+### Changed
+
+- **Stil is now called Cosmetics.**
+
+### Fixed
+
+- On the live server, selling cards (duplicates, a single card, the bulk after opening) failed with "Ungültige
+  Anfrage."; Mama's selling step got stuck on it.
+- The Upgrades page left big gaps between its boxes; in the Skillbaum, texts ran into the buttons.
+- Mama's last step sometimes had no quest ready to claim; reaching it now finishes one.
 
 ## [0.0.1-alpha_12] — Feinschliff (23 Nov 2026)
 
@@ -16,16 +37,12 @@ The last alpha before 0.0.1: explained, balanced, polished.
   you, a fanfare for quests and achievements; tearing a pack crinkles first.
 - **Admin console:** Server-Gesundheit (database size against the free plan, the largest tables) and Tempo (how many
   levels a day every player makes).
-- **Guided tutorial:** Mama now marks the exact thing to click, first the menu entry, then the button, and dims the
-  rest of the page until the step is done. It can no longer be skipped. Every new feature's first tour does the same:
-  each step lights up the part of the page it explains.
 - **E-mail:** you register with e-mail, username and password (and the invite code) and log in with either the e-mail
   or the username. The address is not checked, nobody else sees it and the game never sends mail; change it under
   Profil → Konto. Older accounts can add one there.
 
 ### Changed
 
-- **Stil is now called Cosmetics.**
 - **Balance:** quests, the stamp card and achievements give about half the EP, and from level 50 on every level takes
   a little longer. Level 100 now takes two to three weeks of active play.
 - Quests you cannot do are no longer handed out (a finished set, all upgrades bought), and the quest list shows the
@@ -43,10 +60,6 @@ The last alpha before 0.0.1: explained, balanced, polished.
 
 - A new page opened scrolled down when the last one had been.
 - On phones the amounts on the stamp card ran into each other.
-- The Upgrades page left big gaps between its boxes; in the Skillbaum, texts ran into the buttons.
-- Mama's last step sometimes had no quest ready to claim; reaching it now finishes one.
-- On the live server, selling cards (duplicates, a single card, the bulk after opening) failed with "Ungültige
-  Anfrage."; Mama's selling step got stuck on it.
 
 ## [0.0.1-alpha_11] — Mogul (23 Nov 2026)
 

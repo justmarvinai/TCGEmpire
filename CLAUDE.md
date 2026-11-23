@@ -4,8 +4,8 @@
 
 ## Session start checklist
 
-1. Read the gate in `AGENTS.md` §0. **If no milestone is approved there, write no code.**
-2. Read `ROADMAP.md` to find the current milestone and its open tasks.
+1. Read the gate in `AGENTS.md` §0. **Write code only for an update the owner has asked for.**
+2. Read `ROADMAP.md` for the current state and its open tasks.
 3. Check `USER_QUESTIONS.md` for answers the owner has given since the last session; move decided
    answers into `docs/DECISIONS.md` and the affected design docs.
 4. Work on the designated branch only; never open a pull request unless the owner asks.
@@ -32,6 +32,8 @@
 
 ## Version and changelog
 
-- Pre-release versions are `0.0.1-alpha_01`, `0.0.1-alpha_02`, …; the first full release is `0.0.1`.
+- `0.0.1` is released (23 Nov 2026; before it came `0.0.1-alpha_01` … `_12`). Every update after it counts up by one:
+  `0.0.2`, `0.0.3`, … (owner decision). An update bumps `version` in `content/config.ts` (then `pnpm seed`) and
+  `package.json`, and gets a `CHANGELOG.md` entry and in-game patch notes (`src/texts/patchnotes.ts`).
 - `CHANGELOG.md` is written for players (German patch notes are generated from it later); keep entries
   short and concrete.

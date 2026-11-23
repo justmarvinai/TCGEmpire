@@ -1528,7 +1528,7 @@ export const texts = {
       { title: 'Kein echtes Geld', text: 'Nichts im Spiel kostet echtes Geld, nichts lässt sich für echtes Geld kaufen. Keine Werbung, kein Tracking. Das Spiel ist privat, nur mit Einladung.' },
       { title: 'Fair Play', text: 'Zweitkonten sind erlaubt, bringen aber kaum was: Geschenke und schiefe Tauschgeschäfte sind pro Tag gedeckelt, der Cardmarket handelt nur nahe am Marktwert, Kredite sind klein, und Pack-EP gibt es nur bis zu einer Tagesgrenze. Bots und Skripte sind raus. Wer einen Fehler findet, meldet ihn, statt ihn auszunutzen. Ehrensache.' },
       { title: 'Schattenwirtschaft ist erlaubt', text: 'Bunker knacken, Gerüchte streuen, präparierte Booster: alles Spiel. Beleidigen gehört dazu, echter Hass nicht. Keine Sprüche über Herkunft, Religion, Geschlecht oder Behinderung.' },
-      { title: 'Alpha heißt Baustelle', text: 'Bis zur Version 0.0.1 kann alles zurückgesetzt werden. Das wird vorher angekündigt.' },
+      { title: 'Updates', text: 'Seit Version 0.0.1 ist das Spiel offiziell draußen. Jedes Update zählt eins hoch, 0.0.2, 0.0.3 und so weiter, und unter Neuigkeiten steht, was sich geändert hat.' },
       { title: 'Deine Daten', text: 'Gespeichert werden dein Benutzername, deine E-Mail-Adresse, ein Passwort-Hash und dein Spielstand. Die E-Mail dient nur zum Einloggen: Sie wird nicht geprüft, niemand außer dir sieht sie, und wir schicken dir nie eine Mail. Im Profil änderst du sie; unter „Gefahrenzone“ kannst du alles zurücksetzen oder dein Konto löschen, dann ist auch die E-Mail weg.' },
     ],
     lexikon: 'TCG-Lexikon',
