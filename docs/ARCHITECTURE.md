@@ -229,7 +229,10 @@ logic stays in SQL either way.
 
 - **Migrations:** plain SQL files in `supabase/migrations/`, applied by `scripts/db-migrate.sh` (psql)
   from a GitHub Action after tests pass. `private.migrations` is the ledger of what ran. One short
-  transaction per file. No hand-maintained copies, no megabyte bundles.
+  transaction per file. No hand-maintained copies, no megabyte bundles. When Actions cannot run (their free
+  monthly amount is shared by all of the owner's private repositories), `scripts/db-migrate-api.sh` applies the
+  same files with the same ledger over the Supabase Management API (HTTPS, an access token), only after the
+  owner's go.
 - **Content seed:** generated SQL, applied only when its hash changed. Admin live overrides are stored
   separately and survive deploys.
 - **Order:** database first, then frontend; RPC changes are backwards compatible for one release, and the

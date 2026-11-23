@@ -41,6 +41,7 @@ pnpm seed         # regenerate supabase/seed/config.sql from content/ (run after
 pnpm art:build    # build the PNG atlases into public/atlas (not committed)
 pnpm art:sheet    # contact sheets for art review into art/.sheets (not committed)
 bash scripts/db-migrate.sh   # apply migrations + seed to $DATABASE_URL (CI does this on main)
+bash scripts/db-migrate-api.sh  # the same over Supabase's HTTPS API when Actions cannot run (owner's go each time)
 ```
 
 Where things are: `supabase/migrations` (schema and RPCs), `supabase/tests` (SQL tests and the harness),

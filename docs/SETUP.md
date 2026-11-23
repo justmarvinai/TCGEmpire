@@ -30,7 +30,12 @@ After it, every merge to `main` deploys the site and the database by itself.
 
 ## 2. GitHub (automatic database updates)
 
-Repository → Settings → Secrets and variables → Actions → New repository secret:
+**First create the branch `main`** (once): on the repository page open the branch menu above the file list, type
+`main` and choose "Create branch main from claude/…"; then Settings → General → Default branch → `main`. Claude works
+on its own branch, and only what is on `main` is live. To publish a new version, merge Claude's branch into `main`
+(Pull requests → New pull request → base `main`, compare Claude's branch → Create → Merge), or tell Claude to do it.
+
+Then: Repository → Settings → Secrets and variables → Actions → New repository secret:
 
 | Secret | Value |
 |--------|-------|
@@ -38,13 +43,14 @@ Repository → Settings → Secrets and variables → Actions → New repository
 | `SUPABASE_URL` | the Project URL |
 | `SUPABASE_ANON_KEY` | the publishable key (the name stays from the time of the anon key) |
 
-The workflow "Deploy database" runs all tests and then creates all tables and functions on the next change to
-`main` (or start it by hand: Actions → Deploy database → Run workflow). "Keep Supabase awake" pings the project once
-a day so the free plan never pauses it.
+The workflow "Deploy database" runs all tests and then creates all tables and functions whenever `main` changes (or
+start it by hand: Actions → Deploy database → Run workflow, branch `main`). "Keep Supabase awake" pings the project
+once a day so the free plan never pauses it. If these jobs do not start, see section 5.
 
 ## 3. Vercel (the website)
 
-1. Import the GitHub repository at vercel.com (framework is detected as Vite). Production branch: `main`.
+1. Import the GitHub repository at vercel.com (framework is detected as Vite). Production branch: `main` (if Vercel
+   was connected before `main` existed, change its production branch to `main` in the project settings).
 2. Project → Settings → Environment Variables:
 
 | Variable | Value |
@@ -67,6 +73,20 @@ a day so the free plan never pauses it.
    ```
 
 3. Give your friends the link and the invite code.
+
+## 5. If GitHub Actions cannot run
+
+GitHub Free includes a monthly amount of Actions time for private repositories, shared by all your private
+repositories. When it is used up, the jobs above do not start ("The job was not started … spending limit") until it
+resets; Settings → Billing and licensing shows the date. Nothing has to be paid:
+
+- **Website:** Vercel builds it on its own servers, so it keeps deploying.
+- **Database:** Claude applies the same migrations over Supabase's HTTPS API (`scripts/db-migrate-api.sh`), each
+  time after your go. For that, create an access token once: supabase.com → your account → Access Tokens → generate
+  a new token (if it offers permissions: only Database read-write, only this project). Enter it in the secure form
+  Claude shows, never in the chat, and delete it when the jobs run again; they skip what was already applied.
+- **Keep-alive:** only matters if nobody plays for a week.
+- **Checks:** Claude runs the same tests before every commit.
 
 ## Good to know
 
