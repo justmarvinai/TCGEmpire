@@ -5,8 +5,8 @@ trading-card hobby. Private game for one friend group. Must run on **Vercel Hobb
 
 ## 0. Gate: are you allowed to code?
 
-**Approved milestone: none.** `alpha_11` (Mogul) was delivered as `0.0.1-alpha_11` on 23 Nov 2026. Write no code
-until the owner gives the go for `alpha_12` (Feinschliff → 0.0.1, scope: `ROADMAP.md`).
+**Approved milestone: `alpha_12` (Feinschliff → 0.0.1)** — owner go on 23 Nov 2026 (scope: `ROADMAP.md`). The
+group playtest, the data policy and the release itself need the owner; deploy only with the owner's go.
 - When the owner approves the next milestone, update this section to name it.
 - Never deploy or change platform settings without the owner's go.
 
