@@ -50,6 +50,19 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   await t.sql(`update game.server set clock_offset = (timestamp '2026-11-23 08:00' at time zone 'Europe/Berlin') - now() where id`)
   // the world happens to the bot as well: daily, random, personal and calendar events (the tests switch them off)
   await t.sql(`update game.config_overrides set value = 'true', updated_at = now() where key = 'events.enabled'`)
+  // SIM_EP=1: log every EP grant with the function that asked for it (balance work only)
+  if (process.env.SIM_EP) {
+    await t.sql(`create table game.sim_ep (source text, base numeric)`)
+    await t.sql(`alter function private.ep_grant(uuid, numeric) rename to ep_grant_inner`)
+    await t.sql(`create function private.ep_grant(p_player uuid, p_base_ep numeric) returns jsonb
+      language plpgsql set search_path = '' as $f$
+      declare v_ctx text;
+      begin
+        get diagnostics v_ctx = pg_context;
+        insert into game.sim_ep values ((regexp_match(substr(v_ctx, position(E'\\n' in v_ctx) + 1), 'function (?:\\w+\\.)?"?(\\w+)'))[1], p_base_ep);
+        return private.ep_grant_inner(p_player, p_base_ep);
+      end $f$`)
+  }
   const me = await t.player('Bot')
   const id = await t.playerId(me)
   await t.sql(`update game.players set tutorial_step = -1 where id = $1`, [id])
@@ -115,6 +128,13 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   const notes = Object.fromEntries(
     (await t.sql<{ kind: string; n: string }>(`select kind, count(*) as n from game.notifications where player_id = $1 group by kind`, [id])).map((x) => [x.kind, Number(x.n)]),
   )
+  if (process.env.SIM_EP)
+    console.log(
+      'EP by source (base EP):',
+      (await t.sql<{ source: string; base: string; n: string }>(`select coalesce(source, '?') as source, round(sum(base)) as base, count(*) as n from game.sim_ep group by 1 order by 2 desc`))
+        .map((r) => `${r.source} ${r.base} (${r.n}×)`)
+        .join(', '),
+    )
   const events = Object.fromEntries(
     (await t.sql<{ slot: string; n: string }>(`select slot, count(*) as n from game.events where applied group by slot`)).map((x) => [x.slot, Number(x.n)]),
   )

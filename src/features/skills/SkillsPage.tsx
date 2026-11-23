@@ -113,7 +113,7 @@ function Tree({ d }: { d: Skills }) {
           const nodes = SKILLS.filter((s) => s.branch === b.key)
           const key = nodes.find((s) => s.tier === 4)!
           return (
-            <Panel key={b.key} title={b.name}>
+            <Panel key={b.key} title={b.name} tip={T.branchTip}>
               <p className="-mt-1 mb-3 text-sm text-fg-2">{b.text}</p>
               <div className="grid grid-cols-2 gap-2">
                 {[0, 1].map((line) => (

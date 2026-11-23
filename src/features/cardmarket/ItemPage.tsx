@@ -73,14 +73,14 @@ function Detail({ d }: { d: CardmarketItem }) {
         <ItemArt id={d.item_id} scale={3} />
         <ItemTier id={d.item_id} className="text-sm font-semibold" />
       </Panel>
-      <Panel title={T.value} className="lg:col-span-8">
+      <Panel title={T.value} tip={T.valueTip} className="lg:col-span-8">
         <p className="nums text-4xl font-bold tracking-tight">{formatMoney(d.value_cents)}</p>
         <div className="mt-4">
           <PriceChart itemId={d.item_id} />
         </div>
       </Panel>
 
-      <Panel title={T.offers} className="lg:col-span-6">
+      <Panel title={T.offers} tip={T.offersTip} className="lg:col-span-6">
         {d.listings.length === 0 ? (
           <EmptyState icon="tag" title={T.noListings} />
         ) : (
@@ -92,7 +92,7 @@ function Detail({ d }: { d: CardmarketItem }) {
         )}
       </Panel>
 
-      <Panel title={T.orders} className="lg:col-span-6">
+      <Panel title={T.orders} tip={T.ordersTip} className="lg:col-span-6">
         {d.orders.length === 0 ? (
           <EmptyState icon="search" title={T.noOrders} />
         ) : (
@@ -107,7 +107,7 @@ function Detail({ d }: { d: CardmarketItem }) {
       <ListForm key={d.owned.copies.length + d.owned.slabs.length} d={d} busy={busy} run={run} />
       <OrderForm d={d} busy={busy} run={run} />
 
-      <Panel title={T.sales} className="lg:col-span-12">
+      <Panel title={T.sales} tip={T.salesTip} className="lg:col-span-12">
         <Sales d={d} />
       </Panel>
     </div>

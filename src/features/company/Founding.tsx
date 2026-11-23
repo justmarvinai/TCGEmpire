@@ -70,7 +70,7 @@ export function Founding({ d, player }: { d: CompanyDoc; player: Player }) {
       </Panel>
 
       {step === 0 && (
-        <Panel title={T.step1}>
+        <Panel title={T.step1} tip={T.step1Tip}>
           <p className="text-sm text-fg-2">{T.step1Text(formatMoney(d.found_fee_cents))}</p>
           <Button
             variant="primary"
@@ -84,7 +84,7 @@ export function Founding({ d, player }: { d: CompanyDoc; player: Player }) {
         </Panel>
       )}
       {step === 1 && (
-        <Panel title={T.step2}>
+        <Panel title={T.step2} tip={T.step2Tip}>
           {readyIn > 0 ? (
             <p className="nums text-sm text-fg-2" aria-live="polite">
               {T.waiting(formatDuration(readyIn))}
@@ -165,7 +165,7 @@ function FoundForm({ d, player }: { d: CompanyDoc; player: Player }) {
   }
 
   return (
-    <Panel title={T.step3}>
+    <Panel title={T.step3} tip={T.step3Tip}>
       <p className="mb-4 text-sm text-fg-2">{T.step3Text(formatMoney(d.found_cost_cents))}</p>
       <div className="grid gap-4 lg:grid-cols-2">
         <Field

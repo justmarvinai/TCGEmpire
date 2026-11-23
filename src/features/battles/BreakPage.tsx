@@ -144,6 +144,7 @@ function Board({ d, player }: { d: Break; player: Player }) {
 
       {(d.state === 'running' || d.state === 'done') && d.round > 0 && (
         <Panel
+          tip={T.runningTip}
           title={
             d.state === 'done'
               ? T.done

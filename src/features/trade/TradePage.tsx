@@ -48,7 +48,7 @@ export function TradePage() {
 
 function Offers({ title, offers }: { title: string; offers: TradeDoc[] }) {
   return (
-    <Panel title={title}>
+    <Panel title={title} tip={T.panelTip}>
       {offers.length === 0 ? <p className="text-sm text-fg-3">{T.none}</p> : <div className="flex flex-col gap-3">{offers.map((o) => <Offer key={o.id} o={o} />)}</div>}
     </Panel>
   )

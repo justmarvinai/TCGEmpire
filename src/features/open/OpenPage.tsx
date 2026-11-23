@@ -51,6 +51,7 @@ export function OpenPage() {
     <Page icon="pack" title={T.title} subtitle={T.subtitle}>
       <LiveBar />
       <Panel
+        tip={T.yoursTip}
         title={T.yours}
         action={
           <label className="flex cursor-pointer items-center gap-2 text-sm text-fg-2">

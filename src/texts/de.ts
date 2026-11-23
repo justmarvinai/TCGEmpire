@@ -33,6 +33,7 @@ export const texts = {
       freunde: 'Freunde',
     },
     items: {
+      help: 'Hilfe & Lexikon',
       home: 'Übersicht',
       shop: 'Läden',
       open: 'Booster öffnen',
@@ -119,6 +120,11 @@ export const texts = {
   },
 
   cardmarket: {
+    sellerOffersTip: 'Alles, was dieser Händler gerade anbietet. Was du kaufst, kommt per Paket.',
+    valueTip: 'Der Marktwert und sein Verlauf. Er folgt echten Verkäufen, dem Hype und dem Angebot.',
+    offersTip: 'Die Angebote, günstigste zuerst. Ein Kauf kommt als Paket.',
+    ordersTip: 'Gesuche: Wer zu diesem Preis kaufen will. Verkaufst du an ein Gesuch, ist das Geschäft sofort durch.',
+    salesTip: 'Die letzten echten Verkäufe.',
     title: 'Cardmarket',
     subtitle: 'Kaufen, verkaufen, Gesuche aufgeben. Wer zu teuer anbietet, bleibt drauf sitzen.',
     tip: 'Der Marktplatz für alle Spieler und Händler. Angebote zum Festpreis, Gesuche mit hinterlegtem Geld. Verkauftes geht als Paket raus, bezahlt wird bei Ankunft, minus 5 % Gebühr.',
@@ -281,6 +287,7 @@ export const texts = {
   },
 
   stammtisch: {
+    chatTip: 'Der Chat für alle. Karten, Slabs und Angebote kannst du verlinken. Beleidigen ist Volkssport, Hass ist raus.',
     title: 'Stammtisch',
     subtitle: 'Der Chat für alle. Angeben, lästern, Deals einfädeln.',
     tip: 'Alle Nachrichten sieht jeder auf dem Server. Du kannst eine Karte oder ein Produkt anhängen, dann führt ein Klick zum Marktpreis. Die letzten 5.000 Nachrichten bleiben.',
@@ -356,6 +363,9 @@ export const texts = {
   },
 
   company: {
+    step1Tip: 'Erst der Antrag beim Gewerbeamt. Er kostet eine Gebühr und braucht ein paar Minuten Bearbeitungszeit.',
+    step2Tip: 'Ohne Passierschein A38 keine Firma. Den musst du dir im Amt selbst holen. Viel Glück.',
+    step3Tip: 'Name, Slogan und Etikett. Das Etikett trägt jeder Slab, den deine Firma gradet.',
     title: 'Firma',
     subtitle: 'Andere graden lassen. Selbst kassieren.',
     tip: 'Deine eigene Grading-Firma. Kunden schicken Karten, vier Stationen arbeiten sie ab: Annahme, Prüfung, Einschweißen, Versand. Die langsamste Station bremst alles. Gewinn sammelt sich auf dem Firmenkonto; auszahlen kostet Kapitalertragsteuer.',
@@ -662,6 +672,7 @@ export const texts = {
   },
 
   trade: {
+    panelTip: 'Tauschangebote zwischen Spielern. Beide Seiten müssen zustimmen; was eine Seite mehr hergibt, zählt als Geschenk und kann Schenkungssteuer kosten.',
     title: 'Tausch',
     subtitle: 'Karten gegen Karten, Geld gegen Booster. Unter Freunden. Angeblich.',
     tip: 'Du stellst ein Angebot zusammen, die andere Seite nimmt an oder lehnt ab. Reserviert wird nichts: Fehlt beim Annehmen etwas, platzt der Deal. Gibt eine Seite mehr Wert, als sie bekommt, zählt der Unterschied als Geschenk.',
@@ -1342,6 +1353,7 @@ export const texts = {
   },
 
   open: {
+    yoursTip: 'Deine ungeöffneten Booster und Displays. Displays packst du aus, Booster reißt du einzeln, zu fünft oder zu zehnt auf.',
     unbox: 'Auspacken',
     unboxed: (n: number) => `${n} Booster ausgepackt. Riecht nach frischer Pappe.`,
     displayHint: 'Ein Display wird erst ausgepackt. Dann reißt du die Booster einzeln auf.',
@@ -1453,6 +1465,26 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  help: {
+    title: 'Hilfe & Lexikon',
+    subtitle: 'Für alle, die nicht wissen, was ein Slab ist. Also für dich.',
+    rules: 'Spielregeln',
+    rulesTip: 'Wie das Spiel funktioniert und was am Stammtisch gilt.',
+    ruleList: [
+      { title: 'Worum es geht', text: 'Pfandflaschen sammeln, Booster kaufen, Karten ziehen, verkaufen, graden, eine Firma gründen und irgendwann alles für Sterne verkaufen. Wer am Ende das größte Imperium hat, gewinnt. Oder wer am lautesten angibt.' },
+      { title: 'Der Server entscheidet', text: 'Geld, Karten, Glück und Zeit rechnet allein der Server aus. Was du siehst, ist, was der Server sagt. Diskutieren bringt nichts, die Würfel sind gefallen.' },
+      { title: 'Kein echtes Geld', text: 'Nichts im Spiel kostet echtes Geld, nichts lässt sich für echtes Geld kaufen. Keine Werbung, kein Tracking. Das Spiel ist privat, nur mit Einladung.' },
+      { title: 'Ein Konto pro Person', text: 'Zweitkonten, Bots und Skripte sind raus. Wer einen Fehler findet, meldet ihn, statt ihn auszunutzen. Ehrensache.' },
+      { title: 'Schattenwirtschaft ist erlaubt', text: 'Bunker knacken, Gerüchte streuen, präparierte Booster: alles Spiel. Beleidigen gehört dazu, echter Hass nicht. Keine Sprüche über Herkunft, Religion, Geschlecht oder Behinderung.' },
+      { title: 'Alpha heißt Baustelle', text: 'Bis zur Version 0.0.1 kann alles zurückgesetzt werden. Das wird vorher angekündigt.' },
+      { title: 'Deine Daten', text: 'Gespeichert werden dein Benutzername, ein Passwort-Hash und dein Spielstand. Im Profil unter „Gefahrenzone“ kannst du alles zurücksetzen oder dein Konto löschen.' },
+    ],
+    lexikon: 'TCG-Lexikon',
+    lexikonTip: 'Die Wörter des Hobbys, einfach erklärt. Mit Suchfeld, damit du nicht fragen musst.',
+    search: 'Begriff suchen …',
+    none: 'Nichts gefunden. Vielleicht hast du dir das ausgedacht.',
   },
 
   loewen: {
@@ -1742,6 +1774,8 @@ export const texts = {
   },
 
   battles: {
+    runningTip: 'Battles, die gerade laufen. Zuschauen ist gratis, Mitleid auch.',
+    doneTip: 'Die letzten fertigen Battles: wer gewonnen hat und was im Pott lag.',
     title: 'Pack Battles',
     subtitle: 'Gleicher Einsatz, gleiche Booster. Am Ende weint einer.',
     tip: 'Alle zahlen denselben Einsatz: den Marktwert der Booster. Der Server öffnet alle Packs auf einmal, ihr seht sie Runde für Runde gleichzeitig. Wer nach den Regeln des Modus gewinnt, bekommt die Karten. Leere Plätze füllen Bots; was ein Bot gewinnt, ist weg.',
@@ -1812,6 +1846,7 @@ export const texts = {
   },
 
   breaks: {
+    runningTip: 'Jeder Pack gehört dem, der den Platz gekauft hat. Alle schauen live zu; was rauskommt, landet sofort im Inventar des Käufers.',
     title: 'Box Breaks',
     subtitle: 'Einer reißt auf, alle zittern mit.',
     tip: 'Ein Gastgeber legt ein Display auf den Tisch und verkauft die Packs einzeln nach Packnummer. Beim Start öffnet der Server alles, ihr seht Pack für Pack. Jeder bekommt die Karten seiner Packs, unverkaufte Packs bleiben beim Gastgeber.',
@@ -1937,6 +1972,7 @@ export const texts = {
   },
 
   skills: {
+    branchTip: 'Zwei Linien mit je drei Knoten und ein Schlussstein, der beide Linien braucht. Tiefere Knoten kosten mehr Punkte.',
     title: 'Skillbaum',
     subtitle: 'Wer alles kann, kann nichts richtig. Such dir was aus.',
     tip: 'Pro Level gibt es einen Skillpunkt. Vier Zweige mit je zwei Linien und einem Schlussstein ganz unten. Tiefere Skills kosten mehr Punkte. Alles auf einmal geht nicht, umlernen kostet Geld.',
@@ -2215,6 +2251,7 @@ export const texts = {
   },
 
   bunker: {
+    stageTip: 'Der Bunker füllt sich mit Geld, auch wenn du weg bist, bis er voll ist. Ausbauen macht ihn größer und ertragreicher. Abholen nicht vergessen: Freunde mit Brechstange gibt es genug.',
     title: 'Geldbunker',
     subtitle: 'Sammelt Geld, während du nichts tust. Endlich etwas, das du kannst.',
     tip: 'Der Bunker füllt sich mit Geld pro Stunde, auch wenn du offline bist. Ist er voll, kommt nichts mehr dazu – also regelmäßig leeren. Nur der Inhalt kann später von Einbrechern geklaut werden, dein Kontostand nicht.',
@@ -2235,6 +2272,7 @@ export const texts = {
   },
 
   upgrades: {
+    groupTip: 'Jede Stufe kostet mehr als die davor und braucht ein höheres Level. „Jetzt → danach“ zeigt, was sie bringt.',
     title: 'Upgrades',
     subtitle: 'Bessere Version von dir. Kostet Geld. Wie Selbstoptimierung, nur ehrlicher.',
     tip: 'Upgrades sind dauerhaft. Jede Stufe kostet mehr als die vorige und manche brauchen ein Mindestlevel.',

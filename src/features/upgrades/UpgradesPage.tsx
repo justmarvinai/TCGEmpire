@@ -22,7 +22,7 @@ export function UpgradesPage() {
       ) : (
         <div className="grid items-start gap-4 xl:grid-cols-2">
           {GROUPS.map((g) => (
-            <Panel key={g} title={T.groups[g]}>
+            <Panel key={g} title={T.groups[g]} tip={T.groupTip}>
               <div className="flex flex-col gap-2">
                 {ups.data.upgrades
                   .filter((u) => u.group === g)

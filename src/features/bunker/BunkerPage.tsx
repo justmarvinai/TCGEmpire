@@ -73,7 +73,7 @@ export function BunkerPage() {
         </Panel>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
-          <Panel title={T.stages[b.stage ?? 0]}>
+          <Panel title={T.stages[b.stage ?? 0]} tip={T.stageTip}>
             <div className="flex flex-col items-center gap-4 py-2">
               <div
                 className={clsx(

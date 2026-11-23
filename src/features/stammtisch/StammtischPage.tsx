@@ -39,7 +39,7 @@ export function StammtischPage() {
   return (
     <Page icon="chat" title={T.title} subtitle={T.subtitle} tip={T.tip}>
       <div className="grid gap-4 lg:grid-cols-12">
-        <Panel title={T.chat} className="flex flex-col lg:col-span-8">
+        <Panel title={T.chat} tip={T.chatTip} className="flex flex-col lg:col-span-8">
           {q.isPending ? (
             <Skeleton className="h-96 w-full" />
           ) : q.isError || !q.data ? (

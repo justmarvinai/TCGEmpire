@@ -49,10 +49,10 @@ export function BattlesPage() {
               <BattleList list={d.open} empty={T.lobbyEmpty} player={player} />
             </Panel>
             <BreakList player={player} />
-            <Panel title={T.running}>
+            <Panel title={T.running} tip={T.runningTip}>
               <BattleList list={d.running} empty={T.runningEmpty} player={player} />
             </Panel>
-            <Panel title={T.done}>
+            <Panel title={T.done} tip={T.doneTip}>
               <BattleList list={d.done} empty={T.doneEmpty} player={player} />
             </Panel>
           </div>
