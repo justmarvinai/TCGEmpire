@@ -17,6 +17,7 @@ export const LEXIKON: readonly { term: string; text: string }[] = [
   { term: 'Preisniveau', text: 'Die Inflation des Spiels. Wird der Server reicher, wird alles teurer. Auch der Döner.' },
   { term: 'Reprint', text: 'Ein Set wird nachgedruckt. Mehr Booster, sinkende Preise, weinende Spekulanten.' },
   { term: 'Out of Print', text: 'Ein Set wird nicht mehr gedruckt. Sealed wird nur noch seltener. Und teurer.' },
+  { term: 'Empiremon', text: 'Unser eigenes Kartenspiel. Nur am Kiosk, immer im Druck, keine Lizenz. Die Commons sind Pappe, eine Grail ist ein Haus. Gesehen hat noch keiner eine.' },
   { term: 'Grading', text: 'Eine Firma prüft deine Karte und gibt ihr eine Note von 1 bis 10. Dann kommt sie in Plastik.' },
   { term: 'Slab', text: 'Die versiegelte Plastikhülle mit der Note. Knacken geht, dann ist die Note weg.' },
   { term: 'Gem Mint', text: 'Die 10, die Bestnote. Perfekte Ecken, Kanten, Oberfläche und Zentrierung.' },

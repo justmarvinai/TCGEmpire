@@ -9,8 +9,8 @@ import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { duplicateStacks } from '@/features/collection/sellDupes.ts'
 import { useAct, useLicenses, useShop } from '@/lib/actions.ts'
-import { gameOf, productById, SETS } from '@/lib/catalog.ts'
-import { formatMoney } from '@/lib/format.ts'
+import { gameOf, isHouseProduct, productById, SETS } from '@/lib/catalog.ts'
+import { formatMoney, formatNumber } from '@/lib/format.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { texts } from '@/texts/de.ts'
@@ -22,11 +22,18 @@ import { config } from '../../../content/config.ts'
 
 const T = texts.shop
 
+const one = (ppm: number) => `1:${formatNumber(Math.round(1_000_000 / ppm))}`
+
 /** Odds line for the "i": straight from the configured odds. */
 function oddsText() {
   const o = config['pack.hit_odds_ppm']
-  const one = (ppm: number) => `1:${Math.round(1_000_000 / ppm)}`
   return `Holo ${one(o.holo)}, Alternative ${one(o.alternative)}, Ultra ${one(o.ultra)}, Grail ${one(o.grail)}.`
+}
+
+/** The same for an Empiremon booster: the house odds. */
+function houseOddsText() {
+  const o = config['pack.house_hit_odds_ppm']
+  return `Ultra ${one(o.ultra)}, Grail ${one(o.grail)}.`
 }
 
 export function ShopPage() {
@@ -36,7 +43,7 @@ export function ShopPage() {
   const [justBought, setJustBought] = useState(false)
   const player = useMe().data?.player
   const owned = useLicenses().data?.owned ?? []
-  const licensed = (productId: string) => owned.some((g) => g === gameOf(productId))
+  const licensed = (productId: string) => isHouseProduct(productId) || owned.some((g) => g === gameOf(productId))
 
   const buy = async (productId: string, qty: number) => {
     setBusy(`${productId}:${qty}`)
@@ -61,7 +68,7 @@ export function ShopPage() {
           ) : shop.data.kiosk.length === 0 ? (
             <EmptyState icon="shop" title={T.empty} />
           ) : (
-            shop.data.kiosk.filter((k) => licensed(k.product_id)).map((k) => {
+            shop.data.kiosk.filter((k) => licensed(k.product_id) && !isHouseProduct(k.product_id)).map((k) => {
               const product = productById.get(k.product_id)
               const left = k.daily_limit === null ? Infinity : k.daily_limit - k.bought_today
               return (
@@ -99,6 +106,43 @@ export function ShopPage() {
                 </div>
               )
             })
+          )}
+          {shop.data && shop.data.kiosk.some((k) => isHouseProduct(k.product_id)) && (
+            <section className="mt-6 border-t border-line pt-4">
+              <h3 className="flex items-center gap-1 text-lg font-bold tracking-tight">
+                {T.empiremon} <InfoTip>{T.empiremonTip}</InfoTip>
+              </h3>
+              <p className="mb-3 text-sm text-fg-2">{T.empiremonBody}</p>
+              <ul className="grid gap-3 sm:grid-cols-2">
+                {shop.data.kiosk
+                  .filter((k) => isHouseProduct(k.product_id))
+                  .map((k) => (
+                    <li key={k.product_id} className="flex items-center gap-3 rounded-xl bg-surface-2 p-3">
+                      <ProductArt id={k.product_id} scale={1} />
+                      <div className="flex min-w-0 flex-col gap-1.5">
+                        <p className="flex items-center gap-1 font-bold leading-tight">
+                          {productById.get(k.product_id)?.name} <InfoTip>{T.oddsHouseTip(houseOddsText())}</InfoTip>
+                        </p>
+                        <p className="nums text-lg font-bold text-gold">{formatMoney(k.price_cents)}</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[1, 5, 10].map((n) => (
+                            <Button
+                              key={n}
+                              size="sm"
+                              variant={n === 1 ? 'primary' : 'neutral'}
+                              disabled={busy !== null || (k.daily_limit !== null && k.daily_limit - k.bought_today < n)}
+                              loading={busy === `${k.product_id}:${n}`}
+                              onClick={() => buy(k.product_id, n)}
+                            >
+                              {T.buy(n)}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            </section>
           )}
           {shop.data && shop.data.kiosk.some((k) => !licensed(k.product_id)) && (
             <ul className="mt-6 flex flex-wrap gap-2 border-t border-line pt-4">

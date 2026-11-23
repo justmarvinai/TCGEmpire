@@ -5,6 +5,10 @@ import { HOMES } from '../content/housing.ts'
 import { SKILL_COST, SKILLS } from '../content/skills.ts'
 import { DECISIONS, type DecisionEffect } from '../content/company.ts'
 import { duplicateStacks } from '../src/features/collection/sellDupes.ts'
+import { productById, SETS } from '../content/catalog.ts'
+
+/** Empiremon boosters are an optional lottery; the bot buys the boosters of its licensed games (pace stays comparable). */
+const house = (product: string) => SETS.some((s) => s.id === productById.get(product)?.set && s.house)
 
 const B = 'booster-pkm-base'
 /** the games in the order the bot buys licences, and their sets */
@@ -347,7 +351,7 @@ async function step(t: TestDb, me: string): Promise<number> {
         (await quietly(t, me, 'license_buy', { p_game: next }))) return 10
   }
   // 6. spare money goes into boosters: the kiosk first, then the stores
-  for (const k of shop.kiosk.filter((x) => x.product_id.startsWith('booster-') && (x.daily_limit === null || x.bought_today < x.daily_limit))) {
+  for (const k of shop.kiosk.filter((x) => x.product_id.startsWith('booster-') && !house(x.product_id) && (x.daily_limit === null || x.bought_today < x.daily_limit))) {
     const most = Math.min(k.daily_limit === null ? Infinity : k.daily_limit - k.bought_today, Math.floor(p.cash_cents / k.price_cents / 2))
     const qty = [10, 5, 1].find((n) => n <= most) // the kiosk sells 1, 5 or 10 at a time
     if (qty && (await quietly(t, me, 'store_buy', { p_product: k.product_id, p_qty: qty }))) return 5

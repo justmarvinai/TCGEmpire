@@ -48,7 +48,7 @@ describe('kiosk', () => {
     await override('kiosk.daily_limit', 1)
     await t.rpc(me, 'store_buy', { p_request_id: rid(), p_product: B, p_qty: 1 })
     await expect(t.rpc(me, 'store_buy', { p_request_id: rid(), p_product: B, p_qty: 1 })).rejects.toThrow('store_limit')
-    await t.sql(`update game.set_defs set phase = 'oop' where true`)
+    await t.sql(`update game.set_defs set phase = 'oop' where not house`) // Empiremon never leaves print
     await expect(t.rpc(me, 'store_buy', { p_request_id: rid(), p_product: B, p_qty: 1 })).rejects.toThrow('product_unavailable')
   })
 

@@ -182,7 +182,7 @@ RLS enabled on every table with no policies.
 | `game.modifiers`, `game.counters` | stat bonuses; lifetime event counters |
 | `game.notifications`, `game.feed` | personal messages; server feed (kind + data) |
 | `game.tick_systems`, `game.job_runs` | tick dispatcher and its log |
-| `game.set_defs`, `game.card_defs`, `game.product_defs` | catalog from `content/` (phase is admin-owned) |
+| `game.set_defs`, `game.card_defs`, `game.product_defs` | catalog from `content/` (phase is admin-owned; `set_defs.house` marks Empiremon sets: always in print, kiosk only, no licence, `pack.house_hit_odds_ppm`, 0.0.5) |
 | `game.sealed`, `game.card_stacks`, `game.card_copies`, `game.collection` | sealed boosters; Common–Rare stacks; Holo+ copies with four hidden quality values; ever-pulled cards |
 | `game.pity`, `game.store_purchases` | dry streak per set; Kiosk daily limit |
 | `game.quest_templates`, `game.quests` | mini-quest templates (seeded) and active/claimed quests |

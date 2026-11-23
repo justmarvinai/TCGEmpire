@@ -100,7 +100,7 @@ describe('quests', () => {
   it('offers only quests the player can still do (finished set, maxed upgrades)', async () => {
     await t.sql(
       `insert into game.collection (player_id, card_id, first_at)
-       select $1, c.id, now() from game.card_defs c join game.set_defs s on s.id = c.set_id where s.game = 'pokemon'`,
+       select $1, c.id, now() from game.card_defs c join game.set_defs s on s.id = c.set_id where s.game = 'pokemon' or s.house`,
       [id],
     )
     await t.sql(

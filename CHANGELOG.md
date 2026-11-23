@@ -3,6 +3,20 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.5] — Empiremon (23 Nov 2026)
+
+### Added
+
+- **Empiremon, our own card game:** five sets, all out at once and never out of print: Grundauflage (20 cards),
+  Spätschicht (18), Amt & Elend (15), Pfandland (24) and Abstellgleis (30). Each set has 2 Grails, 3 Ultras and the rest
+  Commons, all of them our own creatures (Tackerdackel, Der Letzte Döner, Der Pünktliche …).
+- **Only at the Kiosk, no licence needed:** an Empiremon booster costs 200 € (twice a normal booster) and holds 5 cards:
+  4 Commons and a hit slot that turns into an Ultra 1 in 10.000 times and a Grail 1 in 50.000 times, otherwise into
+  another Common. No God Packs, no Doppel-Hits, no Pech-Schutz. Not in stores, Pack Battles or classifieds.
+- **Cheap bottom, absurd top:** Commons are worth a few cents, an Ultra about 600.000 €, a Grail about 4 million €
+  (before inflation). On average a booster is still worth 72 % of its price.
+- The Pull-Raten show the Empiremon odds too; new achievement **Hausmarke** for collecting Empiremon cards.
+
 ## [0.0.4] — Seltener (23 Nov 2026)
 
 ### Changed

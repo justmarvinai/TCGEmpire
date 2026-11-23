@@ -1,6 +1,16 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.5',
+    title: 'Empiremon',
+    items: [
+      'Unser eigenes Sammelkartenspiel ist da: Empiremon. Fünf Editionen auf einmal, und keine geht je aus dem Druck: Grundauflage, Spätschicht, Amt & Elend, Pfandland und Abstellgleis. Mit dabei: Tackerdackel, Der Letzte Döner und Der Pünktliche, den noch nie jemand gesehen hat.',
+      'Empiremon gibt es nur am Kiosk, ohne Lizenz. Ein Booster kostet das Doppelte, 5 Karten: 4 Common und ein Hit-Platz. Ultra 1 in 10.000, Grail 1 in 50.000, sonst noch ein Common. Kein God Pack, kein Doppel-Hit, kein Pech-Schutz.',
+      'Die Commons sind ein paar Cent wert. Eine Ultra rund 600.000 €, eine Grail rund 4 Millionen. Im Schnitt ist ein Booster trotzdem nur 72 % seines Preises wert. Lotto mit Pappe, viel Glück.',
+      'Die Pull-Raten zeigen jetzt auch die Empiremon-Chancen, und für Empiremon-Sammler gibt es die Errungenschaft „Hausmarke“.',
+    ],
+  },
+  {
     version: '0.0.4',
     title: 'Seltener',
     items: [

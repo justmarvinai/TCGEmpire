@@ -5,9 +5,10 @@ import { onepieceOp01 } from './sets/onepiece-op01.ts'
 import { pokemonBase } from './sets/pokemon-base.ts'
 import { riftboundOrigins } from './sets/riftbound-origins.ts'
 import { yugiohLob } from './sets/yugioh-lob.ts'
+import { EMPIREMON } from './sets/empiremon.ts'
 import { config } from './config.ts'
 
-export const SETS: readonly SetData[] = [pokemonBase, yugiohLob, onepieceOp01, riftboundOrigins]
+export const SETS: readonly SetData[] = [pokemonBase, yugiohLob, onepieceOp01, riftboundOrigins, ...EMPIREMON]
 
 export const PRODUCTS: readonly ProductData[] = [
   {
@@ -110,6 +111,22 @@ export const PRODUCTS: readonly ProductData[] = [
     contains: { product: 'booster-rb-ogn', qty: 24 },
     wrappers: ['booster-rb-ogn-ahri', 'booster-rb-ogn-jinx', 'booster-rb-ogn-kaisa'],
   },
+  // Empiremon (0.0.5): one booster per set, only at the kiosk, no displays. 5 cards: 4 Commons and the hit slot, which
+  // is a Common unless the house odds give an Ultra or a Grail. Twice the price of a normal booster.
+  ...EMPIREMON.map(
+    (s): ProductData => ({
+      id: `booster-${s.cards[0]!.id.split('-')[0]}`,
+      set: s.id,
+      kind: 'booster',
+      name: `Empiremon ${s.name} Booster`,
+      priceBaseCents: 200_00,
+      slots: [
+        { pool: 'common', n: 4 },
+        { pool: 'hit', n: 1 },
+      ],
+      wrappers: [`booster-${s.cards[0]!.id.split('-')[0]}`],
+    }),
+  ),
 ]
 
 /** In-print, ungraded value range per tier in Basis-€ cents (docs/ECONOMY.md §5.1). */
@@ -125,11 +142,21 @@ export const TIER_VALUE: Record<Tier, [lo: number, hi: number]> = {
   grail: [2_917_000, 4_862_000],
 }
 
+/**
+ * Empiremon (house sets): cheap Commons and Ultras and Grails worth far more, because the house odds make them far
+ * rarer (docs/ECONOMY.md §5.1). Only these three tiers exist there.
+ */
+export const HOUSE_TIER_VALUE: Partial<Record<Tier, [lo: number, hi: number]>> = {
+  common: [5, 200],
+  ultra: [40_000_000, 80_000_000],
+  grail: [250_000_000, 500_000_000],
+}
+
 /** Target: an average booster is worth this share of its list price. */
 export const PACK_EV_SHARE = 0.72
 
-const rawValue = (c: CardData) => {
-  const [lo, hi] = TIER_VALUE[c.tier]
+const rawValue = (c: CardData, set: SetData) => {
+  const [lo, hi] = (set.house ? HOUSE_TIER_VALUE : TIER_VALUE)[c.tier]!
   return lo * Math.pow(hi / lo, (c.d - 1) / 9)
 }
 
@@ -141,24 +168,30 @@ function poolOf(c: CardData): string {
   return c.tier
 }
 
+/** The odds of a set's hit slot in ppm per tier; the rest is the base tier (Rare, or Common in a house set). */
+export function hitOdds(set: SetData): { base: Tier; odds: Partial<Record<Tier, number>> } {
+  return set.house ? { base: 'common', odds: config['pack.house_hit_odds_ppm'] } : { base: 'rare', odds: config['pack.hit_odds_ppm'] }
+}
+
 /** Expected value of one booster for the given card values (pity, double hits and god packs ignored). */
 export function packEv(product: ProductData, set: SetData, value: (c: CardData) => number): number {
   const avg = (pool: string) => {
     const cards = set.cards.filter((c) => poolOf(c) === pool)
     return cards.reduce((s, c) => s + value(c), 0) / cards.length
   }
-  const odds = config['pack.hit_odds_ppm']
-  const hitTiers = ['holo', 'alternative', 'ultra', 'grail'] as const
-  const pRare = 1 - hitTiers.reduce((s, t) => s + odds[t] / 1e6, 0)
-  const hit = pRare * avg('rare') + hitTiers.reduce((s, t) => s + (odds[t] / 1e6) * avg(t), 0)
+  const { base, odds } = hitOdds(set)
+  const tiers = Object.entries(odds) as [Tier, number][]
+  const pBase = 1 - tiers.reduce((s, [, ppm]) => s + ppm / 1e6, 0)
+  const hit = pBase * avg(base) + tiers.reduce((s, [t, ppm]) => s + (ppm / 1e6) * avg(t), 0)
   return product.slots.reduce((s, g) => s + g.n * (g.pool === 'hit' ? hit : avg(g.pool)), 0)
 }
 
 /** Final Basis-€ cent value of every card: tier range by desirability, scaled so the pack EV hits the target. */
 export function cardValues(set: SetData): Map<string, number> {
   const product = PRODUCTS.find((p) => p.set === set.id && p.kind === 'booster')
-  const factor = product ? (PACK_EV_SHARE * product.priceBaseCents) / packEv(product, set, rawValue) : 1
-  return new Map(set.cards.map((c) => [c.id, Math.max(1, Math.round(rawValue(c) * factor))]))
+  const raw = (c: CardData) => rawValue(c, set)
+  const factor = product ? (PACK_EV_SHARE * product.priceBaseCents) / packEv(product, set, raw) : 1
+  return new Map(set.cards.map((c) => [c.id, Math.max(1, Math.round(raw(c) * factor))]))
 }
 
 export const cardById = new Map(SETS.flatMap((s) => s.cards.map((c) => [c.id, c] as const)))

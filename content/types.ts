@@ -12,9 +12,11 @@ export type CardKind =
   | 'leader' | 'character' | 'event'
   | 'legend' | 'unit' | 'gear' | 'rune' | 'battlefield'
 
-/** The four games; one set each in 0.0.1. */
-export type Game = 'pokemon' | 'yugioh' | 'onepiece' | 'riftbound'
-export const GAMES: readonly Game[] = ['pokemon', 'yugioh', 'onepiece', 'riftbound']
+/** The four licensed games (one set each) and Empiremon, the game's own TCG (0.0.5: five house sets). */
+export type LicensedGame = 'pokemon' | 'yugioh' | 'onepiece' | 'riftbound'
+export type Game = LicensedGame | 'empiremon'
+/** The games a Händlerlizenz is needed for: the starter choice and the licences. Empiremon needs none. */
+export const GAMES: readonly LicensedGame[] = ['pokemon', 'yugioh', 'onepiece', 'riftbound']
 
 export interface CardData {
   /** Stable id, also the atlas key, e.g. 'pkm-base-090'. */
@@ -41,6 +43,8 @@ export interface SetData {
   name: string
   /** Printed set size. */
   size: number
+  /** A house set (Empiremon): always in print, only at the kiosk, no licence, the house odds (pack.house_hit_odds_ppm). */
+  house?: true
   cards: readonly CardData[]
 }
 

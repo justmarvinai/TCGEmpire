@@ -220,6 +220,18 @@
 /* ------------------------------------------------------------------------------------------------
    Cards: foil layers move with transform only; the foil atlas masks where a card shines.
    ------------------------------------------------------------------------------------------------ */
+/* Runtime text of the newer sets (Empiremon): written over the frame's dark plates, always light. */
+.card-text {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1;
+  color: var(--color-fg);
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.75);
+  pointer-events: none;
+}
 .card-foil {
   position: absolute;
   inset: 0;

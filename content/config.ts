@@ -5,7 +5,7 @@
 type Json = string | number | boolean | null | readonly Json[] | { readonly [k: string]: Json }
 
 export const config = {
-  version: '0.0.4',
+  version: '0.0.5',
 
   // Login
   'auth.bcrypt_cost': 10,
@@ -138,6 +138,9 @@ export const config = {
   // Boosters
   // per booster's hit slot: Holo 1:5, Alternative 1:50, Ultra 1:1.000, Grail 1:3.500 since 0.0.4 (0.0.3: 1:24, 1:200, 1:2.000)
   'pack.hit_odds_ppm': { holo: 200_000, alternative: 20_000, ultra: 1_000, grail: 285.7 },
+  // Empiremon (house sets, 0.0.5): Ultra 1:10.000, Grail 1:50.000; otherwise the hit slot is a Common. No God Pack,
+  // no Doppel-Hit, no Pech-Schutz.
+  'pack.house_hit_odds_ppm': { ultra: 100, grail: 20 },
   'pack.god_pack_ppm': 200,
   'pack.double_hit_ppm': 25_000,
   'pack.pity_after': 12,

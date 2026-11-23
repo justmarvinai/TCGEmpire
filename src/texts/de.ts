@@ -141,7 +141,7 @@ export const texts = {
     cols: { item: 'Artikel', value: 'Marktwert', today: 'Heute', from: 'ab', offers: 'Angebote', order: 'Gesuch' },
     hype: 'Hype-Index',
     hypeTip: 'Die Stimmung pro Spiel. Über 1 ist alles teurer, unter 1 billiger. Schwankt langsam, manchmal heftig.',
-    games: { pokemon: 'Pokémon', yugioh: 'Yu-Gi-Oh!', onepiece: 'One Piece', riftbound: 'Riftbound' } as Record<string, string>,
+    games: { pokemon: 'Pokémon', yugioh: 'Yu-Gi-Oh!', onepiece: 'One Piece', riftbound: 'Riftbound', empiremon: 'Empiremon' } as Record<string, string>,
     slots: 'Plätze',
     slotsTip: 'Angebote und Gesuche teilen sich die Plätze. Mehr gibt es mit dem Upgrade Verkaufsfläche.',
     parcels: 'Pakete unterwegs',
@@ -195,12 +195,17 @@ export const texts = {
     ruf: 'Ruf',
   },
 
-  games: { pokemon: 'Pokémon', yugioh: 'Yu-Gi-Oh!', onepiece: 'One Piece', riftbound: 'Riftbound' },
+  games: { pokemon: 'Pokémon', yugioh: 'Yu-Gi-Oh!', onepiece: 'One Piece', riftbound: 'Riftbound', empiremon: 'Empiremon' },
+  cards: {
+    // type line of an Empiremon card, written at runtime (decision 065)
+    houseType: (element: string) => `${element}-Empiremon`,
+  },
   gamePitch: {
     pokemon: 'Der Klassiker. Glurak, Opas Liebling. Teuer, aber nostalgisch.',
     yugioh: 'Herz der Karten. Exodia sammeln, Drachen vergöttern, Regeln nie ganz verstehen.',
     onepiece: 'Strohhüte, Schwerter, Shanks. Für Leute, die 1.100 Folgen geschaut haben.',
     riftbound: 'League of Legends auf Pappe. Jinx, Ahri und viel zu viele Runen.',
+    empiremon: 'Unser eigenes Spiel. Nur am Kiosk, ohne Lizenz, und die Grails sieht kein Mensch.',
   },
 
   licenses: {
@@ -278,6 +283,7 @@ export const texts = {
     setsTip: 'Kein Set wechselt die Phase von allein. Out of Print friert den versiegelten Bestand als Knappheits-Maßstab ein; zurück in den Druck ist ein Reprint.',
     phases: { announced: 'Angekündigt', preorder: 'Vorbestellung', print: 'Im Druck', last_wave: 'Letzte Welle', oop: 'Out of Print', vintage: 'Vintage' },
     setPhase: 'Phase setzen',
+    alwaysPrint: 'Empiremon bleibt immer im Druck. Das ist unser eigenes Spiel, da gibt es keinen Hype-Stopp.',
     phaseDone: 'Phase gesetzt. Steht schon in der Zeitung.',
     packs: (n: string) => `${n} Packs geöffnet`,
     sealedLeft: (n: string) => `${n} Booster versiegelt`,
@@ -1394,6 +1400,11 @@ export const texts = {
     openNow: 'Jetzt öffnen',
     odds: 'Chancen pro Booster',
     oddsTip: (s: string) => `Inhalt: 2 Energien, 5 Common, 3 Uncommon und ein Slot mit Rare oder besser. ${s}`,
+    oddsHouseTip: (s: string) => `Inhalt: 4 Common und ein Hit-Platz, der fast immer auch ein Common ist. ${s} Sonst nichts. Kein God Pack, kein Doppel-Hit, kein Pech-Schutz.`,
+    empiremon: 'Empiremon – nur hier',
+    empiremonTip:
+      'Unser eigenes Sammelkartenspiel. Gibt es nur am Kiosk, immer, ohne Lizenz. Doppelt so teuer wie ein normaler Booster, die Commons sind fast nichts wert, aber eine Ultra oder Grail ist ein Vermögen. Wenn sie denn mal kommt.',
+    empiremonBody: 'Fünf Editionen, immer im Druck. Rechne nicht damit, dass du je eine Grail siehst.',
     ankauf: 'Kartenladen – Ankauf',
     ankaufTip:
       'Der Kartenladen kauft jede Karte sofort, zahlt aber nur 60 % des Werts. „Ich muss ja auch von was leben.“',
@@ -1409,6 +1420,8 @@ export const texts = {
     pullRest: 'der Rest',
     pullTip:
       'Jeder Booster hat einen Hit-Platz, so oft landet dort welche Seltenheit. Der Rest ist Common, Uncommon und Energie. Pack-Glück aus dem Skillbaum macht Alternative, Ultra und Grail häufiger.',
+    pullHouse: 'Empiremon',
+    pullHouseNote: 'Ohne God Pack, Doppel-Hit und Pech-Schutz. Pack-Glück zählt auch hier.',
     pullExtras: (double: string, god: string, pity: number) =>
       `Doppel-Hit (zwei Hits in einem Booster): ${double}. God Pack (nur Hits): ${god}. Pech-Schutz: Nach ${pity} Boostern einer Edition ohne Holo oder besser steigt die Holo-Chance mit jedem weiteren.`,
     yoursTip: 'Deine ungeöffneten Booster und Displays. Displays packst du aus, Booster reißt du einzeln, zu fünft oder zu zehnt auf.',

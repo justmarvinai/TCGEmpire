@@ -149,6 +149,12 @@ value, stays: `0.0.3` Ultra 1:200 and Grail 1:2.000 (×2,78; were 1:72 and 1:720
 was 1:24), Ultra 1:1.000 (×5) and Grail 1:3.500 (×1,75). The ranges before: Alternative 120–600 €, Ultra 500–1.600 €,
 Grail 6.000–10.000 €.
 
+**Empiremon** (house sets, 0.0.5) has its own ranges because its odds are its own (Ultra 1:10.000, Grail 1:50.000,
+otherwise a Common; `pack.house_hit_odds_ppm`): Common 0,05–2 €, Ultra 400.000–800.000 €, Grail 2,5–5 Mio. € before
+calibration (`HOUSE_TIER_VALUE` in `content/catalog.ts`). After calibration to the same 72 % a Common is worth
+0,04–0,15 €, an Ultra about 590.000–640.000 € and a Grail about 4,0–4,3 Mio. €: nearly the whole booster value sits in
+two tiers nobody pulls.
+
 The same Glurak is worth a multiple as a PSA 10 (§5.3) and again a multiple once the set is out of print
 (§5.2) — that is where the big numbers come from.
 
@@ -212,6 +218,7 @@ slab_value = marktwert(card) × grade_factor(grade) × pop_factor × brand_facto
 | Yu-Gi-Oh! LOB (24) | 80 € | 1.700 € | 9.700 € |
 | One Piece OP-01 (24) | 100 € | 2.100 € | 12.000 € |
 | Riftbound Origins (24) | 100 € | 2.100 € | 12.000 € |
+| Empiremon (each of the five sets, kiosk only) | 200 € | — | — |
 
 Sealed Marktwert in print = price × launch premium (1.0–1.6, decaying), never below 92 % of price. Out of
 print it follows `set_factor` for sealed; a display also carries its guaranteed-hit premium.
