@@ -139,9 +139,9 @@ describe('levels', () => {
     await t.sql(`insert into game.modifiers (player_id, source, stat, op, value) values ($1, 'test', 'ep', 'pct', 50)`, [b])
     const gain = async (p: string) =>
       (await t.sql<{ r: { ep_gained: number } }>(`select private.ep_grant($1, 1000) as r`, [p]))[0]!.r.ep_gained
-    // level 1: 1000 * 1.035 = 1035, with +50 % = 1552.5 -> 1553
-    expect(await gain(a)).toBe(1035)
-    expect(await gain(b)).toBe(1553)
+    // level 1: rewards grow 3 % per level (ep.reward_growth): 1000 * 1.03 = 1030, with +50 % = 1545
+    expect(await gain(a)).toBe(1030)
+    expect(await gain(b)).toBe(1545)
   })
 })
 

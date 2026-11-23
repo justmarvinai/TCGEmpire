@@ -20,6 +20,8 @@ export const config = {
   'ep.factor': 8.5,
   'ep.exponent': 1.3,
   'ep.growth': 1.035,
+  // EP rewards grow a little slower than the EP needed: the late game slows down, the first levels do not
+  'ep.reward_growth': 1.03,
   'ep.catchup_levels': 10,
   'ep.catchup_pct': 25,
   // EP rewards in level-1 units (scaled by growth^level)

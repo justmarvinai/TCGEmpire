@@ -119,6 +119,18 @@ describe('quests', () => {
     expect(q.weekly).toHaveLength(5)
   })
 
+  it('shows the EP a quest really gives at the current level', async () => {
+    await setLevel(50)
+    const d = (await t.rpc(me, 'quests_get')).daily[0]!
+    const stored = Number((await t.sql<{ ep: string }>(`select reward_ep as ep from game.quests where id = $1`, [d.id]))[0]!.ep)
+    expect(d.reward_ep).toBe(Math.round(stored * 1.03 ** 50))
+    const before = (await t.sql<{ ep: string }>(`select ep from game.players where id = $1`, [id]))[0]!.ep
+    await t.sql(`update game.quests set progress = target where id = $1`, [d.id])
+    await t.rpc(me, 'quest_claim', { p_request_id: rid(), p_quest: d.id })
+    const after = (await t.sql<{ ep: string; level: number }>(`select ep, level from game.players where id = $1`, [id]))[0]!
+    if (after.level === 50) expect(Number(after.ep) - Number(before)).toBe(d.reward_ep)
+  })
+
   it('pays a bonus for all five dailies, expires old ones at midnight', async () => {
     await setLevel(5)
     const q = await t.rpc(me, 'quests_get')

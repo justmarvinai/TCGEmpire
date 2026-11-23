@@ -167,11 +167,11 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
     (await t.sql<{ kind: string; n: string }>(`select kind, count(*) as n from game.notifications where player_id = $1 group by kind`, [id])).map((x) => [x.kind, Number(x.n)]),
   )
   if (process.env.SIM_EP) {
-    // share of each level band's EP by source (in levels' worth: base EP / EP of that level)
+    // share of each level band's EP by source, in levels' worth (EP gained / EP needed at that level)
     for (const r of await t.sql<{ band: string; mix: string }>(
       `select band, string_agg(source || ' ' || lv, ', ' order by lv desc) as mix from (
          select (level - 1) / 10 * 10 + 1 || '–' || ((level - 1) / 10 + 1) * 10 as band, min(level) as lo, coalesce(source, '?') as source,
-                round(sum(base / (25 + 8.5 * power(level, 1.3))), 1) as lv
+                round(sum(base * power(private.cfg_num('ep.reward_growth') / private.cfg_num('ep.growth'), level) / (25 + 8.5 * power(level, 1.3))), 1) as lv
          from game.sim_ep group by 1, 3) x group by band order by min(lo)`,
     ))
       console.log(`levels ${r.band}: ${r.mix}`)

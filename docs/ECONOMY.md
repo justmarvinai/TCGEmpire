@@ -34,7 +34,8 @@ Owner target: **level 100 in about 2–3 weeks** for an active player.
 ```
 minutes_for_level(n) = 0.5 + 0.17 × n^1.3            (standard active play)
 ep_to_next(n)        = round( (25 + 8.5 × n^1.3) × 1.035^n )
-ep_scale(n)          = 1.035^n                       (all EP rewards are multiplied by this)
+reward_scale(n)      = 1.03^n                        (all EP rewards are multiplied by this; since alpha_12 it grows
+                                                      slower than ep_to_next, so the late game slows down step by step)
 ```
 
 | Level | Minutes for this level | Active hours so far | Reached on (2.5 h/day, before idle EP) |

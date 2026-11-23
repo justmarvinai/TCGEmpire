@@ -9,6 +9,7 @@ insert into game.config (key, value) values
   ('ep.factor', '8.5'::jsonb),
   ('ep.exponent', '1.3'::jsonb),
   ('ep.growth', '1.035'::jsonb),
+  ('ep.reward_growth', '1.03'::jsonb),
   ('ep.catchup_levels', '10'::jsonb),
   ('ep.catchup_pct', '25'::jsonb),
   ('ep.pack', '15'::jsonb),
