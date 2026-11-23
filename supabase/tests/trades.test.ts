@@ -34,7 +34,7 @@ beforeEach(async () => {
   aid = await t.playerId(a)
   bid = await t.playerId(b)
   await t.sql(`update game.players set level = 10 where true`)
-  await t.sql(`select private.money_add(id, 500000, 'test') from game.players`)
+  await t.sql(`select private.money_add(id, 1500000, 'test') from game.players`) // enough for the tax on a Grail
   await t.advance('61 minutes') // past the lock for fresh accounts
 })
 

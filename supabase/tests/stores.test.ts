@@ -30,6 +30,9 @@ beforeEach(async () => {
 
 describe('retail stores', () => {
   it('restocks Müller at 10:00 with shared stock; Sven grabs his share; limits per wave; sold out', async () => {
+    // the mechanism, not the schedule: Müller at 10:00 and 16:00, Smyths at 14:00 as when this test was written
+    await t.sql(`update game.store_defs set restocks = '["10:00", "16:00"]' where key = 'mueller'`)
+    await t.sql(`update game.store_defs set restocks = '["14:00"]' where key = 'smyths'`)
     await t.sql(`select private.tick_stores()`)
     const total = 4 * 2 // stock per player x active players (at least two)
     expect(await num(`select qty_total as v from game.store_waves where store = 'mueller'`)).toBe(total)

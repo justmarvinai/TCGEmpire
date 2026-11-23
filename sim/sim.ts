@@ -347,8 +347,8 @@ async function step(t: TestDb, me: string): Promise<number> {
         (await quietly(t, me, 'license_buy', { p_game: next }))) return 10
   }
   // 6. spare money goes into boosters: the kiosk first, then the stores
-  for (const k of shop.kiosk.filter((x) => x.product_id.startsWith('booster-') && x.bought_today < x.daily_limit)) {
-    const most = Math.min(k.daily_limit - k.bought_today, Math.floor(p.cash_cents / k.price_cents / 2))
+  for (const k of shop.kiosk.filter((x) => x.product_id.startsWith('booster-') && (x.daily_limit === null || x.bought_today < x.daily_limit))) {
+    const most = Math.min(k.daily_limit === null ? Infinity : k.daily_limit - k.bought_today, Math.floor(p.cash_cents / k.price_cents / 2))
     const qty = [10, 5, 1].find((n) => n <= most) // the kiosk sells 1, 5 or 10 at a time
     if (qty && (await quietly(t, me, 'store_buy', { p_product: k.product_id, p_qty: qty }))) return 5
   }

@@ -63,7 +63,7 @@ export function ShopPage() {
           ) : (
             shop.data.kiosk.filter((k) => licensed(k.product_id)).map((k) => {
               const product = productById.get(k.product_id)
-              const left = k.daily_limit - k.bought_today
+              const left = k.daily_limit === null ? Infinity : k.daily_limit - k.bought_today
               return (
                 <div key={k.product_id} className="flex flex-wrap items-center gap-6">
                   <ProductArt id={k.product_id} scale={2} className="anim-bob" />
@@ -75,7 +75,7 @@ export function ShopPage() {
                       </p>
                     </div>
                     <p className="nums text-3xl font-bold tracking-tight text-gold">{formatMoney(k.price_cents)}</p>
-                    <p className="text-xs text-fg-3">{T.today(k.bought_today, k.daily_limit)}</p>
+                    {k.daily_limit !== null && <p className="text-xs text-fg-3">{T.today(k.bought_today, k.daily_limit)}</p>}
                     <div className="flex flex-wrap gap-2">
                       {[1, 5, 10].map((n) => (
                         <Button

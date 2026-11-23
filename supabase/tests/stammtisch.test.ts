@@ -60,6 +60,17 @@ describe('Stammtisch', () => {
   })
 })
 
+describe('online players', () => {
+  it('sync counts who is online right now, the caller included', async () => {
+    await t.sql(`update game.players set last_seen_at = private.now() - interval '1 hour'`)
+    expect((await t.rpc(a, 'sync', {})).online).toBe(1) // only Anna, who is asking
+    await t.rpc(b, 'sync', {})
+    expect((await t.rpc(a, 'sync', {})).online).toBe(2)
+    await t.advance('3 minutes') // past presence.online_seconds
+    expect((await t.rpc(b, 'sync', {})).online).toBe(1)
+  })
+})
+
 describe('KARTEN-BILD market headlines', () => {
   it('reports big Cardmarket deals with a player on one side', async () => {
     await t.sql(`update game.players set level = 10 where true`)

@@ -28,6 +28,11 @@ export function formatNumber(n: number): string {
   return nf0.format(n)
 }
 
+/** A chance or share without a sign: 20 %, 4,2 %, 0,05 % */
+export function formatShare(x: number): string {
+  return `${new Intl.NumberFormat('de-DE', { maximumSignificantDigits: 2 }).format(x * 100)} %`
+}
+
 /** Preisniveau and other multipliers: ×1,00 */
 export function formatFactor(x: number): string {
   return `×${nf2.format(x)}`

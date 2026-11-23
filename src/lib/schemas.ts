@@ -47,6 +47,7 @@ export const zSync = zMe.extend({
   feed: z.array(zEntry),
   chat_unread: z.number(),
   chat_last_id: z.number(),
+  online: z.number(),
 })
 export type Sync = z.infer<typeof zSync>
 
@@ -93,7 +94,7 @@ export type PackOpen = z.infer<typeof zPackOpen>
 
 export const zShop = z.object({
   kiosk: z.array(
-    z.object({ product_id: z.string(), price_cents: z.number(), bought_today: z.number(), daily_limit: z.number() }),
+    z.object({ product_id: z.string(), price_cents: z.number(), bought_today: z.number(), daily_limit: z.number().nullable() }),
   ),
   stores: z.array(
     z.object({

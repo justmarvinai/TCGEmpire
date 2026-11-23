@@ -198,7 +198,7 @@ RLS enabled on every table with no policies.
 
 | RPC | Kind | Notes |
 |-----|------|-------|
-| `me_get`, `sync` | read | player doc incl. energy, sealed count, ready quests, net worth |
+| `me_get`, `sync` | read | player doc incl. energy, sealed count, ready quests, net worth; `sync` also counts the players online (0.0.3, `online_count`) |
 | `join`, `login`, `logout`, `account_email_set` | write | own login on anonymous sessions; login by e-mail or username |
 | `shop_get` | read | Kiosk offers, own sealed products |
 | `store_buy(qty 1/5/10)` | write | Kiosk price = list × markup × P; daily limit |

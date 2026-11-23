@@ -26,6 +26,7 @@ export const texts = {
 
   nav: {
     new: 'NEU',
+    online: (n: number) => `${n} gerade online`,
     groups: {
       start: 'Start',
       sammeln: 'Sammeln',
@@ -1385,7 +1386,7 @@ export const texts = {
     subtitle: 'Kiosk am Eck und der Kartenladen. Mehr Läden machen auf, wenn du groß bist.',
     kiosk: 'Kiosk am Eck',
     kioskTip:
-      'Hat immer offen, hat immer Booster, nimmt immer 10 % Aufschlag. Pro Tag verkauft er dir nur eine begrenzte Menge – „sonst ist nix mehr für die Kinder da“.',
+      'Hat immer offen, hat immer Booster, nimmt immer 10 % Aufschlag. Verkauft dir so viele, wie du bezahlen kannst. Die Kinder gucken in die Röhre.',
     price: 'Preis',
     today: (n: number, max: number) => `Heute gekauft: ${n} / ${max}`,
     buy: (n: number) => `${n}× kaufen`,
@@ -1404,6 +1405,12 @@ export const texts = {
   },
 
   open: {
+    pullTitle: 'Pull-Raten',
+    pullRest: 'der Rest',
+    pullTip:
+      'Jeder Booster hat einen Hit-Platz, so oft landet dort welche Seltenheit. Der Rest ist Common, Uncommon und Energie. Pack-Glück aus dem Skillbaum macht Alternative, Ultra und Grail häufiger.',
+    pullExtras: (double: string, god: string, pity: number) =>
+      `Doppel-Hit (zwei Hits in einem Booster): ${double}. God Pack (nur Hits): ${god}. Pech-Schutz: Nach ${pity} Boostern einer Edition ohne Holo oder besser steigt die Holo-Chance mit jedem weiteren.`,
     yoursTip: 'Deine ungeöffneten Booster und Displays. Displays packst du aus, Booster reißt du einzeln, zu fünft oder zu zehnt auf.',
     epCapped: (cap: number) =>
       `Pack-EP für heute ausgeschöpft (${cap} Booster). Karten gibt es trotzdem, EP ab Mitternacht wieder. Geh mal raus.`,
