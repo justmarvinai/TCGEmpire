@@ -27,6 +27,8 @@ After it, every merge to `main` deploys the site and the database by itself.
      starts with `sb_publishable_`; the *Connect* button at the top shows both as well). The older "anon" key also
      works, but Supabase retires it by the end of 2026. Never use the **secret** key anywhere in this setup.
    - **Connection string, "Session pooler"** (Connect button at the top), with your database password filled in.
+     Its host ends in `pooler.supabase.com`. Not the "Direct connection" (`db.….supabase.co`): it needs IPv6, which
+     GitHub's machines do not have ("Network is unreachable").
 
 ## 2. GitHub (automatic database updates)
 
