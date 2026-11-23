@@ -66,7 +66,7 @@ Utilities: `panel` (page panels), `panel-float` (popovers, dialogs, toasts), `pa
 
 - Navigation groups: **Start · Sammeln** (Shop, Öffnen, Sammlung, Grading) **· Handeln** (Cardmarket,
   Kleinanzeigen, Auktionen, Tausch) **· Verdienen** (Jobs, Geldbunker, Firma, Streaming) **· Aufsteigen**
-  (Quests, Upgrades, Skills, Level-Pfad, Prestige) **· Leben** (Wohnen, Stil, Luxus) **· Freunde**
+  (Quests, Upgrades, Skills, Level-Pfad, Prestige) **· Leben** (Wohnen, Cosmetics, Luxus) **· Freunde**
   (Battles, Toplisten, Spieler, Megaprojekte). Active page: gradient pill; counts: pink badges; new
   unlocks: green NEU; unbuilt: "Bald"; locked: lock and level.
 - Every stat pill opens its explanation on click; the avatar menu holds level, EP, profile, settings,

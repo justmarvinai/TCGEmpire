@@ -65,7 +65,7 @@ export function ShopPage() {
               const product = productById.get(k.product_id)
               const left = k.daily_limit - k.bought_today
               return (
-                <div key={k.product_id} className="flex flex-wrap items-center gap-6" data-tour="kiosk">
+                <div key={k.product_id} className="flex flex-wrap items-center gap-6">
                   <ProductArt id={k.product_id} scale={2} className="anim-bob" />
                   <div className="flex min-w-56 flex-col gap-3">
                     <div>
@@ -84,6 +84,7 @@ export function ShopPage() {
                           disabled={left < n || busy !== null}
                           loading={busy === `${k.product_id}:${n}`}
                           onClick={() => buy(k.product_id, n)}
+                          data-tour={n === 1 ? 'kiosk' : undefined}
                         >
                           {T.buy(n)} · {formatMoney(k.price_cents * n)}
                         </Button>

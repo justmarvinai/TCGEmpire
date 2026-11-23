@@ -440,7 +440,7 @@ export function Wholesale({ co, level }: { co: Company; level: number }) {
   const { busy, run } = useRun()
   const w = co.wholesale
   return (
-    <Panel title={T.wholesale} tip={T.wholesaleTip(w.delivery_minutes)}>
+    <Panel tour="wholesale" title={T.wholesale} tip={T.wholesaleTip(w.delivery_minutes)}>
       {level < w.unlock_level ? (
         <p className="text-sm text-fg-3">{T.wholesaleLocked(w.unlock_level)}</p>
       ) : (

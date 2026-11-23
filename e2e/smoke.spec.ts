@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { finishTour } from './tours.ts'
 
 const shot = (name: string) => `e2e/.shots/${name}.png`
 
@@ -19,6 +20,10 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   await expect(page.getByRole('heading', { name: 'Moin, Testmogul.' })).toBeVisible()
   await expect(page.getByText('400,00 €').first()).toBeVisible()
   await page.getByRole('button', { name: 'Pokémon', exact: true }).waitFor()
+  // Mama's tutorial blocks the page until it is done (rip.spec walks it); this test checks the shell without it.
+  await page.goto('/dev/ui')
+  await page.getByRole('button', { name: 'Tutorial aus' }).click()
+  await page.getByRole('link', { name: 'Übersicht' }).click()
   // Level and admin crown live in the avatar menu.
   await page.getByRole('button', { name: 'Einstellungen' }).click()
   await expect(page.getByRole('img', { name: 'Admin' })).toBeVisible()
@@ -29,7 +34,8 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
 
   // Locked and not-yet-built features are visible, not hidden.
   await expect(page.getByTitle('Firma: Ab Level 30')).toBeVisible()
-  await page.getByRole('link', { name: 'Toplisten', exact: true }).click()
+  await page.getByRole('link', { name: /^Toplisten/ }).click() // NEU until its tour is done
+  await finishTour(page, 'Toplisten')
   await expect(page.getByText(/^Platz \d+$/)).toBeVisible()
 
   // Every stat explains itself.

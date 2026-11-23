@@ -25,7 +25,7 @@ export function BreakList({ player }: { player: Player }) {
   const q = useBreaks()
   const d = q.data
   return (
-    <Panel title={T.title} tip={T.tip}>
+    <Panel tour="breaks" title={T.title} tip={T.tip}>
       {q.isPending ? (
         <Skeleton className="h-24 w-full" />
       ) : q.isError || !d ? (

@@ -14,7 +14,7 @@ test('four games: starter pick, Opa’s Yu-Gi-Oh! booster, licences and the bind
   // Mama asks for the favourite game; Opa's booster comes from it.
   await page.getByRole('button', { name: 'Yu-Gi-Oh!', exact: true }).click()
   await expect(page.getByText('Yu-Gi-Oh! also. Mama hätte was anderes genommen.')).toBeVisible()
-  await page.getByRole('button', { name: "Zeig's mir" }).click()
+  await page.locator('[data-tour="nav:/open"]').click() // the menu entry Mama's spotlight marks
   await expect(page.getByText('Yu-Gi-Oh! LOB Booster').first()).toBeVisible()
   await page.getByRole('button', { name: '1× öffnen' }).click()
   const stage = page.getByRole('dialog', { name: 'Booster öffnen' })
@@ -27,6 +27,9 @@ test('four games: starter pick, Opa’s Yu-Gi-Oh! booster, licences and the bind
   await stage.getByRole('button', { name: 'Schließen', exact: true }).last().click()
   const levelUp = page.getByRole('dialog', { name: 'LEVEL UP!' })
   await page.addLocatorHandler(levelUp, () => levelUp.getByRole('button', { name: 'Weiter' }).click())
+  // The rest of Mama's tutorial is rip.spec's; here it is switched off.
+  await page.goto('/dev/ui')
+  await page.getByRole('button', { name: 'Tutorial aus' }).click()
 
   // Läden: Yu-Gi-Oh! is licensed, the other games wait for their licence.
   await page.getByRole('link', { name: /^Läden/ }).click()

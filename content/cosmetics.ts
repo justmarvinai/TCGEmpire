@@ -1,4 +1,4 @@
-// Stil (docs/GAME_DESIGN.md §15): cosmetics bought with money and seen by friends. All looks are CSS on top of the
+// Cosmetics (docs/GAME_DESIGN.md §15): cosmetics bought with money and seen by friends. All looks are CSS on top of the
 // existing art (no new pixel art): name colours, avatar frames, card sleeves in the binder, binder skins, colours of
 // the pack-opening burst, and joke titles. The CSS class of a look is its key (src/styles/app.css). The profile
 // picture is not sold: it is the artwork of any card you own.

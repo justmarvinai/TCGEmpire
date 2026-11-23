@@ -49,7 +49,7 @@ export function StreamingPage() {
         <ErrorState message={errorText(q.error)} onRetry={() => void q.refetch()} />
       ) : (
         <div className="grid items-start gap-4 lg:grid-cols-2">
-          <Panel title={T.channel} tip={T.channelTip}>
+          <Panel tour="streaming-channel" title={T.channel} tip={T.channelTip}>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <Stat label={T.followers} value={formatNumber(d.followers)} />
               <Stat label={T.viewers} value={d.live ? formatNumber(d.viewers) : T.offline} />
@@ -96,7 +96,7 @@ function SponsorPanel({ d }: { d: Stream }) {
   const s = d.sponsor
   const def = s ? SPONSORS.find((x) => x.key === s.key) : undefined
   return (
-    <Panel title={T.sponsor} tip={T.sponsorTip}>
+    <Panel tour="streaming-sponsor" title={T.sponsor} tip={T.sponsorTip}>
       {!s ? (
         <p className="text-sm text-fg-3">{T.noSponsor}</p>
       ) : (

@@ -1,15 +1,9 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+import { finishTour } from './tours.ts'
 
 const shot = (name: string) => `e2e/.shots/${name}.png`
 
 /** Mutti's tour of a feature: click through to the end, then it is gone. */
-async function finishTour(page: Page, name: string) {
-  const tour = page.getByRole('complementary', { name: `Neu: ${name}!` })
-  await expect(tour).toBeVisible()
-  while (await tour.getByRole('button', { name: 'Weiter' }).isVisible()) await tour.getByRole('button', { name: 'Weiter' }).click()
-  await tour.getByRole('button', { name: 'Verstanden' }).click()
-  await expect(tour).toBeHidden()
-}
 
 test('leben: skill tree, moving out, furnishing, style, insurance, Wochenwertung and the profile', async ({ page }) => {
   await page.goto('/')
@@ -44,9 +38,9 @@ test('leben: skill tree, moving out, furnishing, style, insurance, Wochenwertung
   await expect(page.getByText('Ikea-Schreibtisch steht. Der alte Kram ist auf dem Sperrmüll.')).toBeVisible()
   await page.screenshot({ path: shot('housing'), animations: 'disabled' })
 
-  // Stil: a name colour, worn.
-  await page.getByRole('link', { name: /^Stil/ }).click()
-  await finishTour(page, 'Stil')
+  // Cosmetics: a name colour, worn.
+  await page.getByRole('link', { name: /^Cosmetics/ }).click()
+  await finishTour(page, 'Cosmetics')
   const mint = page.locator('li').filter({ has: page.getByText('Minzgrün', { exact: true }) })
   await mint.getByRole('button', { name: /^Kaufen/ }).click()
   await mint.getByRole('button', { name: 'Anlegen' }).click()
@@ -61,6 +55,7 @@ test('leben: skill tree, moving out, furnishing, style, insurance, Wochenwertung
 
   // Toplisten: the Wochenwertung runs until Monday.
   await page.getByRole('link', { name: /^Toplisten/ }).click()
+  await finishTour(page, 'Toplisten')
   await page.getByRole('tab', { name: 'Wochenwertung' }).click()
   await expect(page.getByText(/^Die Woche endet in/)).toBeVisible()
   await page.screenshot({ path: shot('league'), animations: 'disabled' })

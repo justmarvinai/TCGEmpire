@@ -31,7 +31,7 @@ export function Loewen({ level }: { level: number }) {
     if (done) toast(key === 'no' ? 'info' : 'success', done)
   }
   return (
-    <Panel title={T.title} tip={T.tip}>
+    <Panel tour="loewen" title={T.title} tip={T.tip}>
       {!open ? (
         <p className="text-sm text-fg-3">{T.locked(UNLOCKS.loewen)}</p>
       ) : !d ? null : (

@@ -51,13 +51,13 @@ export function CardmarketPage() {
                 ))}
               </div>
             </Panel>
-            <Panel title={T.slots} tip={T.slotsTip}>
+            <Panel tour="cardmarket-slots" title={T.slots} tip={T.slotsTip}>
               <p className="nums text-3xl font-bold tracking-tight">
                 {d.mine.used}
                 <span className="text-fg-3">/{d.mine.slots}</span>
               </p>
             </Panel>
-            <Panel title={T.parcels} tip={T.parcelsTip}>
+            <Panel tour="cardmarket-parcels" title={T.parcels} tip={T.parcelsTip}>
               <p className="nums text-3xl font-bold tracking-tight">{d.mine.parcels.length}</p>
             </Panel>
           </div>

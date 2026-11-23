@@ -64,7 +64,7 @@ function useBares() {
 function Pick({ d }: { d: Bares }) {
   const { busy, run } = useBares()
   return (
-    <Panel title={T.pick} tip={T.pickTip} className="max-w-3xl">
+    <Panel tour="bares-pick" title={T.pick} tip={T.pickTip} className="max-w-3xl">
       {d.copies.length === 0 ? (
         <EmptyState icon="card" title={T.empty} />
       ) : (
@@ -123,7 +123,7 @@ function Studio({ d }: { d: Bares }) {
           <span className="nums text-fg-2">{formatMoney(s.value_cents)}</span>
         </p>
       </Panel>
-      <Panel title={T.dealers} tip={T.dealersTip}>
+      <Panel tour="bares-dealers" title={T.dealers} tip={T.dealersTip}>
         {s.sold !== null ? (
           <p className="text-sm">
             {s.sold >= 0 ? T.sold(dealer(s.offers[s.sold]!.dealer), formatMoney(s.offers[s.sold]!.cents)) : T.notSold}

@@ -316,7 +316,7 @@ function HaktPanel({ co, onTab }: { co: Company; onTab: (t: Tab) => void }) {
     )
   }
   return (
-    <Panel title={T.hakt} tip={T.haktTip}>
+    <Panel tour="company-hakt" title={T.hakt} tip={T.haktTip}>
       {co.hakt.length === 0 ? (
         <p className="flex items-center gap-2 text-sm text-gain">
           <PixelIcon name="check" /> {T.haktNone}
@@ -502,7 +502,7 @@ function Team({ co }: { co: Company }) {
   )
   return (
     <div className="grid items-start gap-4 xl:grid-cols-2">
-      <Panel title={`${T.team} · ${co.staff.length}/${co.staff_cap}`} tip={T.teamTip(co.staff_cap)}>
+      <Panel tour="company-team" title={`${T.team} · ${co.staff.length}/${co.staff_cap}`} tip={T.teamTip(co.staff_cap)}>
         {co.staff.length === 0 && <p className="text-sm text-fg-3">{T.teamEmpty}</p>}
         <ul className="flex flex-col gap-3">
           {co.staff.map((p) => {

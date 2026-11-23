@@ -25,7 +25,7 @@ export function GroupOrders({ player }: { player: Player }) {
   })
   const d = q.data
   return (
-    <Panel title={T.title} tip={T.tip}>
+    <Panel tour="group-orders" title={T.title} tip={T.tip}>
       {q.isPending ? (
         <Skeleton className="h-40 w-full" />
       ) : q.isError || !d ? (

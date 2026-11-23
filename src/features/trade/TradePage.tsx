@@ -136,7 +136,7 @@ function NewOffer({ d, className }: { d: Players; className?: string }) {
   }
 
   return (
-    <Panel title={T.new} tip={T.newTip} className={className}>
+    <Panel tour="trade-new" title={T.new} tip={T.newTip} className={className}>
       <label className="mb-4 block text-sm text-fg-2">
         {T.partner}
         <select

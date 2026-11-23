@@ -82,7 +82,9 @@ function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
   return (
     <Panel title={T.minijobs} tip={T.minijobsTip}>
       {run ? (
-        <Game game={run.game} duration={run.duration} onDone={finish} />
+        <div data-tour="minigame">
+          <Game game={run.game} duration={run.duration} onDone={finish} />
+        </div>
       ) : (
         <>
           {result && (
@@ -102,7 +104,7 @@ function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
               const locked = player.level < j.min_level
               const energy = j.energy ?? 0
               return (
-                <div key={j.key} className={clsx('flex flex-col gap-2 rounded-2xl bg-surface-2 p-4', locked && 'opacity-50')} data-tour={j.minigame === 'pfand' ? 'pfand' : undefined}>
+                <div key={j.key} className={clsx('flex flex-col gap-2 rounded-2xl bg-surface-2 p-4', locked && 'opacity-50')}>
                   <p className="flex items-center gap-2 font-semibold">
                     <PixelIcon name={locked ? 'lock' : 'briefcase'} className="text-accent" />
                     {T.minigameNames[j.minigame!]}
@@ -110,7 +112,13 @@ function Minijobs({ jobs, player }: { jobs: Jobs; player: Player }) {
                   </p>
                   <p className="text-sm text-fg-2">{T.minigameBodies[j.minigame!]}</p>
                   <div className="mt-auto flex items-center gap-3">
-                    <Button variant="primary" loading={busy === j.minigame} disabled={locked || player.energy < energy || busy !== null} onClick={() => start(j.minigame as GameKey)}>
+                    <Button
+                      variant="primary"
+                      loading={busy === j.minigame}
+                      disabled={locked || player.energy < energy || busy !== null}
+                      onClick={() => start(j.minigame as GameKey)}
+                      data-tour={j.minigame === 'pfand' ? 'pfand' : undefined}
+                    >
                       {locked ? texts.nav.lockedLevel(j.min_level) : T.start}
                     </Button>
                     <span className="flex items-center gap-1 text-sm text-info">
@@ -159,7 +167,7 @@ function Shifts({ jobs, player }: { jobs: Jobs; player: Player }) {
 
   if (player.level < jobs.unlock_shifts) {
     return (
-      <Panel title={T.shifts} tip={T.shiftsTip}>
+      <Panel tour="shifts" title={T.shifts} tip={T.shiftsTip}>
         <EmptyState icon="lock" title={T.shiftsLocked(jobs.unlock_shifts)} />
       </Panel>
     )
@@ -173,7 +181,7 @@ function Shifts({ jobs, player }: { jobs: Jobs; player: Player }) {
     const canCheckin = !done && s.checkins < s.checkin_max && now >= Date.parse(s.next_checkin_at)
     const def = jobDef(s.job)
     return (
-      <Panel title={T.shifts} tip={T.shiftsTip}>
+      <Panel tour="shifts" title={T.shifts} tip={T.shiftsTip}>
         <div className="flex flex-col gap-3 rounded-2xl bg-surface-2 p-4">
           <p className="flex items-center gap-2 font-semibold">
             <PixelIcon name="clock" className="text-accent" />
@@ -206,7 +214,7 @@ function Shifts({ jobs, player }: { jobs: Jobs; player: Player }) {
   }
 
   return (
-    <Panel title={T.shifts} tip={T.shiftsTip}>
+    <Panel tour="shifts" title={T.shifts} tip={T.shiftsTip}>
       <div className="flex flex-col gap-2">
         {shiftJobs.map((j) => {
           const def = jobDef(j.key)

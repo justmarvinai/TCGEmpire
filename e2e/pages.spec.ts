@@ -23,6 +23,7 @@ async function levelHundred(page: Page, name: string) {
   await page.getByRole('button', { name: 'Tutorial aus' }).click()
   await page.getByRole('button', { name: '+100.000 €' }).click()
   await page.getByRole('button', { name: 'Level 100' }).click()
+  await page.getByRole('button', { name: 'Touren aus' }).click() // this sweep is about pages, not their tours
 }
 
 /** Client-side navigation (a reload would boot the in-browser database again); waits until the page has loaded. */

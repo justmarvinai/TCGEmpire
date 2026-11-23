@@ -61,7 +61,7 @@ function Policies({ d, player }: { d: Insurance; player: Player }) {
         const needsHome = p.kind === 'hausrat' && !d.has_home && !p.active
         const risk = p.kind === 'versand' ? (d.lost_parcel_bps / 100).toFixed(1).replace('.', ',') : String(d.water_damage_pct)
         return (
-          <Panel key={p.kind} title={info.name} tip={info.text}>
+          <Panel key={p.kind} tour="insurance-policy" title={info.name} tip={info.text}>
             <div className={clsx('flex flex-col gap-2', p.active && 'rounded-xl bg-surface-3 p-3 outline-2 -outline-offset-2 outline-gain')}>
               <p className="text-sm text-fg-2">{info.text}</p>
               <p className="text-xs text-fg-3">{info.risk(risk)}</p>

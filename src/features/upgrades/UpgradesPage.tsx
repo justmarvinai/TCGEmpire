@@ -20,9 +20,9 @@ export function UpgradesPage() {
       ) : ups.isError ? (
         <ErrorState message={errorText(ups.error)} onRetry={() => void ups.refetch()} />
       ) : (
-        <div className="grid items-start gap-4 xl:grid-cols-2">
+        <div className="gap-4 xl:columns-2 min-[1800px]:columns-3">
           {GROUPS.map((g) => (
-            <Panel key={g} title={T.groups[g]} tip={T.groupTip}>
+            <Panel key={g} tour="upgrades-group" title={T.groups[g]} tip={T.groupTip} className="mb-4 break-inside-avoid">
               <div className="flex flex-col gap-2">
                 {ups.data.upgrades
                   .filter((u) => u.group === g)

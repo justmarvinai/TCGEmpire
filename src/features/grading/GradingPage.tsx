@@ -217,7 +217,7 @@ function CheckTab({ d, onSent }: { d: Grading; onSent: () => void }) {
 
   return (
     <div className="grid gap-4 xl:grid-cols-[1fr_24rem]">
-      <Panel title={T.copiesTitle} tip={T.copiesTip}>
+      <Panel tour="grading-copies" title={T.copiesTitle} tip={T.copiesTip}>
         {d.copies.length === 0 ? (
           <EmptyState icon="card" title={T.copiesEmpty} />
         ) : (
@@ -290,7 +290,7 @@ function CheckTab({ d, onSent }: { d: Grading; onSent: () => void }) {
         )}
       </Panel>
 
-      <Panel title={T.graderTitle} tip={T.graderTip} className="self-start xl:sticky xl:top-4">
+      <Panel tour="grading-grader" title={T.graderTitle} tip={T.graderTip} className="self-start xl:sticky xl:top-4">
         <div className="flex flex-col gap-2" role="radiogroup" aria-label={T.graderTitle}>
           {GRADERS.map((g) => (
             <button
@@ -506,7 +506,7 @@ function SlabsTab({ d }: { d: Grading }) {
   }
 
   return (
-    <Panel title={T.tabs.slabs} tip={T.slabsTip}>
+    <Panel tour="grading-slabs" title={T.tabs.slabs} tip={T.slabsTip}>
       {crack && (
         <Dialog
           open

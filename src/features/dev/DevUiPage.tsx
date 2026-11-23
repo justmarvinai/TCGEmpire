@@ -22,6 +22,8 @@ import type { Backend } from '@/lib/backend/types.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { sfx, SFX_NAMES } from '@/lib/sfx.ts'
 import { useMe } from '@/lib/world.ts'
+import { useSettings } from '@/lib/settings.ts'
+import { FEATURES } from '@/app/nav.ts'
 
 const COLORS = [
   'ink', 'surface-1', 'surface-2', 'surface-3', 'line', 'fg', 'fg-2', 'fg-3', 'accent', 'gold', 'gain', 'loss', 'warn', 'info',
@@ -169,6 +171,7 @@ export default function DevUiPage() {
 function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
   const me = useMe()
   const id = me.data?.player?.id
+  const seeTour = useSettings((s) => s.seeTour)
   const run = async (query: string, params: unknown[] = []) => {
     await sql(query, params)
     await me.refetch()
@@ -184,6 +187,9 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
         <Button size="sm" onClick={() => run(`update game.server set clock_offset = clock_offset + interval '1 day' where id; select private.tick()`)}>+1 Tag</Button>
         <Button size="sm" onClick={() => run(`update game.server set clock_offset = clock_offset + interval '1 hour' where id; select private.tick()`)}>+1 Stunde</Button>
         <Button size="sm" onClick={() => run(`update game.players set tutorial_step = -1 where id = $1`, [id])}>Tutorial aus</Button>
+        <Button size="sm" onClick={() => FEATURES.forEach((f) => seeTour(`${id}:${f.key}`))}>
+          Touren aus
+        </Button>
         <Button
           size="sm"
           onClick={() =>

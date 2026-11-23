@@ -73,7 +73,7 @@ export function BunkerPage() {
         </Panel>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
-          <Panel title={T.stages[b.stage ?? 0]} tip={T.stageTip}>
+          <Panel tour="bunker-stage" title={T.stages[b.stage ?? 0]} tip={T.stageTip}>
             <div className="flex flex-col items-center gap-4 py-2">
               <div
                 className={clsx(
@@ -90,7 +90,7 @@ export function BunkerPage() {
                 <Progress value={live.fill} tone={live.fill >= 1 ? 'gain' : 'gold'} className="mt-2" />
                 <p className="mt-1 text-xs text-fg-3">{live.fill >= 1 ? T.full : T.fullIn(formatDuration(live.fullInS))}</p>
               </div>
-              <Button variant="primary" size="lg" loading={busy} disabled={live.content < 1} onClick={collect} className={live.fill >= 1 ? 'anim-nudge' : undefined}>
+              <Button variant="primary" size="lg" loading={busy} disabled={live.content < 1} onClick={collect} className={live.fill >= 1 ? 'anim-nudge' : undefined} data-tour="bunker-collect">
                 {T.collect}
               </Button>
               <dl className="grid w-full grid-cols-3 gap-2 text-center text-sm">
@@ -110,7 +110,7 @@ export function BunkerPage() {
               </dl>
             </div>
           </Panel>
-          <Panel title={T.upgradesTitle} tip={T.upgradesTip}>
+          <Panel tour="bunker-upgrades" title={T.upgradesTitle} tip={T.upgradesTip}>
             {ups.data ? (
               <div className="flex flex-col gap-2">
                 {ups.data.upgrades

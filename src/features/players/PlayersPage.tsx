@@ -60,7 +60,7 @@ export function PlayersPage() {
             }
           >
             {d.players.length < 2 && <EmptyState icon="people" title={T.empty} />}
-            <ul className="flex flex-col gap-1.5">
+            <ul className="flex flex-col gap-1.5" data-tour="players-list">
               {d.players.map((p) => {
                 const lockedMin = Math.ceil((Date.parse(p.locked_until) - (now + offset)) / 60_000)
                 return (
@@ -115,11 +115,11 @@ export function PlayersPage() {
                     )}
                     {!p.me && canTrade && lockedMin <= 0 && (
                       <span className="flex gap-2">
-                        <Button size="sm" onClick={() => setGiftTo(p)}>
+                        <Button size="sm" onClick={() => setGiftTo(p)} data-tour="player-gift">
                           {T.gift}
                         </Button>
                         {loanLevel !== undefined && level >= loanLevel && p.level >= loanLevel && (
-                          <Button size="sm" onClick={() => setLoanTo(p)}>
+                          <Button size="sm" onClick={() => setLoanTo(p)} data-tour="player-loan">
                             {texts.loans.give}
                           </Button>
                         )}
@@ -184,6 +184,7 @@ function FriendButtons({ target, done }: { target: Players['players'][number]; d
           disabled={busy !== null || done.includes(kind) || (kind === 'aushelfen' && full)}
           title={done.includes(kind) ? T.doneToday : kind === 'aushelfen' && full ? T.helpFull : undefined}
           onClick={() => void run(kind)}
+          data-tour={kind === 'aushelfen' ? 'friend-help' : 'friend-coffee'}
         >
           <PixelIcon name={kind === 'aushelfen' ? 'clock' : 'heart'} />
           {kind === 'aushelfen' ? T.help : T.kaffee}

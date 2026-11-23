@@ -76,7 +76,7 @@ function Shop({ d, player }: { d: Cosmetics; player: Player }) {
     <div className="grid items-start gap-4 xl:grid-cols-2">
       <AvatarPanel d={d} look={look} name={player.username} put={put} />
       {COSMETIC_KINDS.map((kind) => (
-        <Panel key={kind} title={T.kinds[kind]} tip={T.kindTips[kind]}>
+        <Panel key={kind} tour="style-kind" title={T.kinds[kind]} tip={T.kindTips[kind]}>
           <ul className="flex flex-col gap-2">
             {COSMETICS.filter((c) => c.kind === kind).map((c) => {
               const has = owned.has(c.key)
@@ -156,7 +156,7 @@ function AvatarPanel({ d, look, name, put }: { d: Cosmetics; look: Look; name: s
   }
 
   return (
-    <Panel title={T.avatar} tip={T.avatarTip} className="xl:col-span-2">
+    <Panel tour="style-avatar" title={T.avatar} tip={T.avatarTip} className="xl:col-span-2">
       <div className="flex flex-wrap items-start gap-5">
         <div className="flex flex-col items-center gap-2">
           <Avatar name={name} look={look} size={96} className="m-2" />

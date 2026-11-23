@@ -105,7 +105,7 @@ export function CollectionPage() {
             <p className="nums text-3xl font-bold tracking-tight text-gold">{formatMoney(value)}</p>
           </div>
           <div className="ml-auto flex items-center gap-1">
-            <Button onClick={sellDupes} loading={selling} disabled={dupes.length === 0}>
+            <Button onClick={sellDupes} loading={selling} disabled={dupes.length === 0} data-tour="sell-dupes">
               {texts.shop.sellDupes} ({dupes.reduce((s, d) => s + d.qty, 0)})
             </Button>
             <InfoTip>{texts.shop.ankaufBody}</InfoTip>
@@ -172,7 +172,7 @@ function Slot({ card, sleeve, onOpen }: { card: BinderCard; sleeve?: string; onO
   const data = cardById.get(card.card_id)
   const has = card.qty > 0
   return (
-    <button type="button" onClick={onOpen} className="group flex flex-col items-center gap-1 text-left">
+    <button type="button" onClick={onOpen} className="group flex flex-col items-center gap-1 text-left" data-tour={has ? 'binder-card' : undefined}>
       <div className="relative transition-transform duration-150 group-hover:-translate-y-1">
         <span className={clsx('block', has && sleeve)}>
           <Card id={card.card_id} scale={2} dim={!has} foil={has ? 'auto' : 'none'} />
@@ -251,7 +251,7 @@ function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }
           </div>
           {sellable > 0 && (
             <div className="mt-auto flex flex-wrap gap-2">
-              <Button onClick={() => sell(false)} loading={busy}>
+              <Button onClick={() => sell(false)} loading={busy} data-tour="sell-one">
                 {T.sellOne}
               </Button>
               {sellable > 1 && (

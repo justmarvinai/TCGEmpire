@@ -63,7 +63,7 @@ export function QuestList({ quests, list, reroll, compact }: { quests: Quests; l
                 <Progress value={q.progress / q.target} tone={done ? 'gain' : 'accent'} className="mt-1.5" />
               </div>
               {done && !q.claimed ? (
-                <Button size="sm" variant="primary" loading={busy === `c${q.id}`} onClick={() => go(`c${q.id}`, 'quest_claim', q.id)} className="anim-nudge">
+                <Button size="sm" variant="primary" loading={busy === `c${q.id}`} onClick={() => go(`c${q.id}`, 'quest_claim', q.id)} className="anim-nudge" data-tour="quest-claim">
                   {T.claim}
                 </Button>
               ) : (
@@ -95,7 +95,7 @@ export function QuestList({ quests, list, reroll, compact }: { quests: Quests; l
                   </Link>
                 )}
                 {reroll && quests.reroll_free && !done && (
-                  <Button size="sm" loading={busy === `r${q.id}`} onClick={() => go(`r${q.id}`, 'quest_reroll', q.id)}>
+                  <Button size="sm" loading={busy === `r${q.id}`} onClick={() => go(`r${q.id}`, 'quest_reroll', q.id)} data-tour="quest-reroll">
                     {T.reroll}
                   </Button>
                 )}
@@ -106,6 +106,7 @@ export function QuestList({ quests, list, reroll, compact }: { quests: Quests; l
                   loading={busy === `c${q.id}`}
                   onClick={() => go(`c${q.id}`, 'quest_claim', q.id)}
                   className={done ? 'anim-nudge' : undefined}
+                  data-tour="quest-claim"
                 >
                   {T.claim}
                 </Button>
@@ -195,10 +196,10 @@ export function QuestsPage() {
         <ErrorState message={errorText(quests.error)} onRetry={() => void quests.refetch()} />
       ) : (
         <div className="flex flex-col gap-4">
-          <Panel title={texts.stamps.title} tip={texts.stamps.tip}>
+          <Panel tour="stamps" title={texts.stamps.title} tip={texts.stamps.tip}>
             <Stamps q={q} />
           </Panel>
-          <Panel title={T.daily} tip={T.dailyTip}>
+          <Panel tour="quests-daily" title={T.daily} tip={T.dailyTip}>
             {q.daily.length === 0 ? (
               <EmptyState icon="lock" title={T.dailyLocked(q.unlock_daily)} />
             ) : (
@@ -219,7 +220,7 @@ export function QuestsPage() {
               <Progress value={(q.claimed_total % q.bonus_every) / q.bonus_every} tone="gold" className="max-w-56" />
             </div>
           </Panel>
-          <Panel title={T.weekly} tip={T.weeklyTip}>
+          <Panel tour="quests-weekly" title={T.weekly} tip={T.weeklyTip}>
             {q.weekly.length === 0 ? (
               <EmptyState icon="lock" title={T.weeklyLocked(q.unlock_weekly)} />
             ) : (
