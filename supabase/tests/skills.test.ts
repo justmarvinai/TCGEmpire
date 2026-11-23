@@ -64,7 +64,7 @@ describe('Skill hooks', () => {
     await learn('h_feil1')
     const binder = await t.rpc(me, 'binder_get', { p_set: 'pokemon-base' })
     expect(binder.cards.find((c) => c.card_id === 'pkm-base-007')!.ankauf_cents).toBe(Math.round((value * 6500) / 10000))
-    const sold = await t.rpc(me, 'ankauf_sell', { p_request_id: rid(), p_stacks: JSON.stringify([{ card_id: 'pkm-base-007', qty: 10 }]), p_copies: [] })
+    const sold = await t.rpc(me, 'ankauf_sell', { p_request_id: rid(), p_stacks: [{ card_id: 'pkm-base-007', qty: 10 }], p_copies: [] })
     expect(sold.payout_cents).toBe(Math.round((value * 10 * 6500) / 10000))
 
     await learn('h_feil2')

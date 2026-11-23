@@ -85,7 +85,7 @@ export function OpenPage() {
             {sealed.map((s) => {
               const product = productById.get(s.product_id)
               return (
-                <div key={s.product_id} className="flex items-center gap-5" data-tour="open-pack">
+                <div key={s.product_id} className="flex items-center gap-5">
                   <div className="relative">
                     <ProductArt id={s.product_id} scale={2} className="anim-bob" />
                     <span className="nums absolute -top-2 -right-3 rounded-lg bg-grad px-2 font-pixel text-lg text-white">×{s.qty}</span>
@@ -107,6 +107,7 @@ export function OpenPage() {
                         disabled={s.qty < n || busy !== null}
                         loading={busy === `${s.product_id}:${n}`}
                         onClick={() => open(s.product_id, n)}
+                        data-tour={n === 1 ? 'open-pack' : undefined}
                       >
                         {T.open(n)}
                       </Button>

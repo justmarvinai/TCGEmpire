@@ -45,7 +45,7 @@ export function Founding({ d, player }: { d: CompanyDoc; player: Player }) {
 
   return (
     <div className="grid items-start gap-4 xl:grid-cols-[22rem_1fr]">
-      <Panel title={T.foundTitle} tip={T.foundTip}>
+      <Panel tour="company-found" title={T.foundTitle} tip={T.foundTip}>
         <ol className="flex flex-col gap-3">
           {[T.step1, T.step2, T.step3].map((name, i) => (
             <li

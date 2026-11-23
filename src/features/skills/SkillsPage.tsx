@@ -84,11 +84,11 @@ function Tree({ d }: { d: Skills }) {
   return (
     <>
       <div className="mb-4 grid gap-4 md:grid-cols-3">
-        <Panel title={T.points} tip={T.pointsTip}>
+        <Panel tour="skills-points" title={T.points} tip={T.pointsTip}>
           <p className="nums text-3xl font-bold tracking-tight">{d.points}</p>
           <p className="text-sm text-fg-3">{T.spent(d.spent)}</p>
         </Panel>
-        <Panel title={T.respec} tip={T.respecTip}>
+        <Panel tour="skills-respec" title={T.respec} tip={T.respecTip}>
           <p className="nums text-xl font-bold text-gold">{formatMoney(d.respec_cents)}</p>
           <Button className="mt-2" size="sm" variant="danger" disabled={d.spent === 0 || busy !== null} onClick={() => setRespec(true)}>
             {T.respec}
@@ -108,24 +108,26 @@ function Tree({ d }: { d: Skills }) {
         )}
       </div>
 
-      <div className="grid items-start gap-4 md:grid-cols-2 2xl:grid-cols-4">
+      <div className="grid gap-4 xl:grid-cols-2">
         {SKILL_BRANCHES.map((b) => {
           const nodes = SKILLS.filter((s) => s.branch === b.key)
           const key = nodes.find((s) => s.tier === 4)!
           return (
-            <Panel key={b.key} title={b.name} tip={T.branchTip}>
+            <Panel key={b.key} tour="skills-branch" title={b.name} tip={T.branchTip}>
               <p className="-mt-1 mb-3 text-sm text-fg-2">{b.text}</p>
-              <div className="grid grid-cols-2 gap-2">
-                {[0, 1].map((line) => (
-                  <div key={line} className="flex flex-col gap-2">
-                    {nodes
-                      .filter((s) => s.line === line)
-                      .sort((a, c) => a.tier - c.tier)
-                      .map((s) => (
-                        <Node key={s.key} s={s} owned={owned} points={d.points} busy={busy} onLearn={learn} />
-                      ))}
-                  </div>
-                ))}
+              <div className="@container">
+                <div className="grid gap-2 @sm:grid-cols-2">
+                  {[0, 1].map((line) => (
+                    <div key={line} className="flex flex-col gap-2">
+                      {nodes
+                        .filter((s) => s.line === line)
+                        .sort((a, c) => a.tier - c.tier)
+                        .map((s) => (
+                          <Node key={s.key} s={s} owned={owned} points={d.points} busy={busy} onLearn={learn} />
+                        ))}
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="mt-2">
                 <Node s={key} owned={owned} points={d.points} busy={busy} onLearn={learn} />
@@ -175,7 +177,7 @@ function Node({
         !has && missing.length > 0 && 'opacity-60',
       )}
     >
-      <p className="flex items-center gap-1.5 font-semibold">
+      <p className="flex min-w-0 items-center gap-1.5 font-semibold break-words">
         <PixelIcon name={has ? 'check' : missing.length ? 'lock' : key ? 'crown' : 'skills'} className={has ? 'text-gain' : 'text-accent'} />
         {s.name}
       </p>

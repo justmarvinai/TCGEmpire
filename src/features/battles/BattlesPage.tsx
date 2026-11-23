@@ -45,7 +45,7 @@ export function BattlesPage() {
       ) : (
         <div className="grid items-start gap-4 xl:grid-cols-[1fr_24rem]">
           <div className="flex min-w-0 flex-col gap-4">
-            <Panel title={T.lobby} tip={T.lobbyTip}>
+            <Panel tour="battles-lobby" title={T.lobby} tip={T.lobbyTip}>
               <BattleList list={d.open} empty={T.lobbyEmpty} player={player} />
             </Panel>
             <BreakList player={player} />
@@ -220,7 +220,7 @@ function CreateBattle({ d, player }: { d: Battles; player: Player }) {
   }
 
   return (
-    <Panel title={T.create} tip={T.createTip}>
+    <Panel tour="battles-create" title={T.create} tip={T.createTip}>
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={T.mode}>
           {BATTLE_MODES.map((m) => (

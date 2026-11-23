@@ -47,7 +47,7 @@ export function LuxuryPage() {
       ) : (
         <div className="grid items-start gap-4 lg:grid-cols-2">
           {GROUPS.map((g) => (
-            <Panel key={g} title={T.groups[g]} tip={T.groupTip}>
+            <Panel key={g} tour="luxury-group" title={T.groups[g]} tip={T.groupTip}>
               <ul className="flex flex-col gap-2">
                 {LUXURY.filter((l) => l.group === g).map((l) => {
                   const owned = d.owned.some((o) => o.key === l.key)

@@ -206,7 +206,7 @@ RLS enabled on every table with no policies.
 | `binder_get(set)` | read | all cards of a set with holdings and values |
 | `ankauf_sell(stacks, copies)` | write | 60 % of value |
 | `quests_get`, `quest_claim` | read/write | endless mini-quests, bonus booster every 10th |
-| `tutorial_ack`, `tutorial_skip` | write | steps complete through `private.emit` |
+| `tutorial_ack`, `tutorial_skip` | — | dropped on 23 Nov 2026 (`tutorial_guided`): the tutorial is guided and cannot be skipped; steps complete through `private.emit`; reaching the quest step finishes the oldest open mini-quest if none is ready |
 | `minigame_start`, `minigame_finish` | write | energy cost, time check, score cap |
 | `level_path_get` | read | EP and rewards per level |
 | `quests_get`, `quest_claim`, `quest_reroll`, `stamp_claim(joker)` | read/write | alpha_03 · mini, daily (00:00) and weekly (Monday) quests; one free reroll a day; Stempelkarte |

@@ -146,7 +146,7 @@ describe('kartenladen', () => {
     const before = await cash(me)
     const res = await t.rpc(me, 'ankauf_sell', {
       p_request_id: rid(),
-      p_stacks: JSON.stringify([{ card_id: energy.card_id, qty: 1 }]),
+      p_stacks: [{ card_id: energy.card_id, qty: 1 }],
       p_copies: [holo.copy_id],
     })
     expect(res.sold).toBe(2)
@@ -157,14 +157,14 @@ describe('kartenladen', () => {
     expect(binder.cards.find((c) => c.card_id === holo.card_id)!.discovered).toBe(true)
 
     await expect(
-      t.rpc(me, 'ankauf_sell', { p_request_id: rid(), p_stacks: JSON.stringify([{ card_id: energy.card_id, qty: 5 }]), p_copies: [] }),
+      t.rpc(me, 'ankauf_sell', { p_request_id: rid(), p_stacks: [{ card_id: energy.card_id, qty: 5 }], p_copies: [] }),
     ).rejects.toThrow('not_owned')
-    await expect(t.rpc(me, 'ankauf_sell', { p_request_id: rid(), p_stacks: '[]', p_copies: [holo.copy_id] })).rejects.toThrow('not_owned')
+    await expect(t.rpc(me, 'ankauf_sell', { p_request_id: rid(), p_stacks: [], p_copies: [holo.copy_id] })).rejects.toThrow('not_owned')
     // another player cannot sell my cards
     const other = await t.player('Dieb')
     const mine = pack.cards.find((c) => c.kind !== 'energy' && !c.copy_id)!
     await expect(
-      t.rpc(other, 'ankauf_sell', { p_request_id: rid(), p_stacks: JSON.stringify([{ card_id: mine.card_id, qty: 1 }]), p_copies: [] }),
+      t.rpc(other, 'ankauf_sell', { p_request_id: rid(), p_stacks: [{ card_id: mine.card_id, qty: 1 }], p_copies: [] }),
     ).rejects.toThrow('not_owned')
     await t.assertLedgerMatches()
   })

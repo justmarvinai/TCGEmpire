@@ -1,14 +1,8 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+import { finishTour } from './tours.ts'
 
 const shot = (name: string) => `e2e/.shots/${name}.png`
 
-async function finishTour(page: Page, name: string) {
-  const tour = page.getByRole('complementary', { name: `Neu: ${name}!` })
-  await expect(tour).toBeVisible()
-  while (await tour.getByRole('button', { name: 'Weiter' }).isVisible()) await tour.getByRole('button', { name: 'Weiter' }).click()
-  await tour.getByRole('button', { name: 'Verstanden' }).click()
-  await expect(tour).toBeHidden()
-}
 
 test('freunde: a pack battle against bots, round by round, with emotes and a result', async ({ page }) => {
   test.setTimeout(90_000)
@@ -70,7 +64,7 @@ test('freunde: helping out a friend, coffee and cake, and starting a Sammelbeste
   await page.getByRole('button', { name: '+Kumpel' }).click()
 
   await page.getByRole('link', { name: /^Spieler/ }).click()
-  for (const tour of ['Spieler', 'Freundschaftsdienste', 'Privatkredit', 'Sammelbestellung']) await finishTour(page, tour)
+  await finishTour(page, 'Spieler') // then Freundschaftsdienste, Privatkredit, Sammelbestellung
   const kumpel = page.getByRole('listitem').filter({ hasText: 'Kumpel' })
   await kumpel.getByRole('button', { name: 'Aushelfen' }).click()
   await expect(page.getByText(/^Kumpel\d hatte nichts zu tun/)).toBeVisible()
@@ -109,7 +103,7 @@ test('freunde: a box break of an own display, pack by pack', async ({ page }) =>
   await page.getByRole('button', { name: '+Display' }).click()
 
   await page.getByRole('link', { name: /^Pack Battles/ }).click()
-  for (const tour of ['Pack Battles', 'Box Breaks']) await finishTour(page, tour)
+  await finishTour(page, 'Pack Battles') // then Box Breaks
   await page.getByRole('button', { name: 'Break eröffnen' }).click()
   await expect(page.getByText('Die Packs werden verkauft …')).toBeVisible()
   await page.screenshot({ path: shot('break-open'), animations: 'disabled' })

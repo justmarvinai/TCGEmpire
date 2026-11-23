@@ -78,7 +78,7 @@ function Board({ d }: { d: Toplist }) {
   const ahead = me && d.rows.find((r) => r.rank === me.rank - 1)
   const gap = me && ahead ? ahead.value - me.value : 0
   return (
-    <Panel title={T.tabs[d.list]} tip={T.tips[d.list]}>
+    <Panel tour="toplist" title={T.tabs[d.list]} tip={T.tips[d.list]}>
       {me && (
         <p className="mb-4 rounded-xl bg-surface-2 px-4 py-3 text-sm">
           <b className="mr-2">{T.rank(me.rank)}</b>

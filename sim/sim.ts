@@ -389,7 +389,7 @@ async function openAll(t: TestDb, me: string) {
   for (const set of SETS) {
     const binder = await t.rpc(me, 'binder_get', { p_set: set })
     const stacks = duplicateStacks(binder.cards) // the same rule as the button in the collection
-    if (stacks.length) await quietly(t, me, 'ankauf_sell', { p_stacks: JSON.stringify(stacks), p_copies: [] })
+    if (stacks.length) await quietly(t, me, 'ankauf_sell', { p_stacks: stacks, p_copies: [] })
   }
   return opened
 }

@@ -68,7 +68,7 @@ export function LicensePanel({ level }: { level: number }) {
   const canBuy = d.owned.length < d.allowed && d.next_fee_cents !== null
   const nextLevel = d.levels.find((l) => l > level)
   return (
-    <Panel title={T.title} tip={T.tip} className="mb-4">
+    <Panel tour="licenses" title={T.title} tip={T.tip} className="mb-4">
       <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {GAMES.map((g) => {
           const owned = d.owned.includes(g)

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { finishTours } from './tours.ts'
 
 const shot = (name: string) => `e2e/.shots/${name}.png`
 
@@ -51,12 +52,14 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
 
   // Upgrades: buy one.
   await page.getByRole('link', { name: 'Upgrades' }).click()
+  await finishTours(page)
   await page.getByRole('button', { name: 'Kaufen' }).first().click()
   await expect(page.getByText(/verbessert\./)).toBeVisible()
   await page.screenshot({ path: shot('upgrades'), animations: 'disabled' })
 
   // Quests: dailies exist, stamp today.
   await page.getByRole('link', { name: 'Quests' }).click()
+  await finishTours(page)
   await expect(page.getByRole('heading', { name: 'Tagesquests' })).toBeVisible()
   await page.getByRole('button', { name: 'Stempeln' }).click()
   await expect(page.getByRole('button', { name: 'Heute gestempelt' })).toBeVisible()
@@ -64,6 +67,7 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
 
   // Jobs: start a 15-minute shift.
   await page.getByRole('link', { name: 'Jobs' }).click()
+  await finishTours(page)
   await page.getByRole('button', { name: '15 Min' }).click()
   await expect(page.getByRole('button', { name: 'Feierabend machen' })).toBeVisible()
   await page.screenshot({ path: shot('jobs'), animations: 'disabled' })
@@ -75,6 +79,7 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
 
   // Shop: a Döner gives greasy fingers.
   await page.getByRole('link', { name: 'Läden' }).click()
+  await finishTours(page)
   await page.getByRole('button', { name: 'Kaufen', exact: true }).first().click()
   await page.getByRole('button', { name: 'Fettfinger' }).click()
   await expect(page.getByText(/Läuft bis \d\d:\d\d Uhr\./)).toBeVisible()
@@ -83,6 +88,7 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
 
   // Profile: achievements, then the Gefahrenzone resets everything.
   await page.getByRole('link', { name: 'Profil' }).click()
+  await finishTours(page)
   await expect(page.getByRole('heading', { name: 'Erfolge' })).toBeVisible()
   // the account: the e-mail from the registration, changed without any confirmation mail
   const mail = page.getByRole('textbox', { name: 'E-Mail' })
@@ -99,6 +105,6 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   await page.waitForTimeout(1700)
   await page.mouse.up()
   await expect(page.getByText('Alles weg. Neues Leben, gleiche Fehler.')).toBeVisible()
-  await page.getByRole('button', { name: 'Einstellungen' }).click()
-  await expect(page.getByText('Level 1', { exact: true })).toBeVisible()
+  // a fresh start: Mama's tutorial begins again and holds the page until the favourite game is picked
+  await expect(page.getByRole('complementary', { name: 'Mama' })).toContainText('1 / 7')
 })

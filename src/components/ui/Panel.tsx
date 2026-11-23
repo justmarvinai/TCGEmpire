@@ -8,16 +8,19 @@ export function Panel({
   tip,
   action,
   className,
+  tour,
   children,
 }: {
   title?: string
   tip?: ReactNode
   action?: ReactNode
   className?: string
+  /** what a guided tour marks: becomes data-tour */
+  tour?: string
   children: ReactNode
 }) {
   return (
-    <section className={clsx('panel p-5', className)}>
+    <section className={clsx('panel p-5', className)} data-tour={tour}>
       {title && (
         <header className="mb-4 flex min-h-5 items-center gap-1.5">
           <h2 className="eyebrow">{title}</h2>

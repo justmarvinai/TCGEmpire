@@ -100,13 +100,13 @@ function Home({ d, player }: { d: Housing; player: Player }) {
         <Panel title={T.wohnwert} tip={T.wohnwertTip}>
           <p className="nums text-3xl font-bold tracking-tight">{formatNumber(d.wohnwert)}</p>
         </Panel>
-        <Panel title={T.nebenkosten} tip={T.nebenkostenTip}>
+        <Panel tour="housing-nebenkosten" title={T.nebenkosten} tip={T.nebenkostenTip}>
           <p className="nums text-3xl font-bold tracking-tight text-gold">{formatMoney(d.nebenkosten_cents)}</p>
         </Panel>
       </div>
 
       <div className="grid items-start gap-4 xl:grid-cols-2">
-        <Panel title={T.furnishing} tip={T.furnishingTip}>
+        <Panel tour="housing-furnishing" title={T.furnishing} tip={T.furnishingTip}>
           <ul className="flex flex-col gap-2">
             {FURNISHING_SLOTS.map((s, i) => {
               const open = i < home.slots
@@ -152,7 +152,7 @@ function Home({ d, player }: { d: Housing; player: Player }) {
           </ul>
         </Panel>
 
-        <Panel title={T.homes} tip={T.homesTip}>
+        <Panel tour="housing-homes" title={T.homes} tip={T.homesTip}>
           <ul className="flex flex-col gap-2">
             {HOMES.filter((h) => h.tier > 0).map((h) => {
               const price = d.homes.find((x) => x.tier === h.tier)?.price_cents ?? 0

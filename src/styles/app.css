@@ -415,6 +415,23 @@
   animation: nudge-ring 1.4s var(--ease-out) infinite;
 }
 
+/* The coach's spotlight: a still ring around the marked element with the nudge pulse around it. */
+.coach-ring {
+  position: fixed;
+  border-radius: 0.9rem;
+  border: 2px solid var(--color-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 30%, transparent);
+  pointer-events: none;
+}
+.coach-ring::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 1.1rem;
+  border: 2px solid var(--color-accent);
+  animation: nudge-ring 1.4s var(--ease-out) infinite;
+}
+
 /* Stil (content/cosmetics.ts): the CSS class of a look is its key. Name colours, avatar frames (rings around the
    picture), card sleeves (a mat behind each binder card) and binder skins (the background of the binder grid). */
 .nc-mint { color: var(--color-gain); }

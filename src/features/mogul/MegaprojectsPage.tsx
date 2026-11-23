@@ -72,7 +72,7 @@ function Projects({ d }: { d: Mega }) {
     toast('success', T.donated(formatMoney(cents(amount))))
   }
   return (
-    <Panel title={T.projects} tip={T.projectsTip}>
+    <Panel tour="megaprojects" title={T.projects} tip={T.projectsTip}>
       <ul className="flex flex-col gap-3">
         {d.projects.map((p) => {
           const def = project(p.key)
@@ -130,7 +130,7 @@ function Museum({ d }: { d: Mega }) {
     toast('success', T.bidDone(formatMoney(value)))
   }
   return (
-    <Panel title={T.museum} tip={T.museumTip}>
+    <Panel tour="museum" title={T.museum} tip={T.museumTip}>
       {d.auctions.length === 0 ? (
         <p className="text-sm text-fg-3">{T.noAuction}</p>
       ) : (

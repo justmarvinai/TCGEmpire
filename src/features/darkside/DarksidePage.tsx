@@ -80,7 +80,7 @@ function report(r: AttackResult) {
 
 function Status({ d }: { d: Darkside }) {
   return (
-    <Panel title={T.status} tip={T.statusTip(d.rules.angriff_per_skill)} className="lg:col-span-4">
+    <Panel tour="darkside-status" title={T.status} tip={T.statusTip(d.rules.angriff_per_skill)} className="lg:col-span-4">
       <p className="flex items-baseline justify-between gap-2">
         <span className="text-sm text-fg-2">{T.angriff}</span>
         <span className="nums text-2xl font-bold text-accent">+{d.angriff}</span>
@@ -114,7 +114,7 @@ function Targets({ d, cash }: { d: Darkside; cash: number }) {
     if (res) report(res.result)
   }
   return (
-    <Panel title={T.targets} tip={T.targetsTip(d.rules.cooldown_minutes, d.rules.daily_successes)} className="lg:col-span-8">
+    <Panel tour="darkside-targets" title={T.targets} tip={T.targetsTip(d.rules.cooldown_minutes, d.rules.daily_successes)} className="lg:col-span-8">
       {d.targets.length === 0 ? (
         <EmptyState icon="people" title={T.noTargets} />
       ) : (

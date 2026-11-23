@@ -83,7 +83,7 @@ function Exit({ d, player }: { d: Prestige; player: Player }) {
     toast('success', T.done(res.history[res.history.length - 1]?.stars ?? 0, rankName(res.prestige) ?? ''))
   }
   return (
-    <Panel title={T.exit} tip={T.exitTip} className="lg:col-span-8">
+    <Panel tour="prestige-exit" title={T.exit} tip={T.exitTip} className="lg:col-span-8">
       {!ready ? (
         <p className="text-sm text-fg-2">{T.nextExit(d.unlock_level)}</p>
       ) : (
@@ -140,7 +140,7 @@ function Perks({ d }: { d: Prestige }) {
     toast('success', T.perkBought(PERKS.find((p) => p.key === key)?.name ?? key))
   }
   return (
-    <Panel title={T.perks} tip={T.perksTip} className="lg:col-span-12">
+    <Panel tour="prestige-perks" title={T.perks} tip={T.perksTip} className="lg:col-span-12">
       <ul className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
         {PERKS.map((p) => {
           const own = d.perks[p.key] ?? { level: 0, cost: null }

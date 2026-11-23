@@ -45,7 +45,7 @@ export function LoansPanel({ player }: { player: Player }) {
   const q = useLoans()
   const d = q.data
   return (
-    <Panel title={T.title} tip={T.tip}>
+    <Panel tour="loans" title={T.title} tip={T.tip}>
       {q.isPending ? (
         <Skeleton className="h-32 w-full" />
       ) : q.isError || !d ? (

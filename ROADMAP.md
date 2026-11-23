@@ -205,7 +205,8 @@ Goal: it feels finished.
 | ☑ | Balance pass with the simulation over levels 1–100 and two prestiges; admin economy dashboard (Geldfluss, Server-Gesundheit, Tempo) | M |
 | ☑ | Art pass (cards and products only): Ultra and Grail hero art reviewed once more; animated Grails | M |
 | ☑ | Sound pass; performance pass (bundle, atlas loading, tick duration); database size report | M |
-| ◐ | Full playtest by the group; bug bash; final data policy decision (wipe or keep) — bug bash done (page sweep, fixes); playtest checklist ready (`docs/PLAYTEST.md`); playtest needs the deployment, data policy is Q-29 | M |
+| ◐ | Full playtest by the group; bug bash; final data policy decision (wipe or keep) — bug bash done (page sweep, fixes); playtest checklist ready (`docs/PLAYTEST.md`); database deployed to the owner's Supabase project on 23 Nov 2026 (the repository public for one Actions run, decision 112), the website and the playtest are next; data policy is Q-29 | M |
+| ☑ | Owner requests from the first live test (23 Nov 2026): selling fixed on the live server (decision 113); guided, unskippable tutorial and feature tours with a spotlight (decision 114); Upgrades and Skillbaum layouts fixed; "Stil" renamed "Cosmetics" (decision 115) | M |
 | ☐ | Release `0.0.1` | M |
 
 ## After 0.0.1 (not planned in detail)

@@ -57,7 +57,7 @@ export const texts = {
       path: 'Level-Pfad',
       prestige: 'Prestige',
       housing: 'Wohnen',
-      style: 'Stil',
+      style: 'Cosmetics',
       insurance: 'Versicherungen',
       luxury: 'Luxus',
       battles: 'Pack Battles',
@@ -1103,7 +1103,7 @@ export const texts = {
         ],
       },
       style: {
-        name: 'Stil',
+        name: 'Cosmetics',
         steps: [
           'Hier kaufst du Angeberei: Namensfarben, Profilrahmen, Kartenhüllen, Ordner-Skins, Effekte beim Aufreißen und Titel.',
           'Dein Profilbild ist die Grafik einer Karte, die du besitzt. Glurak ist beliebt. Eine Energiekarte ist ehrlicher.',
@@ -1654,7 +1654,7 @@ export const texts = {
     resetsList: 'Level, Bargeld, Upgrades, Skills, Jobs, Geldbunker, Firma, Wohnung und Möbel, Quests.',
     keeps: 'Bleibt',
     keepsList: (start: string, ruf: number) =>
-      `Karten und Sealed (auf Omas Dachboden), Erfolge, Titel, Stil, Freunde, Ehre und Perks. Du startest mit ${start}, Ruf danach ${ruf}.`,
+      `Karten und Sealed (auf Omas Dachboden), Erfolge, Titel, Cosmetics, Freunde, Ehre und Perks. Du startest mit ${start}, Ruf danach ${ruf}.`,
     blocked: 'Erst aufräumen:',
     blockers: {
       listings: (n: number) => `${n} ${n === 1 ? 'Angebot' : 'Angebote'} am Cardmarket`,
@@ -1933,7 +1933,7 @@ export const texts = {
   },
 
   style: {
-    title: 'Stil',
+    title: 'Cosmetics',
     subtitle: 'Geld gegen Aufmerksamkeit. Ein fairer Tausch.',
     tip: 'Kosmetik bringt keine Boni, nur Neid. Einmal kaufen, beliebig wechseln. Freunde sehen Namensfarbe, Rahmen und Profilbild überall, den Rest bei dir.',
     kinds: {
@@ -1966,7 +1966,7 @@ export const texts = {
     avatarSet: 'Profilbild gesetzt.',
     avatarClear: 'Bild entfernen',
     avatarNothing: 'Keine passende Karte im Besitz.',
-    locked: (level: number) => `Stil gibt es ab Level ${level}.`,
+    locked: (level: number) => `Cosmetics gibt es ab Level ${level}.`,
     preview: 'Vorschau',
   },
 
@@ -2294,9 +2294,6 @@ export const texts = {
 
   tutorial: {
     from: 'Mama',
-    show: "Zeig's mir",
-    skip: 'Ich komm klar, Mama',
-    hide: 'Später',
     done: 'Mama ist stolz. Ein bisschen.',
   },
 
@@ -2548,7 +2545,6 @@ export const texts = {
     partner_locked: 'Die andere Seite darf noch nicht: zu neu oder unter Level 10.',
     trade_invalid: 'Das passt nicht mehr: Jemand hat die Sachen nicht mehr oder das Geld reicht nicht.',
     quest_not_ready: 'Die Quest ist noch nicht fertig.',
-    tutorial_not_skippable: 'Erst die ersten Schritte, dann darfst du Mama ignorieren.',
     not_enough_energy: 'Keine Energie mehr. Iss was oder warte.',
     too_early: 'Zu schnell fertig. Schummeln ist Mamas Job.',
     not_ready: 'Noch nicht so weit. Geduld, das kennst du doch von DHL.',

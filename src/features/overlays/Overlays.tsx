@@ -1,7 +1,6 @@
 // Things that appear on top of every page: level-up celebration, Mutti's tutorial, big pulls of others.
-import clsx from 'clsx'
-import { useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router'
 import { ALL_ITEMS, FEATURES, unseenFeatures } from '@/app/nav.ts'
 import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
@@ -16,6 +15,8 @@ import { formatDuration, formatMoney } from '@/lib/format.ts'
 import { hash01, useNow } from '@/lib/pure.ts'
 import type { Player } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
+import { Coach, useSpot } from './Coach.tsx'
+import { TOUR_TARGETS } from './tourTargets.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
@@ -94,39 +95,54 @@ function RecapSheet({ away, player }: { away: number; player: Player }) {
   )
 }
 
-/** Mutti's 2–3 step tour of a freshly unlocked feature, on the page where it lives. */
+/** Mutti's 2–3 step tour of a freshly unlocked feature, on the page where it lives; each step marks what it explains. */
 export function FeatureTour({ player }: { player: Player }) {
   const { pathname } = useLocation()
   const seeTour = useSettings((s) => s.seeTour)
   const feature = unseenFeatures(player, useSettings((s) => s.seenTours)).find((f) => f.path === pathname)
-  return feature ? <TourDock key={feature.key} tour={TOURS[feature.key]} onDone={() => seeTour(`${player.id}:${feature.key}`)} /> : null
+  return feature ? <TourCoach key={feature.key} feature={feature.key} onDone={() => seeTour(`${player.id}:${feature.key}`)} /> : null
 }
 
-type Tour = { name: string; steps: readonly string[] }
-const TOURS: Record<(typeof FEATURES)[number]['key'], Tour> = texts.tour.features
+type FeatureKey = (typeof FEATURES)[number]['key']
+const TOURS: Record<FeatureKey, { name: string; steps: readonly string[] }> = texts.tour.features
 
-function TourDock({ tour, onDone }: { tour: Tour; onDone: () => void }) {
+function TourCoach({ feature, onDone }: { feature: FeatureKey; onDone: () => void }) {
+  const tour = TOURS[feature]
   const [step, setStep] = useState(0)
+  const target = TOUR_TARGETS[feature][step]
+  const { spot, dialog } = useSpot(target ? [target] : [])
   const last = step === tour.steps.length - 1
+  if (dialog) return null // a level-up or another dialog first
   return (
-    <aside className="panel mb-4 flex flex-wrap items-center gap-3 p-3 animate-fade-up" aria-live="polite" aria-label={texts.tour.title(tour.name)}>
-      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tier-grail font-pixel text-xl text-accent-fg">M</span>
-      <div className="min-w-64 flex-1">
-        <p className="text-xs text-fg-3">
+    <Coach
+      spot={spot}
+      block
+      label={texts.tour.title(tour.name)}
+      head={
+        <>
           <span className="font-semibold text-gain">{texts.tour.title(tour.name)}</span> · {step + 1} / {tour.steps.length}
-        </p>
-        <p className="text-sm leading-snug">{tour.steps[step]}</p>
-      </div>
-      <Button variant="primary" size="sm" onClick={() => (last ? onDone() : setStep(step + 1))}>
-        {last ? texts.tour.done : texts.tour.next}
-      </Button>
-    </aside>
+        </>
+      }
+      text={tour.steps[step]!}
+      actions={
+        <Button variant="primary" size="sm" onClick={() => (last ? onDone() : setStep(step + 1))}>
+          {last ? texts.tour.done : texts.tour.next}
+        </Button>
+      }
+    />
   )
 }
 
-/** Mutti's current message, on top of every page while the tutorial runs. */
+/** Mutti's tutorial on top of every page: her message beside the spotlight on what to click next. Not skippable. */
 export function TutorialBanner({ player }: { player: Player }) {
-  return player.tutorial_step >= 0 ? <TutorialDock key={player.tutorial_step} step={player.tutorial_step} /> : null
+  const step = player.tutorial_step
+  const { pathname } = useLocation()
+  const before = useRef(step)
+  useEffect(() => {
+    if (before.current >= 0 && step < 0) toast('success', texts.tutorial.done)
+    before.current = step
+  }, [step])
+  return step >= 0 && !pathname.startsWith('/dev') ? <TutorialCoach key={step} step={step} /> : null
 }
 
 function LevelUpOverlay() {
@@ -241,64 +257,21 @@ function StarterButtons() {
   )
 }
 
-function TutorialDock({ step }: { step: number }) {
+function TutorialCoach({ step }: { step: number }) {
   const def = TUTORIAL[step]
-  const act = useAct()
-  const navigate = useNavigate()
-  const [hidden, setHidden] = useState(false)
-  const [busy, setBusy] = useState(false)
+  const { pathname } = useLocation()
+  // the menu entry of the page the player is on is not worth marking
+  const guide = (def?.guide ?? []).filter((g) => g.target !== `nav:${pathname}`)
+  const { spot, dialog } = useSpot(guide.map((g) => g.target), true)
   if (!def) return null
-
-  if (hidden) {
-    return (
-      <button
-        type="button"
-        onClick={() => setHidden(false)}
-        className="mb-4 flex items-center gap-2 rounded-xl border border-line bg-surface-2 px-3 py-1.5 text-sm font-semibold"
-      >
-        <PixelIcon name="chat" className="text-accent" /> {texts.tutorial.from}
-      </button>
-    )
-  }
-
-  const run = async (fn: 'tutorial_ack' | 'tutorial_skip') => {
-    setBusy(true)
-    await act(fn, {}, ['shop'])
-    setBusy(false)
-  }
-
-  return (
-    <aside className="panel mb-4 flex flex-wrap items-center gap-3 p-3 animate-fade-up" aria-live="polite">
-      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tier-grail font-pixel text-xl text-accent-fg">M</span>
-      <div className="min-w-64 flex-1">
-        <p className="text-xs text-fg-3">
-          <span className="font-semibold text-fg-2">{texts.tutorial.from}</span> · {step + 1} / {TUTORIAL.length}
-        </p>
-        <p className="text-sm leading-snug">{def.text}</p>
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        {def.pick ? (
-          <StarterButtons />
-        ) : def.ack ? (
-          <Button variant="primary" size="sm" loading={busy} onClick={() => run('tutorial_ack')}>
-            {def.ack}
-          </Button>
-        ) : (
-          def.path && (
-            <Button variant="primary" size="sm" onClick={() => navigate(def.path!)} className={clsx('anim-nudge')}>
-              {texts.tutorial.show}
-            </Button>
-          )
-        )}
-        {step >= 3 && (
-          <Button size="sm" disabled={busy} onClick={() => run('tutorial_skip')}>
-            {texts.tutorial.skip}
-          </Button>
-        )}
-        <button type="button" onClick={() => setHidden(true)} className="text-xs text-fg-3 hover:text-fg">
-          {texts.tutorial.hide}
-        </button>
-      </div>
-    </aside>
+  const head = (
+    <>
+      <span className="font-semibold text-fg-2">{texts.tutorial.from}</span> · {step + 1} / {TUTORIAL.length}
+    </>
   )
+  if (def.pick) return dialog ? null : <Coach spot={null} block label={texts.tutorial.from} head={head} text={def.text} actions={<StarterButtons />} />
+  // Dialogs (the booster opening, a level-up) stay usable; inside one, only a target in it is marked.
+  if (dialog && !spot) return null
+  const hint = (guide.find((g) => g.target === spot?.id) ?? guide[0])?.hint
+  return <Coach spot={spot} block={!!spot && !dialog} label={texts.tutorial.from} head={head} text={def.text} hint={hint} />
 }

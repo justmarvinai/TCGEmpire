@@ -57,21 +57,25 @@ describe('tutorial', () => {
     await t.sql(`delete from game.licenses where player_id = $1`, [id]) // fresh from registration: no game yet
     let p = (await t.rpc(me, 'me_get')).player!
     expect(p.tutorial_step).toBe(0)
-    await expect(t.rpc(me, 'tutorial_skip', { p_request_id: rid() })).rejects.toThrow('tutorial_not_skippable')
     p = (await t.rpc(me, 'starter_pick', { p_request_id: rid(), p_game: 'yugioh' })).player
     expect(p).toMatchObject({ tutorial_step: 1, sealed_total: 1 }) // Opa's booster, from the favourite game
     const sealed = await t.sql<{ product_id: string }>(`select product_id from game.sealed where player_id = $1 and qty > 0`, [id])
     expect(sealed.map((r) => r.product_id)).toEqual(['booster-ygo-lob'])
     p = (await t.rpc(me, 'pack_open', { p_request_id: rid(), p_product: 'booster-ygo-lob', p_qty: 1 })).player
     expect(p.tutorial_step).toBe(2)
-    // acknowledging again does nothing outside its step
-    p = (await t.rpc(me, 'tutorial_ack', { p_request_id: rid() })).player
-    expect(p.tutorial_step).toBe(2)
     const run = await t.rpc(me, 'minigame_start', { p_request_id: rid(), p_game: 'pfand' })
     await t.advance('46 seconds')
     p = (await t.rpc(me, 'minigame_finish', { p_request_id: rid(), p_run: run.run_id, p_score: 8000, p_bottles: 30 })).player
     expect(p.tutorial_step).toBe(3)
-    p = (await t.rpc(me, 'tutorial_skip', { p_request_id: rid() })).player
+    // there is no way to skip or acknowledge a step
+    expect(await t.sql(`select 1 from pg_proc where proname in ('tutorial_skip', 'tutorial_ack')`)).toEqual([])
+    // the last step asks for a quest reward: reaching it makes sure one is ready
+    await t.sql(`update game.players set tutorial_step = 5 where id = $1`, [id])
+    await t.sql(`update game.quests set progress = 0 where player_id = $1`, [id])
+    await t.sql(`select private.emit($1, 'cards_sold', 1)`, [id])
+    expect((await t.rpc(me, 'me_get')).player!).toMatchObject({ tutorial_step: 6, quests_ready: 1 })
+    const ready = (await t.sql<{ id: number }>(`select id from game.quests where player_id = $1 and kind = 'mini' and progress >= target`, [id]))[0]!
+    p = (await t.rpc(me, 'quest_claim', { p_request_id: rid(), p_quest: ready.id })).player
     expect(p.tutorial_step).toBe(-1)
   })
 })

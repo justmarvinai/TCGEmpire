@@ -135,6 +135,7 @@ function SidebarItem({ item, level, badge, isNew, onPick }: { item: NavItem; lev
     <NavLink
       to={item.path}
       end={item.path === '/'}
+      data-tour={`nav:${item.path}`}
       onClick={() => {
         sfx('click')
         onPick()

@@ -39,7 +39,7 @@ export function StammtischPage() {
   return (
     <Page icon="chat" title={T.title} subtitle={T.subtitle} tip={T.tip}>
       <div className="grid gap-4 lg:grid-cols-12">
-        <Panel title={T.chat} tip={T.chatTip} className="flex flex-col lg:col-span-8">
+        <Panel tour="stammtisch-chat" title={T.chat} tip={T.chatTip} className="flex flex-col lg:col-span-8">
           {q.isPending ? (
             <Skeleton className="h-96 w-full" />
           ) : q.isError || !q.data ? (
@@ -52,7 +52,7 @@ export function StammtischPage() {
           )}
         </Panel>
         <div className="flex flex-col gap-4 lg:col-span-4">
-          <Panel title={T.online} tip={T.onlineTip}>
+          <Panel tour="stammtisch-online" title={T.online} tip={T.onlineTip}>
             {q.data ? (
               <ul className="flex flex-wrap gap-2">
                 {q.data.online.map((o) => (

@@ -728,10 +728,13 @@ At level 100 you can sell your empire.
 
 - **Tutorial:** Mutti (messages) and Opa Günther (gifts you his old binder) lead through the first
   session with real actions: collect bottles, buy a booster at the Kiosk, open it, put cards in the
-  binder, sell one, finish a mini-quest. About 3 minutes, skippable after step 3, progress stored on the
-  server. It ends exactly on level 2.
-- **Unlock moments:** every feature unlock shows an overlay ("Neu: Cardmarket!"), a 2–4 step mini-tour and
-  a **NEU** badge in the navigation.
+  binder, sell one, finish a mini-quest. About 3 minutes, progress stored on the server. It ends exactly on
+  level 2. **Guided and not skippable:** a spotlight dims the page and marks the one thing to click next
+  (first the menu entry, then the button on the page), with Mutti's message beside it; clicks elsewhere are
+  blocked until the step is done. Dialogs such as the booster opening and the level-up stay usable.
+- **Unlock moments:** every feature unlock shows a **NEU** badge in the navigation. The first visit of its
+  page starts a 2–3 step guided tour: each step marks the part of the page it explains, the rest is dimmed
+  and blocked until the player clicks through ("Weiter", "Verstanden"); it cannot be skipped.
 - **Level-Pfad:** a track that shows what every upcoming level unlocks. Locked features stay visible in
   the navigation with their level, so there is always something to look forward to.
 - **"i" everywhere:** every panel, stat and price has an info icon with a two-sentence explanation and,

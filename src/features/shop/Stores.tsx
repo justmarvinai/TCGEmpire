@@ -36,7 +36,7 @@ export function Stores({ shop, player, licensed }: { shop: Shop; player: Player;
         if (!def) return null
         const rule = s.shared ? T.sharedTip((def.restocks ?? []).join(' und '), def.limit) : T.weeklyTip(def.limit, def.limitPerRuf100 ?? 0)
         return (
-          <Panel key={s.key} title={def.name} tip={`${def.text} ${rule}`}>
+          <Panel key={s.key} tour="stores" title={def.name} tip={`${def.text} ${rule}`}>
             {player.level < s.min_level ? (
               <EmptyState icon="lock" title={T.fromLevel(s.min_level)}>
                 {def.text}
@@ -107,7 +107,7 @@ export function Stores({ shop, player, licensed }: { shop: Shop; player: Player;
 export function Lager({ shop }: { shop: Shop }) {
   const { used, cap } = shop.lager
   return (
-    <Panel title={T.lager} tip={T.lagerTip}>
+    <Panel tour="lager" title={T.lager} tip={T.lagerTip}>
       <p className="nums text-3xl font-bold tracking-tight">
         {used}
         <span className="text-fg-3">/{cap}</span>

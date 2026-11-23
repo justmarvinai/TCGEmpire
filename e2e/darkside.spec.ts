@@ -1,14 +1,8 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+import { finishTour } from './tours.ts'
 
 const shot = (name: string) => `e2e/.shots/${name}.png`
 
-async function finishTour(page: Page, name: string) {
-  const tour = page.getByRole('complementary', { name: `Neu: ${name}!` })
-  await expect(tour).toBeVisible()
-  while (await tour.getByRole('button', { name: 'Weiter' }).isVisible()) await tour.getByRole('button', { name: 'Weiter' }).click()
-  await tour.getByRole('button', { name: 'Verstanden' }).click()
-  await expect(tour).toBeHidden()
-}
 
 test('schattenwirtschaft: a bunker heist on a friend, a rumour, the file', async ({ page }) => {
   test.setTimeout(120_000)

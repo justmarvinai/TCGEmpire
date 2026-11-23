@@ -80,7 +80,7 @@ function useAdsAct() {
 function Board({ d }: { d: Ads }) {
   if (d.board.length === 0) return <Panel><EmptyState icon="tag" title={T.empty} /></Panel>
   return (
-    <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+    <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3" data-tour="kleinanzeigen-board">
       {d.board.map((a) => (
         <AdCard key={a.id} a={a} />
       ))}
@@ -247,7 +247,7 @@ function PostForm({ d }: { d: Ads }) {
     }
   }
   return (
-    <Panel title={T.postTitle} tip={T.postTip} action={<span className="nums text-xs text-fg-3">{T.slots(d.mine.length, d.slots)}</span>}>
+    <Panel tour="kleinanzeigen-post" title={T.postTitle} tip={T.postTip} action={<span className="nums text-xs text-fg-3">{T.slots(d.mine.length, d.slots)}</span>}>
       <label className="mb-1 block text-sm font-medium text-fg-2" htmlFor="ad-what">
         {T.what}
       </label>

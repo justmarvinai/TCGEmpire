@@ -59,7 +59,7 @@ export const zLogin = z.union([
 
 const withPlayer = { player: zPlayer }
 
-/** Stil (alpha_07): what friends see of a player. */
+/** Cosmetics (alpha_07): what friends see of a player. */
 export const zLook = z.object({ name_color: z.string().nullable(), frame: z.string().nullable(), avatar_card: z.string().nullable() })
 export type Look = z.infer<typeof zLook>
 // Ehre: kept and broken deals (alpha_08)
@@ -1379,8 +1379,6 @@ export const RPC_SCHEMAS = {
   recap_collect: z.object({ bunker_cents: z.number(), shift_cents: z.number(), ...withPlayer }),
   account_reset: zMe,
   account_delete: zMe,
-  tutorial_ack: z.object(withPlayer),
-  tutorial_skip: z.object(withPlayer),
   minigame_start: z.object({ run_id: z.string(), duration_s: z.number(), ...withPlayer }),
   minigame_finish: z.object({
     score: z.number(),

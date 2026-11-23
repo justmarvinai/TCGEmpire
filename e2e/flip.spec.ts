@@ -1,15 +1,9 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+import { finishTour } from './tours.ts'
 
 const shot = (name: string) => `e2e/.shots/${name}.png`
 
 /** Mutti's tour of a feature: click through to the end, then it is gone. */
-async function finishTour(page: Page, name: string) {
-  const tour = page.getByRole('complementary', { name: `Neu: ${name}!` })
-  await expect(tour).toBeVisible()
-  while (await tour.getByRole('button', { name: 'Weiter' }).isVisible()) await tour.getByRole('button', { name: 'Weiter' }).click()
-  await tour.getByRole('button', { name: 'Verstanden' }).click()
-  await expect(tour).toBeHidden()
-}
 
 test('flip: Cardmarket, Kleinanzeigen, toplists, Stammtisch, players, trade and the admin console', async ({ page }) => {
   await page.goto('/')
