@@ -371,7 +371,22 @@ Mutti sends pocket money.
   per 24 h; self-trading impossible.
 - Gift allowance per day by level; above it Schenkungssteuer. Loans count as debt for the borrower and as
   an asset for the lender.
-- Wochenwertung ignores gifts, loans and off-market trades between players.
+- Wochenwertung ignores gifts, loans and off-market trades between players, Cardmarket prices away from the Marktwert
+  and what a company charges a player above its fair price.
+- **Fair play against second accounts (decision 111).** Extra accounts are allowed, so value must not flow freely
+  between accounts, while normal play does not notice the limits:
+  - Cardmarket: players list and bid only within **50–200 %** of the Marktwert (slabs at their value); NPC trade is
+    the market itself and unchanged.
+  - Company prices stay within **50–300 %** of the fair price; an order never pays more, even if the fair price fell.
+  - Privatkredit: at most **a day (1.440 minutes) of the borrower's reference income**, and one running loan per
+    borrower, so several loans cannot burst at once.
+  - What a player **receives** as gifts or trade surpluses is capped at **120 minutes of their reference income per
+    day**, next to the 20 % Schenkungssteuer of the giver. Fair trades (equal Marktwert) never count.
+  - EP from opening packs only for the first **400 packs a day** (an all-out player opens about 250); new cards
+    always count. Buying a second account's boosters no longer speeds up levelling.
+  - At most **3 Aushelfen** received per player and day; Box Break spots at most **120 %** of the booster.
+  - The admin console lists the largest one-way flows between players (gifts, trade surpluses, market prices away
+    from the Marktwert, burst loans and interest, company orders) and the players who receive the most.
 - New and freshly reset accounts: trade and gift lock for the first hour of play; account reset has a
   cooldown, and items of a reset or deleted account are destroyed, not handed to anyone.
 - Pack battles and attacks have cooldowns and hourly limits.

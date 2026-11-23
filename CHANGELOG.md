@@ -26,6 +26,11 @@ The last alpha before 0.0.1: explained, balanced, polished.
   a little longer. Level 100 now takes two to three weeks of active play.
 - Quests you cannot do are no longer handed out (a finished set, all upgrades bought), and the quest list shows the
   EP you really get.
+- **Fair play:** second accounts are allowed but barely help. Cardmarket prices between players stay within
+  50–200 % of the Marktwert, company prices within 50–300 % of the fair price, a private loan is at most a day of the
+  borrower's income and only one runs at a time, what you can receive as gifts or lopsided trades is capped at two
+  hours of your own income a day, packs give EP for the first 400 a day, nobody gets more than three helps a day, and
+  break spots cost at most 120 %. Every form shows its limit. The admin console shows who sends value to whom.
 - One action, one sound: an action and its message no longer both play a sound.
 - Faster start: pages load when you open them.
 - Reduced motion also stops endless animations.

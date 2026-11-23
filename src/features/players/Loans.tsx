@@ -10,7 +10,7 @@ import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { useAct } from '@/lib/actions.ts'
+import { useAct, useLimits } from '@/lib/actions.ts'
 import { formatDate, formatDuration, formatMoney } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
@@ -219,6 +219,7 @@ export function LoanDialog({
   const [pct, setPct] = useState('10')
   const [days, setDays] = useState('3')
   const [busy, setBusy] = useState(false)
+  const limit = useLimits(to.id).data?.target
   const cents = Math.round(Number(euros.replace(',', '.')) * 100)
   const interest = Math.round(Number(pct))
   const dayCount = Math.round(Number(days))
@@ -226,6 +227,7 @@ export function LoanDialog({
     !!d &&
     Number.isFinite(cents) &&
     cents >= d.min_cents &&
+    (!limit || (cents <= limit.loan_max_cents && !limit.loan_active)) &&
     interest >= 0 &&
     interest <= d.max_interest_pct &&
     dayCount >= 1 &&
@@ -281,6 +283,11 @@ export function LoanDialog({
           onChange={(e) => setDays(e.target.value)}
         />
       </div>
+      {limit && (
+        <p className={clsx('mt-2 text-xs', limit.loan_active || cents > limit.loan_max_cents ? 'text-warn' : 'text-fg-3')}>
+          {limit.loan_active ? T.busy(to.name) : T.max(formatMoney(limit.loan_max_cents))}
+        </p>
+      )}
       <div className="mt-4 flex justify-end gap-2">
         <Button onClick={onClose}>{texts.common.cancel}</Button>
         <Button variant="primary" loading={busy} disabled={busy || !valid} onClick={() => void send()}>

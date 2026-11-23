@@ -58,6 +58,7 @@ export function AdminPage() {
           <MuseumAdmin />
           <Health />
           <Pace />
+          <Flows />
           <Economy d={q.data} />
           <Players d={q.data} />
           <Server />
@@ -493,6 +494,84 @@ function MuseumAdmin() {
           >
             {T.museumGo}
           </Button>
+        </div>
+      )}
+    </Panel>
+  )
+}
+
+/** One-way value between players (decision 111): who receives from whom, to spot second accounts. */
+function Flows() {
+  const [days, setDays] = useState(7)
+  const q = useQuery({ queryKey: ['admin-flows', days], queryFn: () => rpc('admin_flows', { p_days: days }) })
+  const pick = (
+    <select
+      className="panel-inset bg-transparent px-2 py-1 text-xs"
+      value={days}
+      aria-label={T.flows}
+      onChange={(e) => setDays(Number(e.target.value))}
+    >
+      {[7, 30].map((n) => (
+        <option key={n} value={n}>
+          {T.flowsDays(n)}
+        </option>
+      ))}
+    </select>
+  )
+  return (
+    <Panel title={T.flows} tip={T.flowsTip} action={pick} className="xl:col-span-2">
+      {q.isPending ? (
+        <Skeleton className="h-32 w-full" />
+      ) : q.isError ? (
+        <ErrorState message={errorText(q.error)} onRetry={() => void q.refetch()} />
+      ) : q.data.pairs.length === 0 ? (
+        <EmptyState icon="check" title={T.flowsEmpty} />
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="overflow-x-auto lg:col-span-2">
+            <table className="w-full text-xs [&_td]:px-2 [&_th]:px-2 [&_td:first-child]:pl-0 [&_th:first-child]:pl-0">
+              <thead>
+                <tr className="text-left text-fg-3">
+                  <th className="pb-1 font-semibold">{T.flowFrom}</th>
+                  <th className="pb-1 font-semibold">{T.flowTo}</th>
+                  <th className="pb-1 text-right font-semibold">{T.flowSum}</th>
+                  <th className="pb-1 font-semibold">{T.flowKinds}</th>
+                  <th className="pb-1 text-right font-semibold">{T.flowBack}</th>
+                  <th className="pb-1 text-right font-semibold">{T.flowWorth}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {q.data.pairs.map((f) => (
+                  <tr key={`${f.from.id}-${f.to.id}`} className="border-t border-line align-top">
+                    <td className="py-1">{f.from.name}</td>
+                    <td className="py-1 font-semibold">{f.to.name}</td>
+                    <td className="nums py-1 text-right font-semibold text-gold">{formatMoney(f.cents)}</td>
+                    <td className="py-1 text-fg-2">
+                      {Object.entries(f.kinds)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([k, v]) => `${T.flowKind[k] ?? k} ${formatMoney(v)}`)
+                        .join(' · ')}
+                    </td>
+                    <td className="nums py-1 text-right">{formatMoney(f.back_cents)}</td>
+                    <td className="nums py-1 text-right">{formatMoney(f.to_net_worth_cents)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <p className="mb-2 text-xs font-semibold text-fg-3">{T.receivers}</p>
+            <ul className="flex flex-col gap-1.5 text-sm">
+              {q.data.receivers.map((r) => (
+                <li key={r.player.id} className="rounded-lg bg-surface-2 px-3 py-2">
+                  <span className="font-semibold">{r.player.name}</span>
+                  <span className="nums block text-xs text-fg-3">
+                    {T.receiverLine(formatMoney(r.cents), r.givers, formatMoney(r.net_worth_cents))}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
     </Panel>

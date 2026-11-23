@@ -6,12 +6,13 @@ import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
+import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { GoodsPicker, NO_GOODS, useSettled } from '@/features/trade/GoodsPicker.tsx'
-import { useAct, usePlayers } from '@/lib/actions.ts'
+import { useAct, useLimits, usePlayers } from '@/lib/actions.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
@@ -162,6 +163,8 @@ export function PlayersPage() {
 /** Aushelfen and Kaffee und Kuchen: once a day per friend each. */
 function FriendButtons({ target, done }: { target: Players['players'][number]; done: string[] }) {
   const act = useAct()
+  // nobody gets more than a few helps a day (decision 111)
+  const full = useLimits(target.id).data?.target?.helps_left === 0
   const [busy, setBusy] = useState<string | null>(null)
   const run = async (kind: 'aushelfen' | 'kaffee') => {
     setBusy(kind)
@@ -178,8 +181,8 @@ function FriendButtons({ target, done }: { target: Players['players'][number]; d
           key={kind}
           size="sm"
           loading={busy === kind}
-          disabled={busy !== null || done.includes(kind)}
-          title={done.includes(kind) ? T.doneToday : undefined}
+          disabled={busy !== null || done.includes(kind) || (kind === 'aushelfen' && full)}
+          title={done.includes(kind) ? T.doneToday : kind === 'aushelfen' && full ? T.helpFull : undefined}
           onClick={() => void run(kind)}
         >
           <PixelIcon name={kind === 'aushelfen' ? 'clock' : 'heart'} />
@@ -208,6 +211,8 @@ function GiftDialog({ to, onClose }: { to: Players['players'][number]; onClose: 
     placeholderData: keepPreviousData,
   })
   const empty = goods.money_cents === 0 && goods.items.length === 0
+  // what the friend may still receive today (decision 111)
+  const tooMuch = !!quote.data && quote.data.give_cents > quote.data.their_receive_left_cents
   const send = async () => {
     setBusy(true)
     const res = await act('gift_send', { p_to: to.id, p_goods: goods }, ['players', 'trade-inventory'])
@@ -239,11 +244,17 @@ function GiftDialog({ to, onClose }: { to: Players['players'][number]; onClose: 
           {formatMoney(quote.data?.my_tax_cents ?? 0)}
         </dd>
       </dl>
+      {quote.data && (
+        <p className={clsx('mt-2 flex items-center gap-1 text-xs', tooMuch ? 'text-warn' : 'text-fg-3')}>
+          {tooMuch ? T.receiveBlocked(to.name) : T.receiveLeft(to.name, formatMoney(quote.data.their_receive_left_cents))}
+          <InfoTip>{T.receiveTip}</InfoTip>
+        </p>
+      )}
       <Button
         variant="primary"
         className="mt-4 w-full"
         loading={busy}
-        disabled={empty}
+        disabled={empty || tooMuch}
         onClick={() => void send()}
       >
         {T.gift}

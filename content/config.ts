@@ -27,6 +27,8 @@ export const config = {
   // EP rewards in level-1 units (scaled by growth^level)
   'ep.pack': 15,
   'ep.new_card': 3,
+  // EP only for the first packs opened per day (an all-out player opens about 250)
+  'ep.pack_daily_cap': 400,
   'ep.sale': 5,
   'ep.minigame_min': 40,
   'ep.minigame_max': 120,
@@ -100,6 +102,8 @@ export const config = {
   // reset accounts wait before trading; open offers per player, items per side, offer lifetime
   'gift.allowance_base_cents_per_level': 50_00,
   'gift.tax_bps': 2000,
+  // what a player may receive per day as gifts or trade surpluses, in minutes of their reference income
+  'gift.receive_cap_minutes': 120,
   'trade.lock_minutes': 60,
   'trade.max_open': 10,
   'trade.max_items': 20,
@@ -120,6 +124,9 @@ export const config = {
   'snapshots.hourly_days': 7,
   // Cardmarket: seller fee, shipping time, places for listings and buy orders together
   'market.fee_bps': 500,
+  // fair play (decision 111): players list and bid only within this band around the Marktwert
+  'market.player_min_pct': 50,
+  'market.player_max_pct': 200,
   'market.ship_min_minutes': 5,
   'market.ship_max_minutes': 20,
   'market.slots': 10,
@@ -244,12 +251,13 @@ export const config = {
   // Box Breaks: seconds per revealed pack; spot prices between these shares of the booster's Marktwert (basis points)
   'break.round_seconds': 3,
   'break.min_price_bps': 8_000,
-  'break.max_price_bps': 15_000,
+  'break.max_price_bps': 12_000,
   // Aushelfen: share of the remaining time taken off a friend's grading orders and shift (at most this many minutes);
   // both get this many minutes of reference income and this much EP. Kaffee und Kuchen: EP bonus for both.
   'help.speedup_pct': 25,
   'help.max_minutes': 60,
   'help.reward_minutes': 3,
+  'help.max_received': 3,
   'help.ep': 20,
   'kaffee.ep_pct': 10,
   'kaffee.minutes': 120,
@@ -264,6 +272,8 @@ export const config = {
   // for some days; a reminder goes out this many hours before the due date. Ehre: titles from kept and broken deals.
   'loan.max_interest_pct': 30,
   'loan.max_days': 14,
+  // at most this much of the borrower's reference income, and one running loan per borrower
+  'loan.max_minutes': 1440,
   'loan.min_base_cents': 100_00,
   'loan.default_ruf': 100,
   'loan.schufa_days': 7,
@@ -287,6 +297,9 @@ export const config = {
   'company.ruf_points': [[0, 0.2], [200, 0.3], [700, 1], [1000, 1.8]],
   'company.price_elasticity': 1.5,
   'company.price_factor_min': 0.1,
+  // fair play: own prices stay within this band around the fair price
+  'company.price_min_pct': 50,
+  'company.price_max_pct': 300,
   'company.price_factor_max': 1.6,
   'company.speed_hours': 24,
   'company.speed_min': 0.2,

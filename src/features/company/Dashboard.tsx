@@ -11,7 +11,7 @@ import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { useAct } from '@/lib/actions.ts'
+import { useAct, useLimits } from '@/lib/actions.ts'
 import { formatDate, formatDuration, formatMoney, formatNumber, formatStars } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import {
@@ -657,6 +657,7 @@ function Team({ co }: { co: Company }) {
 
 function Prices({ co }: { co: Company }) {
   const { busy, run } = useCompanyAct()
+  const band = useLimits().data
   const [draft, setDraft] = useState<Record<string, string>>({})
   const value = (s: string) => draft[s] ?? String((co.prices[s] ?? 0) / 100)
   const changed = Object.keys(draft).length > 0
@@ -687,6 +688,7 @@ function Prices({ co }: { co: Company }) {
               {live ? (
                 <span className="nums pb-1 text-xs text-fg-3">
                   {T.fair(money(live.fair_cents))} ·{' '}
+                  {band && <>{T.priceBand(money(Math.ceil((live.fair_cents * band.company_min_pct) / 100)), money(Math.floor((live.fair_cents * band.company_max_pct) / 100)))} · </>}
                   {T.priceFactor(String(live.price_factor).replace('.', ','))}
                 </span>
               ) : (

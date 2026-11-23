@@ -157,7 +157,9 @@ RLS enabled on every table with no policies.
 | `game.cosmetic_defs`, `game.cosmetics_owned`, `players.style`, `players.avatar_card` | alpha_07 · Stil from `content/cosmetics.ts`; equipped look per kind (jsonb) and the card used as profile picture. |
 | `players.best_pull_card`, `players.best_pull_cents`, `game.league` | alpha_07 · the most valuable card ever pulled (value then); Wochenwertung per week and player: start net worth, value moved to/from other players (`adjust_cents`), final growth and rank. |
 | `game.insurance` | alpha_07 · policies (versand, hausrat) with the day the premium was paid. |
-| `game.friend_acts` | alpha_08 · Aushelfen and Kaffee und Kuchen: actor, target, kind and German day (one per pair, kind and day). |
+| `game.friend_acts` | alpha_08 · Aushelfen and Kaffee und Kuchen: actor, target, kind and German day (one per pair, kind and day). Since alpha_12 at most `help.max_received` Aushelfen per target and day (trigger). |
+| `game.daily_counts` | alpha_12 · per player, German day and key a running count: `packs` (packs opened, for the pack EP cap), `received` (value received as gifts and trade surpluses, for the receive cap). Kept 7 days. |
+| `game.transfers` | alpha_12 · one-way value between two players for the admin console: from, to, kind (gift, trade, market, loan, company), cents, time. Kept 30 days. |
 | `game.group_orders`, `game.group_order_shares` | alpha_08 · Sammelbestellung: a case of displays (product, wholesale unit price fixed at the start, state, expiry) and each player's shares and payment; a full case becomes one shipment per player. |
 | `players.rt_topic` | alpha_08 · random id of the player's private Realtime channel (`player:<rt_topic>`); triggers on notifications, feed, chat and battles send pokes (`private.rt_send`). |
 | `game.worth_snapshots` | alpha_04 · net worth per player, hourly for `snapshots.hourly_days`, then the last one per Berlin day; deleted on reset. |
@@ -245,7 +247,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 
 | Area | Reads | Writes |
 |------|-------|--------|
-| Session | `sync`, `me_get`, `recap_get`, `account_get` (own e-mail) | `join` (e-mail, username, password, invite code), `login` (e-mail or username), `logout`, `account_email_set`, `recap_collect`, `settings_set`, `account_reset`, `account_delete` |
+| Session | `sync`, `me_get`, `recap_get`, `account_get` (own e-mail), `limits_get` (price bands, pack EP today, another player's loan maximum, receive cap and helps left) | `join` (e-mail, username, password, invite code), `login` (e-mail or username), `logout`, `account_email_set`, `recap_collect`, `settings_set`, `account_reset`, `account_delete` |
 | Packs | `shop_get`, `opening_get` | `store_buy` (qty), `pack_open` (qty 1/5/10/36, returns every pack's content at once), `opening_finish`, `display_unbox` |
 | Collection | `binder_get`, `card_get`, `inventory_get` | `bulk_sell`, `vitrine_set`, `attic_move`, `bulk_recycle` |
 | Market | `market_overview`, `market_card`, `my_listings`, `ads_get`, `auctions_get`, `trade_get` | `listing_create/cancel/buy`, `order_create/cancel`, `ad_offer`, `ad_post`, `ad_answer`, `auction_create`, `auction_bid`, `trade_propose/update/confirm/cancel`, `ankauf_sell` |
@@ -260,7 +262,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 | Dark side | `darkside_get` (own Angriff and Abwehr, cap, per target and kind: chance, cost, loot, reason, Rache; rumour cards; booster stock; log) | `attack` (kind + target, or `geruecht` + card + direction), `reseal`, `loan_burst` |
 | Events / world | `events_get`, `megaprojects_get` | `event_claim`, `megaproject_donate`, `insurance_buy/cancel`, `lotto_buy` |
 | Prestige | `prestige_get` (Sterne preview, blockers, perks, Omas Dachboden with today's limit, exits) | `prestige_exit` (typed confirmation), `perk_buy`, `attic_retrieve` |
-| Admin | `admin_dashboard`, `admin_players`, `admin_jobs`, `admin_health` (database size, largest tables, players, each player's pace in the current run) | `admin_set_phase`, `admin_restock`, `admin_event_start/stop`, `admin_config_set`, `admin_invite_set`, `admin_grant`, `admin_announce`, `admin_auction_create` |
+| Admin | `admin_dashboard`, `admin_players`, `admin_jobs`, `admin_health` (database size, largest tables, players, each player's pace in the current run), `admin_flows` (largest one-way flows between players and the biggest receivers) | `admin_set_phase`, `admin_restock`, `admin_event_start/stop`, `admin_config_set`, `admin_invite_set`, `admin_grant`, `admin_announce`, `admin_auction_create` |
 
 ## 4. Engines (internal)
 
@@ -269,6 +271,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 | `private.money_add`, `private.item_*` | The only ways to change cash and inventory; write ledger and versions. |
 | `private.eur(base_cents)` | Basis-€ → real cents at the current Preisniveau. The only way a config amount becomes money. |
 | `private.emit` | Event bus → quests, achievements, counters, feed. |
+| `private.market_band_check`, `private.company_fair_cents`, `private.loan_max_cents`, `private.receive_left` / `receive_book`, `private.daily_get` / `daily_bump`, `private.transfer_log` | Fair play (decision 111): the Cardmarket band (triggers on listings and buy orders), the fair price of a company service (trigger on prices, clamp on orders), the loan maximum (trigger on loans), the daily receive cap, daily counts and the flow log. |
 | `private.quest_doable(player, event)` | Whether a quest of that event can still be done (new cards left in a licensed set in print; an upgrade below its maximum); quests are only offered when it is true. |
 | `private.stat(player, key)` | Effective stat from modifiers, buffs and events. |
 | `private.roll_*` | Seeded randomness (pack contents, quality values, events). |

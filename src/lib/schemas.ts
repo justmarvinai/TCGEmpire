@@ -85,6 +85,8 @@ export const zPackOpen = z.object({
   packs: z.array(z.object({ cards: z.array(zPulledCard), value_cents: z.number() })),
   total_value_cents: z.number(),
   price_cents: z.number(),
+  /** the day's EP from packs is used up: these packs gave none (decision 111) */
+  ep_capped: z.boolean(),
   ...withPlayer,
 })
 export type PackOpen = z.infer<typeof zPackOpen>
@@ -475,7 +477,10 @@ export const zTradeQuote = z.object({
   my_tax_cents: z.number(),
   their_tax_cents: z.number(),
   allowance_left_cents: z.number(),
+  my_receive_left_cents: z.number(),
+  their_receive_left_cents: z.number(),
 })
+export type TradeQuote = z.infer<typeof zTradeQuote>
 const zTradeWrite = z.object({ trades: zTrades, player: zPlayer })
 
 export const zChat = z.object({
@@ -886,6 +891,39 @@ export const zStream = z.object({
 export type Stream = z.infer<typeof zStream>
 
 // Admin: server health (alpha_12)
+// Fair play (decision 111): the limits a player may run into, and another player's when asked
+export const zLimits = z.object({
+  market_min_pct: z.number(),
+  market_max_pct: z.number(),
+  company_min_pct: z.number(),
+  company_max_pct: z.number(),
+  packs_today: z.number(),
+  pack_ep_cap: z.number(),
+  receive_left_cents: z.number(),
+  target: z
+    .object({ loan_max_cents: z.number(), loan_active: z.boolean(), receive_left_cents: z.number(), helps_left: z.number() })
+    .nullable(),
+})
+export type Limits = z.infer<typeof zLimits>
+
+// Admin: one-way value between players
+const zFlowPlayer = z.object({ id: z.string(), name: z.string() })
+export const zAdminFlows = z.object({
+  days: z.number(),
+  pairs: z.array(
+    z.object({
+      from: zFlowPlayer,
+      to: zFlowPlayer,
+      cents: z.number(),
+      kinds: z.record(z.string(), z.number()),
+      back_cents: z.number(),
+      to_net_worth_cents: z.number(),
+    }),
+  ),
+  receivers: z.array(z.object({ player: zFlowPlayer, cents: z.number(), givers: z.number(), net_worth_cents: z.number() })),
+})
+export type AdminFlows = z.infer<typeof zAdminFlows>
+
 // The signed-in player's own account (the e-mail is never part of any other document)
 export const zAccount = z.object({ email: z.string().nullable() })
 export type Account = z.infer<typeof zAccount>
@@ -1267,6 +1305,8 @@ export const RPC_SCHEMAS = {
   login: zLogin,
   logout: zMe,
   account_get: zAccount,
+  limits_get: zLimits,
+  admin_flows: zAdminFlows,
   account_email_set: zAccount,
   sync: zSync,
   shop_get: zShop,

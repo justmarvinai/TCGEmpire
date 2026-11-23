@@ -27,6 +27,8 @@ const money = (cents: number) => ({ money_cents: cents, items: [] })
 
 beforeEach(async () => {
   t = await createTestDb()
+  // this file is not about the fair-play limits (fair_play.test.ts is): prices and gifts as the tests need them
+  await t.setConfig({ 'gift.receive_cap_minutes': 1_000_000, 'market.player_min_pct': 0, 'market.player_max_pct': 1_000_000 })
   a = await t.player('Anna')
   b = await t.player('Bert')
   aid = await t.playerId(a)

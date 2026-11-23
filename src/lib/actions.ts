@@ -47,3 +47,8 @@ export const useGrading = () => useQuery({ queryKey: ['grading'], queryFn: () =>
 export const useCosmetics = () => useQuery({ queryKey: ['cosmetics'], queryFn: () => rpc('cosmetics_get'), staleTime: 60_000 })
 export const useLevelPath = () =>
   useQuery({ queryKey: ['levelpath'], queryFn: () => rpc('level_path_get'), staleTime: 5 * 60_000 })
+
+/** Fair-play limits (decision 111): price bands, today's pack EP, and another player's loan, gift and help limits. */
+export function useLimits(target: string | null = null) {
+  return useQuery({ queryKey: ['limits', target], queryFn: () => rpc('limits_get', { p_target: target }), staleTime: 15_000 })
+}

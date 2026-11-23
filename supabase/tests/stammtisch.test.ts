@@ -15,6 +15,8 @@ const feed = async (kind: string) => (await t.sql<{ data: Record<string, unknown
 
 beforeEach(async () => {
   t = await createTestDb()
+  // this file is not about the fair-play limits (fair_play.test.ts is): prices and gifts as the tests need them
+  await t.setConfig({ 'market.player_min_pct': 0, 'market.player_max_pct': 1_000_000 })
   a = await t.player('Anna')
   b = await t.player('Bert')
   aid = await t.playerId(a)

@@ -12,6 +12,8 @@ const exit = () => t.rpc(me, 'prestige_exit', { p_request_id: rid(), p_confirm: 
 
 beforeEach(async () => {
   t = await createTestDb()
+  // this file is not about the fair-play limits (fair_play.test.ts is): prices and gifts as the tests need them
+  await t.setConfig({ 'market.player_min_pct': 0, 'market.player_max_pct': 1_000_000 })
   me = await t.player('Aussteiger')
   id = await t.playerId(me)
   await t.sql(`update game.players set level = 100, ruf = 800 where id = $1`, [id])

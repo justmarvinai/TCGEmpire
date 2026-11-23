@@ -10,6 +10,7 @@ export const PATCH_NOTES: readonly { version: string; title: string; items: read
       'Balance: Quests, Stempelkarte und Erfolge geben etwa halb so viel EP, und ab Level 50 wird jedes Level ein Stück zäher. Level 100 dauert jetzt zwei bis drei Wochen. Wer schneller ist, hat kein Leben.',
       'Quests, die du nicht schaffen kannst, gibt es nicht mehr (fertiges Set, alle Upgrades gekauft). Und die Quests zeigen die EP, die du wirklich kriegst.',
       'Schnellerer Start: Seiten laden erst, wenn du sie aufmachst. Neue Seiten öffnen oben und nicht irgendwo in der Mitte.',
+      'Fair Play: Zweitkonten sind erlaubt, bringen aber kaum was. Auf dem Cardmarket geht nur noch 50–200 % vom Marktwert, Firmenpreise bleiben nahe am fairen Preis, Kredite sind klein und immer nur einer auf einmal, Geschenke und schiefe Deals darf jeder am Tag nur bis zu zwei Stunden seines Einkommens annehmen, Pack-EP gibt es für die ersten 400 Booster am Tag, und mehr als drei Helfer am Tag verträgt keiner. Der Admin sieht trotzdem, wer wem was zuschiebt.',
       'Anmeldung mit E-Mail: Neue Konten brauchen E-Mail, Benutzername und Passwort, einloggen geht mit beidem. Die E-Mail wird nicht geprüft, sieht niemand außer dir, und wir schicken nie was. Ändern unter Profil → Konto.',
     ],
   },

@@ -19,6 +19,8 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   await page.goto('/dev/ui')
   await page.getByRole('button', { name: 'Tutorial aus' }).click()
   await page.getByRole('button', { name: '+viel EP' }).click()
+  // the level-ups (and with them the bunker) must exist before the clock moves
+  await expect(page.getByRole('link', { name: 'Geldbunker NEU' })).toBeVisible()
   for (let i = 0; i < 5; i++) await page.getByRole('button', { name: '+1.000 €' }).click()
   await page.getByRole('button', { name: '+1 Stunde' }).click()
 

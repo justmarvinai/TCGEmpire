@@ -62,6 +62,15 @@ export async function createTestDb() {
       const raw = await localRpc(db, userId, fn, args)
       return RPC_SCHEMAS[fn].parse(raw) as z.infer<(typeof RPC_SCHEMAS)[N]>
     },
+    /** Overrides config values like the admin console does (e.g. to widen a limit a test is not about). */
+    async setConfig(values: Record<string, number | boolean>) {
+      for (const [key, value] of Object.entries(values))
+        await sql(
+          `insert into game.config_overrides (key, value, updated_at) values ($1, $2::jsonb, now())
+           on conflict (key) do update set value = excluded.value, updated_at = excluded.updated_at`,
+          [key, JSON.stringify(value)],
+        )
+    },
     async advance(interval: string) {
       await sql(`update game.server set clock_offset = clock_offset + $1::interval where id`, [interval])
     },

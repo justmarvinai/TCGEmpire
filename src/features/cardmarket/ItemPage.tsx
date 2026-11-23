@@ -10,7 +10,7 @@ import { Panel } from '@/components/ui/Panel.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { PriceChart } from '@/features/market/PriceChart.tsx'
-import { useAct } from '@/lib/actions.ts'
+import { useAct, useLimits } from '@/lib/actions.ts'
 import { cardById, itemName } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
@@ -245,6 +245,7 @@ function ListForm({ d, busy, run }: { d: CardmarketItem; busy: string | null; ru
           {T.list}
         </Button>
       </div>
+      <BandHint value={choice?.value ?? d.value_cents} cents={cents} />
     </Panel>
   )
 }
@@ -267,7 +268,22 @@ function OrderForm({ d, busy, run }: { d: CardmarketItem; busy: string | null; r
           {T.order}
         </Button>
       </div>
+      <BandHint value={d.value_cents} cents={cents} />
     </Panel>
+  )
+}
+
+/** The price band players trade in (decision 111); turns orange when the price is outside it. */
+function BandHint({ value, cents }: { value: number; cents: number }) {
+  const limits = useLimits()
+  if (!limits.data) return null
+  const { market_min_pct: minPct, market_max_pct: maxPct } = limits.data
+  const min = Math.floor((value * minPct) / 100)
+  const max = Math.ceil((value * maxPct) / 100)
+  return (
+    <p className={clsx('mt-2 text-xs', cents > 0 && (cents < min || cents > max) ? 'text-warn' : 'text-fg-3')}>
+      {T.band(formatMoney(min), formatMoney(max), minPct, maxPct)}
+    </p>
   )
 }
 

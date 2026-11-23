@@ -12,7 +12,7 @@ import { useAct, usePlayers } from '@/lib/actions.ts'
 import { formatDuration, formatMoney } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
-import type { Goods, Players, TradeDoc } from '@/lib/schemas.ts'
+import type { Goods, Players, TradeDoc, TradeQuote } from '@/lib/schemas.ts'
 import { useMe, useWorld } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { GoodsList, GoodsPicker, NO_GOODS, useSettled } from './GoodsPicker.tsx'
@@ -181,11 +181,34 @@ function NewOffer({ d, className }: { d: Players; className?: string }) {
             <dt className="text-fg-2">{T.theirTax}</dt>
             <dd className="nums text-right">{formatMoney(quote.data?.their_tax_cents ?? 0)}</dd>
           </dl>
+          {quote.data && quote.data.give_cents !== quote.data.take_cents && (
+            <ReceiveNote q={quote.data} name={others.find((p) => p.id === partner)?.name ?? ''} />
+          )}
           <Button variant="primary" className="mt-4" loading={busy} disabled={empty || quote.isError} onClick={() => void send()}>
             {T.send}
           </Button>
         </>
       )}
     </Panel>
+  )
+}
+
+/** Whoever gets more value receives a gift: capped per day (decision 111). */
+function ReceiveNote({ q, name }: { q: TradeQuote; name: string }) {
+  const P = texts.players
+  const toThem = q.give_cents > q.take_cents
+  const surplus = Math.abs(q.give_cents - q.take_cents)
+  const left = toThem ? q.their_receive_left_cents : q.my_receive_left_cents
+  return (
+    <p className={clsx('mt-2 flex items-center gap-1 text-xs', surplus > left ? 'text-warn' : 'text-fg-3')}>
+      {surplus > left
+        ? toThem
+          ? P.receiveBlocked(name)
+          : texts.errors.receive_cap
+        : toThem
+          ? P.receiveLeft(name, formatMoney(left))
+          : P.receiveLeftMe(formatMoney(left))}
+      <InfoTip>{P.receiveTip}</InfoTip>
+    </p>
   )
 }

@@ -9,7 +9,7 @@ test('hilfe: rules and a searchable TCG-Lexikon', async ({ page }) => {
   await page.getByRole('button', { name: 'Imperium gründen' }).click()
   await expect(page.getByRole('heading', { name: 'Moin, Neuling.' })).toBeVisible()
   await page.getByRole('link', { name: /^Hilfe & Lexikon/ }).click()
-  await expect(page.getByText('Ein Konto pro Person')).toBeVisible()
+  await expect(page.getByText('Fair Play', { exact: true })).toBeVisible()
   await page.getByLabel('Begriff suchen …').fill('slab')
   await expect(page.getByText('Die versiegelte Plastikhülle mit der Note.', { exact: false })).toBeVisible()
   await expect(page.getByText('Bulk', { exact: true })).toBeHidden()

@@ -27,6 +27,8 @@ const deliver = async () => {
 
 beforeEach(async () => {
   t = await createTestDb()
+  // this file is not about the fair-play limits (fair_play.test.ts is): prices and gifts as the tests need them
+  await t.setConfig({ 'market.player_min_pct': 0, 'market.player_max_pct': 1_000_000 })
   await t.sql(`select setseed(0.5)`)
   seller = await t.player('Verkäufer')
   buyer = await t.player('Käufer')

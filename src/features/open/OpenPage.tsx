@@ -8,7 +8,7 @@ import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
-import { useAct, useShop } from '@/lib/actions.ts'
+import { useAct, useLimits, useShop } from '@/lib/actions.ts'
 import { productById } from '@/lib/catalog.ts'
 import { errorText } from '@/lib/rpc.ts'
 import type { PackOpen } from '@/lib/schemas.ts'
@@ -27,12 +27,15 @@ export function OpenPage() {
   const [session, setSession] = useState<{ result: PackOpen; productId: string; qty: number } | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const stream = useStream()
+  const limits = useLimits()
 
   const open = async (productId: string, qty: number) => {
     setBusy(`${productId}:${qty}`)
-    const result = await act('pack_open', { p_product: productId, p_qty: qty }, ['shop', 'binder', 'quests', 'stream'])
+    const result = await act('pack_open', { p_product: productId, p_qty: qty }, ['shop', 'binder', 'quests', 'stream', 'limits'])
     setBusy(null)
     if (result) setSession({ result, productId, qty })
+    // the day's EP from packs is used up (decision 111): cards still come, EP from midnight
+    if (result?.ep_capped) toast('info', T.epCapped(limits.data?.pack_ep_cap ?? 0))
   }
 
   const sealed = shop.data?.sealed ?? []

@@ -41,6 +41,8 @@ const revealAll = async () => {
 
 beforeEach(async () => {
   t = await createTestDb()
+  // this file is not about the fair-play limits (fair_play.test.ts is): prices and gifts as the tests need them
+  await t.setConfig({ 'market.player_min_pct': 0, 'market.player_max_pct': 1_000_000 })
   me = await t.player('Grader')
   id = await t.playerId(me)
   await t.sql(`update game.players set level = 13 where id = $1`, [id])
