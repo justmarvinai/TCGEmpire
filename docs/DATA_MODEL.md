@@ -260,7 +260,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 | Dark side | `darkside_get` (own Angriff and Abwehr, cap, per target and kind: chance, cost, loot, reason, Rache; rumour cards; booster stock; log) | `attack` (kind + target, or `geruecht` + card + direction), `reseal`, `loan_burst` |
 | Events / world | `events_get`, `megaprojects_get` | `event_claim`, `megaproject_donate`, `insurance_buy/cancel`, `lotto_buy` |
 | Prestige | `prestige_get` (Sterne preview, blockers, perks, Omas Dachboden with today's limit, exits) | `prestige_exit` (typed confirmation), `perk_buy`, `attic_retrieve` |
-| Admin | `admin_dashboard`, `admin_players`, `admin_jobs` | `admin_set_phase`, `admin_restock`, `admin_event_start/stop`, `admin_config_set`, `admin_invite_set`, `admin_grant`, `admin_announce`, `admin_auction_create` |
+| Admin | `admin_dashboard`, `admin_players`, `admin_jobs`, `admin_health` (database size, largest tables, players, each player's pace in the current run) | `admin_set_phase`, `admin_restock`, `admin_event_start/stop`, `admin_config_set`, `admin_invite_set`, `admin_grant`, `admin_announce`, `admin_auction_create` |
 
 ## 4. Engines (internal)
 
@@ -269,6 +269,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 | `private.money_add`, `private.item_*` | The only ways to change cash and inventory; write ledger and versions. |
 | `private.eur(base_cents)` | Basis-€ → real cents at the current Preisniveau. The only way a config amount becomes money. |
 | `private.emit` | Event bus → quests, achievements, counters, feed. |
+| `private.quest_doable(player, event)` | Whether a quest of that event can still be done (new cards left in a licensed set in print; an upgrade below its maximum); quests are only offered when it is true. |
 | `private.stat(player, key)` | Effective stat from modifiers, buffs and events. |
 | `private.roll_*` | Seeded randomness (pack contents, quality values, events). |
 | `private.settle_*` | Lazy settlement (bunker, shift, energy, grading, shipments). |

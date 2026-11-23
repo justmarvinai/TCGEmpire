@@ -445,23 +445,23 @@ export const config = {
   'quest.mini_slots': 3,
   'quest.mini_reward_minutes': 1,
   'quest.mini_pfandbons': 1,
-  'quest.mini_ep_share': 0.1,
+  'quest.mini_ep_share': 0.03,
   'quest.bonus_every': 10,
   'quest.daily_slots': 5,
   'quest.daily_reward_minutes': 20,
-  'quest.daily_ep_share': 0.4,
+  'quest.daily_ep_share': 0.2,
   'quest.daily_pfandbons': 2,
   'quest.daily_bonus_minutes': 60,
-  'quest.daily_bonus_ep_share': 1,
+  'quest.daily_bonus_ep_share': 0.5,
   'quest.weekly_slots': 5,
   'quest.weekly_reward_minutes': 180,
-  'quest.weekly_ep_share': 1.5,
+  'quest.weekly_ep_share': 0.8,
   'quest.weekly_pfandbons': 5,
   'quest.weekly_chest_boosters': 3,
 
   // Stempelkarte: stamp n of the week pays minutes[n-1] of reference income; the 7th also a booster
   'stamp.minutes': [10, 20, 30, 45, 60, 90, 120],
-  'stamp.ep_share': 0.3,
+  'stamp.ep_share': 0.2,
 
   // Geldbunker: rate = base * growth^(Ertrag level) per hour, holds base capacity + upgrades hours
   'bunker.base_rate_base_cents': 120_00,
@@ -482,7 +482,7 @@ export const config = {
   'ep.shift_hour': 150,
 
   // Achievements: EP per tier as a share of the current level (index = tier - 1)
-  'ep.achievement_share': [0.25, 0.5, 1, 2],
+  'ep.achievement_share': [0.1, 0.2, 0.4, 0.8],
 
   // Account
   'account.reset_cooldown_h': 24,

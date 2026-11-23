@@ -6,6 +6,9 @@ import { SKILL_COST, SKILLS } from '../content/skills.ts'
 import { DECISIONS, type DecisionEffect } from '../content/company.ts'
 
 const B = 'booster-pkm-base'
+/** the games in the order the bot buys licences, and their sets */
+const GAMES = ['pokemon', 'yugioh', 'onepiece', 'riftbound'] as const
+const SETS = ['pokemon-base', 'yugioh-lob', 'onepiece-op01', 'riftbound-origins']
 const rid = () => crypto.randomUUID()
 const ASPECTS = ['centering', 'corners', 'edges', 'surface'] as const
 const BRANCH_ORDER = ['unternehmer', 'sammler', 'haendler', 'schlitzohr']
@@ -13,8 +16,10 @@ const BRANCH_ORDER = ['unternehmer', 'sammler', 'haendler', 'schlitzohr']
 const SCORE: Record<string, number> = { pfand: 8_000, regale: 9_000, sortieren: 8_000, pakete: 12_000, fake: 14_000, praktikum: 16_000 }
 
 export interface SimResult {
-  /** level -> active minutes and day when it was reached */
+  /** level -> active minutes and day when it was reached (first run) */
   levels: Record<number, { activeMin: number; day: number }>
+  /** every run (an exit starts the next): its first day, the day of the run each level came, the exit, the Sterne */
+  runs: { startDay: number; levels: Record<number, number>; exitDay?: number; stars?: number; peakNetWorthCents: number; prevPeakDay?: number }[]
   finalLevel: number
   netWorthCents: number
   /** Basis-€ income per ledger reason over the whole run */
@@ -27,6 +32,8 @@ export interface SimResult {
   notes: Record<string, number>
   /** events that happened, by slot */
   events: Record<string, number>
+  /** database size at the end (one player, no tick retention jobs: an upper bound) and the biggest tables */
+  db: { mb: number; tables: string }
   /** the company at the end (if founded): stage, value, and per German day its profit and the player's other income */
   company: {
     stage: number
@@ -43,7 +50,7 @@ export interface SimResult {
   } | null
 }
 
-export async function simulate(opts: { days: number; activeMinPerDay: number; seed?: number }): Promise<SimResult> {
+export async function simulate(opts: { days: number; activeMinPerDay: number; seed?: number; prestiges?: number }): Promise<SimResult> {
   const t = await createTestDb()
   await t.sql(`select setseed($1)`, [opts.seed ?? 0.5])
   // a fixed Monday morning, so that weekly and calendar events fall the same way on every run
@@ -52,14 +59,15 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   await t.sql(`update game.config_overrides set value = 'true', updated_at = now() where key = 'events.enabled'`)
   // SIM_EP=1: log every EP grant with the function that asked for it (balance work only)
   if (process.env.SIM_EP) {
-    await t.sql(`create table game.sim_ep (source text, base numeric)`)
+    await t.sql(`create table game.sim_ep (source text, base numeric, level int)`)
     await t.sql(`alter function private.ep_grant(uuid, numeric) rename to ep_grant_inner`)
     await t.sql(`create function private.ep_grant(p_player uuid, p_base_ep numeric) returns jsonb
       language plpgsql set search_path = '' as $f$
       declare v_ctx text;
       begin
         get diagnostics v_ctx = pg_context;
-        insert into game.sim_ep values ((regexp_match(substr(v_ctx, position(E'\\n' in v_ctx) + 1), 'function (?:\\w+\\.)?"?(\\w+)'))[1], p_base_ep);
+        insert into game.sim_ep values ((regexp_match(substr(v_ctx, position(E'\\n' in v_ctx) + 1), 'function (?:\\w+\\.)?"?(\\w+)'))[1], p_base_ep,
+          (select level from game.players where id = p_player));
         return private.ep_grant_inner(p_player, p_base_ep);
       end $f$`)
   }
@@ -67,17 +75,35 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   const id = await t.playerId(me)
   await t.sql(`update game.players set tutorial_step = -1 where id = $1`, [id])
   const levels: SimResult['levels'] = {}
+  const runs: SimResult['runs'] = [{ startDay: 1, levels: {}, peakNetWorthCents: 0 }]
   let active = 0
   let day = 1
   const note = (level: number) => {
-    for (let l = 2; l <= level; l++) levels[l] ??= { activeMin: Math.round(active), day }
+    const run = runs.at(-1)!
+    for (let l = 2; l <= level; l++) {
+      if (runs.length === 1) levels[l] ??= { activeMin: Math.round(active), day }
+      run.levels[l] ??= day - run.startDay + 1
+    }
   }
+  const exitsLeft = () => (opts.prestiges ?? 0) - (runs.length - 1)
 
   for (; day <= opts.days; day++) {
     let spent = 0
     await quietly(t, me, 'recap_collect', {})
     await quietly(t, me, 'sync', {}) // online: personal events can find the bot
-    await t.sql(`select private.tick_events(), private.tick_calendar()`) // the only tick systems the sim runs
+    await t.sql(`select private.tick_events(), private.tick_calendar(), private.tick_battles()`) // the only tick systems the sim runs
+    // the exit at level 100 (planned prestiges): perks first, then a new run
+    const lvl = await level(t, me)
+    stopGrading = exitsLeft() > 0 && lvl >= 95
+    if (exitsLeft() > 0 && lvl >= 100 && Object.keys((await t.rpc(me, 'prestige_get')).blockers).length === 0) {
+      const res = await quietly(t, me, 'prestige_exit', { p_confirm: 'Bot' })
+      if (res) {
+        Object.assign(runs.at(-1)!, { exitDay: day, stars: res.history.at(-1)?.stars })
+        await buyPerks(t, me)
+        runs.push({ startDay: day, levels: {}, peakNetWorthCents: 0 })
+        lastRuf = -1
+      }
+    }
     while (spent < opts.activeMinPerDay * 60) {
       advanced = 0
       const s = await step(t, me)
@@ -86,7 +112,12 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
       if (s > advanced) await t.advance(`${Math.round(s - advanced)} seconds`)
       note((await t.rpc(me, 'me_get')).player!.level)
     }
-    await t.sql(`select private.tick_events(), private.tick_calendar()`)
+    await t.sql(`select private.tick_events(), private.tick_calendar(), private.tick_battles()`)
+    const run = runs.at(-1)!
+    const worth = (await t.rpc(me, 'me_get')).player!.net_worth_cents
+    run.peakNetWorthCents = Math.max(run.peakNetWorthCents, worth)
+    const prev = runs.at(-2)
+    if (prev && run.prevPeakDay === undefined && worth >= prev.peakNetWorthCents) run.prevPeakDay = day - run.startDay + 1
     // Before leaving: start a long shift, then the rest of the day passes.
     const jobs = await t.rpc(me, 'jobs_get')
     if (!jobs.shift && (await level(t, me)) >= jobs.unlock_shifts) await quietly(t, me, 'shift_start', { p_job: bestShift(jobs, await level(t, me)), p_hours: 8 })
@@ -128,21 +159,41 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   const notes = Object.fromEntries(
     (await t.sql<{ kind: string; n: string }>(`select kind, count(*) as n from game.notifications where player_id = $1 group by kind`, [id])).map((x) => [x.kind, Number(x.n)]),
   )
-  if (process.env.SIM_EP)
+  if (process.env.SIM_EP) {
+    // share of each level band's EP by source (in levels' worth: base EP / EP of that level)
+    for (const r of await t.sql<{ band: string; mix: string }>(
+      `select band, string_agg(source || ' ' || lv, ', ' order by lv desc) as mix from (
+         select (level - 1) / 10 * 10 + 1 || '–' || ((level - 1) / 10 + 1) * 10 as band, min(level) as lo, coalesce(source, '?') as source,
+                round(sum(base / (25 + 8.5 * power(level, 1.3))), 1) as lv
+         from game.sim_ep group by 1, 3) x group by band order by min(lo)`,
+    ))
+      console.log(`levels ${r.band}: ${r.mix}`)
     console.log(
       'EP by source (base EP):',
       (await t.sql<{ source: string; base: string; n: string }>(`select coalesce(source, '?') as source, round(sum(base)) as base, count(*) as n from game.sim_ep group by 1 order by 2 desc`))
         .map((r) => `${r.source} ${r.base} (${r.n}×)`)
         .join(', '),
     )
+  }
   const events = Object.fromEntries(
     (await t.sql<{ slot: string; n: string }>(`select slot, count(*) as n from game.events where applied group by slot`)).map((x) => [x.slot, Number(x.n)]),
   )
-  return { levels, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`), company, jobErrors, notes, events }
+  await t.db.exec('vacuum analyze')
+  const db = {
+    mb: Math.round(Number((await t.sql<{ v: string }>(`select pg_database_size(current_database()) as v`))[0]!.v) / 104857.6) / 10,
+    tables: (await t.sql<{ t: string }>(
+      `select c.relname || ' ' || round(pg_total_relation_size(c.oid) / 1048576.0, 1) || ' MB' as t from pg_class c
+       join pg_namespace n on n.oid = c.relnamespace where n.nspname = 'game' and c.relkind = 'r'
+       order by pg_total_relation_size(c.oid) desc limit 6`,
+    )).map((x) => x.t).join(', '),
+  }
+  return { levels, runs, finalLevel: p.level, netWorthCents: p.net_worth_cents, income, slabs: slabs.map((s) => `${s.grader} ${Number(s.grade)}`), company, jobErrors, notes, events, db }
 }
 
 /** Seconds the current step already moved the clock (a minijob round has to really last). */
 let advanced = 0
+/** no new grading orders shortly before an exit (open orders block it) */
+let stopGrading = false
 
 const level = async (t: TestDb, me: string) => (await t.rpc(me, 'me_get')).player!.level
 
@@ -173,6 +224,10 @@ async function step(t: TestDb, me: string): Promise<number> {
     await quietly(t, me, 'stamp_claim', { p_joker: false })
     return 5
   }
+  // open quests steer what an active player does next; the daily grading quest needs days, so it is rerolled
+  const open = new Set([...q.mini, ...q.daily, ...q.weekly].filter((x) => !x.claimed && x.progress < x.target).map((x) => x.template))
+  const slow = q.daily.find((x) => x.template === 'd_graded' && !x.claimed && x.progress < x.target)
+  if (q.reroll_free && slow && (await quietly(t, me, 'quest_reroll', { p_quest: slow.id }))) return 5
   // 2. idle income: a finished shift, a half-full bunker
   const jobs = await t.rpc(me, 'jobs_get')
   if (jobs.shift?.done) {
@@ -184,7 +239,8 @@ async function step(t: TestDb, me: string): Promise<number> {
     return 5
   }
   const bunker = await t.rpc(me, 'bunker_get')
-  if (bunker.unlocked && (bunker.content_cents ?? 0) > (bunker.rate_cents ?? 0) * (bunker.capacity_h ?? 0) * 0.5) {
+  const bunkerQuest = ['bunker', 'd_bunker', 'w_bunker'].some((k) => open.has(k))
+  if (bunker.unlocked && (bunker.content_cents ?? 0) > (bunkerQuest ? 0 : (bunker.rate_cents ?? 0) * (bunker.capacity_h ?? 0) * 0.5)) {
     await quietly(t, me, 'bunker_collect', {})
     return 5
   }
@@ -193,15 +249,22 @@ async function step(t: TestDb, me: string): Promise<number> {
     const spent = await companyStep(t, me, p)
     if (spent) return spent
   }
-  // 3. sealed boosters are opened at once
-  if (p.sealed_total > 0) {
-    await openAll(t, me)
-    return 20
+  // 2b. quick quests: a snack, a pack battle against bots
+  const shop = await t.rpc(me, 'shop_get')
+  if (open.has('d_snack')) {
+    const snack = shop.snacks.filter((x) => x.price_cents !== null && x.price_cents * 10 <= p.cash_cents).sort((a, b) => a.price_cents! - b.price_cents!)[0]
+    if (snack && (await quietly(t, me, 'consumable_use', { p_key: snack.key }))) return 5
   }
+  if (p.level >= 16 && (open.has('d_battle') || open.has('w_battles'))) {
+    const b = await quietly(t, me, 'battle_create', { p_mode: 'klassisch', p_product: B, p_packs: 1, p_seats: 2 })
+    if (b && (await quietly(t, me, 'battle_start', { p_battle: b.battle.id }))) return 120 // watching it
+  }
+  // 3. sealed boosters are opened at once
+  if (p.sealed_total > 0) return 10 + 4 * (await openAll(t, me)) // bulk opening: a few seconds a pack
   // 4. cheapest affordable upgrade, if it costs less than a third of the cash
   if (p.level >= 5) {
     const ups = (await t.rpc(me, 'upgrades_get')).upgrades
-      .filter((u) => u.cost_cents !== null && u.need_level <= p.level && u.cost_cents * 3 <= p.cash_cents)
+      .filter((u) => u.cost_cents !== null && u.need_level <= p.level && u.cost_cents * (open.has('d_upgrade') || open.has('w_upgrade') ? 1 : 3) <= p.cash_cents)
       .sort((a, b) => a.cost_cents! - b.cost_cents!)
     if (ups[0]) {
       await quietly(t, me, 'upgrade_buy', { p_key: ups[0].key })
@@ -240,7 +303,10 @@ async function step(t: TestDb, me: string): Promise<number> {
     const top = (c: (typeof g.copies)[number]) => ASPECTS.every((a) => c.ranges![a][1] === 10)
     const psa = g.graders.psa.fees_cents.economy
     const cgc = g.graders.cgc.fees_cents.economy
-    const send = g.copies.find((c) => top(c) && (c.value_cents >= 2 * psa || c.value_cents * 2 >= cgc))
+    const send = stopGrading
+      ? undefined
+      : (g.copies.find((c) => top(c) && (c.value_cents >= 2 * psa || c.value_cents * 2 >= cgc)) ??
+        (open.has('w_graded') ? g.copies.find((c) => c.ranges && c.value_cents * 2 >= cgc) : undefined))
     if (send && g.used < g.slots && p.cash_cents >= 3 * psa) {
       await quietly(t, me, 'grading_submit', { p_copies: [send.copy_id], p_grader: send.value_cents >= 2 * psa ? 'psa' : 'cgc', p_service: 'economy' })
       return 10
@@ -257,29 +323,58 @@ async function step(t: TestDb, me: string): Promise<number> {
       return run.duration_s + 10
     }
   }
-  // 6. spare money goes into boosters
-  const shop = await t.rpc(me, 'shop_get')
-  const price = shop.kiosk[0]?.price_cents ?? Infinity
-  const qty = p.cash_cents >= price * 10 ? 10 : p.cash_cents >= price * 5 ? 5 : p.cash_cents >= price ? 1 : 0
-  if (qty && (await quietly(t, me, 'store_buy', { p_product: B, p_qty: qty }))) return 5
+  // 5a. a licence for the next game once it is cheap compared to the cash (new cards, more boosters)
+  if (p.level >= 10) {
+    const lic = await t.rpc(me, 'licenses_get')
+    const next = GAMES.find((g) => !lic.owned.includes(g))
+    if (next && lic.owned.length < lic.allowed && lic.next_fee_cents !== null && lic.next_fee_cents * 3 <= p.cash_cents &&
+        (await quietly(t, me, 'license_buy', { p_game: next }))) return 10
+  }
+  // 6. spare money goes into boosters: the kiosk first, then the stores
+  for (const k of shop.kiosk.filter((x) => x.product_id.startsWith('booster-') && x.bought_today < x.daily_limit)) {
+    const qty = Math.min(10, k.daily_limit - k.bought_today, Math.floor(p.cash_cents / k.price_cents / 2))
+    if (qty > 0 && (await quietly(t, me, 'store_buy', { p_product: k.product_id, p_qty: qty }))) return 5
+  }
+  for (const st of shop.stores.filter((x) => x.open)) {
+    const o = st.offers.find((x) => x.product_id.startsWith('booster-') && (x.left ?? 0) > 0 && x.bought < x.limit && x.price_cents * 20 <= p.cash_cents)
+    const qty = o ? Math.min(10, o.left ?? 0, o.limit - o.bought) : 0
+    if (o && qty > 0 && (await quietly(t, me, 'retail_buy', { p_store: st.key, p_product: o.product_id, p_qty: qty }))) return 5
+  }
   // 7. nothing to do: wait a minute
   return 60
 }
 
+/** Sterne go into perks: EP and wage first, then the bunker, the start money and luck. */
+async function buyPerks(t: TestDb, me: string) {
+  for (;;) {
+    const pr = await t.rpc(me, 'prestige_get')
+    const key = ['ep', 'lohn', 'zinsen', 'erbe', 'glueck', 'oma'].find((k) => {
+      const cost = pr.perks[k]?.cost
+      return cost != null && cost <= pr.stars
+    })
+    if (!key || !(await quietly(t, me, 'perk_buy', { p_key: key }))) return
+  }
+}
+
+/** Opens every sealed booster; returns how many. */
 async function openAll(t: TestDb, me: string) {
   const sealed = (await t.rpc(me, 'shop_get')).sealed
+  let opened = 0
   for (const s of sealed) {
     let left = s.qty
     while (left > 0) {
       const n = Math.min(10, left)
-      await quietly(t, me, 'pack_open', { p_product: s.product_id, p_qty: n })
+      if (await quietly(t, me, 'pack_open', { p_product: s.product_id, p_qty: n })) opened += n
       left -= n
     }
   }
   // sell the duplicates of bulk cards, keep one of each
-  const binder = await t.rpc(me, 'binder_get', { p_set: 'pokemon-base' })
-  const stacks = binder.cards.filter((c) => c.copies.length === 0 && c.qty > 1).map((c) => ({ card_id: c.card_id, qty: c.qty - 1 }))
-  if (stacks.length) await quietly(t, me, 'ankauf_sell', { p_stacks: JSON.stringify(stacks), p_copies: [] })
+  for (const set of SETS) {
+    const binder = await t.rpc(me, 'binder_get', { p_set: set })
+    const stacks = binder.cards.filter((c) => c.copies.length === 0 && c.qty > 1).map((c) => ({ card_id: c.card_id, qty: c.qty - 1 }))
+    if (stacks.length) await quietly(t, me, 'ankauf_sell', { p_stacks: JSON.stringify(stacks), p_copies: [] })
+  }
+  return opened
 }
 
 const STATIONS = ['annahme', 'pruefung', 'slabbing', 'versand'] as const

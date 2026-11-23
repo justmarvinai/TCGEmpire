@@ -97,6 +97,28 @@ describe('quests', () => {
     expect((await t.rpc(me, 'quests_get')).weekly).toHaveLength(5)
   })
 
+  it('offers only quests the player can still do (finished set, maxed upgrades)', async () => {
+    await t.sql(
+      `insert into game.collection (player_id, card_id, first_at)
+       select $1, c.id, now() from game.card_defs c join game.set_defs s on s.id = c.set_id where s.game = 'pokemon'`,
+      [id],
+    )
+    await t.sql(
+      `insert into game.upgrades_owned (player_id, key, level) select $1, key, max_level from game.upgrade_defs
+       on conflict (player_id, key) do update set level = excluded.level`,
+      [id],
+    )
+    await setLevel(13)
+    const q = await t.rpc(me, 'quests_get')
+    const templates = (await t.sql<{ key: string; event: string }>(`select key, event from game.quest_templates`))
+    const event = (key: string) => templates.find((x) => x.key === key)!.event
+    const offered = [...q.mini, ...q.daily, ...q.weekly].map((x) => event(x.template))
+    expect(offered).not.toContain('card_new')
+    expect(offered).not.toContain('upgrade_bought')
+    expect(q.daily).toHaveLength(5)
+    expect(q.weekly).toHaveLength(5)
+  })
+
   it('pays a bonus for all five dailies, expires old ones at midnight', async () => {
     await setLevel(5)
     const q = await t.rpc(me, 'quests_get')
