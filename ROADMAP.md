@@ -202,7 +202,7 @@ Goal: it feels finished.
 | | Scope | |
 |---|-------|---|
 | ☑ | Onboarding pass: every unlock has a tour; "i" on every panel; TCG-Lexikon; rules page | M |
-| ◐ | Balance pass with the simulation over levels 1–100 and two prestiges; admin economy dashboard (Geldfluss, Server-Gesundheit, Tempo) | M |
+| ☑ | Balance pass with the simulation over levels 1–100 and two prestiges; admin economy dashboard (Geldfluss, Server-Gesundheit, Tempo) | M |
 | ☑ | Art pass (cards and products only): Ultra and Grail hero art reviewed once more; animated Grails | M |
 | ☑ | Sound pass; performance pass (bundle, atlas loading, tick duration); database size report | M |
 | ◐ | Full playtest by the group; bug bash; final data policy decision (wipe or keep) — bug bash done (page sweep, fixes); playtest checklist ready (`docs/PLAYTEST.md`); playtest needs the deployment, data policy is Q-29 | M |

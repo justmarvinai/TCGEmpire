@@ -91,6 +91,16 @@ weekly events fall the same way on every run) and the bot syncs once a day like 
 alpha_11 (with ~200 achievement tiers paying EP): level 30 on day 2, 40 on day 4, level 47 after 5 days; the 20-day run
 ends at level 68 (see §11 for the late-game finding).
 
+**alpha_12 balance pass** (`SIM_EP=1 SIM_TRACE=1 pnpm sim 36 150 2`): the bot now plays like an active player who does
+every quest (decision 107), and the EP shares and the reward growth were set from it (decision 109). Level 30 on day 2,
+50 on day 5, 75 on day 9, **100 on day 14** (34 active hours). The bot wastes no second, so a real player at 2,5 hours
+a day should land at about 2,5–3 weeks, the owner's target. EP by level band: up to level 10 mostly minijobs; levels
+10–60 packs ≈ 40 %, quests 20–25 %, achievements 10–20 %, minijobs 10–15 %; from level 60 quests ≈ 45 %, packs ≈ 35 %.
+The slow late game measured in alpha_11 came from the bot, not the game: it idled once its one kiosk product was sold
+out, spent game time on actions that failed and, from day 6 on, moved one worker back and forth between two stations
+all day. Money: shifts bring about 65 % of the income, quests 13 %, bunker 9 %, stamps 7 % (the bot keeps its company
+profit in the company); the playtest shows the real mix in the admin console (Geldfluss).
+
 ## 4. Preisniveau (the game's own inflation)
 
 One server-wide number, **P**. Everything the game itself prices or pays is defined in Basis-€ and
@@ -350,8 +360,10 @@ Mutti sends pocket money.
   with 17,9 Mio. € net worth (company 7,1 Mio. €); extrapolated to level 100 a first exit gives about 17–20 Sterne,
   enough for +15 % wage and +5 % EP (Fleißiges Erbe 3, Schnellstarter 1). Perk cost per level: `costBase ×
   growth^level` (3 × 1,4ⁿ for most, 4 × 1,5ⁿ for Pack-Glück).
-- **Pace finding for the alpha_12 balance pass:** past level 50 the bot slows down (level 50 on day 7, 60 on day 12,
-  68 on day 20) and shifts carry 75 % of its income; level 100 in 2–3 weeks needs a faster late game.
+- **Measured in alpha_12** (36 simulated days, two exits): exits on day 15 and day 29 with 18 Sterne each. The second
+  run reached level 100 in 14 days like the first and the first run's peak net worth (46 Mio. €) only on its last day,
+  so the target (at least 50 % of the previous run's time) holds with room to spare; with the perks of two exits the
+  third run reached level 75 in 7 days instead of 9. The alpha_11 pace finding was a bot artefact (see §3).
 
 ## 12. Anti-exploit rules
 

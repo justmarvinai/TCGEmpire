@@ -4,6 +4,7 @@ import { createTestDb, type TestDb } from '../supabase/tests/harness.ts'
 import { HOMES } from '../content/housing.ts'
 import { SKILL_COST, SKILLS } from '../content/skills.ts'
 import { DECISIONS, type DecisionEffect } from '../content/company.ts'
+import { duplicateStacks } from '../src/features/collection/sellDupes.ts'
 
 const B = 'booster-pkm-base'
 /** the games in the order the bot buys licences, and their sets */
@@ -387,7 +388,7 @@ async function openAll(t: TestDb, me: string) {
   // sell the duplicates of bulk cards, keep one of each
   for (const set of SETS) {
     const binder = await t.rpc(me, 'binder_get', { p_set: set })
-    const stacks = binder.cards.filter((c) => c.copies.length === 0 && c.qty > 1).map((c) => ({ card_id: c.card_id, qty: c.qty - 1 }))
+    const stacks = duplicateStacks(binder.cards) // the same rule as the button in the collection
     if (stacks.length) await quietly(t, me, 'ankauf_sell', { p_stacks: JSON.stringify(stacks), p_copies: [] })
   }
   return opened
