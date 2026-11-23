@@ -58,7 +58,7 @@ export function CollectionPage() {
 
   const sellDupes = async () => {
     setSelling(true)
-    const res = await act('ankauf_sell', { p_stacks: JSON.stringify(dupes), p_copies: [] }, ['binder'])
+    const res = await act('ankauf_sell', { p_stacks: dupes, p_copies: [] }, ['binder'])
     setSelling(false)
     if (res) {
       sfx('coin')
@@ -214,8 +214,8 @@ function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }
     setBusy(true)
     const n = all ? card.qty : 1
     const args = hit
-      ? { p_stacks: '[]', p_copies: all ? card.copies : card.copies.slice(-1) }
-      : { p_stacks: JSON.stringify([{ card_id: card.card_id, qty: n }]), p_copies: [] }
+      ? { p_stacks: [], p_copies: all ? card.copies : card.copies.slice(-1) }
+      : { p_stacks: [{ card_id: card.card_id, qty: n }], p_copies: [] }
     const res = await act('ankauf_sell', args, ['binder'])
     setBusy(false)
     if (res) {

@@ -39,6 +39,8 @@ The last alpha before 0.0.1: explained, balanced, polished.
 
 - A new page opened scrolled down when the last one had been.
 - On phones the amounts on the stamp card ran into each other.
+- On the live server, selling cards (duplicates, a single card, the bulk after opening) failed with "Ungültige
+  Anfrage."; Mama's selling step got stuck on it.
 
 ## [0.0.1-alpha_11] — Mogul (23 Nov 2026)
 

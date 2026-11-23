@@ -148,7 +148,7 @@ function SellDuplicates() {
         toast('info', T.noDupes)
         return
       }
-      const res = await act('ankauf_sell', { p_stacks: JSON.stringify(stacks), p_copies: [] }, ['binder'])
+      const res = await act('ankauf_sell', { p_stacks: stacks, p_copies: [] }, ['binder'])
       if (res) {
         sfx('coin')
         toast('success', T.sold(res.sold, formatMoney(res.payout_cents)))

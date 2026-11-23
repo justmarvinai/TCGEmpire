@@ -212,6 +212,18 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
         >
           +5 Hits
         </Button>
+        <Button
+          size="sm"
+          onClick={() =>
+            run(
+              `select private.stack_add($1, c.id, 3)
+               from (select id from game.card_defs where tier = 'common' and id like 'pkm-%' order by id limit 3) c`,
+              [id],
+            )
+          }
+        >
+          +Duplikate
+        </Button>
       </div>
     </Panel>
   )

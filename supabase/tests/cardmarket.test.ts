@@ -69,7 +69,7 @@ describe('Cardmarket', () => {
     await t.rpc(seller, 'listing_create', { p_request_id: rid(), p_kind: 'copy', p_item: H, p_copy: id, p_qty: 1, p_price: 99_00 })
     const binder = await t.rpc(seller, 'binder_get', { p_set: SET })
     expect(binder.cards.find((c) => c.card_id === H)!.qty).toBe(0)
-    await expect(t.rpc(seller, 'ankauf_sell', { p_request_id: rid(), p_stacks: '[]', p_copies: [id] })).rejects.toThrow('not_owned')
+    await expect(t.rpc(seller, 'ankauf_sell', { p_request_id: rid(), p_stacks: [], p_copies: [id] })).rejects.toThrow('not_owned')
 
     const item = await t.rpc(buyer, 'cardmarket_item', { p_item: H })
     await t.rpc(buyer, 'listing_buy', { p_request_id: rid(), p_listing: item.listings[0]!.id, p_qty: 1 })

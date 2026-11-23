@@ -379,7 +379,7 @@ function Summary({
     setBusy(true)
     const res = await act(
       'ankauf_sell',
-      { p_stacks: JSON.stringify([...bulk].map(([card_id, qty]) => ({ card_id, qty }))), p_copies: [] },
+      { p_stacks: [...bulk].map(([card_id, qty]) => ({ card_id, qty })), p_copies: [] },
       ['binder'],
     )
     setBusy(false)
