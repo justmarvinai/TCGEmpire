@@ -4,6 +4,7 @@ const shot = (name: string) => `e2e/.shots/${name}.png`
 
 test('four games: starter pick, Opa’s Yu-Gi-Oh! booster, licences and the binder per game', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('duellant@example.com')
   await page.getByLabel('Benutzername').fill('Duellant')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

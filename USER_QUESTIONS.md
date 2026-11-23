@@ -12,7 +12,7 @@ New questions are appended at the bottom with a recommended default.
 | Q-1 | Rhythm | Build one alpha, report, wait for the go for the next one. | default |
 | Q-2 | Accounts and deployment | Owner creates the Supabase project (Frankfurt) and the Vercel project and adds three GitHub secrets; every merge to `main` then deploys site and database. `*.vercel.app` domain. | default |
 | Q-3 | Players | **2–10.** Everything must be fun with two. | owner |
-| Q-4 | Login | Username + password + **one shared invite code** that is set once and can be used any number of times. | owner |
+| Q-4 | Login | Username + password + **one shared invite code** that is set once and can be used any number of times. Since Q-31 also an e-mail. | owner |
 | Q-5 | Admin | **The first account created** is the admin. It plays normally and additionally sees the admin console. | owner |
 | Q-6 | Pace | **Level 100 in about 2–3 weeks.** | owner |
 | Q-7 | Betrayal | Medium. Attacks can be **blocked**: defence through account upgrades, more efficient attacks through skills. | owner |
@@ -37,6 +37,7 @@ New questions are appended at the bottom with a recommended default.
 | Q-26 | Pack Battles against bots | Keep: bots pay nothing, what they win is gone. | owner |
 | Q-27 | eBay-Auktionen | Backlog for after 0.0.1. | owner |
 | Q-28 | Anfängerschutz | Keep: players below level 35 can neither attack nor be attacked. | owner |
+| Q-31 | E-Mail | **Register with e-mail, username and password** (23 Nov 2026), no verification. Login with the e-mail or the username. The shared invite code stays, so the game stays invite-only (default; say so if it should go). | owner |
 
 ## Additional owner requirements (21 Nov 2026)
 

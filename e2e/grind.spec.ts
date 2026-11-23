@@ -4,6 +4,7 @@ const shot = (name: string) => `e2e/.shots/${name}.png`
 
 test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile and reset', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('grinder@example.com')
   await page.getByLabel('Benutzername').fill('Grinder')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')
@@ -81,6 +82,13 @@ test('grind loop: bunker, upgrades, quests and stamps, shifts, snacks, profile a
   // Profile: achievements, then the Gefahrenzone resets everything.
   await page.getByRole('link', { name: 'Profil' }).click()
   await expect(page.getByRole('heading', { name: 'Erfolge' })).toBeVisible()
+  // the account: the e-mail from the registration, changed without any confirmation mail
+  const mail = page.getByRole('textbox', { name: 'E-Mail' })
+  await expect(mail).toHaveValue('grinder@example.com')
+  await mail.fill('grinder2@example.com')
+  await page.getByRole('button', { name: 'Speichern' }).click()
+  await expect(page.getByText('E-Mail gespeichert.')).toBeVisible()
+  await page.locator('section').filter({ has: page.getByRole('heading', { name: 'Konto' }) }).screenshot({ path: shot('account') })
   await page.screenshot({ path: shot('profile'), fullPage: true, animations: 'disabled' })
   await page.getByLabel('Tipp „Grinder“ zur Bestätigung').first().fill('grinder')
   const hold = page.getByRole('button', { name: /Account zurücksetzen/ })

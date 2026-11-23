@@ -13,6 +13,7 @@ async function finishTour(page: Page, name: string) {
 test('der exit: sell the empire, buy a perk, bring a card down from the attic', async ({ page }) => {
   test.setTimeout(120_000)
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('tycoon@example.com')
   await page.getByLabel('Benutzername').fill('Tycoon')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')
@@ -46,6 +47,7 @@ test('der exit: sell the empire, buy a perk, bring a card down from the attic', 
 test('mogul: a Golf GTI, a donation for the BER, a museum auction from the admin console', async ({ page }) => {
   test.setTimeout(120_000)
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('bonze@example.com')
   await page.getByLabel('Benutzername').fill('Bonze')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')
@@ -86,6 +88,7 @@ test('mogul: a Golf GTI, a donation for the BER, a museum auction from the admin
 test('streaming: go live, the opening page shows the audience', async ({ page }) => {
   test.setTimeout(120_000)
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('streamerin@example.com')
   await page.getByLabel('Benutzername').fill('Streamerin')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

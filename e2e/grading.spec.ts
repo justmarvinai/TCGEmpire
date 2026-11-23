@@ -13,6 +13,7 @@ async function finishTour(page: Page, name: string) {
 
 test('grading: Vorprüfung, sending a card to CGC, the reveal, the slab and the Vitrine', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('grader@example.com')
   await page.getByLabel('Benutzername').fill('Grader')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

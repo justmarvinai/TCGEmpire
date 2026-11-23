@@ -886,6 +886,10 @@ export const zStream = z.object({
 export type Stream = z.infer<typeof zStream>
 
 // Admin: server health (alpha_12)
+// The signed-in player's own account (the e-mail is never part of any other document)
+export const zAccount = z.object({ email: z.string().nullable() })
+export type Account = z.infer<typeof zAccount>
+
 export const zAdminHealth = z.object({
   db_bytes: z.number(),
   limit_bytes: z.number(),
@@ -1262,6 +1266,8 @@ export const RPC_SCHEMAS = {
   join: zMe,
   login: zLogin,
   logout: zMe,
+  account_get: zAccount,
+  account_email_set: zAccount,
   sync: zSync,
   shop_get: zShop,
   store_buy: z.object({ bought: z.number(), paid_cents: z.number(), ...withPlayer }),

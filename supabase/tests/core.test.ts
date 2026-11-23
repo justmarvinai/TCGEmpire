@@ -22,7 +22,7 @@ describe('join and login', () => {
 
   it('first account sets the invite code, becomes admin and gets the start capital', async () => {
     const b = t.browser()
-    const me = await t.rpc(b, 'join', { p_username: 'Erster', p_password: 'passwort1', p_invite_code: 'geheim123' })
+    const me = await t.rpc(b, 'join', { p_username: 'Erster', p_password: 'passwort1', p_invite_code: 'geheim123', p_email: 'erster@example.com' })
     expect(me.player).toMatchObject({ username: 'Erster', is_admin: true, level: 1, cash_cents: 400_00 })
     expect(me.server.has_invite_code).toBe(true)
     await t.assertLedgerMatches()
@@ -30,20 +30,53 @@ describe('join and login', () => {
 
   it('later accounts need the same code and are not admin', async () => {
     const b = t.browser()
-    const args = { p_username: 'Zweiter', p_password: 'passwort1' }
+    const args = { p_username: 'Zweiter', p_password: 'passwort1', p_email: 'zweiter@example.com' }
     await expect(t.rpc(b, 'join', { ...args, p_invite_code: 'falsch' })).rejects.toThrow('invite_wrong')
     await expect(t.rpc(b, 'sync')).rejects.toThrow('no_player')
     const me = await t.rpc(b, 'join', { ...args, p_invite_code: 'geheim123' })
     expect(me.player).toMatchObject({ username: 'Zweiter', is_admin: false })
   })
 
-  it('validates username, password and uniqueness (case-insensitive)', async () => {
+  it('validates e-mail, username, password and uniqueness (case-insensitive)', async () => {
     const b = t.browser()
-    const ok = { p_username: 'Dritter', p_password: 'passwort1', p_invite_code: 'geheim123' }
+    const ok = { p_username: 'Dritter', p_password: 'passwort1', p_invite_code: 'geheim123', p_email: 'dritter@example.com' }
     await expect(t.rpc(b, 'join', { ...ok, p_username: 'ab' })).rejects.toThrow('username_invalid')
     await expect(t.rpc(b, 'join', { ...ok, p_username: 'böse name' })).rejects.toThrow('username_invalid')
     await expect(t.rpc(b, 'join', { ...ok, p_password: '12345' })).rejects.toThrow('password_invalid')
     await expect(t.rpc(b, 'join', { ...ok, p_username: 'ERSTER' })).rejects.toThrow('username_taken')
+    for (const bad of [null, '', 'keine-mail', 'a@b', 'zwei@@example.com', 'mit leer@example.com', `${'x'.repeat(250)}@example.com`])
+      await expect(t.rpc(b, 'join', { ...ok, p_email: bad })).rejects.toThrow('email_invalid')
+    await expect(t.rpc(b, 'join', { ...ok, p_email: ' ERSTER@Example.com ' })).rejects.toThrow('email_taken')
+    const me = await t.rpc(b, 'join', { ...ok, p_email: '  Dritter@Example.com ' })
+    expect(me.player?.username).toBe('Dritter')
+    expect((await t.rpc(b, 'account_get')).email).toBe('Dritter@Example.com')
+  })
+
+  it('signs in with the e-mail as well, in any case', async () => {
+    const other = t.browser()
+    expect(await t.rpc(other, 'login', { p_username: 'erster@example.com', p_password: 'falsch!' })).toEqual({ error: 'login_wrong' })
+    expect(await t.rpc(other, 'login', { p_username: 'niemand@example.com', p_password: 'passwort1' })).toEqual({ error: 'login_wrong' })
+    const res = await t.rpc(other, 'login', { p_username: ' ERSTER@example.COM ', p_password: 'passwort1' })
+    expect(res.error).toBeNull()
+    expect((await t.rpc(other, 'me_get')).player?.username).toBe('Erster')
+  })
+
+  it('keeps the e-mail private and lets its owner change it', async () => {
+    const b = await t.player('Wechsler')
+    expect((await t.rpc(b, 'account_get')).email).toBe('Wechsler@example.com')
+    // no player document, list or feed carries it
+    const me = JSON.stringify(await t.rpc(b, 'me_get'))
+    const players = JSON.stringify(await t.rpc(b, 'players_get'))
+    expect(me + players).not.toMatch(/@example\.com/i)
+    await expect(t.rpc(b, 'account_email_set', { p_request_id: crypto.randomUUID(), p_email: 'erster@EXAMPLE.com' })).rejects.toThrow('email_taken')
+    await expect(t.rpc(b, 'account_email_set', { p_request_id: crypto.randomUUID(), p_email: 'kaputt' })).rejects.toThrow('email_invalid')
+    const rid = crypto.randomUUID()
+    expect(await t.rpc(b, 'account_email_set', { p_request_id: rid, p_email: 'neu@example.com' })).toEqual({ email: 'neu@example.com' })
+    expect(await t.rpc(b, 'account_email_set', { p_request_id: rid, p_email: 'neu@example.com' })).toEqual({ email: 'neu@example.com' })
+    expect((await t.rpc(t.browser(), 'login', { p_username: 'neu@example.com', p_password: 'passwort1' })).error).toBeNull()
+    // accounts from before the e-mail can add one
+    await t.sql(`update game.credentials set email = null where player_id = $1`, [await t.playerId(b)])
+    expect((await t.rpc(b, 'account_get')).email).toBeNull()
   })
 
   it('signs in from another browser, signs out, and never stores the password in clear', async () => {

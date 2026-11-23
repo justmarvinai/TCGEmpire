@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test('hilfe: rules and a searchable TCG-Lexikon', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('neuling@example.com')
   await page.getByLabel('Benutzername').fill('Neuling')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

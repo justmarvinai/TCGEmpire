@@ -13,6 +13,7 @@ async function finishTour(page: Page, name: string) {
 
 test('flip: Cardmarket, Kleinanzeigen, toplists, Stammtisch, players, trade and the admin console', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('flipper@example.com')
   await page.getByLabel('Benutzername').fill('Flipper')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

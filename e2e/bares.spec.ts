@@ -13,6 +13,7 @@ async function finishTour(page: Page, name: string) {
 test('bares für rares: appraisal, dealer bids, a deal', async ({ page }) => {
   test.setTimeout(120_000)
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('studiogast@example.com')
   await page.getByLabel('Benutzername').fill('Studiogast')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

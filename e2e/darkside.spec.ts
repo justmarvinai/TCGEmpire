@@ -13,6 +13,7 @@ async function finishTour(page: Page, name: string) {
 test('schattenwirtschaft: a bunker heist on a friend, a rumour, the file', async ({ page }) => {
   test.setTimeout(120_000)
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('schlitzohr@example.com')
   await page.getByLabel('Benutzername').fill('Schlitzohr')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

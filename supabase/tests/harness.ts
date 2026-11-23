@@ -40,7 +40,7 @@ export async function createTestDb() {
      */
     async player(username: string, inviteCode = 'geheim123', starter: string | null = 'pokemon') {
       const browser = this.browser()
-      await this.rpc(browser, 'join', { p_username: username, p_password: 'passwort1', p_invite_code: inviteCode })
+      await this.rpc(browser, 'join', { p_username: username, p_password: 'passwort1', p_invite_code: inviteCode, p_email: `${username}@example.com` })
       if (starter) {
         const id = await this.playerId(browser)
         await sql(`insert into game.licenses (player_id, game, at) values ($1, $2, private.now())`, [id, starter])

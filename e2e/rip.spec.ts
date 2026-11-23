@@ -4,6 +4,7 @@ const shot = (name: string) => `e2e/.shots/${name}.png`
 
 test('core loop: tutorial booster, opening, summary, binder, kiosk, sell, quests', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('rippa@example.com')
   await page.getByLabel('Benutzername').fill('Rippa')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

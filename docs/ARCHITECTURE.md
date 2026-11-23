@@ -25,7 +25,7 @@
                 │ supabase-js: auth, rpc()      │ Realtime: Broadcast + Presence
                 ▼                               ▼
 ┌──────────────────────────────── Supabase (Free, eu-central) ────────────────────────┐
-│ Auth: anonymous session per browser; own username + password + invite code in SQL   │
+│ Auth: anonymous session per browser; own e-mail/username + password + invite code   │
 │ PostgREST → schema `public` holds ONLY the RPC functions                            │
 │ Postgres                                                                            │
 │   public.*   RPC functions (SECURITY DEFINER): the whole game API                   │
@@ -148,10 +148,12 @@ The tick takes an advisory lock; if a run is still active the next one skips. Ev
 
 ## 8. Security
 
-- **Login:** Supabase gives every browser an anonymous auth user. Our RPCs `join` (username, password,
-  **shared invite code**), `login` and `logout` bind that session to a player. Passwords are bcrypt
-  hashes; wrong passwords are counted and lock the account for a few minutes. The invite code is one code
-  for everybody (Q-4): the first account sets it, it is stored hashed. No e-mail anywhere.
+- **Login:** Supabase gives every browser an anonymous auth user. Our RPCs `join` (e-mail, username,
+  password, **shared invite code**), `login` (e-mail or username) and `logout` bind that session to a player.
+  Passwords are bcrypt hashes; wrong passwords are counted and lock the account for a few minutes. The invite
+  code is one code for everybody (Q-4): the first account sets it, it is stored hashed. The e-mail (Q-31) is a
+  second login name only: unique regardless of case, never verified, never mailed, stored next to the password
+  hash in `game.credentials` so no player document carries it; only its owner reads it (`account_get`).
 - **Exposure:** schema `public` contains nothing but the RPC functions, each granted to signed-in
   sessions only. Tables live in unexposed schemas, additionally with RLS enabled and no policies (deny
   all) as a second wall. No service-role key anywhere in the client.

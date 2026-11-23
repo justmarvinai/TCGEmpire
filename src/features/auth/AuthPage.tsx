@@ -16,6 +16,7 @@ export function AuthPage({ me, localMode }: { me: Me; localMode: boolean }) {
   // On a fresh server nobody can log in yet: start on "Neu hier".
   const [mode, setMode] = useState<Mode>(me.server.has_invite_code ? 'login' : 'register')
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [invite, setInvite] = useState('')
   const [busy, setBusy] = useState(false)
@@ -27,7 +28,7 @@ export function AuthPage({ me, localMode }: { me: Me; localMode: boolean }) {
     setError(null)
     try {
       if (mode === 'register') {
-        setMe(await rpc('join', { p_username: username, p_password: password, p_invite_code: invite }))
+        setMe(await rpc('join', { p_email: email, p_username: username, p_password: password, p_invite_code: invite }))
       } else {
         const res = await rpc('login', { p_username: username, p_password: password })
         if (res.error !== null) throw new RpcError(res.error)
@@ -74,16 +75,31 @@ export function AuthPage({ me, localMode }: { me: Me; localMode: boolean }) {
           </div>
 
           <div className="flex flex-col gap-3">
+            {mode === 'register' && (
+              <Field
+                label={texts.auth.email}
+                name="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                hint={texts.auth.emailHint}
+                maxLength={254}
+                required
+                autoFocus
+              />
+            )}
             <Field
-              label={texts.auth.username}
+              // logging in works with the e-mail or the username
+              label={mode === 'register' ? texts.auth.username : texts.auth.loginName}
               name="username"
               autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               hint={mode === 'register' ? texts.auth.usernameHint : undefined}
-              maxLength={16}
+              maxLength={mode === 'register' ? 16 : 254}
               required
-              autoFocus
+              autoFocus={mode === 'login'}
             />
             <Field
               label={texts.auth.password}

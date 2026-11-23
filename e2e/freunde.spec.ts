@@ -13,6 +13,7 @@ async function finishTour(page: Page, name: string) {
 test('freunde: a pack battle against bots, round by round, with emotes and a result', async ({ page }) => {
   test.setTimeout(90_000)
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('zocker@example.com')
   await page.getByLabel('Benutzername').fill('Zocker')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')
@@ -53,6 +54,7 @@ test('freunde: a pack battle against bots, round by round, with emotes and a res
 
 test('freunde: helping out a friend, coffee and cake, and starting a Sammelbestellung', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('helfer@example.com')
   await page.getByLabel('Benutzername').fill('Helfer')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')
@@ -92,6 +94,7 @@ test('freunde: helping out a friend, coffee and cake, and starting a Sammelbeste
 
 test('freunde: a box break of an own display, pack by pack', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('breaker@example.com')
   await page.getByLabel('Benutzername').fill('Breaker')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

@@ -26,7 +26,7 @@ RLS enabled on every table with no policies.
 | `game.player_stats` | player_id, stats jsonb, computed_at | Resolved modifiers (cache). |
 | `game.modifiers` | player_id, source_kind, source_key, stat, op, value, expires_at | One row per active effect from upgrades, skills, perks, decor, set goals, buffs. |
 | `game.server` | single row: invite_code_hash, price_level, price_level_day, clock_offset | Server-wide settings and the Preisniveau. |
-| `game.credentials`, `game.sessions` | password_hash, failed_count, locked_until · auth_uid → player_id | Own login: bcrypt hashes; which anonymous Supabase session is signed in as which player. |
+| `game.credentials`, `game.sessions` | password_hash, email (+ unique `email_key` = lower(email)), failed_count, locked_until · auth_uid → player_id | Own login: bcrypt hashes and the e-mail as a second login name (never verified, never shown to others); which anonymous Supabase session is signed in as which player. |
 | `game.unlocks` | player_id, feature, unlocked_at, tour_seen | Feature gates and seen tours. |
 | `game.settings` | player_id, data jsonb | Sound, animations, etc. |
 
@@ -197,7 +197,7 @@ RLS enabled on every table with no policies.
 | RPC | Kind | Notes |
 |-----|------|-------|
 | `me_get`, `sync` | read | player doc incl. energy, sealed count, ready quests, net worth |
-| `join`, `login`, `logout` | write | own login on anonymous sessions |
+| `join`, `login`, `logout`, `account_email_set` | write | own login on anonymous sessions; login by e-mail or username |
 | `shop_get` | read | Kiosk offers, own sealed products |
 | `store_buy(qty 1/5/10)` | write | Kiosk price = list × markup × P; daily limit |
 | `pack_open(qty 1..10)` | write | rolls and books everything; returns all packs |
@@ -245,7 +245,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 
 | Area | Reads | Writes |
 |------|-------|--------|
-| Session | `sync`, `me_get`, `recap_get` | `join` (username, password, invite code), `login`, `logout`, `recap_collect`, `settings_set`, `account_reset`, `account_delete` |
+| Session | `sync`, `me_get`, `recap_get`, `account_get` (own e-mail) | `join` (e-mail, username, password, invite code), `login` (e-mail or username), `logout`, `account_email_set`, `recap_collect`, `settings_set`, `account_reset`, `account_delete` |
 | Packs | `shop_get`, `opening_get` | `store_buy` (qty), `pack_open` (qty 1/5/10/36, returns every pack's content at once), `opening_finish`, `display_unbox` |
 | Collection | `binder_get`, `card_get`, `inventory_get` | `bulk_sell`, `vitrine_set`, `attic_move`, `bulk_recycle` |
 | Market | `market_overview`, `market_card`, `my_listings`, `ads_get`, `auctions_get`, `trade_get` | `listing_create/cancel/buy`, `order_create/cancel`, `ad_offer`, `ad_post`, `ad_answer`, `auction_create`, `auction_bid`, `trade_propose/update/confirm/cancel`, `ankauf_sell` |

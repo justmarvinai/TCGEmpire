@@ -8,8 +8,8 @@ After it, every merge to `main` deploys the site and the database by itself.
 1. Create a project at supabase.com. Region: **Frankfurt (eu-central-1)**. Plan: Free.
    Save the database password you choose.
 2. **Authentication → Sign In / Providers → Anonymous sign-ins: turn ON.**
-   (The game has its own username + password login; Supabase only hands every browser an anonymous
-   session. No e-mails are ever sent.)
+   (The game has its own login with e-mail or username and a password; Supabase only hands every browser an
+   anonymous session. The e-mail is not verified and no e-mails are ever sent, so no mail settings are needed.)
 3. **Realtime → Settings → "Allow public access": turn OFF.** (Live updates use private channels; the game
    works without them too, just a few seconds slower.)
 4. Note three values:

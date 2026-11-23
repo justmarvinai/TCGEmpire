@@ -10,6 +10,7 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   await expect(page.getByText('Du bist der erste Account')).toBeVisible()
   await page.screenshot({ path: shot('auth'), animations: 'disabled' })
 
+  await page.getByLabel('E-Mail').fill('testmogul@example.com')
   await page.getByLabel('Benutzername').fill('Testmogul')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')
@@ -40,10 +41,12 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   await page.getByRole('button', { name: 'Einstellungen' }).click()
   await page.getByRole('button', { name: 'Abmelden' }).click()
   await expect(page.getByRole('tab', { name: 'Anmelden' })).toHaveAttribute('aria-selected', 'true')
-  await page.getByLabel('Benutzername').fill('testmogul')
+  await page.getByLabel('E-Mail oder Benutzername').fill('testmogul')
   await page.getByLabel('Passwort').fill('falsch123')
   await page.getByRole('button', { name: 'Rein da' }).click()
   await expect(page.getByRole('alert')).toContainText('Name oder Passwort falsch')
+  // the e-mail works as well, in any case
+  await page.getByLabel('E-Mail oder Benutzername').fill('TestMogul@Example.com')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByRole('button', { name: 'Rein da' }).click()
   // Signed in again, still on the page where we left.
@@ -54,6 +57,7 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
 
 test('component showcase renders and local dev tools move money and levels', async ({ page }) => {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('baumeister@example.com')
   await page.getByLabel('Benutzername').fill('Baumeister')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

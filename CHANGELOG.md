@@ -16,6 +16,9 @@ The last alpha before 0.0.1: explained, balanced, polished.
   you, a fanfare for quests and achievements; tearing a pack crinkles first.
 - **Admin console:** Server-Gesundheit (database size against the free plan, the largest tables) and Tempo (how many
   levels a day every player makes).
+- **E-mail:** you register with e-mail, username and password (and the invite code) and log in with either the e-mail
+  or the username. The address is not checked, nobody else sees it and the game never sends mail; change it under
+  Profil → Konto. Older accounts can add one there.
 
 ### Changed
 

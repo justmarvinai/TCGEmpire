@@ -13,6 +13,7 @@ async function finishTour(page: Page, name: string) {
 test('firma: Gewerbeanmeldung, Passierschein A38, founding, hiring and the pipeline', async ({ page }) => {
   test.setTimeout(120_000)
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill('chefin@example.com')
   await page.getByLabel('Benutzername').fill('Chefin')
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

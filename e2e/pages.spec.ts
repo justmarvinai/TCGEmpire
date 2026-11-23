@@ -11,6 +11,7 @@ const PAGES = [
 
 async function levelHundred(page: Page, name: string) {
   await page.goto('/')
+  await page.getByLabel('E-Mail').fill(`${name}@example.com`)
   await page.getByLabel('Benutzername').fill(name)
   await page.getByLabel('Passwort').fill('passwort1')
   await page.getByLabel('Einladungscode').fill('geheim123')

@@ -1,9 +1,10 @@
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { LUXURY } from '../../../content/mogul.ts'
 import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
+import { Button } from '@/components/ui/Button.tsx'
 import { Field } from '@/components/ui/Field.tsx'
 import { HoldButton } from '@/components/ui/HoldButton.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -127,10 +128,65 @@ export function ProfilePage() {
             </div>
           </Panel>
 
+          <AccountPanel player={player} />
           <DangerZone player={player} />
         </div>
       )}
     </Page>
+  )
+}
+
+/** Login data: the username and the e-mail (only its owner ever sees it). */
+function AccountPanel({ player }: { player: Player }) {
+  const q = useQuery({ queryKey: ['account'], queryFn: () => rpc('account_get') })
+  const act = useAct()
+  const client = useQueryClient()
+  const [draft, setDraft] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const value = draft ?? q.data?.email ?? ''
+
+  const save = async (e: FormEvent) => {
+    e.preventDefault()
+    setBusy(true)
+    const res = await act('account_email_set', { p_email: value })
+    setBusy(false)
+    if (!res) return
+    client.setQueryData(['account'], res)
+    setDraft(null)
+    sfx('success')
+    toast('success', T.accountSaved)
+  }
+
+  return (
+    <Panel title={T.account} tip={T.accountTip} className="xl:col-span-2">
+      {q.isPending ? (
+        <Skeleton className="h-28 w-full" />
+      ) : q.isError ? (
+        <ErrorState message={errorText(q.error)} onRetry={() => void q.refetch()} />
+      ) : (
+        <form onSubmit={save} className="grid gap-3 text-sm md:grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <span className="text-fg-3">{T.accountName}</span>
+            <span className="text-lg font-semibold">{player.username}</span>
+            {!q.data.email && <span className="text-fg-2">{T.accountNoEmail}</span>}
+          </div>
+          <div className="flex flex-col gap-2">
+            <Field
+              label={T.accountEmail}
+              type="email"
+              autoComplete="email"
+              maxLength={254}
+              value={value}
+              onChange={(e) => setDraft(e.target.value)}
+              required
+            />
+            <Button type="submit" size="sm" className="self-start" loading={busy} disabled={busy || value.trim() === (q.data.email ?? '')}>
+              {T.accountSave}
+            </Button>
+          </div>
+        </form>
+      )}
+    </Panel>
   )
 }
 

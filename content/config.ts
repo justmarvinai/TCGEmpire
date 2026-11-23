@@ -503,6 +503,7 @@ export const config = {
   'rate.battle': 6,
   'rate.emote': 20,
   'rate.friend': 20,
+  'rate.email': 5,
 } as const satisfies Record<string, Json>
 
 export type ConfigKey = keyof typeof config

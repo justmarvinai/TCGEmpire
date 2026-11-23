@@ -769,9 +769,11 @@ trades are open to every game. Reward boosters come from the favourite game (dec
 
 ### Profil and Gefahrenzone
 
-The profile shows level, titles, Vitrine, statistics, home and company. At its bottom sits the
-**Gefahrenzone** with two actions, each behind a typed confirmation (your username) and a hold-to-confirm
-button:
+The profile shows level, titles, Vitrine, statistics, home and company. **Konto** shows the username and the
+e-mail used to log in (players register with e-mail, username, password and the invite code and log in with the
+e-mail or the username; the e-mail is never verified, never mailed and seen by nobody else, Q-31); it can be changed
+there at any time. At the bottom sits the **Gefahrenzone** with two actions, each behind a typed confirmation (your
+username) and a hold-to-confirm button:
 
 - **Account zurücksetzen:** back to a fresh level-1 account with the start capital. Money, cards, sealed,
   slabs, company, home, upgrades, skills, quests and prestige are gone; username, friends' chat history

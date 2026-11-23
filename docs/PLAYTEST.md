@@ -14,7 +14,7 @@ plus ungefähre Uhrzeit. Fehlerbildschirm, Geld weg, Karte doppelt, ewiges Laden
 
 | Wann | Was |
 |------|-----|
-| Tag 1 | Registrieren mit dem Einladungscode, Tutorial, Booster kaufen und aufreißen (auch 10 auf einmal und Sofort-Aufdecken), Minijobs, Stempelkarte, Quests, Geldbunker (Level 3) |
+| Tag 1 | Registrieren mit E-Mail, Benutzername, Passwort und dem Einladungscode, einmal per E-Mail einloggen, Tutorial, Booster kaufen und aufreißen (auch 10 auf einmal und Sofort-Aufdecken), Minijobs, Stempelkarte, Quests, Geldbunker (Level 3) |
 | Level 4–13 | Läden und Kartenladen, Kleinanzeigen, Upgrades und Skills, Schichten, Cardmarket, Direkthandel und Geschenke **untereinander**, Händlerlizenz, Versicherung, Privatkredit, Grading (13) |
 | Level 16–30 | Pack Battles gegeneinander und gegen Bots, Box Break, Aushelfen, Kaffee und Kuchen, Sammelbestellung, Wohnung, Bares für Rares (28), **Firma gründen (30)** und bei der Firma eines Freundes graden lassen |
 | Ab Level 35 | Schattenwirtschaft gegeneinander (vorher Anfängerschutz), Großhandel (40), Streaming (45), Luxus (55), Höhle der Löwen (60), Megaprojekte und Museum (65), Exit ab 100 |
