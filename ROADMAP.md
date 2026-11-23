@@ -192,8 +192,8 @@ Goal: the endgame and the reason to start again.
 | ☑ | **Prestige (Exit)**: Empire-Sterne, perks, Omas Dachboden with retrieval limit, ranks | M |
 | ☑ | Achievements complete (~200), titles | M |
 | ☑ | Luxus, Megaprojekte, Museum auctions | S |
-| ☐ | Streaming with Followers and sponsors | S |
-| ☐ | Höhle der Löwen | S |
+| ☑ | Streaming with Followers and sponsors | S |
+| ☑ | Höhle der Löwen | S |
 
 ### alpha_12 — Feinschliff → **0.0.1**
 

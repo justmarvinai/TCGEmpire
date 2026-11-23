@@ -15,6 +15,7 @@ import type { PackOpen } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { texts } from '@/texts/de.ts'
 import { OpeningStage } from './OpeningStage.tsx'
+import { LiveBar, useStream } from '@/features/streaming/StreamingPage.tsx'
 
 const T = texts.open
 const SIZES = [1, 5, 10] as const
@@ -25,10 +26,11 @@ export function OpenPage() {
   const { instantReveal, set } = useSettings()
   const [session, setSession] = useState<{ result: PackOpen; productId: string; qty: number } | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
+  const stream = useStream()
 
   const open = async (productId: string, qty: number) => {
     setBusy(`${productId}:${qty}`)
-    const result = await act('pack_open', { p_product: productId, p_qty: qty }, ['shop', 'binder', 'quests'])
+    const result = await act('pack_open', { p_product: productId, p_qty: qty }, ['shop', 'binder', 'quests', 'stream'])
     setBusy(null)
     if (result) setSession({ result, productId, qty })
   }
@@ -47,6 +49,7 @@ export function OpenPage() {
 
   return (
     <Page icon="pack" title={T.title} subtitle={T.subtitle}>
+      <LiveBar />
       <Panel
         title={T.yours}
         action={
@@ -118,6 +121,7 @@ export function OpenPage() {
           result={session.result}
           productId={session.productId}
           canAgain={left > 0}
+          viewers={stream.data?.live ? stream.data.viewers : null}
           onClose={() => setSession(null)}
           onAgain={() => void open(session.productId, Math.min(session.qty, left))}
         />

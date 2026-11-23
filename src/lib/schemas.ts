@@ -872,6 +872,31 @@ export const zMega = z.object({
 })
 export type Mega = z.infer<typeof zMega>
 
+// Streaming (alpha_11)
+export const zStream = z.object({
+  unlock_level: z.number(),
+  live: z.boolean(),
+  viewers: z.number(),
+  followers: z.number(),
+  today_cents: z.number(),
+  cap_cents: z.number(),
+  total_cents: z.number(),
+  sponsor: z.object({ key: z.string(), done: z.number(), need: z.number(), reward_cents: z.number(), until: z.string() }).nullable(),
+})
+export type Stream = z.infer<typeof zStream>
+
+// Höhle der Löwen (alpha_11)
+export const zLoewen = z.object({
+  unlock_level: z.number(),
+  investor_pct: z.number(),
+  max_pct: z.number(),
+  pitch: z
+    .object({ offers: z.array(z.object({ lion: z.number(), share_pct: z.number(), cents: z.number() })), chosen: z.number().nullable() })
+    .nullable(),
+  value_cents: z.number(),
+})
+export type Loewen = z.infer<typeof zLoewen>
+
 // Bares für Rares (alpha_10)
 const zBaresCopy = z.object({
   card_id: z.string(),
@@ -1366,6 +1391,11 @@ export const RPC_SCHEMAS = {
   darkside_get: zDarkside,
   prestige_get: zPrestige,
   luxury_get: zLuxury,
+  stream_get: zStream,
+  loewen_get: zLoewen,
+  loewen_pitch: zLoewen,
+  loewen_deal: zLoewen,
+  stream_set: zStream,
   luxury_buy: zLuxury.extend(withPlayer),
   megaprojects_get: zMega,
   megaproject_donate: zMega.extend(withPlayer),

@@ -780,6 +780,8 @@ export const texts = {
   },
 
   feed: {
+    loewen: (d: Record<string, unknown>, name: string, money: string) =>
+      `HÖHLE DER LÖWEN: ${String(d.name)} holt ${money} von ${name} für ${String(d.share_pct)} % an „${String(d.company)}“. Die Löwen lecken sich die Pfoten.`,
     luxury: (d: Record<string, unknown>, item: string, money: string) => `PROTZ-ALARM: ${String(d.name)} kauft ${item} für ${money}. Die Neider schärfen schon die Schlüssel.`,
     megaproject_done: (d: Record<string, unknown>, name: string) =>
       `GESCHAFFT! Der Stammtisch hat „${name}“ finanziert. Alle bekommen einen Bonus. Größter Spender: ${String(d.name)}.`,
@@ -952,6 +954,20 @@ export const texts = {
         steps: [
           'Deine Firma darf jetzt beim Großhändler bestellen: Displays zum Händlerpreis, billiger als überall sonst.',
           'Jede Woche gibt es ein Kontingent. Je größer deine Rechtsform, desto mehr. Du findest den Großhandel im Büro deiner Firma.',
+        ],
+      },
+      loewen: {
+        name: 'Höhle der Löwen',
+        steps: [
+          'Die Löwen wollen deine Firma sehen! Im Büro deiner Firma kannst du jetzt einmal pro Woche pitchen.',
+          'Drei Löwen bieten Geld gegen einen Anteil. Schnelles Geld heute, weniger Firma morgen. Überleg es dir gut.',
+        ],
+      },
+      streaming: {
+        name: 'Streaming',
+        steps: [
+          'Geh live, reiß Booster auf, und Fremde schauen dir dabei zu. Bei Hits regnet es Spenden und neue Follower.',
+          'Sponsoren zahlen dir einen Deal, wenn du genug Booster im Stream öffnest. Nach einer halben Stunde Pause ist das Publikum weg.',
         ],
       },
       luxury: {
@@ -1138,6 +1154,7 @@ export const texts = {
   },
 
   notifications: {
+    stream_sponsor: (name: string, money: string) => `${name} ist zufrieden und überweist ${money}. Dein Chat schreibt den Rabattcode.`,
     museum_outbid: (d: Record<string, unknown>, name: string, money: string) =>
       `Überboten! ${String(d.name)} bietet ${money} für „${name}“. Dein Geld ist zurück.`,
     museum_won: (name: string, money: string) => `Zuschlag! „${name}“ gehört dir für ${money}. Die Hall of Fame wartet.`,
@@ -1187,6 +1204,8 @@ export const texts = {
         prestige: 'Mama: Du verkaufst alles und fängst von vorn an? Wie dein Onkel nach der dritten Scheidung. Dein Zimmer ist übrigens noch frei.',
         luxury: 'Mama: Ein Sportwagen? Du hast nicht mal einen Führerschein. Und denk an die Versicherung.',
         megaprojects: 'Mama: Du spendest jetzt für Flughäfen? Für meine neue Küche hat es nie gereicht.',
+        streaming: 'Mama: Du filmst dich jetzt beim Kartenaufreißen? Und Fremde schauen zu? Zieh dir wenigstens was Ordentliches an.',
+        loewen: 'Mama: Du gehst zu diesen Löwen im Fernsehen? Lass dich nicht über den Tisch ziehen. Und lächle, du lächelst nie.',
         company: 'Mama: Eine eigene Firma? In der Garage? Papas Auto muss dann draußen stehen. Das sagst du ihm.',
         loans: 'Mama: Du verleihst jetzt Geld? An deine Freunde? Dann sieh es schon mal als Geschenk.',
         breaks: 'Mama: Du machst jetzt Live-Shows? Zieh dir wenigstens was Ordentliches an.',
@@ -1434,6 +1453,53 @@ export const texts = {
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
     } as Record<string, (v: number) => string>,
+  },
+
+  loewen: {
+    title: 'Höhle der Löwen',
+    tip: 'Einmal pro Woche pitchst du deine Firma vor den Löwen. Drei bieten Geld fürs Firmenkonto gegen einen Anteil an deiner Firma. Ihr Anteil senkt den Firmenwert in deinem Vermögen, und bei jeder Auszahlung nehmen sie sich ihren Teil zuerst. Zurückkaufen geht nicht. Mehr als 49 % geben sie dir nicht, die Firma bleibt deine.',
+    locked: (n: number) => `Die Löwen empfangen dich ab Level ${n}.`,
+    share: (pct: number, max: number) => `Die Löwen besitzen ${pct} % deiner Firma (höchstens ${max} %).`,
+    pitch: 'Pitchen',
+    offer: (money: string, pct: number) => `${money} für ${pct} % deiner Firma`,
+    accept: 'Deal!',
+    decline: 'Ich bin raus',
+    deal: (name: string, money: string) => `Deal mit ${name}! ${money} landen auf dem Firmenkonto. Händeschütteln vor laufender Kamera.`,
+    dealDone: (name: string) => `Diese Woche: Deal mit ${name}. Nächste Woche wieder.`,
+    noDealDone: 'Diese Woche kein Deal. Die Löwen sind beleidigt. Nächste Woche wieder.',
+  },
+
+  streaming: {
+    title: 'Streaming',
+    subtitle: 'Aufreißen vor Publikum. Schreien ist Pflicht.',
+    tip: 'Geh live und reiß Booster auf. Jeder Booster bringt Zuschauer, eine lange Durststrecke vertreibt sie. Hits bringen Spenden und neue Follower; Spenden gibt es pro Tag bis zu einer Obergrenze. Sponsoren zahlen für eine Zahl Booster, die du live öffnest. Nach 30 Minuten ohne Booster ist dein Publikum weg.',
+    locked: (n: number) => `Streaming ab Level ${n}. Vorher schaut dir nur deine Mutter zu.`,
+    channel: 'Dein Kanal',
+    channelTip: 'Follower bleiben, Zuschauer kommen und gehen. Je mehr Follower, desto mehr Leute sind gleich beim Start da. Beim Exit bleibt die Hälfte der Follower.',
+    followers: 'Follower',
+    viewers: 'Zuschauer',
+    offline: 'offline',
+    total: 'Spenden insgesamt',
+    today: 'Spenden heute',
+    capTip: (money: string) => `Mehr als ${money} spendet dein Publikum an einem Tag nicht. Dann sind alle pleite.`,
+    capLabel: 'Tagesgrenze der Spenden',
+    goLive: 'Live gehen',
+    end: 'Stream beenden',
+    toOpen: 'Zum Aufreißen',
+    wentLive: 'Du bist live! Jetzt Booster aufreißen und laut sein.',
+    ended: 'Stream beendet. Der Chat ist traurig.',
+    sponsor: 'Sponsor',
+    sponsorTip: 'Beim Live-Gehen bietet dir ein Sponsor einen Deal an: Öffne eine Zahl Booster im Stream, und er zahlt. Der Deal gilt einen Tag.',
+    noSponsor: 'Gerade kein Sponsor. Geh live, dann meldet sich einer.',
+    deal: (n: number, money: string) => `Öffne ${n} Booster im Stream, dann gibt es ${money}.`,
+    dealProgress: (done: number, need: number) => `${done} von ${need} Boostern`,
+    until: (time: string) => `gilt bis ${time} Uhr`,
+    liveNow: 'LIVE',
+    viewersN: (n: number) => `${n} Zuschauer`,
+    followersN: (n: number) => `${n} Follower`,
+    todayN: (money: string) => `heute ${money} Spenden`,
+    presentedBy: (name: string) => `präsentiert von ${name}`,
+    manage: 'Stream',
   },
 
   luxury: {

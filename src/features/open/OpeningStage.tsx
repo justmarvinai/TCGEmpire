@@ -37,12 +37,15 @@ export function OpeningStage({
   onClose,
   onAgain,
   canAgain,
+  viewers,
 }: {
   result: PackOpen
   productId: string
   onClose: () => void
   onAgain: () => void
   canAgain: boolean
+  /** live stream audience, or null when not streaming */
+  viewers: number | null
 }) {
   const fx = useCosmetics().data?.style.pack_fx
   const fxHues = COSMETICS.find((c) => c.key === fx)?.hues
@@ -236,7 +239,7 @@ export function OpeningStage({
           </div>
         )}
       </div>
-      <Chat lines={chat.lines} />
+      <Chat lines={chat.lines} viewers={viewers} />
     </div>
   )
 }
@@ -497,7 +500,7 @@ function useChat(game: string | undefined) {
   return useMemo(() => ({ lines, react }), [lines, react])
 }
 
-function Chat({ lines }: { lines: { id: number; name: string; text: string }[] }) {
+function Chat({ lines, viewers }: { lines: { id: number; name: string; text: string }[]; viewers: number | null }) {
   const end = useRef<HTMLDivElement>(null)
   useEffect(() => {
     end.current?.scrollIntoView({ block: 'end' })
@@ -507,7 +510,7 @@ function Chat({ lines }: { lines: { id: number; name: string; text: string }[] }
       <div className="flex items-center gap-2 border-b-2 border-line px-3 py-2">
         <span className="size-2 bg-loss anim-heartbeat" />
         <span className="font-pixel text-lg">{T.chatTitle}</span>
-        <span className="ml-auto text-xs text-fg-3">{T.chatViewers(37 + lines.length * 3)}</span>
+        <span className="ml-auto text-xs text-fg-3">{T.chatViewers(viewers ?? 37 + lines.length * 3)}</span>
       </div>
       <div className="flex-1 overflow-y-auto p-2 text-sm leading-snug">
         {lines.map((l) => (

@@ -60,9 +60,19 @@ export const TROPHIES: readonly TrophyDef[] = [
   { key: 'prototype', name: 'Riftbound-Prototyp', text: 'Ein Testdruck, der das Werk nie hätte verlassen dürfen. Hat er aber.' },
 ]
 
+/** Höhle der Löwen (level 60): the investors. Their lines are shown with their offer. */
+export const LOEWEN: readonly { name: string; line: string }[] = [
+  { name: 'Carsten Maschmann', line: 'Ich sehe hier ein Riesenpotenzial. Für mich.' },
+  { name: 'Judith Wilms', line: 'Ich liebe Pappe. Ich verkaufe alles, was man in eine Hülle stecken kann.' },
+  { name: 'Ralf Dümmler', line: 'Das kriegen wir in jeden Supermarkt. Bis Freitag.' },
+  { name: 'Dagmar Wöhrmann', line: 'Ihre Zahlen sind schlecht. Ihr Gesicht ist gut. Ich bin dabei.' },
+  { name: 'Frank Theling', line: 'Skaliert das? Nein? Dann skaliere ich es.' },
+]
+
 /** What the server needs (seeded as config). */
 export const MOGUL_CONFIG = {
   'luxury.items': Object.fromEntries(LUXURY.map(({ key, name: _n, text: _t, ...l }) => [key, l])),
   'mega.projects': MEGAPROJECTS.map(({ name: _n, text: _t, bonus: _b, ...m }) => m),
   'museum.trophies': TROPHIES.map((t) => t.key),
+  'loewen.count': LOEWEN.length,
 } as const

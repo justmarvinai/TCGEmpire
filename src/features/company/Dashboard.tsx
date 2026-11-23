@@ -32,6 +32,7 @@ import { LabelDesigner, LabelPreview } from './LabelDesigner.tsx'
 import { personCv, personName } from './people.ts'
 import { PlayerOrders, VipOrder } from './Orders.tsx'
 import { Awards, DecisionCard, Marketing, Research, Shady, Taxes, Wholesale } from './Business.tsx'
+import { Loewen } from './Loewen.tsx'
 
 const T = texts.company
 const TABS = ['overview', 'team', 'build', 'office', 'reviews'] as const
@@ -120,6 +121,7 @@ export function Dashboard({ d, player }: { d: CompanyDoc; player: Player }) {
           </div>
           <Wholesale co={co} level={player.level} />
           <Shady co={co} />
+          <Loewen level={player.level} />
         </div>
       )}
       {tab === 'reviews' && <Reviews co={co} />}

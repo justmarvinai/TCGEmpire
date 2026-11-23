@@ -4,7 +4,7 @@ import { HOMES } from '@/lib/catalog.ts'
 import { AWARDS } from '../../../content/company.ts'
 import { ATTACKS } from '../../../content/darkside.ts'
 import { rankName } from '@/features/prestige/PrestigePage.tsx'
-import { LUXURY, MEGAPROJECTS, TROPHIES } from '../../../content/mogul.ts'
+import { LOEWEN, LUXURY, MEGAPROJECTS, TROPHIES } from '../../../content/mogul.ts'
 import { eventDef, eventTarget, eventWhen } from '@/features/events/eventText.ts'
 import { CONSUMABLES, cardName, gameOf, GOALS, itemName, SETS, STORES, type Game } from '@/lib/catalog.ts'
 import { formatAgo, formatMoney } from '@/lib/format.ts'
@@ -44,6 +44,7 @@ export function feedText(f: FeedEntry, doener: string) {
   }
   if (f.kind === 'resealed_caught') return texts.feed.resealed_caught(f.data)
   if (f.kind === 'prestige') return texts.feed.prestige(f.data, rankName(Number(f.data.n)) ?? '')
+  if (f.kind === 'loewen') return texts.feed.loewen(f.data, LOEWEN[Number(f.data.lion)]?.name ?? '', formatMoney(Number(f.data.cents)))
   if (f.kind === 'luxury') return texts.feed.luxury(f.data, LUXURY.find((l) => l.key === f.data.key)?.name ?? '', formatMoney(Number(f.data.cents)))
   if (f.kind === 'megaproject_done') return texts.feed.megaproject_done(f.data, MEGAPROJECTS.find((m) => m.key === f.data.key)?.name ?? '')
   if (f.kind === 'museum_open') return texts.feed.museum_open(TROPHIES.find((t) => t.key === f.data.key)?.name ?? '', formatMoney(Number(f.data.cents)))
