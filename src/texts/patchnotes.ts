@@ -1,6 +1,20 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1-alpha_11',
+    title: 'Mogul',
+    items: [
+      'Ab Level 100 der Exit: Verkauf dein Imperium für Empire-Sterne und fang von vorn an. Deine Karten warten so lange auf Omas Dachboden.',
+      'Mit Sternen kaufst du Perks, die für immer bleiben: mehr Lohn, mehr EP, mehr Glück, ein besseres Erbe. Jeder Exit bringt einen neuen Rang, vom Kleinunternehmer bis zum Weltherrscher.',
+      'Oma rückt jeden Tag nur einen Teil vom Dachboden raus. Reich an Karten, arm an Bargeld: so fängt jeder neue Lauf an.',
+      'Fast 200 Erfolgsstufen für alles im Spiel, mit neuen Titeln von „Halunke“ bis „Phönix“.',
+      'Ab Level 45 Streaming: Geh live, reiß Booster auf, kassier Spenden und Follower. Sponsoren zahlen für Booster im Stream.',
+      'Ab Level 55 Luxus: Golf GTI bis Privatjet, jeweils ein winziger Bonus für immer. Mit eigener Protz-Toplist.',
+      'Ab Level 60 die Höhle der Löwen: Hol dir Geld für deine Firma. Die Löwen wollen dafür ein Stück vom Kuchen.',
+      'Ab Level 65 Megaprojekte für alle (BER, Stuttgart 21, Schalke) mit Bonus für den ganzen Server, und das Museum mit einmaligen Trophäen zum Ersteigern.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_10',
     title: 'Risiko',
     items: [

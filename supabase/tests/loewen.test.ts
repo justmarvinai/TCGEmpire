@@ -36,7 +36,11 @@ describe('Höhle der Löwen', () => {
     expect(deal.investor_pct).toBe(offer.share_pct)
     expect(deal.pitch!.chosen).toBe(0)
     expect(await num(`select cash_cents as v from game.companies where owner_id = $1`, [id])).toBe(cash + offer.cents)
-    expect(deal.value_cents).toBeLessThan(cash + offer.cents)
+    // the Löwen's share comes off the company value (whatever the profit of the last days adds to it)
+    await t.sql(`update game.companies set investor_pct = 0 where owner_id = $1`, [id])
+    const whole = await num(`select private.company_value($1) as v`, [id])
+    await t.sql(`update game.companies set investor_pct = $2 where owner_id = $1`, [id, offer.share_pct])
+    expect(Math.abs(deal.value_cents - (whole * (100 - offer.share_pct)) / 100)).toBeLessThanOrEqual(1)
     await expect(t.rpc(me, 'loewen_deal', { p_request_id: rid(), p_offer: 1 })).rejects.toThrow('not_found')
 
     const before = await num(`select cash_cents as v from game.players where id = $1`, [id])

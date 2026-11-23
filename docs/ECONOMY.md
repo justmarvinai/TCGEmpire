@@ -87,6 +87,8 @@ Since alpha_10 the sim runs the events and calendar ticks too, from a fixed Mond
 weekly events fall the same way on every run) and the bot syncs once a day like a client. 5 days: level 10 after
 12 min, 20 and 25 on day 2, 30 and 35 on day 3, 40 on day 4, level 44 at the end; income 49 % shifts, 18 % quests,
 13 % level rewards, 10 % Stempelkarte, 7 % bunker; events change the pace by about one level, within the bands.
+alpha_11 (with ~200 achievement tiers paying EP): level 30 on day 2, 40 on day 4, level 47 after 5 days; the 20-day run
+ends at level 68 (see §11 for the late-game finding).
 
 ## 4. Preisniveau (the game's own inflation)
 

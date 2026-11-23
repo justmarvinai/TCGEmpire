@@ -3,6 +3,34 @@
 All notable changes to TCGEmpire. Versions before the first full release are `0.0.1-alpha_NN`;
 the first full release will be `0.0.1`.
 
+## [0.0.1-alpha_11] — Mogul (23 Nov 2026)
+
+The endgame and the reason to start again.
+
+### Added
+
+- **Der Exit** (level 100): sell the empire for Empire-Sterne (10 per exit plus the root of what you give up in
+  millions). Level, money, upgrades, skills, bunker, company and home start over; first finish what is still
+  running (listings, parcels, grading, loans, battles). Named ranks from Kleinunternehmer to Weltherrscher.
+- **Empire-Perks** bought with Sterne, kept forever: more wage, bunker yield, EP, Pack-Glück, a bigger start capital
+  and a more generous Oma.
+- **Omas Dachboden:** after an exit your cards and sealed product wait there, count for net worth and goals, and
+  come back worth a part of a day's income per day.
+- **Achievements:** 63 achievements with almost 200 tiers across every part of the game, with new titles.
+- **Streaming** (level 45): go live while opening packs; viewers, donations (capped per day), Followers and one
+  sponsor deal a day.
+- **Luxus** (level 55): cars, watches, yachts and jets with tiny permanent bonuses, shown on the profile and in a
+  new Luxus toplist.
+- **Höhle der Löwen** (level 60): a weekly pitch for your company; take cash for a share, the Löwen get their cut
+  of every payout.
+- **Megaprojekte** (level 65): the whole server donates for BER, Stuttgart 21, Schalke and Elbphilharmonie II, one
+  after another, each with a bonus for everyone; the top donors go on the plaque.
+- **Museum:** the admin auctions 1-of-1 trophies; the winner enters the Hall of Fame.
+
+### Changed
+
+- eBay-Auktionen are planned for after 0.0.1.
+
 ## [0.0.1-alpha_10] — Risiko (22 Nov 2026)
 
 The world happens to you, and you happen to your friends.

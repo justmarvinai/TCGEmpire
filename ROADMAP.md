@@ -1,6 +1,6 @@
 # TCGEmpire — Roadmap to 0.0.1
 
-> **Current phase: `alpha_11` (Mogul) in progress — owner go on 22 Nov 2026.**
+> **Current phase: `alpha_11` (Mogul) delivered as `0.0.1-alpha_11` — waiting for the owner's go for `alpha_12` (Feinschliff → 0.0.1).**
 
 Versions: every milestone ships as `0.0.1-alpha_NN`. The first full release is `0.0.1`.
 Each alpha is deployable and playable on its own, ends with a changelog entry, in-game patch notes and a

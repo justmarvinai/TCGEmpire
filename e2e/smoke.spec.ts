@@ -67,7 +67,7 @@ test('component showcase renders and local dev tools move money and levels', asy
   await page.getByRole('button', { name: '+viel EP' }).click()
   await page.getByRole('dialog', { name: 'LEVEL UP!' }).getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('button', { name: 'Einstellungen' }).click()
-  await expect(page.getByText(/Level (1[0-9]|[2-9][0-9])/)).toBeVisible()
+  await expect(page.getByText(/^Level (1[0-9]|[2-9][0-9])$/)).toBeVisible()
   await page.keyboard.press('Escape')
   // The page scrolls inside the shell: use a tall window to capture the whole showcase.
   await page.setViewportSize({ width: 1440, height: 2700 })
