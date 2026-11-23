@@ -5,9 +5,8 @@ trading-card hobby. Private game for one friend group. Must run on **Vercel Hobb
 
 ## 0. Gate: are you allowed to code?
 
-**Approved milestone: `alpha_12` (Feinschliff → 0.0.1)** — owner go on 23 Nov 2026 (scope: `ROADMAP.md`). The
-group playtest, the data policy and the release itself need the owner; deploy only with the owner's go.
-- When the owner approves the next milestone, update this section to name it.
+**Released: `0.0.1` (23 Nov 2026).** There are no more milestones: work only on updates the owner asks for. Each
+update ships as the next version, counting up by one (`0.0.2`, `0.0.3`, …).
 - Never deploy or change platform settings without the owner's go.
 
 ## 1. Read first
@@ -147,8 +146,8 @@ New RPC checklist: SQL function in a migration → `select private.expose(...)` 
   milestone.
 - Record assumptions as a decision in `docs/DECISIONS.md`; tick progress in `ROADMAP.md`; update
   `docs/DATA_MODEL.md` with every migration.
-- End of a milestone: `CHANGELOG.md` entry, version bump (`0.0.1-alpha_NN`), patch notes, report to the
-  owner, then wait.
+- End of an update: `CHANGELOG.md` entry, version bump to the next `0.0.N`, patch notes, report to the owner,
+  then wait.
 - Questions that only the owner can answer go into `USER_QUESTIONS.md` with a recommended default; do not
   block on them if a sensible default exists and the choice is cheap to change.
 

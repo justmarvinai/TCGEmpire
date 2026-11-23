@@ -1,6 +1,16 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.1',
+    title: 'Release',
+    items: [
+      'Es ist raus: Version 0.0.1. Ab jetzt zählt jedes Update eins hoch, 0.0.2, 0.0.3 und so weiter, und steht hier drin.',
+      'Mama zeigt jetzt mit dem Finger drauf: Im Tutorial leuchtet genau das, was du anklicken sollst, erst im Menü, dann auf der Seite. Der Rest ist dunkel, bis du es gemacht hast. Überspringen ist nicht mehr. Und jede neue Funktion erklärt sich beim ersten Besuch genauso, Schritt für Schritt mit Scheinwerfer.',
+      'Aufgeräumt: Die Upgrades stehen nicht mehr kreuz und quer, und im Skillbaum laufen keine Texte mehr in die Knöpfe. „Stil“ heißt jetzt „Cosmetics“.',
+      'Verkaufen geht wieder: Duplikate, einzelne Karten und der Bulk nach dem Öffnen endeten auf dem Server mit „Ungültige Anfrage.“ Mamas Verkaufs-Aufgabe hing deshalb fest. Der Kartenladen nimmt deinen Kram wieder. Für fast nichts, wie immer.',
+    ],
+  },
+  {
     version: '0.0.1-alpha_12',
     title: 'Feinschliff',
     items: [
@@ -12,9 +22,6 @@ export const PATCH_NOTES: readonly { version: string; title: string; items: read
       'Schnellerer Start: Seiten laden erst, wenn du sie aufmachst. Neue Seiten öffnen oben und nicht irgendwo in der Mitte.',
       'Fair Play: Zweitkonten sind erlaubt, bringen aber kaum was. Auf dem Cardmarket geht nur noch 50–200 % vom Marktwert, Firmenpreise bleiben nahe am fairen Preis, Kredite sind klein und immer nur einer auf einmal, Geschenke und schiefe Deals darf jeder am Tag nur bis zu zwei Stunden seines Einkommens annehmen, Pack-EP gibt es für die ersten 400 Booster am Tag, und mehr als drei Helfer am Tag verträgt keiner. Der Admin sieht trotzdem, wer wem was zuschiebt.',
       'Anmeldung mit E-Mail: Neue Konten brauchen E-Mail, Benutzername und Passwort, einloggen geht mit beidem. Die E-Mail wird nicht geprüft, sieht niemand außer dir, und wir schicken nie was. Ändern unter Profil → Konto.',
-      'Mama zeigt jetzt mit dem Finger drauf: Im Tutorial leuchtet genau das, was du anklicken sollst, erst im Menü, dann auf der Seite. Der Rest ist dunkel, bis du es gemacht hast. Überspringen ist nicht mehr. Und jede neue Funktion erklärt sich beim ersten Besuch genauso, Schritt für Schritt mit Scheinwerfer.',
-      'Aufgeräumt: Die Upgrades stehen nicht mehr kreuz und quer, und im Skillbaum laufen keine Texte mehr in die Knöpfe. „Stil“ heißt jetzt „Cosmetics“.',
-      'Verkaufen geht wieder: Duplikate, einzelne Karten und der Bulk nach dem Öffnen endeten auf dem Server mit „Ungültige Anfrage.“ Mamas Verkaufs-Aufgabe hing deshalb fest. Der Kartenladen nimmt deinen Kram wieder. Für fast nichts, wie immer.',
     ],
   },
   {
