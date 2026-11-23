@@ -1,11 +1,23 @@
 name: CI
+# Runs on main and on pull requests only (not on every push to a work branch), skips changes that only touch docs,
+# and cancels a run when a newer one for the same branch starts. GitHub Free includes about $12 of Actions compute a
+# month for private repositories; this keeps the game far below it.
 on:
   push:
+    branches: [main]
+    paths-ignore: ['**/*.md', 'docs/**']
   pull_request:
+    paths-ignore: ['**/*.md', 'docs/**']
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
