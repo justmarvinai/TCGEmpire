@@ -24,12 +24,14 @@
 | Beton | stone, concrete, offices | grey | Kampf |
 | Spuk | ghosts, night, paperwork from hell | violet | Psycho |
 
-- **Frame (Common):** dark indigo border with a thin gold line, name bar in the element colour, a large art window,
-  a type line ("Strom-Empiremon") and a number strip with a pixel set symbol and the rarity mark (white dot).
-  No text is baked in: name, type and number are written at runtime in a real font (decision 065) into the slots of
-  `art/frames/empiremon-layout.ts`.
-- **Ultra:** full art, silver-prism border, the whole artwork shines (foil), rarity mark a silver diamond.
-- **Grail:** full art, gold border, the whole artwork shines and sparkles, rarity mark a gold crown.
+- **Frame (Common):** a frame in the element colour with a thin indigo outline, a large art window and dark plates
+  for the name (with the element emblem beside it), the type line ("Strom-Empiremon") and the number, next to a
+  pixel set symbol and the rarity mark (white dot). Set symbols: Grundauflage a paw, Spätschicht a moon, Amt & Elend
+  a rubber stamp, Pfandland a bottle, Abstellgleis a train front. No text is baked in: name, type and number are
+  written at runtime in a real font (decision 065) into the slots of `art/frames/empiremon-layout.ts`.
+- **Ultra:** full art with dark plates top and bottom, silver-prism border, rarity mark a silver diamond.
+- **Grail:** full art with dark plates, gold border, rarity mark a gold crown; sparkles in the game.
+- **Foil:** Ultra and Grail shine on the border and the artwork, never under the text plates.
 - **Rule for every artwork:** our own creatures. Nothing may copy or imitate a creature, logo or frame of another
   card game.
 

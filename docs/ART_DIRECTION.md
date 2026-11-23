@@ -113,7 +113,7 @@ logos pixel for pixel:
 | Yu-Gi-Oh! | Card-kind coloured frame (normal yellow-brown, effect orange, spell teal, trap magenta), attribute orb, level stars, square art window, text box, ATK/DEF. |
 | One Piece | Full-bleed art, cost badge top left, power top right, colour band, name plate at the bottom, type line. |
 | Riftbound | Modern full-art frame, domain-coloured gem, energy cost, might value, slim name bar. |
-| Empiremon (our own, 0.0.5) | Dark indigo border with a gold line, element-coloured name bar and number strip, element emblem, set symbol and rarity mark; Ultra full art with a silver-prism border, Grail full art with a gold border. No baked text: name, type and number are written at runtime (decision 065, `art/frames/empiremon-layout.ts`). |
+| Empiremon (our own, 0.0.5) | Element-coloured frame with an indigo outline, dark text plates, element emblem, set symbol and rarity mark; Ultra full art with a silver-prism border, Grail full art with a gold border. No baked text: name, type and number are written at runtime (decision 065, `art/frames/empiremon-layout.ts`). |
 
 - **Text on cards** is drawn with our own bitmap fonts (5×7, condensed 4×6, micro 3×5) directly into the
   pixel image, with automatic condensing for long names ("Blauäugiger w. Drache"). Cards are therefore
