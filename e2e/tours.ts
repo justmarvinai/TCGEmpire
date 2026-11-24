@@ -7,7 +7,10 @@ import { expect, type Page } from '@playwright/test'
 export async function finishTours(page: Page) {
   const any = page.getByRole('complementary', { name: /^Neu: / })
   while (await any.waitFor({ timeout: 1500 }).then(() => true, () => false)) {
-    const tour = page.getByRole('complementary', { name: (await any.getAttribute('aria-label'))!, exact: true })
+    // a tour can vanish between seeing it and reading its name (the next one takes over): look again
+    const label = await any.first().getAttribute('aria-label', { timeout: 1500 }).catch(() => null)
+    if (!label) continue
+    const tour = page.getByRole('complementary', { name: label, exact: true })
     const next = tour.getByRole('button', { name: 'Weiter' })
     while (await next.isVisible()) await next.click()
     await tour.getByRole('button', { name: 'Verstanden' }).click()
