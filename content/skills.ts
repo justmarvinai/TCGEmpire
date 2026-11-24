@@ -45,7 +45,7 @@ export const SKILLS: readonly SkillDef[] = [
   { key: 'h_netz1', branch: 'haendler', tier: 1, line: 1, name: 'Großes Regal', text: '+5 Plätze für Angebote und Gesuche am Cardmarket.', requires: [], stat: 'listing_slots', op: 'flat', value: 5 },
   { key: 'h_netz2', branch: 'haendler', tier: 2, line: 1, name: 'Silberzunge', text: 'Käufer in den Kleinanzeigen bieten 10 % mehr für deine Anzeigen.', requires: ['h_netz1'], stat: 'ad_bonus_pct', op: 'flat', value: 10 },
   { key: 'h_netz3', branch: 'haendler', tier: 3, line: 1, name: 'Lagerhalle', text: '+30 Plätze im Lager für Booster und Displays.', requires: ['h_netz2'], stat: 'lager_units', op: 'flat', value: 30 },
-  { key: 'h_stamm', branch: 'haendler', tier: 4, line: -1, name: 'Stammkunden', text: 'Sammler und Investoren kaufen deine Cardmarket-Angebote bis zum vollen Marktwert, nicht nur Schnäppchen.', requires: ['h_feil3', 'h_netz3'], stat: 'npc_trust', op: 'flat', value: 1 },
+  { key: 'h_stamm', branch: 'haendler', tier: 4, line: -1, name: 'Stammkunden', text: 'NPC-Käufer holen deine Karten doppelt so schnell ab, und Scalper und Investoren nehmen dein Sealed bis zum vollen Marktwert.', requires: ['h_feil3', 'h_netz3'], stat: 'npc_trust', op: 'flat', value: 1 },
   // Unternehmer
   { key: 'u_fleiss1', branch: 'unternehmer', tier: 1, line: 0, name: 'Frühaufsteher', text: '+5 % Lohn in Schichten und Minijobs.', requires: [], stat: 'wage_pct', op: 'flat', value: 5 },
   { key: 'u_fleiss2', branch: 'unternehmer', tier: 2, line: 0, name: 'Energydrink-Abo', text: '+15 maximale Energie.', requires: ['u_fleiss1'], stat: 'energy_max', op: 'flat', value: 15 },

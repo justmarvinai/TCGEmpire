@@ -57,6 +57,13 @@ export function formatDuration(seconds: number): string {
   return `${Math.floor(h / 24)} T ${h % 24} h`
 }
 
+/** A wait between two durations: 30–60 s · 1–2 min · 12–24 h */
+export function formatWaitRange(minS: number, maxS: number): string {
+  if (maxS < 120) return `${Math.round(minS)}–${Math.round(maxS)} s`
+  if (maxS < 3600) return `${Math.round(minS / 60)}–${Math.round(maxS / 60)} min`
+  return `${Math.round(minS / 3600)}–${Math.round(maxS / 3600)} h`
+}
+
 /** Relative time for the feed: gerade eben · vor 5 min · vor 3 h · vor 2 T */
 export function formatAgo(iso: string, nowMs: number): string {
   const s = Math.max(0, (nowMs - new Date(iso).getTime()) / 1000)

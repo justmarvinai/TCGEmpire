@@ -298,6 +298,12 @@ Actual player-to-player prices are free.
 
 - Listings (fixed price), buy orders ("Gesuche"), price history chart, cheapest-listing view, seller Ruf.
 - NPC traders list their own stock and buy listings they consider cheap (§18). Players compete with them.
+- **NPC collector for players' cards (0.0.11, owner request):** a card a player lists is bought by Sammler-Sabine after
+  a wait that depends on its price against the Marktwert at listing time: up to 100 % after 1–2 minutes, up to 115 %
+  after 10–20 minutes, up to 130 % after 12–24 hours; dearer cards wait for players. No NPC budget limits it. The sell
+  form shows the wait for the entered price, the own listing counts down, and the seller gets a message at the sale.
+  In the Kleinanzeigen the same rule brings Sabine's offer at the full asking price. Sealed products keep the scalpers
+  and investors. The Kartenladen's instant sale (60 % of the Marktwert) is unchanged.
 - Listing slots are limited and grow with upgrades. Sold items are paid out after "Versand" (a short
   timer; shipping can be insured — uninsured parcels can get lost or damaged by event).
 - **Käuferschutz:** a buyer who received a fake or resealed product can report it → refund, and the
@@ -679,7 +685,7 @@ inventory, tastes and a set of German text lines.
 | Scalper | **Scalper-Sven** | Buys store stock shortly after restocks, lists at a premium. |
 | Whale | **Logan Paul** (cameo), **Whale-Wolfgang** | Rarely appears, buys top slabs above value, bids in auctions. |
 | Investor | **Investor-Ingo** | Hoards sealed, panic-sells in a crash. |
-| Collector | **Sammler-Sabine** | Buys what she is missing at fair prices; steady demand. |
+| Collector | **Sammler-Sabine** | Buys every player's card priced fairly, faster the cheaper (§7.3, 0.0.11); keeps fair buy orders open. |
 | Bargain hunter | **Letzter-Preis-Lars** | Sends lowball offers on your ads. |
 | Clueless seller | **Dachboden-Doris** | Underprices attic finds; sometimes it is a fake. |
 | Kid | **Kevin (12)** | Overpays; chargeback risk. |

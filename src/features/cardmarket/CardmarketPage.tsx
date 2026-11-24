@@ -223,7 +223,16 @@ function useCancel() {
 
 function MyListings({ mine }: { mine: Cardmarket['mine'] }) {
   const { busy, cancel } = useCancel()
+  const now = useNow()
+  const offset = useWorld((w) => w.clockOffsetMs)
   if (mine.listings.length === 0) return <Panel><EmptyState icon="tag" title={T.noMine} /></Panel>
+  // when the NPC collector comes (0.0.11): server time, counted down on the device
+  const npc = (l: Cardmarket['mine']['listings'][number]) => {
+    if (l.item_kind === 'sealed' || now === 0) return null
+    if (!l.npc_buy_at) return T.npcNever
+    const left = (new Date(l.npc_buy_at).getTime() - (now + offset)) / 1000
+    return left > 0 ? T.npcIn(formatDuration(left)) : T.npcDue
+  }
   return (
     <Panel>
       <ul className="flex flex-col gap-2">
@@ -236,6 +245,7 @@ function MyListings({ mine }: { mine: Cardmarket['mine'] }) {
             <span className="nums text-sm text-fg-2">
               {formatMoney(l.price_cents)} {T.each} · {T.value} {formatMoney(l.value_cents)}
             </span>
+            {npc(l) && <span className="nums text-xs text-fg-3">{npc(l)}</span>}
             <Button size="sm" loading={busy === l.id} onClick={() => cancel('listing_cancel', l.id)}>
               {T.cancel}
             </Button>

@@ -166,7 +166,13 @@ export const texts = {
     cancel: 'Zurückziehen',
     list: 'Anbieten',
     listTitle: 'Verkaufen',
-    listTip: 'Die Ware liegt im Angebot, bis jemand kauft oder du zurückziehst. Bezahlt wird bei Ankunft des Pakets, minus 5 % Gebühr.',
+    listTip:
+      'Die Ware liegt im Angebot, bis jemand kauft oder du zurückziehst. Karten zum fairen Preis holt sich ein NPC-Sammler: bis zum Marktwert nach 1–2 Minuten, bis +15 % nach 10–20 Minuten, bis +30 % nach 12–24 Stunden. Teurer wartet auf Spieler. Bezahlt wird bei Ankunft des Pakets, minus 5 % Gebühr.',
+    npcBuys: (wait: string) => `Zu diesem Preis kauft ein NPC-Sammler in ${wait}.`,
+    npcNone: (pct: number) => `Über +${pct} % vom Marktwert kauft kein NPC. Dann wartest du auf Spieler.`,
+    npcIn: (wait: string) => `NPC-Käufer in ~${wait}`,
+    npcDue: 'NPC-Käufer ist unterwegs',
+    npcNever: 'Wartet auf Spieler',
     owned: (n: number) => `Du hast ${n} Stück.`,
     ownedNone: 'Du hast keins davon.',
     which: 'Welches Exemplar?',
@@ -823,7 +829,8 @@ export const texts = {
     fake: 'Fake! Die Karte kommt aus dem Drucker vom Enkel. Geld weg.',
     knick: 'Gekauft. Die Karte hat einen Knick. Stand nicht in der Anzeige. Natürlich nicht.',
     postTitle: 'Inserieren',
-    postTip: 'Die Ware bleibt bis zum Verkauf in der Anzeige. Käufer melden sich von selbst. Nach drei Tagen läuft die Anzeige ab und du kriegst alles zurück.',
+    postTip:
+      'Die Ware bleibt bis zum Verkauf in der Anzeige. Käufer melden sich von selbst. Bei Karten zum fairen Preis bietet ein Sammler den vollen Preis: bis zum Marktwert nach 1–2 Minuten, bis +15 % nach 10–20 Minuten, bis +30 % nach 12–24 Stunden. Nach drei Tagen läuft die Anzeige ab und du kriegst alles zurück.',
     what: 'Was?',
     pick: 'Ware wählen …',
     qty: 'Menge',
@@ -1288,6 +1295,8 @@ export const texts = {
       `Erfolg „${name}“ Stufe ${String(d.tier)} erreicht.${d.title ? ` Neuer Titel: ${String(d.title)}.` : ''}`,
     parcel_arrived: (d: Record<string, unknown>, name: string) => `Paket angekommen: ${String(d.qty)}× ${name}. Der Postbote hat geklingelt. Einmal.`,
     sale_paid: (d: Record<string, unknown>, name: string, money: string) => `Verkauft: ${String(d.qty)}× ${name}. ${money} sind da.`,
+    npc_bought: (buyer: string, qty: number, name: string, money: string) =>
+      `${buyer} kauft ${qty}× ${name} für ${money}. Das Paket ist unterwegs, das Geld kommt bei Ankunft.`,
     ad_offer: (name: string, item: string, money: string) => `${name} bietet ${money} für ${item}. Schau in deine Kleinanzeigen.`,
     ad_expired: (item: string) => `Deine Anzeige für ${item} ist abgelaufen. Keiner wollte es. Die Ware liegt wieder bei dir.`,
     chargeback: (money: string) => `Rückbuchung: Kevins Mama hat die Kreditkarte gefunden. ${money} sind weg.`,

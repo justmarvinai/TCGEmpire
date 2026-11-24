@@ -77,9 +77,9 @@ RLS enabled on every table with no policies.
 | `game.prices` | Current Marktwert per card/product plus factors (hype, pressure). |
 | `game.price_history` | Thinned history (5 min / hourly / daily). |
 | `game.market_state` | Hype index per game, cached market snapshot, tick counters. |
-| `game.listings`, `game.buy_orders` | Cardmarket. |
+| `game.listings`, `game.buy_orders` | Cardmarket. `listings.npc_buy_at` (0.0.11): when the NPC collector buys a player's card (set on insert from `market.npc_buy_steps`, null for sealed and above +30 %). |
 | `game.auctions`, `game.bids` | eBay and museum auctions. |
-| `game.ads`, `game.ad_offers` | Kleinanzeigen (NPC ads, player ads, haggling state). |
+| `game.ads`, `game.ad_offers` | Kleinanzeigen (NPC ads, player ads, haggling state). `ads.npc_offer_at` (0.0.11): when the collector offers the full asking price (offer `reply_kind` 'full', needs no NPC budget). |
 | `game.trades` | alpha_04 · open Direkthandel offers: both sides as goods JSON (`money_cents`, `items`), nothing reserved; expire after `trade.expiry_hours`. |
 | `game.gift_days` | alpha_04 · gift value given per player and Berlin day (against the allowance). |
 | `game.sales_log` | Completed sales (for charts, tax, anti-wash rules; thinned). |
@@ -181,7 +181,7 @@ RLS enabled on every table with no policies.
 | `game.requests`, `game.rate_limits` | idempotency journal, rate limits |
 | `game.modifiers`, `game.counters` | stat bonuses; lifetime event counters |
 | `game.notifications`, `game.feed` | personal messages; server feed (kind + data) |
-| `game.tick_systems`, `game.job_runs` | tick dispatcher and its log |
+| `game.tick_systems`, `game.job_runs` | tick dispatcher and its log; a system runs when its interval is due within 5 s (0.0.11: cron jitter skipped every-minute systems). `npc_buyers` (60 s, 0.0.11) books the NPC collector's purchases and full-price offers |
 | `game.set_defs`, `game.card_defs`, `game.product_defs` | catalog from `content/` (phase is admin-owned; a new set gets `SetData.launch` as its first phase, default 'print', 0.0.9; `set_defs.house` marks Empiremon sets: always in print, kiosk only, no licence, `pack.house_hit_odds_ppm`, 0.0.5). Sets in 'announced' or 'preorder' are not out yet: NPC traders and classifieds, company VIP cards, the reward booster, market movers, price headlines and the price history skip them (0.0.9, `20261124000100_unreleased_sets.sql`) |
 | `game.sealed`, `game.card_stacks`, `game.card_copies`, `game.collection` | sealed boosters; Common–Rare stacks; Holo+ copies with four hidden quality values; ever-pulled cards |
 | `game.pity`, `game.store_purchases` | dry streak per set; Kiosk daily limit |

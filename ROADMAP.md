@@ -222,6 +222,7 @@ Goal: it feels finished.
 | ☑ | `0.0.8` | Empiremon Ultras and Grails 2.5 times likelier (and worth correspondingly less), a kiosk grouped by game with filters (decision 123) |
 | ☑ | `0.0.9` | Sets 2 and 3 of Pokémon, Yu-Gi-Oh!, One Piece and Riftbound (eight sets, 60–90 cards each), announced until the owner releases each one; unreleased sets stay out of the game; a themed goal per set (decisions 124–126) |
 | ☑ | `0.0.10` | The Firma opens at level 20 instead of 30 (decision 127) |
+| ☑ | `0.0.11` | NPC collectors buy players' cards by price: up to the Marktwert in 1–2 min, +15 % in 10–20 min, +30 % in 12–24 h; full-price offers in the Kleinanzeigen (decision 130) |
 
 **QA pass (24 Nov 2026, owner request; no version, changelog or patch notes: QA stays out of the in-game news).** Bugs
 fixed on server and client (decision 128), progression hiccups fixed and the pace re-measured with a corrected sim bot

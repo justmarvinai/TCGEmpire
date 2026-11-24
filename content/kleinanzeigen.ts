@@ -33,4 +33,6 @@ export const AD_REPLIES = {
   lowball: ['Was letzte Preis? {price} bar.', 'Gebe {price}, heute noch.', 'Ist noch da? {price} und ich hol sofort.'],
   kid: ['ich zahl {price}!!! mama hat kreditkarte', 'NEHME ES FÜR {price} BITTE BITTE', 'ich will das unbedingt, {price} ok???'],
   fair: ['Würde {price} geben. Passt das?', '{price} wäre fair, oder?', 'Ich biete {price}, Abholung heute.'],
+  // 0.0.11: the collector who comes at the asking price (market.npc_buy_steps)
+  full: ['Nehm ich, {price} ohne Feilschen. Wann kann ich vorbeikommen?', '{price}? Gekauft. Endlich mal einer, der nicht spinnt.', 'Zum vollen Preis, {price}. Ich bring Bargeld und Kekse mit.'],
 } as const

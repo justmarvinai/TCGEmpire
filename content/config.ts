@@ -5,7 +5,7 @@
 type Json = string | number | boolean | null | readonly Json[] | { readonly [k: string]: Json }
 
 export const config = {
-  version: '0.0.10',
+  version: '0.0.11',
 
   // Login
   'auth.bcrypt_cost': 10,
@@ -131,6 +131,14 @@ export const config = {
   'market.ship_min_minutes': 5,
   'market.ship_max_minutes': 20,
   'market.slots': 10,
+  // 0.0.11 (owner request): an NPC collector buys a player's card listing after a wait that depends on its price
+  // against the Marktwert when it is listed (the first step whose max_pct the price fits). Dearer cards wait for players.
+  // In the Kleinanzeigen the same wait brings an offer at the full asking price.
+  'market.npc_buy_steps': [
+    { max_pct: 100, min_s: 60, max_s: 120 },
+    { max_pct: 115, min_s: 600, max_s: 1_200 },
+    { max_pct: 130, min_s: 43_200, max_s: 86_400 },
+  ],
 
   // Energy (minijobs only)
   'energy.max': 100,

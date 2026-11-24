@@ -284,7 +284,17 @@ export type MarketOverview = z.infer<typeof zMarketOverview>
 const zTrader = z.object({ id: z.string(), kind: z.enum(['player', 'npc']), name: z.string(), ruf: z.number() })
 const zMyMarket = z.object({
   listings: z.array(
-    z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number(), slab: zSlab.nullable() }),
+    z.object({
+      id: z.number(),
+      item_kind: z.string(),
+      item_id: z.string(),
+      qty: z.number(),
+      price_cents: z.number(),
+      value_cents: z.number(),
+      slab: zSlab.nullable(),
+      /** when the NPC collector buys it (0.0.11); null: only players */
+      npc_buy_at: z.string().nullable(),
+    }),
   ),
   orders: z.array(z.object({ id: z.number(), item_kind: z.string(), item_id: z.string(), qty: z.number(), price_cents: z.number(), value_cents: z.number() })),
   parcels: z.array(
@@ -903,6 +913,8 @@ export const zLimits = z.object({
   market_max_pct: z.number(),
   company_min_pct: z.number(),
   company_max_pct: z.number(),
+  /** 0.0.11: how long an NPC collector takes for a card at up to max_pct of the Marktwert (seconds, this player's) */
+  npc_buy_steps: z.array(z.object({ max_pct: z.number(), min_s: z.number(), max_s: z.number() })),
   packs_today: z.number(),
   pack_ep_cap: z.number(),
   receive_left_cents: z.number(),

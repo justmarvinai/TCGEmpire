@@ -12,7 +12,7 @@ import { toast } from '@/components/ui/toast.tsx'
 import { PriceChart } from '@/features/market/PriceChart.tsx'
 import { useAct, useLimits } from '@/lib/actions.ts'
 import { cardById, itemName } from '@/lib/catalog.ts'
-import { formatAgo, formatMoney } from '@/lib/format.ts'
+import { formatAgo, formatMoney, formatWaitRange } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import { errorText } from '@/lib/rpc.ts'
 import type { CardmarketItem } from '@/lib/schemas.ts'
@@ -252,6 +252,7 @@ function ListForm({ d, busy, run }: { d: CardmarketItem; busy: string | null; ru
         </Button>
       </div>
       <BandHint value={choice?.value ?? d.value_cents} cents={cents} />
+      {d.kind !== 'sealed' && <NpcHint value={choice?.value ?? d.value_cents} cents={cents} />}
     </Panel>
   )
 }
@@ -289,6 +290,19 @@ function BandHint({ value, cents }: { value: number; cents: number }) {
   return (
     <p className={clsx('mt-2 text-xs', cents > 0 && (cents < min || cents > max) ? 'text-warn' : 'text-fg-3')}>
       {T.band(formatMoney(min), formatMoney(max), minPct, maxPct)}
+    </p>
+  )
+}
+
+/** When an NPC collector buys a card at this price (0.0.11, the server's steps for this player). */
+function NpcHint({ value, cents }: { value: number; cents: number }) {
+  const limits = useLimits()
+  if (!limits.data || !(cents > 0) || !(value > 0)) return null
+  const steps = limits.data.npc_buy_steps
+  const step = steps.find((s) => cents * 100 <= value * s.max_pct)
+  return (
+    <p className={clsx('mt-1 text-xs', step ? 'text-gain' : 'text-fg-3')}>
+      {step ? T.npcBuys(formatWaitRange(step.min_s, step.max_s)) : T.npcNone((steps.at(-1)?.max_pct ?? 100) - 100)}
     </p>
   )
 }
