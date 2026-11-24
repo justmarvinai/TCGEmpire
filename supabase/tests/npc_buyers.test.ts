@@ -120,3 +120,27 @@ describe('NPC buyers (0.0.11)', () => {
     expect(await num(`select count(*) as v from game.listings where seller_id = $1 and npc_buy_at is null`, [id])).toBe(1)
   })
 })
+
+// The deploy applies new migrations before the seed writes new config keys, onto a database with players' listings.
+describe('deploying 0.0.11 onto live data', () => {
+  it('gives listings and ads that are already up their NPC buyer', async () => {
+    const file = '20261124000500_npc_buyers.sql'
+    const live = await createTestDb({ holdBack: [file] })
+    await live.sql(`delete from game.config where key = 'market.npc_buy_steps'`) // the seed of 0.0.10 did not have it
+    const seller = await live.player('Altkunde')
+    const sid = await live.playerId(seller)
+    await live.sql(`update game.players set level = 20 where id = $1`, [sid])
+    await live.sql(`select private.tick_market()`)
+    const v = Number((await live.sql<{ v: string }>(`select private.card_or_product_value($1) as v`, [C]))[0]!.v)
+    // made by 0.0.10 (its answers lack the new fields, so plain SQL instead of the RPCs)
+    await live.sql(`insert into game.listings (seller_id, item_kind, item_id, qty, price_cents, created_at) values ($1, 'card', $2, 1, $3, private.now())`, [sid, C, v])
+    await live.sql(
+      `insert into game.ads (seller_id, style, item_kind, item_id, qty, ask_cents, created_at, expires_at)
+       values ($1, 'player', 'card', $2, 1, $3, private.now(), private.now() + interval '3 days')`,
+      [sid, C, v],
+    )
+    await live.migrate(file)
+    expect(await live.sql(`select 1 from game.listings where seller_id = $1 and npc_buy_at is not null`, [sid])).toHaveLength(1)
+    expect(await live.sql(`select 1 from game.ads where seller_id = $1 and npc_offer_at is not null`, [sid])).toHaveLength(1)
+  })
+})
