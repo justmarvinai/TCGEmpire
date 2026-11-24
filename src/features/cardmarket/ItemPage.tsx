@@ -297,8 +297,8 @@ function BandHint({ value, cents }: { value: number; cents: number }) {
 /** When an NPC collector buys a card at this price (0.0.11, the server's steps for this player). */
 function NpcHint({ value, cents }: { value: number; cents: number }) {
   const limits = useLimits()
-  if (!limits.data || !(cents > 0) || !(value > 0)) return null
-  const steps = limits.data.npc_buy_steps
+  const steps = limits.data?.npc_buy_steps ?? []
+  if (steps.length === 0 || !(cents > 0) || !(value > 0)) return null
   const step = steps.find((s) => cents * 100 <= value * s.max_pct)
   return (
     <p className={clsx('mt-1 text-xs', step ? 'text-gain' : 'text-fg-3')}>
