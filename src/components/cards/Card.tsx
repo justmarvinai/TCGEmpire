@@ -2,7 +2,9 @@ import clsx from 'clsx'
 import { useRef, type PointerEvent } from 'react'
 import { maskStyle, spriteStyle, useCardAtlas } from '@/components/pixel/atlas.ts'
 import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
-import { CARD_BACK, cardById, HIT_TIERS, setOfCard, TIER_TEXT, type Tier } from '@/lib/catalog.ts'
+import { CARD_BACK, cardById, HIT_TIERS, isHouse, SETS, setOfCard, TIER_TEXT, type Tier } from '@/lib/catalog.ts'
+import { texts } from '@/texts/de.ts'
+import { EMP_CLASSIC, EMP_FULL, type Slot } from '../../../art/frames/empiremon-layout.ts'
 
 const W = 80
 const H = 112
@@ -48,6 +50,7 @@ export function Card({
           <i />
         </div>
       )}
+      {isHouse(set) && <HouseText id={id} scale={scale} />}
       {shiny && tier === 'grail' && (
         <span className="grail-sparkles" aria-hidden>
           <b />
@@ -56,6 +59,35 @@ export function Card({
           <b />
         </span>
       )}
+    </div>
+  )
+}
+
+/** A one-line text in a frame slot, shrunk to fit its width (bold Space Grotesk: about 0.58 em per character). */
+function SlotText({ slot, text, scale, bold }: { slot: Slot; text: string; scale: number; bold?: boolean }) {
+  const size = Math.min(slot.h * scale * 0.82, (slot.w * scale) / (text.length * (bold ? 0.6 : 0.55)))
+  return (
+    <span
+      className={clsx('card-text', bold && 'font-bold')}
+      style={{ left: slot.x * scale, top: slot.y * scale, width: slot.w * scale, height: slot.h * scale, fontSize: size }}
+    >
+      {text}
+    </span>
+  )
+}
+
+/** Empiremon bakes no text into its cards (decision 065): name, type line and number go into the frame's slots. */
+function HouseText({ id, scale }: { id: string; scale: number }) {
+  const data = cardById.get(id)
+  const set = SETS.find((s) => s.cards.some((c) => c.id === id))
+  if (!data || !set) return null
+  const slots = data.tier === 'ultra' || data.tier === 'grail' ? EMP_FULL : EMP_CLASSIC
+  const pad = (n: number) => String(n).padStart(3, '0')
+  return (
+    <div aria-hidden>
+      <SlotText slot={slots.name} text={data.name} scale={scale} bold />
+      <SlotText slot={slots.type} text={texts.cards.houseType(data.element ?? '')} scale={scale} />
+      <SlotText slot={slots.number} text={`${pad(data.no)}/${pad(set.size)}`} scale={scale} />
     </div>
   )
 }

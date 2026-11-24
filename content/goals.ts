@@ -92,4 +92,5 @@ const SET_GOALS: readonly GoalDef[] = SETS.flatMap((s) => [
   },
 ])
 
-export const GOALS: readonly GoalDef[] = [...SET_GOALS, ...THEMES]
+// A goal needs something to collect: Empiremon sets have no Holos (0.0.5).
+export const GOALS: readonly GoalDef[] = [...SET_GOALS.filter((g) => g.groups.length > 0), ...THEMES]

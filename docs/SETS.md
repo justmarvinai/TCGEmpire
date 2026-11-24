@@ -13,6 +13,7 @@
 | Yu-Gi-Oh! | Legend of Blue Eyes White Dragon (LOB) | 2002 | 86 | Blauäugiger w. Drache | Dunkler Magier, Exodia, die Verbotene, Rotäugiger schwarzer Drache | [`sets/yugioh-lob.md`](./sets/yugioh-lob.md) |
 | One Piece Card Game | OP-01 Romance Dawn | 2022 | 89 | Shanks (manga art) | Luffy Leader parallel, Zoro parallel, Shanks parallel, Yamato parallel | [`sets/onepiece-op01.md`](./sets/onepiece-op01.md) |
 | Riftbound (League of Legends TCG) | Origins | 2025 | 89 | Ahri, Nine-Tailed Fox (Signature) | Signature Kai'Sa, Miss Fortune, Jinx, Lee Sin | [`sets/riftbound-origins.md`](./sets/riftbound-origins.md) |
+| Empiremon (our own TCG, 0.0.5) | Grundauflage, Spätschicht, Amt & Elend, Pfandland, Abstellgleis | 2026 | 20 / 18 / 15 / 24 / 30 | 2 per set | 3 per set | [`sets/empiremon.md`](./sets/empiremon.md) |
 
 The lists were researched from public card databases and price trackers in November 2026. Entries the
 research could not confirm are marked "(?)" in the set files and collected under each file's "Open
@@ -55,6 +56,7 @@ Curation rules used for every set:
 | Yu-Gi-Oh! LOB | 9 | 5 Common, 3 Uncommon | — | 1 (Rare or better) | — |
 | One Piece OP-01 | 12 | 7 Common, 3 Uncommon | 1 Rare | 1 (Rare or better) | — |
 | Riftbound Origins | 14 | 8 Common, 4 Uncommon | 1 Rare | 1 (Rare or better) | At least 1 Rune |
+| Empiremon (each set) | 5 | 4 Common | — | 1 (Common, Ultra or Grail; house odds) | — |
 
 Real-world pack facts per set are in the set files; the in-game structure follows them where it fits the
 seven tiers.
@@ -63,11 +65,14 @@ seven tiers.
 
 | Result | Chance | About 1 in |
 |--------|--------|------------|
-| Rare | 74.3 % | — |
+| Rare | 77.9 % | — |
 | Holo | 20.0 % | 5 |
-| Alternative | 4.17 % | 24 |
-| Ultra | 1.39 % | 72 |
-| Grail | 0.139 % | 720 |
+| Alternative | 2.0 % | 50 |
+| Ultra | 0.1 % | 1.000 |
+| Grail | 0.029 % | 3.500 |
+
+Since `0.0.4` (decision 119). **Empiremon** has its own odds (`pack.house_hit_odds_ppm`, decision 120): Common 99.88 %,
+Ultra 0.01 % (1 in 10.000), Grail 0.002 % (1 in 50.000); no Doppel-Hit, God Pack or Pech-Schutz.
 
 - Within a tier, cards are drawn with weights (most cards equal; a Grail tier with two cards may weight
   them differently).
@@ -97,6 +102,7 @@ display keep their content. The skill "Display-Mapping" (Sammler branch) hints w
 | Yu-Gi-Oh! LOB | 80 € | 1.700 € | 9.700 € |
 | One Piece OP-01 | 100 € | 2.100 € | 12.000 € |
 | Riftbound Origins | 100 € | 2.100 € | 12.000 € |
+| Empiremon (each set, kiosk only) | 200 € | — | — |
 
 Boosters can be bought and opened 1, 5 or 10 at a time from level 1; a display can be opened in one go
 with the display-mode upgrade.

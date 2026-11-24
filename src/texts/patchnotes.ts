@@ -1,6 +1,26 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.6',
+    title: 'Dritte Runde Feedback',
+    items: [
+      'Quests zahlen kein Geld mehr, außer den Wochenquests. Mini- und Tagesquests gibt es für EP und Pfandbons, der Bonus für alle fünf Tagesquests ist jetzt ein Batzen EP. Weniger Geld heißt weniger Booster, also levelst du auch langsamer. War ja gewünscht.',
+      'Der Pfandautomat ist teurer: Energie-Bon 5 Pfandbons, Lern-Bon 6, Kiosk-Gutschein 12. Der Glücks-Bon kostet 10 und gibt nur noch +5 % Pack-Glück für 5 Minuten. Also schnell aufreißen.',
+      'Sammlung: Sortieren nach Nummer oder nach Wert, das Teuerste oben. Die Seltenheiten zeigen nur noch, was es im Set auch gibt.',
+      'Handy: Mamas Tutorial zeigte auf das Menü links, das es auf dem Handy gar nicht gibt, und hat alles andere abgedunkelt. Jetzt zeigt sie erst auf den Menü-Knopf oben links und dann auf den Eintrag. Kein Steckenbleiben mehr.',
+    ],
+  },
+  {
+    version: '0.0.5',
+    title: 'Empiremon',
+    items: [
+      'Unser eigenes Sammelkartenspiel ist da: Empiremon. Fünf Editionen auf einmal, und keine geht je aus dem Druck: Grundauflage, Spätschicht, Amt & Elend, Pfandland und Abstellgleis. Mit dabei: Tackerdackel, Der Letzte Döner und Der Pünktliche, den noch nie jemand gesehen hat.',
+      'Empiremon gibt es nur am Kiosk, ohne Lizenz. Ein Booster kostet das Doppelte, 5 Karten: 4 Common und ein Hit-Platz. Ultra 1 in 10.000, Grail 1 in 50.000, sonst noch ein Common. Kein God Pack, kein Doppel-Hit, kein Pech-Schutz.',
+      'Die Commons sind ein paar Cent wert. Eine Ultra rund 600.000 €, eine Grail rund 4 Millionen. Im Schnitt ist ein Booster trotzdem nur 72 % seines Preises wert. Lotto mit Pappe, viel Glück.',
+      'Die Pull-Raten zeigen jetzt auch die Empiremon-Chancen, und für Empiremon-Sammler gibt es die Errungenschaft „Hausmarke“.',
+    ],
+  },
+  {
     version: '0.0.4',
     title: 'Seltener',
     items: [

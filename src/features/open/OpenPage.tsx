@@ -142,29 +142,49 @@ export function OpenPage() {
 
 const oneIn = (ppm: number) => `1 : ${formatNumber(Math.round(1_000_000 / ppm))}`
 
-/** The odds of a booster's hit slot, from the same config the server rolls with. */
+/** One tile per tier: the base tier shows its share ("der Rest"), every other tier "1 : N". */
+function RateTiles({ rows, base }: { rows: [Tier, number][]; base: Tier }) {
+  return (
+    <ul className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+      {rows.map(([tier, ppm]) => (
+        <li key={tier} className="rounded-xl bg-surface-2 px-3 py-2">
+          <p className={clsx('text-sm font-semibold', TIER_TEXT[tier])}>{TIER_LABEL[tier]}</p>
+          {/* the base tier is what is left over: a share says more than "1 : 1" */}
+          <p className="nums text-lg font-bold">{tier === base ? formatShare(ppm / 1_000_000) : oneIn(ppm)}</p>
+          <p className="nums text-xs text-fg-3">{tier === base ? T.pullRest : formatShare(ppm / 1_000_000)}</p>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/** The odds of a booster's hit slot, from the same config the server rolls with; Empiremon has its own. */
 function PullRates() {
   const o = config['pack.hit_odds_ppm']
-  const rows: [Tier, number][] = [
-    ['rare', 1_000_000 - o.holo - o.alternative - o.ultra - o.grail],
-    ['holo', o.holo],
-    ['alternative', o.alternative],
-    ['ultra', o.ultra],
-    ['grail', o.grail],
-  ]
+  const h = config['pack.house_hit_odds_ppm']
   return (
     <Panel title={T.pullTitle} tip={T.pullTip} className="mt-4">
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-        {rows.map(([tier, ppm]) => (
-          <li key={tier} className="rounded-xl bg-surface-2 px-3 py-2">
-            <p className={clsx('text-sm font-semibold', TIER_TEXT[tier])}>{TIER_LABEL[tier]}</p>
-            {/* the Rare is what is left over: a share says more than "1 : 1" */}
-            <p className="nums text-lg font-bold">{tier === 'rare' ? formatShare(ppm / 1_000_000) : oneIn(ppm)}</p>
-            <p className="nums text-xs text-fg-3">{tier === 'rare' ? T.pullRest : formatShare(ppm / 1_000_000)}</p>
-          </li>
-        ))}
-      </ul>
+      <RateTiles
+        base="rare"
+        rows={[
+          ['rare', 1_000_000 - o.holo - o.alternative - o.ultra - o.grail],
+          ['holo', o.holo],
+          ['alternative', o.alternative],
+          ['ultra', o.ultra],
+          ['grail', o.grail],
+        ]}
+      />
       <p className="mt-3 text-xs text-fg-3">{T.pullExtras(oneIn(config['pack.double_hit_ppm']), oneIn(config['pack.god_pack_ppm']), config['pack.pity_after'])}</p>
+      <h3 className="mt-4 mb-2 text-sm font-bold">{T.pullHouse}</h3>
+      <RateTiles
+        base="common"
+        rows={[
+          ['common', 1_000_000 - h.ultra - h.grail],
+          ['ultra', h.ultra],
+          ['grail', h.grail],
+        ]}
+      />
+      <p className="mt-3 text-xs text-fg-3">{T.pullHouseNote}</p>
     </Panel>
   )
 }

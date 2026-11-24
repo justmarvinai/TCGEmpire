@@ -40,7 +40,7 @@ reward_scale(n)      = 1.03^n                        (all EP rewards are multipl
 
 | Level | Minutes for this level | Active hours so far | Reached on (2.5 h/day, before idle EP) |
 |-------|------------------------|---------------------|-----------------------------------------|
-| 10 | 4 | 0.3 | first 20 minutes |
+| 10 | 4 | 0.3 | first 20 minutes (since 0.0.6 about 30–40: no quest money) |
 | 20 | 9 | 1.3 | day 1 |
 | 30 | 15 | 3.2 | day 2 |
 | 50 | 28 | 10 | day 4–5 |
@@ -90,6 +90,12 @@ weekly events fall the same way on every run) and the bot syncs once a day like 
 13 % level rewards, 10 % Stempelkarte, 7 % bunker; events change the pace by about one level, within the bands.
 alpha_11 (with ~200 achievement tiers paying EP): level 30 on day 2, 40 on day 4, level 47 after 5 days; the 20-day run
 ends at level 68 (see §11 for the late-game finding).
+
+**0.0.6** (owner request: quests pay no money except weekly quests; levelling a little slower). `pnpm sim 6 150`,
+same bot, before → after: level 15 after 0.6 → 2.5 active hours, level 30 after 5.2 → 6.8, level 40 on day 4 → 6,
+level 55 → 43 after six days, net worth 1,22 → 0,78 Mio. €. Quests were 27 % of the bot's income; without that
+money it buys fewer boosters and levels more slowly. That is already more than the "a little slower" the owner
+asked for, so the EP curve stays as it is (a 10 % steeper curve on top was tried: level 42 after six days).
 
 **alpha_12 balance pass** (`SIM_EP=1 SIM_TRACE=1 pnpm sim 36 150 2`): the bot now plays like an active player who does
 every quest (decision 107), and the EP shares and the reward growth were set from it (decision 109). Level 30 on day 2,
@@ -148,6 +154,12 @@ A rarer tier is worth more by the same factor, so its share of a booster's value
 value, stays: `0.0.3` Ultra 1:200 and Grail 1:2.000 (×2,78; were 1:72 and 1:720), `0.0.4` Alternative 1:50 (×2,08;
 was 1:24), Ultra 1:1.000 (×5) and Grail 1:3.500 (×1,75). The ranges before: Alternative 120–600 €, Ultra 500–1.600 €,
 Grail 6.000–10.000 €.
+
+**Empiremon** (house sets, 0.0.5) has its own ranges because its odds are its own (Ultra 1:10.000, Grail 1:50.000,
+otherwise a Common; `pack.house_hit_odds_ppm`): Common 0,05–2 €, Ultra 400.000–800.000 €, Grail 2,5–5 Mio. € before
+calibration (`HOUSE_TIER_VALUE` in `content/catalog.ts`). After calibration to the same 72 % a Common is worth
+0,04–0,15 €, an Ultra about 590.000–640.000 € and a Grail about 4,0–4,3 Mio. €: nearly the whole booster value sits in
+two tiers nobody pulls.
 
 The same Glurak is worth a multiple as a PSA 10 (§5.3) and again a multiple once the set is out of print
 (§5.2) — that is where the big numbers come from.
@@ -212,6 +224,7 @@ slab_value = marktwert(card) × grade_factor(grade) × pop_factor × brand_facto
 | Yu-Gi-Oh! LOB (24) | 80 € | 1.700 € | 9.700 € |
 | One Piece OP-01 (24) | 100 € | 2.100 € | 12.000 € |
 | Riftbound Origins (24) | 100 € | 2.100 € | 12.000 € |
+| Empiremon (each of the five sets, kiosk only) | 200 € | — | — |
 
 Sealed Marktwert in print = price × launch premium (1.0–1.6, decaying), never below 92 % of price. Out of
 print it follows `set_factor` for sealed; a display also carries its guaranteed-hit premium.
@@ -224,9 +237,9 @@ print it follows `set_factor` for sealed; a display also carries its guaranteed-
 | Minijob round (15–45 s) | 0.6–2.0 by performance | Energy |
 | Shift | 55 % of reference income per hour × rank bonus | One at a time, max 8 h |
 | Geldbunker | Base 120 €/h; Ertrag level k: `120 × 1.12^k` €/h; cost `500 × 1.17^k` € | Capacity 4–24 h |
-| Mini-quest | 1 + 1 Pfandbon | Endless, deliberately tiny |
-| Tagesquest | 20 each, +60 for all five | 5 per day |
-| Wochenquest | 180 each + weekly chest | 5 per week |
+| Mini-quest | no money since 0.0.6 (was 1); 1 Pfandbon | Endless, deliberately tiny |
+| Tagesquest | no money since 0.0.6 (was 20 each, +60 for all five); EP and Pfandbons | 5 per day |
+| Wochenquest | 180 each + weekly chest: the only quest money | 5 per week |
 | Level reward | 8 + booster every 5 levels | Per level |
 | Stempelkarte | 10 → 120 over 7 days | Daily |
 | Selling to NPCs | Marktwert × 60 % (Ankauf) up to ~100 % (NPC collectors) | NPC budgets, pressure |

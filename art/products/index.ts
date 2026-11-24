@@ -1,4 +1,5 @@
 import type { Painter } from '../toolkit/index.ts'
+import { EMPIREMON_BOOSTERS } from './booster-empiremon.ts'
 import { OP01_BOOSTERS } from './booster-op01.ts'
 import { boosterBisaflor, boosterGlurak, boosterTurtok } from './booster-pokemon-base.ts'
 import { RB_OGN_BOOSTERS } from './booster-rb-ogn.ts'
@@ -21,5 +22,6 @@ export const PRODUCTS: readonly ProductDef[] = [
   ...YGO_LOB_BOOSTERS,
   ...OP01_BOOSTERS,
   ...RB_OGN_BOOSTERS,
+  ...EMPIREMON_BOOSTERS,
   ...SLAB_FRAMES,
 ]

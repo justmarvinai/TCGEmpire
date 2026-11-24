@@ -6,7 +6,8 @@ import { simulate } from './sim.ts'
 describe('pace', () => {
   it('levels at the planned speed over three days', async () => {
     const r = await simulate({ days: 3, activeMinPerDay: 150, seed: 0.5 })
-    expect(r.levels[10]!.activeMin).toBeLessThanOrEqual(30) // level 10 in the first half hour
+    // level 10 within the first 40 minutes (0.0.6: no quest money any more, so the first boosters come a little later)
+    expect(r.levels[10]!.activeMin).toBeLessThanOrEqual(40)
     expect(r.levels[20]!.day).toBeLessThanOrEqual(2)
     expect(r.levels[30]?.day ?? 99).toBeLessThanOrEqual(3)
     expect(r.finalLevel).toBeGreaterThanOrEqual(30)

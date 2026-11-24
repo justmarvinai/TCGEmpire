@@ -9,7 +9,7 @@ import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { eurosToCents } from '@/features/cardmarket/common.tsx'
 import { useAct } from '@/lib/actions.ts'
-import { SETS, STORES } from '@/lib/catalog.ts'
+import { isHouse, SETS, STORES } from '@/lib/catalog.ts'
 import { formatAgo, formatDuration, formatMoney, formatNumber } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
@@ -20,7 +20,10 @@ import { EVENTS } from '../../../content/events.ts'
 import { TROPHIES } from '../../../content/mogul.ts'
 
 const T = texts.admin
-const setName = (id: string) => SETS.find((s) => s.id === id)?.name ?? id
+const setName = (id: string) => {
+  const set = SETS.find((s) => s.id === id)
+  return set ? (set.house ? `${texts.games.empiremon} ${set.name}` : set.name) : id
+}
 const storeName = (key: string) => STORES.find((s) => s.key === key)?.name ?? key
 
 /** Runs an admin write and puts the fresh console document into the cache. */
@@ -89,6 +92,9 @@ function Sets({ d }: { d: Admin }) {
                 {T.packs(formatNumber(s.packs_opened))} · {T.sealedLeft(formatNumber(s.sealed_left))}
                 {s.sealed_at_oop !== null && ` · ${T.atOop(formatNumber(s.sealed_at_oop))}`}
               </p>
+              {isHouse(s.id) ? (
+                <p className="mt-3 text-xs text-fg-3">{T.alwaysPrint}</p>
+              ) : (
               <div className="mt-3 flex gap-2">
                 <select
                   value={target}
@@ -116,6 +122,7 @@ function Sets({ d }: { d: Admin }) {
                   {T.setPhase}
                 </Button>
               </div>
+              )}
             </li>
           )
         })}

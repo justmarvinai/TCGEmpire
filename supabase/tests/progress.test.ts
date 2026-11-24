@@ -46,7 +46,7 @@ describe('mini-quests', () => {
     expect(res.mini).toHaveLength(3)
     expect(res.mini.map((m) => m.id)).not.toContain(first.id)
     expect(res.player.pfandbons).toBe(before.pfandbons + 1)
-    expect(res.player.cash_cents).toBeGreaterThan(before.cash_cents)
+    expect(res.player.cash_cents).toBe(before.cash_cents) // 0.0.6: only weekly quests pay money
     expect(res.claimed_total).toBe(1)
   })
 })

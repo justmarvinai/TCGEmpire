@@ -45,7 +45,8 @@ import { place } from './stage.ts'
  * element 'Zauber', traps 'Falle') and `v` its variant (0 day, 1 night). Scenes: Pokémon types
  * (Feuer, Wasser, Pflanze, Elektro, Psycho, Kampf, Farblos), Yu-Gi-Oh! attributes (LICHT,
  * FINSTERNIS, ERDE, WASSER, FEUER, WIND), One Piece colours (Rot, Grün, Blau, Lila), Riftbound
- * domains (Fury, Calm, Mind, Body, Chaos, Order), Zauber, Falle.
+ * domains (Fury, Calm, Mind, Body, Chaos, Order), Zauber, Falle. Empiremon elements use the Pokémon
+ * type scenes (Glut Feuer, Flut Wasser, Kraut Pflanze, Strom Elektro, Beton Kampf, Spuk Psycho).
  */
 export type { CreatureArt } from './creature.ts'
 export type { FigureArt } from './figure.ts'
@@ -99,9 +100,20 @@ function typeOf(element: string | undefined): PokemonType | undefined {
   return t
 }
 
+/** Empiremon elements borrow the Pokémon type scenes. */
+const EMPIREMON_SCENES: Readonly<Record<string, SceneKey>> = {
+  Glut: 'Feuer',
+  Flut: 'Wasser',
+  Kraut: 'Pflanze',
+  Strom: 'Elektro',
+  Beton: 'Kampf',
+  Spuk: 'Psycho',
+}
+
 /** Home scene of a card and, for One Piece dual colours, the second colour. */
 function scenesOf(game: Game, data: CardData): [SceneKey, SceneKey | undefined] {
   if (game === 'pokemon') return [typeOf(data.element) ?? 'Farblos', undefined]
+  if (game === 'empiremon') return [EMPIREMON_SCENES[data.element ?? ''] ?? 'Farblos', undefined]
   const [first = '', second] = (data.element ?? '').split('/')
   if (isScene(first)) return [first, second !== undefined && isScene(second) ? second : undefined]
   if (data.kind === 'trap') return ['Falle', undefined]

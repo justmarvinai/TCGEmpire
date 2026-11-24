@@ -112,6 +112,8 @@ Full curated card lists with tier mapping, German names, art briefs and real-wor
 German card names are used where an official German print exists (Pokémon, Yu-Gi-Oh!: *Glurak*,
 *Blauäugiger w. Drache*); One Piece and Riftbound use the official English names (Q-9).
 
+Since `0.0.5` there is a fifth game, **Empiremon**, the game's own TCG with five small sets (§4.7).
+
 ### 4.2 Rarity tiers
 
 The game uses its own seven tiers for every game and set:
@@ -177,6 +179,23 @@ slot. Exact structure per set: `SETS.md`.
 - **Doppel-Hit** and the very rare **God Pack** (every card Holo or better) exist as jackpot moments.
 - Odds are public: every pack has an "i" with the exact chances and what you still miss.
 - **Pack-Glück** bonuses (skills, upgrades, events) multiply hit odds and are capped (max +50 %).
+
+### 4.7 Empiremon, our own TCG (0.0.5)
+
+The owner's own card game inside the game: creatures full of German everyday misery (Tackerdackel, Der Letzte
+Döner, Der Pünktliche). Brief and card lists: `docs/sets/empiremon.md`; decision 120.
+
+- **Five sets, all available from the start:** Grundauflage (20 cards), Spätschicht (18), Amt & Elend (15),
+  Pfandland (24), Abstellgleis (30). Each set: 2 Grail, 3 Ultra, the rest Common.
+- **Only at the kiosk, always in print, no licence.** Empiremon boosters are never sold by stores, wholesale, group
+  orders, Pack Battles or NPC classifieds, and the admin cannot take a set out of print. Players can still trade,
+  sell and list the cards and sealed boosters they own.
+- **Booster:** 5 cards (4 Commons + the hit slot) for twice the price of a normal booster. The hit slot is a Common
+  unless it rolls an Ultra (1:10.000) or a Grail (1:50.000): 10 to 14 times rarer than in the licensed games. No God
+  Pack, no Doppel-Hit, no Pech-Schutz; Pack-Glück counts.
+- **Values:** Commons are worth cents; an Ultra about 600.000 €, a Grail about 4 Mio. € (Basis-€). The booster is
+  still calibrated to 72 % of its price on average: a pure lottery.
+- **Card text** is written at runtime in a real font (decision 065); only artwork and frame are pixel art.
 
 ---
 
@@ -496,9 +515,9 @@ respec costs money. Four branches, each ending in a keystone:
 | Type | Count | Reset | Reward size | Notes |
 |------|-------|-------|-------------|-------|
 | **Kapitel (story/tutorial)** | Chain | — | Unlocks, packs, money | Mutti and Opa guide you through every new system. |
-| **Mini-Quests** | 3 always active, endless | Replaced instantly | Tiny: a little money, EP, 1 Pfandbon | "Öffne 3 Booster", "Sammle den Bunker ein". Every 10th gives a small bonus chest. |
-| **Tagesquests** | 5 | Daily 00:00 | Medium | One free reroll per day; never impossible for your level or wallet. |
-| **Wochenquests** | 5 | Monday 00:00 | Large + weekly chest (pack/display of choice) | One of them is social (trade, battle, help). |
+| **Mini-Quests** | 3 always active, endless | Replaced instantly | Tiny: EP, 1 Pfandbon (no money since 0.0.6) | "Öffne 3 Booster", "Sammle den Bunker ein". Every 10th gives a small bonus chest. |
+| **Tagesquests** | 5 | Daily 00:00 | Medium: EP and Pfandbons; all five give bonus EP (no money since 0.0.6) | One free reroll per day; never impossible for your level or wallet. |
+| **Wochenquests** | 5 | Monday 00:00 | Large: money, EP, Pfandbons + weekly chest (pack/display of choice) | The only quests that pay money (0.0.6). One of them is social (trade, battle, help). |
 | **Erfolge (achievements)** | ~200 in tiers | — | Titles, cosmetics, Skillpunkte at milestones | Includes joke achievements for failures ("Pechvogel", "Auf Fake reingefallen"). |
 | **Sammelziele** | Per set | — | Permanent bonuses | §6. |
 | **Event-Quests** | During events | — | Event rewards | §19. |

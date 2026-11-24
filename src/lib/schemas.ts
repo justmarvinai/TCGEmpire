@@ -177,6 +177,7 @@ export const zQuests = z.object({
   bonus_every: z.number(),
   reroll_free: z.boolean(),
   daily_bonus_cents: z.number(),
+  daily_bonus_ep: z.number(),
   daily_bonus_done: z.boolean(),
   weekly_chest_boosters: z.number(),
   weekly_bonus_done: z.boolean(),

@@ -55,6 +55,10 @@ export const itemName = (id: string) => cardById.get(id)?.name ?? productById.ge
 
 export const setOfCard = (id: string) => SETS.find((s) => s.cards.some((c) => c.id === id))?.id ?? 'pokemon-base'
 
+/** Empiremon (house sets): only at the kiosk, no licence, always in print, the house odds. */
+export const isHouse = (setId: string | undefined) => SETS.some((s) => s.id === setId && s.house === true)
+export const isHouseProduct = (productId: string) => isHouse(productById.get(productId)?.set)
+
 /** Card name as shown in lists. */
 export const cardName = (id: string) => cardById.get(id)?.name ?? id
 
