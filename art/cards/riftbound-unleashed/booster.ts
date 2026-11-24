@@ -45,9 +45,9 @@ const boosterBaron = boosterPack({
   id: 'booster-rb-unl-baron',
   set: 'Unleashed',
   hero: baron,
-  at: [-2, 31],
-  foil: colors('070a02', '111a04', '1c2c06', '2a400a', '3c580e', '567a14', '86aa24', 'dcf47c'),
-  burst: [38, 59],
+  at: [-4, 31],
+  foil: colors('060a02', '0f1a04', '1a2e06', '28460a', '3a640e', '529016', '84c42a', 'e0ff88'),
+  burst: [36, 59],
 })
 
 /** Brick colours and outline of the Vi Signature artwork. */
@@ -55,8 +55,9 @@ const BRICK = colors('5a2028', '8a3a34', 'b85a44')
 const VI_OUTLINE = hex('070812')
 
 /**
- * Vi as the wrapper shows her: without the two flying bricks of the artwork that touch her silhouette
- * (one on a hair tip, one on the raised gauntlet).
+ * Vi as the wrapper shows her: without the two flying bricks of the artwork that touch her silhouette.
+ * The one on the tip of her upper left hair strand goes with that tip; the one on the edge of the
+ * raised gauntlet becomes outline again.
  */
 const vi: CardDef = {
   ...viSignature,
@@ -76,9 +77,9 @@ const boosterVi = boosterPack({
   set: 'Unleashed',
   hero: vi,
   effects: (art) => inColors(art, CYAN),
-  at: [-6, 32],
-  foil: colors('0e0a02', '1c1404', '2e2006', '44300a', '5e440c', '826010', 'ba9020', 'fff08c'),
-  burst: [33, 63],
+  at: [-9, 32],
+  foil: colors('100c02', '201804', '342806', '4c3c08', '6a560a', '92780e', 'c8a81c', 'fff49a'),
+  burst: [30, 63],
 })
 
 /** Colours of the violet smoke round LeBlanc's feet. */
@@ -90,9 +91,9 @@ const boosterLeblanc = boosterPack({
   set: 'Unleashed',
   hero: leblancSignature,
   effects: (art) => inColors(art, SMOKE).and(art.m().rect(0, 76, 80, 36)),
-  at: [9, 29],
+  at: [8, 30],
   foil: colors('020a0e', '04161a', '062226', '0a3238', '0e464e', '16626a', '2a929a', '9ceef0'),
-  burst: [41, 57],
+  burst: [40, 58],
 })
 
 /** The booster wrappers of this set (content/catalog.ts lists their ids). */
