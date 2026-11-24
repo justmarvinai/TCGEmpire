@@ -1,7 +1,8 @@
 # TCGEmpire — Sets, Tiers and Pack Odds
 
 > Status: **approved plan; all four sets are in the game data since alpha_05** (`content/sets/*.ts`, products in
-> `content/catalog.ts`; displays of the three new sets hold 24 boosters). Odds and values are starting points; the calibration script fixes each set's
+> `content/catalog.ts`; displays of the three new sets hold 24 boosters). **Since 0.0.9** the second and third set
+> of each licensed game are in the game data too (§1.1); they start "Angekündigt" and the owner releases each one. Odds and values are starting points; the calibration script fixes each set's
 > numbers so that an average booster is worth 72 % ± 3 % of its price (`ECONOMY.md` §5.1). Prices are
 > Basis-€ and rise with the Preisniveau (`ECONOMY.md` §4).
 
@@ -14,6 +15,27 @@
 | One Piece Card Game | OP-01 Romance Dawn | 2022 | 89 | Shanks (manga art) | Luffy Leader parallel, Zoro parallel, Shanks parallel, Yamato parallel | [`sets/onepiece-op01.md`](./sets/onepiece-op01.md) |
 | Riftbound (League of Legends TCG) | Origins | 2025 | 89 | Ahri, Nine-Tailed Fox (Signature) | Signature Kai'Sa, Miss Fortune, Jinx, Lee Sin | [`sets/riftbound-origins.md`](./sets/riftbound-origins.md) |
 | Empiremon (our own TCG, 0.0.5) | Grundauflage, Spätschicht, Amt & Elend, Pfandland, Abstellgleis | 2026 | 20 / 18 / 15 / 24 / 30 | 2 per set | 3 per set | [`sets/empiremon.md`](./sets/empiremon.md) |
+
+### 1.1 Sets 2 and 3 (0.0.9)
+
+Owner request (24 Nov 2026): the second and third set of each licensed game, 60–90 cards each, 1–2 Grails, 5–6 Ultras
+and at least 10 Alternatives. They start **Angekündigt** and stay out of the game (no stores, kiosk, NPC offers,
+collection or minigames) until the owner moves them to "Im Druck" in the admin console (decision 124). Each game's
+new sets use its existing frame.
+
+| Game | Set | Year (DE) | Cards | Grail | Ultra | Curated list |
+|------|-----|-----------|-------|-------|-------|--------------|
+| Pokémon | Dschungel (Jungle) | 2000 | 78 | Aquana, Relaxo | Sichlor, Flamara, Blitza, Tauboss, Knuddeluff | [`sets/pokemon-jungle.md`](./sets/pokemon-jungle.md) |
+| Pokémon | Fossil | 2000 | 75 | Gengar, Dragoran | Lavados, Lapras, Arktos, Zapdos, Aerodactyl | [`sets/pokemon-fossil.md`](./sets/pokemon-fossil.md) |
+| Yu-Gi-Oh! | Metal Raiders (MRD) | 2003 | 88 | Torwächter, Herbeigerufener Totenkopf | Tausenddrache, Feierliches Urteil, Zeitzauberer, Überläufer, Spiegelkraft, Schw. Totenkopfdrache | [`sets/yugioh-mrd.md`](./sets/yugioh-mrd.md) |
+| Yu-Gi-Oh! | Spell Ruler (MRL/SRL) | 2003 | 80 | Blauäugiger Toon-Drache | Toon-Jungfrau, Verbrecher-Duo, Schnappstahl, Herbeigerufener Toon-Schädel, Mystischer Raum-Taifun, Aufgegeben | [`sets/yugioh-mrl.md`](./sets/yugioh-mrl.md) |
+| One Piece Card Game | OP-02 Paramount War | 2023 | 90 | Portgas.D.Ace (manga art) | Newgate, Garp, Smoker (Leader parallels), Uta, Kuzan, Ace (parallels) | [`sets/onepiece-op02.md`](./sets/onepiece-op02.md) |
+| One Piece Card Game | OP-03 Pillars of Strength | 2023 | 90 | Sogeking (manga art) | Ace, Nami, Katakuri (Leader parallels), Luffy (wanted poster), Katakuri, Sogeking (parallels) | [`sets/onepiece-op03.md`](./sets/onepiece-op03.md) |
+| Riftbound | Spiritforged | 2026 | 88 | Irelia, Ahri (Signature) | Signature Vayne, Bard, Teemo, Yone, Yasuo, Soraka | [`sets/riftbound-spiritforged.md`](./sets/riftbound-spiritforged.md) |
+| Riftbound | Unleashed | 2026 | 86 | Diana (Signature), Baron Nashor (Ultimate) | Signature Jhin, Rengar, Pyke, Vi, Vex, LeBlanc | [`sets/riftbound-unleashed.md`](./sets/riftbound-unleashed.md) |
+
+Pokémon Dschungel and Fossil have no non-holo Rares in the real sets' sense of a separate card: each Holo also exists
+as a non-holo Rare (the real "Rare" print), so the hit slot's Rare base tier has something of its own.
 
 The lists were researched from public card databases and price trackers in November 2026. Entries the
 research could not confirm are marked "(?)" in the set files and collected under each file's "Open
@@ -56,6 +78,10 @@ Curation rules used for every set:
 | Yu-Gi-Oh! LOB | 9 | 5 Common, 3 Uncommon | — | 1 (Rare or better) | — |
 | One Piece OP-01 | 12 | 7 Common, 3 Uncommon | 1 Rare | 1 (Rare or better) | — |
 | Riftbound Origins | 14 | 8 Common, 4 Uncommon | 1 Rare | 1 (Rare or better) | At least 1 Rune |
+| Pokémon Dschungel, Fossil | 11 | 7 Common, 3 Uncommon | — | 1 (Rare or better) | — |
+| Yu-Gi-Oh! MRD, Spell Ruler | 9 | 5 Common, 3 Uncommon | — | 1 (Rare or better) | — |
+| One Piece OP-02, OP-03 | 12 | 7 Common, 3 Uncommon | 1 Rare | 1 (Rare or better) | — |
+| Riftbound Spiritforged, Unleashed | 14 | 7 Common, 4 Uncommon | 1 Rare | 1 (Rare or better) | 1 Rune |
 | Empiremon (each set) | 5 | 4 Common | — | 1 (Common, Ultra or Grail; house odds) | — |
 
 Real-world pack facts per set are in the set files; the in-game structure follows them where it fits the

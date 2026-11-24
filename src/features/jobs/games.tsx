@@ -1,11 +1,12 @@
 // The minijob games. Each reports a score in Basis-€ cents; the server checks it against the job's cap and pays it.
 import clsx from 'clsx'
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Card } from '@/components/cards/Card.tsx'
 import { PixelIcon, type IconName } from '@/components/pixel/PixelIcon.tsx'
-import { cardById, SETS } from '@/lib/catalog.ts'
+import { cardById, SETS, type CardData } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
 import { sfx } from '@/lib/sfx.ts'
+import { useReleasedSets } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { minijobs } from '@/texts/minijobs.ts'
 
@@ -344,7 +345,11 @@ function TimingGame({ duration, onDone }: { duration: number; onDone: Done }) {
 // Grading minijobs: one card at a time. An answer counts once the card lies still; after a miss the
 // card stays up for a moment to show why (so blind button mashing does not pay either).
 // ----------------------------------------------------------------------------------------------
-const ALL_CARDS = SETS.flatMap((s) => s.cards)
+/** The cards of every released set (sets not out yet stay hidden). */
+function useCardPool() {
+  const sets = useReleasedSets()
+  return useMemo(() => sets.flatMap((s) => s.cards), [sets])
+}
 /** Answers while the next card is still dealing in do not count (no blind double clicks). */
 const DEAL_MS = 250
 /** Cards are shown at this integer scale; a card is CW x CH card pixels. */
@@ -362,9 +367,9 @@ function sample<V>(list: readonly V[], n: number): V[] {
   return Array.from({ length: Math.min(n, rest.length) }, () => rest.splice(Math.floor(Math.random() * rest.length), 1)[0]!)
 }
 
-function randomCard(avoid?: string) {
+function randomCard(pool: readonly CardData[], avoid?: string) {
   for (;;) {
-    const c = pick(ALL_CARDS)
+    const c = pick(pool)
     if (c.id !== avoid) return c
   }
 }
@@ -469,8 +474,8 @@ interface FakeCard {
   plate: string
 }
 
-function nextFake(prev?: FakeCard): FakeCard {
-  const card = randomCard(prev?.id)
+function nextFake(pool: readonly CardData[], prev?: FakeCard): FakeCard {
+  const card = randomCard(pool, prev?.id)
   const tell = Math.random() < FAKE.share ? pick(TELLS) : null
   return {
     key: (prev?.key ?? 0) + 1,
@@ -505,7 +510,8 @@ function FakeGame({ duration, onDone }: { duration: number; onDone: Done }) {
   const [last, setLast] = useState<{ key: number; ok: boolean } | null>(null)
   const state = useRef({ score: 0, count: 0 })
   const left = useRound(duration, onDone, useCallback(() => [state.current.score, state.current.count], []))
-  const { card, missed, ready, next } = useCardFlow(nextFake, FAKE.revealMs, left)
+  const pool = useCardPool()
+  const { card, missed, ready, next } = useCardFlow((prev?: FakeCard) => nextFake(pool, prev), FAKE.revealMs, left)
 
   const answer = (saysFake: boolean) => {
     if (!ready()) return
@@ -654,7 +660,7 @@ function rollValue() {
   return 7
 }
 
-function nextGrade(prev?: GradeCard): GradeCard {
+function nextGrade(pool: readonly CardData[], prev?: GradeCard): GradeCard {
   const values = { centering: rollValue(), corners: rollValue(), edges: rollValue(), surface: rollValue() }
   const bad = (a: Aspect) => 10 - values[a]
   const shift = SHIFT[bad('centering')]! * pick([-1, 1])
@@ -673,7 +679,7 @@ function nextGrade(prev?: GradeCard): GradeCard {
   }
   return {
     key: (prev?.key ?? 0) + 1,
-    id: randomCard(prev?.id).id,
+    id: randomCard(pool, prev?.id).id,
     values,
     grade: Math.min(...Object.values(values)),
     at: Math.random() < 0.5 ? { x: MARGIN + shift, y: MARGIN } : { x: MARGIN, y: MARGIN + shift },
@@ -715,7 +721,8 @@ function GradingGame({ duration, onDone }: { duration: number; onDone: Done }) {
   const [last, setLast] = useState<{ key: number; off: number; cents: number } | null>(null)
   const state = useRef({ score: 0, count: 0 })
   const left = useRound(duration, onDone, useCallback(() => [state.current.score, state.current.count], []))
-  const { card, missed, ready, next } = useCardFlow(nextGrade, PRAKTIKUM.revealMs, left)
+  const pool = useCardPool()
+  const { card, missed, ready, next } = useCardFlow((prev?: GradeCard) => nextGrade(pool, prev), PRAKTIKUM.revealMs, left)
 
   const choose = (grade: number) => {
     if (!ready()) return

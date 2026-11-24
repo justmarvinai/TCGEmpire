@@ -114,6 +114,12 @@ German card names are used where an official German print exists (Pokémon, Yu-G
 
 Since `0.0.5` there is a fifth game, **Empiremon**, the game's own TCG with five small sets (§4.7).
 
+Since `0.0.9` each licensed game also has its **second and third set** (Pokémon Dschungel and Fossil, Yu-Gi-Oh! Metal
+Raiders and Spell Ruler, One Piece OP-02 and OP-03, Riftbound Spiritforged and Unleashed; 60–90 cards each, 1–2
+Grails, 5–6 Ultras, at least 10 Alternatives; `SETS.md` §1.1). They come in as **Angekündigt** and the owner releases
+each one in the admin console (§4.5). Until then a set is not in the game: no store, kiosk, NPC or classified offers
+it, and the collection and the minigames do not show it.
+
 ### 4.2 Rarity tiers
 
 The game uses its own seven tiers for every game and set:
@@ -161,6 +167,8 @@ Angekündigt → Vorbestellung → Im Druck (Restock-Wellen) → Letzte Welle �
 
 - No set enters or leaves a phase by itself. The admin (the owner, in the in-game admin console or together
   with Claude in a session) triggers every transition (Q-17). New sets are added by a code/content update.
+- **Angekündigt** and **Vorbestellung:** the set is not out yet. Nothing of it can be bought, found or traded; the
+  collection, the minigames, the market movers and the price history leave it out (0.0.9).
 - **Im Druck:** stores restock on a schedule. Supply keeps growing, singles drift down towards a floor.
 - **Out of Print:** stores sell out and never restock. From now on every opened pack shrinks the remaining
   sealed supply for good. Sealed and singles rise with scarcity and time (`ECONOMY.md` §4).

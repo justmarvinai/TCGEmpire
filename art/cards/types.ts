@@ -46,7 +46,7 @@ export interface CardDef {
   text?: string
   /** Yu-Gi-Oh! attribute, One Piece colour or Riftbound domain, as in the content catalog. */
   element?: string
-  /** Yu-Gi-Oh! subtype as in the content catalog (normal, effect, fusion, equip, field, continuous). */
+  /** Yu-Gi-Oh! subtype as in the content catalog (normal, effect, fusion, ritual, equip, field, continuous, quickplay, counter). */
   sub?: string
   /** Printed values of the other games, read by their frame, e.g. { atk: '3000', def: '2500', level: 8 }. */
   print?: Readonly<Record<string, string | number>>

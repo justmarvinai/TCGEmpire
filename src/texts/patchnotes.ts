@@ -1,6 +1,15 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.9',
+    title: 'Acht neue Sets',
+    items: [
+      'Acht neue Sets sind angekündigt, das zweite und dritte von jedem Spiel: Pokémon Dschungel und Fossil, Yu-Gi-Oh! Metal Raiders und Spell Ruler, One Piece OP-02 Paramount War und OP-03 Pillars of Strength, Riftbound Spiritforged und Unleashed. 75 bis 90 Karten pro Set, jedes mit ein oder zwei Grails, fünf oder sechs Ultras und mindestens zehn Alternativen. Die Grails und Ultras sind von Hand gepixelt.',
+      'Die Sets kommen nach und nach in den Handel, sobald der Chef sie freigibt. Dann stehen sie in den Läden und am Kiosk, tauchen in deiner Sammlung auf, und der Ticker sagt Bescheid. Vorher kriegt sie niemand, auch nicht der Typ von Kleinanzeigen.',
+      'Jedes neue Set hat ein eigenes Sammelziel, zum Beispiel „Die drei legendären Vögel“ oder „Familie Charlotte“. Mit kleinem Bonus, versteht sich.',
+    ],
+  },
+  {
     version: '0.0.8',
     title: 'Kiosk und Empiremon',
     items: [

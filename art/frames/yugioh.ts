@@ -18,7 +18,12 @@ import { Mask, Painter, colors, fromHsl, hex, mix, noise, pts } from '../toolkit
  *   14 and the bottom 22 pixels
  *
  * Printed values read from `def.print`: `level` (stars), `atk`, `def` and `type` (the monster type for
- * the type line, e.g. 'Drache'; effect and fusion monsters get '/Effekt' and '/Fusion' appended).
+ * the type line, e.g. 'Drache'; effect, fusion and ritual monsters get '/Effekt', '/Fusion' and
+ * '/Ritual' appended).
+ *
+ * Subtypes (`def.sub`): monsters normal, effect, fusion and ritual (each with its frame colour);
+ * spells equip, field, continuous, quickplay and ritual, traps continuous and counter (each with an
+ * icon in the stars row; normal spells and traps have none).
  */
 export const CARD = { w: 80, h: 112 } as const
 
@@ -39,7 +44,7 @@ const GLASS = hex('0c0816')
 /** Lettering pressed into the gold footer. */
 const ENGRAVED = hex('3c2410')
 
-type Look = 'normal' | 'effect' | 'fusion' | 'spell' | 'trap'
+type Look = 'normal' | 'effect' | 'fusion' | 'ritual' | 'spell' | 'trap'
 
 interface KindLook {
   /** Frame ramp, darkest first: shadow, three texture tones, highlight. */
@@ -70,6 +75,12 @@ const LOOKS: Readonly<Record<Look, KindLook>> = {
     name: INK,
     print: WHITE,
   },
+  ritual: {
+    frame: colors('1e3a78', '4a72c0', '557dca', '6088d4', 'a8c6f4'),
+    bar: hex('94b4ec'),
+    name: INK,
+    print: INK,
+  },
   spell: {
     frame: colors('0b4c40', '178a6d', '1d9777', '25a481', '66d4ae'),
     bar: hex('0f6a56'),
@@ -87,7 +98,7 @@ const LOOKS: Readonly<Record<Look, KindLook>> = {
 function lookOf(def: CardDef): Look {
   if (def.kind === 'spell') return 'spell'
   if (def.kind === 'trap') return 'trap'
-  return def.sub === 'effect' ? 'effect' : def.sub === 'fusion' ? 'fusion' : 'normal'
+  return def.sub === 'effect' || def.sub === 'fusion' || def.sub === 'ritual' ? def.sub : 'normal'
 }
 
 interface Orb {
@@ -165,11 +176,17 @@ const MARKS: Readonly<Record<'common' | 'uncommon', readonly string[]>> = {
   common: ['.###.', '#####', '#####', '#####', '.###.'],
   uncommon: ['..#..', '.###.', '#####', '.###.', '..#..'],
 }
-/** Subtype icons of spells and traps, 5×5: equip, field, continuous. */
+/**
+ * Subtype icons of spells and traps, 5×5: equip (cross), field (compass), continuous (loop),
+ * quickplay (lightning), ritual (flame) and counter (an arrow making a U-turn).
+ */
 const ICONS: Readonly<Record<string, readonly string[]>> = {
   equip: ['..#..', '..#..', '#####', '..#..', '..#..'],
   field: ['..#..', '.#.#.', '#.#.#', '.#.#.', '..#..'],
   continuous: ['.....', '##.##', '#.#.#', '##.##', '.....'],
+  quickplay: ['..##.', '.##..', '####.', '..##.', '.##..'],
+  ritual: ['..#..', '.##..', '.###.', '##.##', '.###.'],
+  counter: ['.###.', '....#', '.#..#', '####.', '.#...'],
 }
 
 const CORNER_CUTS: readonly (readonly number[])[] = [[3, 1, 1], [2, 1], [1], [1]]
@@ -208,6 +225,14 @@ function orb(p: Painter, x: number, y: number, def: CardDef): void {
   p.stamp(['.###.', '#####', '#####', '#####', '.###.'], x + 1, y + 1, { '#': c[1] })
   p.stamp(['.##..', '##...', '#....'], x + 1, y + 1, { '#': c[2] })
   p.stamp(glyph, x + 1, y + 1, { o: c[3] })
+}
+
+/**
+ * Spacing of a row of level stars whose first star sits `room` pixels right of where the last may
+ * start: eight pixels, closer together when more than nine stars would not fit (Torwächter has 11).
+ */
+function starStep(level: number, room: number): number {
+  return level <= 1 ? 8 : Math.min(8, Math.floor(room / (level - 1)))
 }
 
 /** 7×7 level star: a red disc with a yellow star. */
@@ -254,6 +279,9 @@ function levelOf(def: CardDef): number {
   return Number.isFinite(n) ? Math.max(0, Math.min(12, Math.round(n))) : 0
 }
 
+/** What effect, fusion and ritual monsters append to their type. */
+const KIND_SUFFIX: Readonly<Record<string, string>> = { effect: '/Effekt', fusion: '/Fusion', ritual: '/Ritual' }
+
 /**
  * The type line, e.g. 'Drache' or 'Krieger/Fusion' (printed in brackets): effect and fusion monsters get
  * their kind appended where it fits, a type too long for one row wraps onto a second. Empty if no type
@@ -262,7 +290,7 @@ function levelOf(def: CardDef): number {
 function typeRows(def: CardDef, width: number): string[] {
   const type = printed(def, 'type')
   if (type === undefined) return []
-  const kind = def.sub === 'effect' ? '/Effekt' : def.sub === 'fusion' ? '/Fusion' : ''
+  const kind = KIND_SUFFIX[def.sub ?? ''] ?? ''
   for (const t of [type.includes('/') ? type : type + kind, type]) if (bracketedWidth(t, MICRO, false) <= width) return [t]
   return wrap(type, MICRO, width - 3).slice(0, 2)
 }
@@ -518,7 +546,9 @@ function drawFramed(job: Job): FrameResult {
     imprint(p, (q) => bracketed(q, kind, x, starsY + 7 - f.cap, f, INK, icon), INK, base)
   } else {
     const level = levelOf(def)
-    for (let i = 0; i < level; i++) levelStar(p, BAR.x + BAR.w - 8 - i * 8, starsY)
+    const first = BAR.x + BAR.w - 8
+    const step = starStep(level, first - BAR.x - 1)
+    for (let i = 0; i < level; i++) levelStar(p, first - i * step, starsY)
   }
 
   // art window
@@ -621,7 +651,8 @@ function drawFull(job: Job): FrameResult {
     if (first !== undefined) drawText(p, first, 5, 98, MICRO, WHITE, { shadow: INK })
   } else {
     const level = levelOf(def)
-    for (let i = 0; i < level; i++) levelStar(p, right - 6 - i * 8, 91)
+    const step = starStep(level, right - 6 - 4)
+    for (let i = 0; i < level; i++) levelStar(p, right - 6 - i * step, 91)
     drawText(p, statLine(def), right, 98, MICRO, WHITE, { align: 'right', shadow: INK })
   }
 

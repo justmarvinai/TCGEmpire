@@ -5,7 +5,7 @@
 type Json = string | number | boolean | null | readonly Json[] | { readonly [k: string]: Json }
 
 export const config = {
-  version: '0.0.8',
+  version: '0.0.9',
 
   // Login
   'auth.bcrypt_cost': 10,

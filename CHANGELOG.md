@@ -3,6 +3,22 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.9] — Acht neue Sets (24 Nov 2026)
+
+### Added
+
+- **Eight new sets, announced:** the second and third set of every licensed game: Pokémon Dschungel and Fossil,
+  Yu-Gi-Oh! Metal Raiders and Spell Ruler, One Piece OP-02 Paramount War and OP-03 Pillars of Strength, Riftbound
+  Spiritforged and Unleashed. 75–90 cards each, every set with one or two Grails, five or six Ultras (both drawn by
+  hand) and at least ten Alternatives. They come out one by one: the moment the admin puts a set in print it is in the
+  stores, at the kiosk and in your collection, and the ticker says so.
+- **A themed collection goal for each new set**, such as "Die drei legendären Vögel" or "Familie Charlotte".
+
+### Changed
+
+- A set that is not out yet stays out of the game: no NPC trader, classified ad, grading customer or reward booster
+  brings it early.
+
 ## [0.0.8] — Kiosk und Empiremon (24 Nov 2026)
 
 ### Changed

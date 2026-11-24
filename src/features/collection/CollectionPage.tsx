@@ -20,7 +20,7 @@ import { formatMoney } from '@/lib/format.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
 import type { BinderCard } from '@/lib/schemas.ts'
 import { sfx } from '@/lib/sfx.ts'
-import { useMe } from '@/lib/world.ts'
+import { useMe, useReleasedSets } from '@/lib/world.ts'
 import { texts } from '@/texts/de.ts'
 import { PriceChart } from '@/features/market/PriceChart.tsx'
 import { duplicateStacks } from './sellDupes.ts'
@@ -55,8 +55,10 @@ const ORDER: Record<SortKey, (a: BinderCard, b: BinderCard) => number> = {
 }
 
 export function CollectionPage() {
+  // sets not out yet stay hidden until the admin releases them
+  const released = useReleasedSets()
   const binder = useQueries({
-    queries: SETS.map((s) => ({ queryKey: ['binder', s.id], queryFn: () => rpc('binder_get', { p_set: s.id }) })),
+    queries: released.map((s) => ({ queryKey: ['binder', s.id], queryFn: () => rpc('binder_get', { p_set: s.id }) })),
     combine: mergeBinders,
   })
   const look = useCosmetics().data?.style
@@ -74,7 +76,7 @@ export function CollectionPage() {
   const [page, setPage] = useState({ filters, n: PAGE })
   const limit = page.filters === filters ? page.n : PAGE
 
-  const sets = SETS.filter((s) => game === 'all' || s.game === game)
+  const sets = released.filter((s) => game === 'all' || s.game === game)
   // game and set narrow the collection: progress, value, duplicates and goals follow them
   const scoped = useMemo(
     () =>

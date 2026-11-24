@@ -1,7 +1,8 @@
 // Client state fed by the server: own player, feed, notifications, level-ups, server clock.
 import { create } from 'zustand'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
+import { SETS } from './catalog.ts'
 import { rpc } from './rpc.ts'
 import { useSettings } from './settings.ts'
 import { sfx, type SfxName } from './sfx.ts'
@@ -51,6 +52,12 @@ const ME_KEY = ['me'] as const
 /** The signed-in player and server info. `player` is null when signed out. */
 export function useMe() {
   return useQuery({ queryKey: ME_KEY, queryFn: () => rpc('me_get'), staleTime: Infinity, retry: 1 })
+}
+
+/** The sets players can have: all but those the admin has not released yet, which the server names. */
+export function useReleasedSets() {
+  const key = useMe().data?.server.unreleased.join(',') ?? ''
+  return useMemo(() => SETS.filter((s) => !key.split(',').includes(s.id)), [key])
 }
 
 export function useSetMe() {

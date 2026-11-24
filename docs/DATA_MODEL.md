@@ -182,7 +182,7 @@ RLS enabled on every table with no policies.
 | `game.modifiers`, `game.counters` | stat bonuses; lifetime event counters |
 | `game.notifications`, `game.feed` | personal messages; server feed (kind + data) |
 | `game.tick_systems`, `game.job_runs` | tick dispatcher and its log |
-| `game.set_defs`, `game.card_defs`, `game.product_defs` | catalog from `content/` (phase is admin-owned; `set_defs.house` marks Empiremon sets: always in print, kiosk only, no licence, `pack.house_hit_odds_ppm`, 0.0.5) |
+| `game.set_defs`, `game.card_defs`, `game.product_defs` | catalog from `content/` (phase is admin-owned; a new set gets `SetData.launch` as its first phase, default 'print', 0.0.9; `set_defs.house` marks Empiremon sets: always in print, kiosk only, no licence, `pack.house_hit_odds_ppm`, 0.0.5). Sets in 'announced' or 'preorder' are not out yet: NPC traders and classifieds, company VIP cards, the reward booster, market movers, price headlines and the price history skip them (0.0.9, `20261124000100_unreleased_sets.sql`) |
 | `game.sealed`, `game.card_stacks`, `game.card_copies`, `game.collection` | sealed boosters; Common–Rare stacks; Holo+ copies with four hidden quality values; ever-pulled cards |
 | `game.pity`, `game.store_purchases` | dry streak per set; Kiosk daily limit |
 | `game.quest_templates`, `game.quests` | mini-quest templates (seeded) and active/claimed quests |
@@ -198,7 +198,7 @@ RLS enabled on every table with no policies.
 
 | RPC | Kind | Notes |
 |-----|------|-------|
-| `me_get`, `sync` | read | player doc incl. energy, sealed count, ready quests, net worth; `sync` also counts the players online (0.0.3, `online_count`) |
+| `me_get`, `sync` | read | player doc incl. energy, sealed count, ready quests, net worth; `sync` also counts the players online (0.0.3, `online_count`); the server doc lists the `unreleased` set ids (0.0.9) |
 | `join`, `login`, `logout`, `account_email_set` | write | own login on anonymous sessions; login by e-mail or username |
 | `shop_get` | read | Kiosk offers, own sealed products |
 | `store_buy(qty 1/5/10)` | write | Kiosk price = list × markup × P; daily limit |

@@ -15,6 +15,7 @@ export const LEXIKON: readonly { term: string; text: string }[] = [
   { term: 'Marktwert', text: 'Was eine Karte gerade wert ist, berechnet aus Verkäufen, Angebot und Hype.' },
   { term: 'Hype', text: 'Wie heiß ein Spiel gerade ist. Hype treibt die Preise, bis er platzt.' },
   { term: 'Preisniveau', text: 'Die Inflation des Spiels. Wird der Server reicher, wird alles teurer. Auch der Döner.' },
+  { term: 'Angekündigt', text: 'Ein Set, das bald kommt. Bis der Chef es freigibt, gibt es nichts davon, nicht mal beim Typen von Kleinanzeigen.' },
   { term: 'Reprint', text: 'Ein Set wird nachgedruckt. Mehr Booster, sinkende Preise, weinende Spekulanten.' },
   { term: 'Out of Print', text: 'Ein Set wird nicht mehr gedruckt. Sealed wird nur noch seltener. Und teurer.' },
   { term: 'Empiremon', text: 'Unser eigenes Kartenspiel. Nur am Kiosk, immer im Druck, keine Lizenz. Die Commons sind Pappe, eine Grail ist ein Haus. Gesehen hat noch keiner eine.' },

@@ -3,7 +3,7 @@ import { jinxSignature } from '../cards/riftbound-origins/jinx-signature.ts'
 import { kaisaSignature } from '../cards/riftbound-origins/kaisa-signature.ts'
 import type { CardDef } from '../cards/types.ts'
 import { paintArtwork } from '../cards/types.ts'
-import { MICRO, REGULAR, drawText } from '../fonts.ts'
+import { CONDENSED, MICRO, REGULAR, drawText, fit } from '../fonts.ts'
 import { artArea } from '../frames/riftbound.ts'
 import type { Mask, Painter, Pt, Ramp } from '../toolkit/index.ts'
 import { colors, hex, rays } from '../toolkit/index.ts'
@@ -11,10 +11,11 @@ import { crimp as crimpWith, pick, thick } from './booster-pokemon-base.ts'
 import type { ProductDef } from './index.ts'
 
 /**
- * Booster pack of Riftbound Origins, 84×132: a foil wrapper in the colour of the hero's domain with
- * crimped seals, our own angular "RIFTBOUND" wordmark in hextech gold (not the official logo), the
- * "Origins" plate, a gold "14 Karten" medallion and the hero of a Signature card bursting out of the
- * lower two thirds. The hero is cut out of its card artwork, so wrapper and card always match.
+ * Booster pack of Riftbound, 84×132: a foil wrapper in the colour of the hero's domain with crimped
+ * seals, our own angular "RIFTBOUND" wordmark in hextech gold (not the official logo), the plate with
+ * the set's name ("Origins"), a gold "14 Karten" medallion and the hero of a Signature card bursting out
+ * of the lower two thirds. The hero is cut out of its card artwork, so wrapper and card always match.
+ * Every Riftbound set paints its wrappers with `boosterPack` (art/cards/riftbound-<set>/booster.ts).
  */
 const W = 84
 const H = 132
@@ -27,8 +28,10 @@ const NAVY = colors('07081a', '141a3a', '26305e')
 const SILVER = colors('3e4258', '7e849e', 'bcc2d6', 'f4f6ff')
 const WHITE = hex('ffffff')
 
-interface Look {
+export interface BoosterLook {
   id: string
+  /** Set name on the plate under the wordmark, e.g. 'Origins'. */
+  set: string
   hero: CardDef
   /** Effects of the card artwork that belong to the hero, e.g. its flames. */
   effects?: (art: Painter) => Mask
@@ -81,7 +84,7 @@ function polygon(p: Painter, cx: number, cy: number, r: number, n: number, turn 
   return p.m().poly(corners)
 }
 
-function boosterPack(look: Look): ProductDef {
+export function boosterPack(look: BoosterLook): ProductDef {
   return {
     id: look.id,
     w: W,
@@ -114,13 +117,13 @@ function boosterPack(look: Look): ProductDef {
       const [dx, dy] = look.at
       look.effects?.(art).minus(art.subjectMask).each((x, y) => p.set(x + dx, y + dy, art.get(x, y)))
 
-      // "Origins" plate with pointed ends
+      // plate with pointed ends and the set's name, condensed when it is long ('Spiritforged')
       const plate = p.m().poly([12, 30, 72, 30, 77, 35.5, 72, 41, 12, 41, 7, 35.5])
       p.fill(plate.moved(1, 1), look.foil[0] ?? NAVY[0])
       p.fill(plate.grown(1), GOLD[1])
       p.fill(plate, NAVY[1])
       p.fill(plate.facing([0, -1]), NAVY[2])
-      drawText(p, 'Origins', 42, 32, REGULAR, GOLD[3], { align: 'center', shadow: NAVY[0] })
+      drawText(p, look.set, 42, 32, fit(look.set, 52, [REGULAR, CONDENSED]), GOLD[3], { align: 'center', shadow: NAVY[0] })
 
       // ground, then the hero
       const ground = p.m().poly([0, 118.5, 26, 117, 54, 118.5, W, 117, W, H, 0, H])
@@ -162,6 +165,7 @@ const FIRE = colors('c22a12', 'f0641a', 'fcb02c', 'fff2a0')
 /** Ahri wrapper (Calm): teal-green foil; the fox keeps her spirit flames from the Grail artwork. */
 const boosterAhri = boosterPack({
   id: 'booster-rb-ogn-ahri',
+  set: 'Origins',
   hero: ahriSignature,
   effects: (art) =>
     pick(art, FOXFIRE, [
@@ -176,6 +180,7 @@ const boosterAhri = boosterPack({
 /** Jinx wrapper (Fury): red foil; Jinx rides her cannon with its burning fuse. */
 const boosterJinx = boosterPack({
   id: 'booster-rb-ogn-jinx',
+  set: 'Origins',
   hero: jinxSignature,
   effects: (art) =>
     pick(art, FIRE, [
@@ -192,6 +197,7 @@ const RIFT = colors('4a1458', '7a1e78', 'b0389a', 'ff6ab0', '0c4a56', '13848a', 
 /** Kai'Sa wrapper (Mind): deep blue foil; she dives out of the magenta void rift of her Signature artwork. */
 const boosterKaisa = boosterPack({
   id: 'booster-rb-ogn-kaisa',
+  set: 'Origins',
   hero: kaisaSignature,
   effects: (art) => pick(art, RIFT, [{ x: 0, y: 0, w: 80, h: 112 }]),
   at: [2, 31],

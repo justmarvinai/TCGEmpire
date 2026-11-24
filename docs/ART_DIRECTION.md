@@ -115,6 +115,13 @@ logos pixel for pixel:
 | Riftbound | Modern full-art frame, domain-coloured gem, energy cost, might value, slim name bar. |
 | Empiremon (our own, 0.0.5) | Element-coloured frame with an indigo outline, dark text plates, element emblem, set symbol and rarity mark; Ultra full art with a silver-prism border, Grail full art with a gold border. No baked text: name, type and number are written at runtime (decision 065, `art/frames/empiremon-layout.ts`). |
 
+**Sets 2 and 3 (0.0.9)** reuse their game's frame family (decision 124). Small frame additions that leave every card of
+the first sets pixel-identical: Riftbound wraps a long Legend epithet onto two lines (in place of the type line),
+moves a long unit epithet 2 px left, and gives cards named "(Ultimate)" no signature scrawl; One Piece got kit
+scenes for the colours Schwarz and Gelb; Yu-Gi-Oh! got the blue Ritual frame, icons for Ritual (flame) and Quick-Play (lightning) spells and Counter traps
+(U-turn arrow), and tighter level stars from level 10; the bitmap fonts got "#" and "è".
+Each set's three booster wrappers reuse the first set's painter with the set name on the plate.
+
 - **Text on cards** is drawn with our own bitmap fonts (5×7, condensed 4×6, micro 3×5) directly into the
   pixel image, with automatic condensing for long names ("Blauäugiger w. Drache"). Cards are therefore
   complete images that can be shared as PNG.

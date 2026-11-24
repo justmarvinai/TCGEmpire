@@ -161,6 +161,9 @@ Grail 6.000–10.000 €.
 calibration to the same 72 % a Common is worth 0,04–0,15 €, an Ultra about 236.000–255.000 € and a Grail about
 1,6–1,7 Mio. €: nearly the whole booster value sits in two tiers few people pull.
 
+**Sets 2 and 3 (0.0.9)** use the same tier ranges and odds as the first sets; after calibration their Grails are
+worth about 36.000–49.000 € and their Ultras about 15.000–20.000 € (Basis-€, in print).
+
 The same Glurak is worth a multiple as a PSA 10 (§5.3) and again a multiple once the set is out of print
 (§5.2) — that is where the big numbers come from.
 
@@ -224,6 +227,10 @@ slab_value = marktwert(card) × grade_factor(grade) × pop_factor × brand_facto
 | Yu-Gi-Oh! LOB (24) | 80 € | 1.700 € | 9.700 € |
 | One Piece OP-01 (24) | 100 € | 2.100 € | 12.000 € |
 | Riftbound Origins (24) | 100 € | 2.100 € | 12.000 € |
+| Pokémon Dschungel, Fossil (36, 0.0.9) | 100 € | 3.200 € | 18.200 € |
+| Yu-Gi-Oh! Metal Raiders, Spell Ruler (24, 0.0.9) | 80 € | 1.700 € | 9.700 € |
+| One Piece OP-02, OP-03 (24, 0.0.9) | 100 € | 2.100 € | 12.000 € |
+| Riftbound Spiritforged, Unleashed (24, 0.0.9) | 100 € | 2.100 € | 12.000 € |
 | Empiremon (each of the five sets, kiosk only) | 200 € | — | — |
 
 Sealed Marktwert in print = price × launch premium (1.0–1.6, decaying), never below 92 % of price. Out of

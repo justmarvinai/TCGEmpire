@@ -220,10 +220,11 @@ Goal: it feels finished.
 | ☑ | `0.0.6` | Quests pay money only weekly, dearer Pfandautomat and a weaker Glücks-Bon, Sammlung sorted by value, the tutorial works on phones (decision 121) |
 | ☑ | `0.0.7` | One Sammlung with filters and sorting, pack contents and chances on click, sealed grading packs with a suspenseful grade reveal, animated slabs (decision 122) |
 | ☑ | `0.0.8` | Empiremon Ultras and Grails 2.5 times likelier (and worth correspondingly less), a kiosk grouped by game with filters (decision 123) |
+| ◐ | `0.0.9` | Sets 2 and 3 of Pokémon, Yu-Gi-Oh!, One Piece and Riftbound (eight sets, 60–90 cards each), announced until the owner releases each one; unreleased sets stay out of the game; a themed goal per set (decisions 124–126) |
 
 ## After 0.0.1 (not planned in detail)
 
-More sets (admin-released), further business units (Kartenladen, Automaten, Auktionshaus), drawn room
+More sets after the third (admin-released), further business units (Kartenladen, Automaten, Auktionshaus), drawn room
 scenes and avatars, tournaments, Vereine (guilds), music, more calendar events, phone polish.
 
 Moved here from alpha milestones: Stille Teilhaberschaft (alpha_09, decision 091); Box Break spots by card type

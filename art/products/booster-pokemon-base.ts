@@ -14,6 +14,7 @@ import type { ProductDef } from './index.ts'
  * "Pokémon" wordmark (yellow letters, blue outline, in the spirit of the logo but drawn from
  * scratch), the set ribbon, an "11 Karten" seal and a hero creature bursting out of the lower two
  * thirds. `boosterPack` builds one wrapper per hero; the three artworks differ only in their look.
+ * The later Pokémon sets reuse it with their own name on the ribbon (art/cards/pokemon-<set>/booster.ts).
  */
 const W = 84
 const H = 132
@@ -35,6 +36,8 @@ export interface BoosterLook {
   foil: Ramp
   /** Centre of the burst. */
   burst: Pt
+  /** Set name on the ribbon (default 'Basis-Set'). */
+  set?: string
 }
 
 /** Pixels of the given colours inside the regions: picks effects such as fire out of an artwork. */
@@ -188,7 +191,7 @@ export function boosterPack(look: BoosterLook): ProductDef {
       p.fill(ribbon, BLUE[1])
       p.fill(ribbon.facing([0, -1]), BLUE[2])
       p.fill(ribbon.facing([0, 1]), BLUE[0])
-      drawText(p, 'Basis-Set', 42, 33, REGULAR, WHITE, { align: 'center', shadow: BLUE[0] })
+      drawText(p, look.set ?? 'Basis-Set', 42, 33, REGULAR, WHITE, { align: 'center', shadow: BLUE[0] })
 
       // ground for the hero to stand on, then the hero
       const ground = p.m().poly([0, 119.5, 22, 118, 50, 119.5, W, 118, W, H, 0, H])

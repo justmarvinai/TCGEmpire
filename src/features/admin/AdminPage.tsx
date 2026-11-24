@@ -22,7 +22,7 @@ import { TROPHIES } from '../../../content/mogul.ts'
 const T = texts.admin
 const setName = (id: string) => {
   const set = SETS.find((s) => s.id === id)
-  return set ? (set.house ? `${texts.games.empiremon} ${set.name}` : set.name) : id
+  return set ? `${texts.games[set.game]} · ${set.name}` : id
 }
 const storeName = (key: string) => STORES.find((s) => s.key === key)?.name ?? key
 
@@ -80,7 +80,8 @@ function Sets({ d }: { d: Admin }) {
   return (
     <Panel title={T.sets} tip={T.setsTip}>
       <ul className="flex flex-col gap-3">
-        {d.sets.map((s) => {
+        {/* Empiremon cannot change phase: its sets go to the end */}
+        {[...d.sets].sort((a, b) => Number(isHouse(a.id)) - Number(isHouse(b.id))).map((s) => {
           const target = pick[s.id] ?? s.phase
           return (
             <li key={s.id} className="rounded-xl bg-surface-2 p-3">

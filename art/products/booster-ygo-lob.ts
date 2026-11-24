@@ -17,6 +17,9 @@ import type { ProductDef } from './index.ts'
  * "Legend of Blue Eyes" ribbon, a "9 Karten" seal in the colours of a level star and the hero of an
  * Ultra or Grail card bursting out of the lower two thirds in front of a summoning circle. The hero
  * is cut out of its card artwork, so wrapper and card always match.
+ *
+ * Every Yu-Gi-Oh! set shares this painter: `boosterPack` builds one wrapper from a `BoosterLook`; the
+ * later sets call it from their folder (e.g. art/cards/yugioh-mrd/booster.ts) with their own set name.
  */
 const W = 84
 const H = 132
@@ -32,9 +35,11 @@ const NAVY = colors('070b24', '15235e', '2a4496')
 const RED = colors('4a060c', 'a8141c', 'd83a26')
 const WHITE = hex('ffffff')
 
-interface Look {
+export interface BoosterLook {
   id: string
   hero: CardDef
+  /** The set name on the ribbon: a small line over a big one, e.g. ['Legend of', 'Blue Eyes']. */
+  title: readonly [string, string]
   /** Effects of the card artwork that belong to the hero, e.g. its lightning; painted behind the hero. */
   effects?: (art: Painter) => Mask
   /** Where the artwork's top left corner lands on the pack. */
@@ -105,7 +110,7 @@ function summoningCircle(p: Painter, [cx, cy]: Pt, r: number): Mask {
   return m
 }
 
-function boosterPack(look: Look): ProductDef {
+export function boosterPack(look: BoosterLook): ProductDef {
   return {
     id: look.id,
     w: W,
@@ -145,15 +150,16 @@ function boosterPack(look: Look): ProductDef {
       p.edge(ground, look.foil[2] ?? NAVY[1], [0, -1])
       art.subjectMask.each((x, y) => p.set(x + dx, y + dy, art.get(x, y)))
 
-      // set ribbon with swallow tails in front of the hero (horns and hat tips tuck behind it):
-      // "Legend of" small over "Blue Eyes"
+      // set ribbon with swallow tails in front of the hero (horns and hat tips tuck behind it): the
+      // set name, e.g. "Legend of" small over "Blue Eyes"
       const ribbon = p.m().poly([7, 29, 77, 29, 72.5, 38.5, 77, 48, 7, 48, 11.5, 38.5])
       p.fill(ribbon.moved(1, 1), look.foil[0] ?? INK)
       p.fill(ribbon, NAVY[1])
       p.fill(ribbon.facing([0, -1]), GOLD[3])
       p.fill(ribbon.facing([0, 1]), GOLD[1])
-      drawText(p, 'Legend of', 42, 31, MICRO, GOLD[3], { align: 'center' })
-      drawText(p, 'Blue Eyes', 42, 38, REGULAR, WHITE, { align: 'center', shadow: NAVY[0] })
+      const [small, big] = look.title
+      drawText(p, small, 42, 31, MICRO, GOLD[3], { align: 'center' })
+      drawText(p, big, 42, 38, REGULAR, WHITE, { align: 'center', shadow: NAVY[0] })
 
       // wordmark: gold letters that turn to fire orange towards the baseline, dark red rim, black
       // outline and a shadow that gives them depth
@@ -189,6 +195,7 @@ function boosterPack(look: Look): ProductDef {
   }
 }
 
+const LOB = ['Legend of', 'Blue Eyes'] as const
 const LIGHTNING = colors('8cc4ff', 'd4ecff', 'ffffff')
 const EMBERS = colors('ec6a1c', 'ff9a2a', 'ffd462', 'fff4c0')
 
@@ -196,6 +203,7 @@ const EMBERS = colors('ec6a1c', 'ff9a2a', 'ffd462', 'fff4c0')
 const boosterBlueEyes = boosterPack({
   id: 'booster-ygo-lob-blue-eyes',
   hero: blauaeugigerDrache,
+  title: LOB,
   effects: (art) => pick(art, LIGHTNING, [{ x: 0, y: 0, w: 80, h: 112 }]),
   at: [2, 35],
   foil: colors('02040f', '050b26', '0a1748', '12286e', '1c3e96', '2e60c0', '5e94e8', 'c8e4ff'),
@@ -206,6 +214,7 @@ const boosterBlueEyes = boosterPack({
 const boosterDarkMagician = boosterPack({
   id: 'booster-ygo-lob-dark-magician',
   hero: dunklerMagier,
+  title: LOB,
   at: [0, 35],
   foil: colors('04020c', '0a0420', '140a34', '200e48', '34125a', '5a1a6e', 'a03c8c', 'f4a6d8'),
   burst: [40, 70],
@@ -215,6 +224,7 @@ const boosterDarkMagician = boosterPack({
 const boosterRedEyes = boosterPack({
   id: 'booster-ygo-lob-red-eyes',
   hero: rotaeugigerDrache,
+  title: LOB,
   effects: (art) => pick(art, EMBERS, [{ x: 0, y: 0, w: 80, h: 70 }]),
   at: [4, 33],
   foil: colors('080102', '180306', '2c060a', '480a0e', '6e1010', '9c1e12', 'd2461c', 'ffb060'),

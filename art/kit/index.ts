@@ -44,7 +44,7 @@ import { place } from './stage.ts'
  * element; the first colour of a One Piece dual colour, the second tints the sky; spells without an
  * element 'Zauber', traps 'Falle') and `v` its variant (0 day, 1 night). Scenes: Pokémon types
  * (Feuer, Wasser, Pflanze, Elektro, Psycho, Kampf, Farblos), Yu-Gi-Oh! attributes (LICHT,
- * FINSTERNIS, ERDE, WASSER, FEUER, WIND), One Piece colours (Rot, Grün, Blau, Lila), Riftbound
+ * FINSTERNIS, ERDE, WASSER, FEUER, WIND), One Piece colours (Rot, Grün, Blau, Lila, Schwarz, Gelb), Riftbound
  * domains (Fury, Calm, Mind, Body, Chaos, Order), Zauber, Falle. Empiremon elements use the Pokémon
  * type scenes (Glut Feuer, Flut Wasser, Kraut Pflanze, Strom Elektro, Beton Kampf, Spuk Psycho).
  */
