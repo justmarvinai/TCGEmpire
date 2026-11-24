@@ -360,7 +360,7 @@ async function step(t: TestDb, me: string): Promise<number> {
   // 6. spare money goes into boosters: the kiosk first, then the stores
   for (const k of shop.kiosk.filter((x) => x.product_id.startsWith('booster-') && !house(x.product_id) && (x.daily_limit === null || x.bought_today < x.daily_limit))) {
     const most = Math.min(k.daily_limit === null ? Infinity : k.daily_limit - k.bought_today, Math.floor(p.cash_cents / k.price_cents / 2))
-    const qty = [10, 5, 1].find((n) => n <= most) // the kiosk sells 1, 5 or 10 at a time
+    const qty = [50, 10, 5, 1].find((n) => n <= most) // the kiosk sells 1, 5, 10 or 50 at a time
     if (qty && (await quietly(t, me, 'store_buy', { p_product: k.product_id, p_qty: qty }))) return 5
   }
   for (const st of shop.stores.filter((x) => x.open)) {
@@ -391,7 +391,7 @@ async function openAll(t: TestDb, me: string) {
   for (const s of sealed) {
     let left = s.qty
     while (left > 0) {
-      const n = Math.min(10, left)
+      const n = Math.min(50, left)
       if (await quietly(t, me, 'pack_open', { p_product: s.product_id, p_qty: n })) opened += n
       left -= n
     }
