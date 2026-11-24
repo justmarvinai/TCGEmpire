@@ -219,6 +219,7 @@ Goal: it feels finished.
 | ☑ | `0.0.5` | Empiremon, our own TCG: five kiosk-only sets that never leave print, far rarer and far more valuable Ultras and Grails (decision 120) |
 | ☑ | `0.0.6` | Quests pay money only weekly, dearer Pfandautomat and a weaker Glücks-Bon, Sammlung sorted by value, the tutorial works on phones (decision 121) |
 | ☑ | `0.0.7` | One Sammlung with filters and sorting, pack contents and chances on click, sealed grading packs with a suspenseful grade reveal, animated slabs (decision 122) |
+| ☑ | `0.0.8` | Empiremon Ultras and Grails 2.5 times likelier (and worth correspondingly less), a kiosk grouped by game with filters (decision 123) |
 
 ## After 0.0.1 (not planned in detail)
 

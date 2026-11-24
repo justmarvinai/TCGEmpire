@@ -155,11 +155,11 @@ value, stays: `0.0.3` Ultra 1:200 and Grail 1:2.000 (×2,78; were 1:72 and 1:720
 was 1:24), Ultra 1:1.000 (×5) and Grail 1:3.500 (×1,75). The ranges before: Alternative 120–600 €, Ultra 500–1.600 €,
 Grail 6.000–10.000 €.
 
-**Empiremon** (house sets, 0.0.5) has its own ranges because its odds are its own (Ultra 1:10.000, Grail 1:50.000,
-otherwise a Common; `pack.house_hit_odds_ppm`): Common 0,05–2 €, Ultra 400.000–800.000 €, Grail 2,5–5 Mio. € before
-calibration (`HOUSE_TIER_VALUE` in `content/catalog.ts`). After calibration to the same 72 % a Common is worth
-0,04–0,15 €, an Ultra about 590.000–640.000 € and a Grail about 4,0–4,3 Mio. €: nearly the whole booster value sits in
-two tiers nobody pulls.
+**Empiremon** (house sets) has its own ranges because its odds are its own (since 0.0.8 Ultra 1:4.000, Grail
+1:20.000, otherwise a Common; 0.0.5 had 1:10.000 and 1:50.000; `pack.house_hit_odds_ppm`): Common 0,05–2 €, Ultra
+160.000–320.000 €, Grail 1–2 Mio. € before calibration (`HOUSE_TIER_VALUE` in `content/catalog.ts`). After
+calibration to the same 72 % a Common is worth 0,04–0,15 €, an Ultra about 236.000–255.000 € and a Grail about
+1,6–1,7 Mio. €: nearly the whole booster value sits in two tiers few people pull.
 
 The same Glurak is worth a multiple as a PSA 10 (§5.3) and again a multiple once the set is out of print
 (§5.2) — that is where the big numbers come from.

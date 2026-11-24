@@ -5,9 +5,10 @@
 > in print from the start and for good, sold **only at the kiosk**, no Händlerlizenz needed (owner request,
 > 23 Nov 2026; decision 120).
 > **Booster:** 5 cards = 4 Commons + 1 hit slot · 200 € Basis (twice a normal booster) · no displays.
-> **Odds of the hit slot:** Ultra 1 : 10.000, Grail 1 : 50.000, otherwise a Common (`pack.house_hit_odds_ppm`).
-> No God Pack, no Doppel-Hit, no Pech-Schutz. That is 10 to 14 times rarer than the licensed games.
-> **Values:** Commons 0,04–0,15 €, Ultra about 590.000–640.000 €, Grail about 4,0–4,3 Mio. € (Basis-€, in print,
+> **Odds of the hit slot:** Ultra 1 : 4.000, Grail 1 : 20.000 since 0.0.8 (0.0.5: 1 : 10.000 and 1 : 50.000),
+> otherwise a Common (`pack.house_hit_odds_ppm`). No God Pack, no Doppel-Hit, no Pech-Schutz. That is 4 to 6 times
+> rarer than the licensed games.
+> **Values:** Commons 0,04–0,15 €, Ultra about 236.000–255.000 €, Grail about 1,6–1,7 Mio. € (Basis-€, in print,
 > neutral market); a booster is still worth 72 % of its price on average (`ECONOMY.md` §5.1).
 
 ## Identity

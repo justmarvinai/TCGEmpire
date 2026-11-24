@@ -71,8 +71,8 @@ seven tiers.
 | Ultra | 0.1 % | 1.000 |
 | Grail | 0.029 % | 3.500 |
 
-Since `0.0.4` (decision 119). **Empiremon** has its own odds (`pack.house_hit_odds_ppm`, decision 120): Common 99.88 %,
-Ultra 0.01 % (1 in 10.000), Grail 0.002 % (1 in 50.000); no Doppel-Hit, God Pack or Pech-Schutz.
+Since `0.0.4` (decision 119). **Empiremon** has its own odds (`pack.house_hit_odds_ppm`, decisions 120 and 123): Common
+99.7 %, Ultra 0.025 % (1 in 4.000), Grail 0.005 % (1 in 20.000); no Doppel-Hit, God Pack or Pech-Schutz.
 
 - Within a tier, cards are drawn with weights (most cards equal; a Grail tier with two cards may weight
   them differently).

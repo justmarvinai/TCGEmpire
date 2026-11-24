@@ -148,8 +148,9 @@ export const TIER_VALUE: Record<Tier, [lo: number, hi: number]> = {
  */
 export const HOUSE_TIER_VALUE: Partial<Record<Tier, [lo: number, hi: number]>> = {
   common: [5, 200],
-  ultra: [40_000_000, 80_000_000],
-  grail: [250_000_000, 500_000_000],
+  // 0.0.8: 2.5 times as likely as in 0.0.5, so worth 2.5 times less (were 400.000-800.000 € and 2,5-5 Mio. €)
+  ultra: [16_000_000, 32_000_000],
+  grail: [100_000_000, 200_000_000],
 }
 
 /** Target: an average booster is worth this share of its list price. */

@@ -3,6 +3,17 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.8] — Kiosk und Empiremon (24 Nov 2026)
+
+### Changed
+
+- **Empiremon is a little less brutal:** Ultra 1 in 4.000 boosters (was 1 in 10.000), Grail 1 in 20.000 (was 1 in
+  50.000). They are worth correspondingly less (an Ultra about 240.000 €, a Grail about 1,7 million), so a booster is
+  worth the same on average.
+- **New Kiosk:** the boosters are compact tiles grouped by game, with buttons to show one game; your favourite game
+  comes first, then your other games, Empiremon and the games you have no licence for. Ankauf, Lager and the snacks
+  now sit below it.
+
 ## [0.0.7] — Sammlung, Packs und Slabs (24 Nov 2026)
 
 ### Added

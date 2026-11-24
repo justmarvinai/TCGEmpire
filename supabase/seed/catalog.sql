@@ -392,11 +392,11 @@ insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_bas
   ('emp1-013', 'empiremon-1', 13, 'Rußratte', 'common', 'monster', 'Glut', 4),
   ('emp1-014', 'empiremon-1', 14, 'Schlammschnecke', 'common', 'monster', 'Flut', 4),
   ('emp1-015', 'empiremon-1', 15, 'Steckdosenigel', 'common', 'monster', 'Strom', 10),
-  ('emp1-016', 'empiremon-1', 16, 'Vulkanwolf', 'ultra', 'monster', 'Glut', 59067038),
-  ('emp1-017', 'empiremon-1', 17, 'Gewitterhirsch', 'ultra', 'monster', 'Strom', 63795930),
-  ('emp1-018', 'empiremon-1', 18, 'Abgrundwal', 'ultra', 'monster', 'Flut', 59067038),
-  ('emp1-019', 'empiremon-1', 19, 'Imperadon', 'grail', 'monster', 'Glut', 430646346),
-  ('emp1-020', 'empiremon-1', 20, 'Mondkaiserin', 'grail', 'monster', 'Spuk', 398724562)
+  ('emp1-016', 'empiremon-1', 16, 'Vulkanwolf', 'ultra', 'monster', 'Glut', 23626818),
+  ('emp1-017', 'empiremon-1', 17, 'Gewitterhirsch', 'ultra', 'monster', 'Strom', 25518375),
+  ('emp1-018', 'empiremon-1', 18, 'Abgrundwal', 'ultra', 'monster', 'Flut', 23626818),
+  ('emp1-019', 'empiremon-1', 19, 'Imperadon', 'grail', 'monster', 'Glut', 172258556),
+  ('emp1-020', 'empiremon-1', 20, 'Mondkaiserin', 'grail', 'monster', 'Spuk', 159489841)
 on conflict (id) do update set set_id = excluded.set_id, no = excluded.no, name = excluded.name, tier = excluded.tier,
   kind = excluded.kind, element = excluded.element, value_base_cents = excluded.value_base_cents;
 insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_base_cents) values
@@ -413,11 +413,11 @@ insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_bas
   ('emp2-011', 'empiremon-2', 11, 'Dönerdachs', 'common', 'monster', 'Glut', 15),
   ('emp2-012', 'empiremon-2', 12, 'Laternenlibelle', 'common', 'monster', 'Strom', 6),
   ('emp2-013', 'empiremon-2', 13, 'Rucksackratte', 'common', 'monster', 'Beton', 4),
-  ('emp2-014', 'empiremon-2', 14, 'Spätikönig', 'ultra', 'monster', 'Beton', 59057592),
-  ('emp2-015', 'empiremon-2', 15, 'Neonphönix', 'ultra', 'monster', 'Strom', 63785727),
-  ('emp2-016', 'empiremon-2', 16, 'Kebabkrake', 'ultra', 'monster', 'Glut', 59057592),
-  ('emp2-017', 'empiremon-2', 17, 'Der Letzte Döner', 'grail', 'monster', 'Glut', 430577475),
-  ('emp2-018', 'empiremon-2', 18, 'Neonyx', 'grail', 'monster', 'Spuk', 398660796)
+  ('emp2-014', 'empiremon-2', 14, 'Spätikönig', 'ultra', 'monster', 'Beton', 23623039),
+  ('emp2-015', 'empiremon-2', 15, 'Neonphönix', 'ultra', 'monster', 'Strom', 25514294),
+  ('emp2-016', 'empiremon-2', 16, 'Kebabkrake', 'ultra', 'monster', 'Glut', 23623039),
+  ('emp2-017', 'empiremon-2', 17, 'Der Letzte Döner', 'grail', 'monster', 'Glut', 172231009),
+  ('emp2-018', 'empiremon-2', 18, 'Neonyx', 'grail', 'monster', 'Spuk', 159464336)
 on conflict (id) do update set set_id = excluded.set_id, no = excluded.no, name = excluded.name, tier = excluded.tier,
   kind = excluded.kind, element = excluded.element, value_base_cents = excluded.value_base_cents;
 insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_base_cents) values
@@ -431,11 +431,11 @@ insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_bas
   ('emp3-008', 'empiremon-3', 8, 'Lochermaulwurf', 'common', 'monster', 'Kraut', 6),
   ('emp3-009', 'empiremon-3', 9, 'Faxfledermaus', 'common', 'monster', 'Strom', 6),
   ('emp3-010', 'empiremon-3', 10, 'Kaffeeautomatenkauz', 'common', 'monster', 'Glut', 10),
-  ('emp3-011', 'empiremon-3', 11, 'Bürokrator', 'ultra', 'monster', 'Beton', 59072368),
-  ('emp3-012', 'empiremon-3', 12, 'Aktenhydra', 'ultra', 'monster', 'Spuk', 59072368),
-  ('emp3-013', 'empiremon-3', 13, 'Faxdrache', 'ultra', 'monster', 'Strom', 63801686),
-  ('emp3-014', 'empiremon-3', 14, 'Der Ewige Antrag', 'grail', 'monster', 'Spuk', 398760540),
-  ('emp3-015', 'empiremon-3', 15, 'Stempelgott', 'grail', 'monster', 'Beton', 430685205)
+  ('emp3-011', 'empiremon-3', 11, 'Bürokrator', 'ultra', 'monster', 'Beton', 23628950),
+  ('emp3-012', 'empiremon-3', 12, 'Aktenhydra', 'ultra', 'monster', 'Spuk', 23628950),
+  ('emp3-013', 'empiremon-3', 13, 'Faxdrache', 'ultra', 'monster', 'Strom', 25520677),
+  ('emp3-014', 'empiremon-3', 14, 'Der Ewige Antrag', 'grail', 'monster', 'Spuk', 159504232),
+  ('emp3-015', 'empiremon-3', 15, 'Stempelgott', 'grail', 'monster', 'Beton', 172274100)
 on conflict (id) do update set set_id = excluded.set_id, no = excluded.no, name = excluded.name, tier = excluded.tier,
   kind = excluded.kind, element = excluded.element, value_base_cents = excluded.value_base_cents;
 insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_base_cents) values
@@ -458,11 +458,11 @@ insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_bas
   ('emp4-017', 'empiremon-4', 17, 'Pfandbonbär', 'common', 'monster', 'Beton', 10),
   ('emp4-018', 'empiremon-4', 18, 'Tütenqualle', 'common', 'monster', 'Flut', 4),
   ('emp4-019', 'empiremon-4', 19, 'Rückgaberabe', 'common', 'monster', 'Spuk', 6),
-  ('emp4-020', 'empiremon-4', 20, 'Pfandautomaten-Titan', 'ultra', 'monster', 'Beton', 59087706),
-  ('emp4-021', 'empiremon-4', 21, 'Glasdrache', 'ultra', 'monster', 'Flut', 63818252),
-  ('emp4-022', 'empiremon-4', 22, 'Recyclingphönix', 'ultra', 'monster', 'Glut', 59087706),
-  ('emp4-023', 'empiremon-4', 23, 'Goldflaschengeist', 'grail', 'monster', 'Spuk', 430797031),
-  ('emp4-024', 'empiremon-4', 24, 'Pfandkönig', 'grail', 'monster', 'Beton', 398864077)
+  ('emp4-020', 'empiremon-4', 20, 'Pfandautomaten-Titan', 'ultra', 'monster', 'Beton', 23635085),
+  ('emp4-021', 'empiremon-4', 21, 'Glasdrache', 'ultra', 'monster', 'Flut', 25527303),
+  ('emp4-022', 'empiremon-4', 22, 'Recyclingphönix', 'ultra', 'monster', 'Glut', 23635085),
+  ('emp4-023', 'empiremon-4', 23, 'Goldflaschengeist', 'grail', 'monster', 'Spuk', 172318828),
+  ('emp4-024', 'empiremon-4', 24, 'Pfandkönig', 'grail', 'monster', 'Beton', 159545646)
 on conflict (id) do update set set_id = excluded.set_id, no = excluded.no, name = excluded.name, tier = excluded.tier,
   kind = excluded.kind, element = excluded.element, value_base_cents = excluded.value_base_cents;
 insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_base_cents) values
@@ -491,11 +491,11 @@ insert into game.card_defs (id, set_id, no, name, tier, kind, element, value_bas
   ('emp5-023', 'empiremon-5', 23, 'Sitzplatzschakal', 'common', 'monster', 'Glut', 6),
   ('emp5-024', 'empiremon-5', 24, 'Weichenwurm', 'common', 'monster', 'Kraut', 4),
   ('emp5-025', 'empiremon-5', 25, 'Notbremsnashorn', 'common', 'monster', 'Glut', 10),
-  ('emp5-026', 'empiremon-5', 26, 'Zugausfall-Hydra', 'ultra', 'monster', 'Spuk', 59085815),
-  ('emp5-027', 'empiremon-5', 27, 'Stellwerk-Golem', 'ultra', 'monster', 'Beton', 59085815),
-  ('emp5-028', 'empiremon-5', 28, 'Schnellzugphönix', 'ultra', 'monster', 'Glut', 63816210),
-  ('emp5-029', 'empiremon-5', 29, 'Signalstörung', 'grail', 'monster', 'Strom', 398851313),
-  ('emp5-030', 'empiremon-5', 30, 'Der Pünktliche', 'grail', 'monster', 'Strom', 430783245)
+  ('emp5-026', 'empiremon-5', 26, 'Zugausfall-Hydra', 'ultra', 'monster', 'Spuk', 23634328),
+  ('emp5-027', 'empiremon-5', 27, 'Stellwerk-Golem', 'ultra', 'monster', 'Beton', 23634328),
+  ('emp5-028', 'empiremon-5', 28, 'Schnellzugphönix', 'ultra', 'monster', 'Glut', 25526486),
+  ('emp5-029', 'empiremon-5', 29, 'Signalstörung', 'grail', 'monster', 'Strom', 159540540),
+  ('emp5-030', 'empiremon-5', 30, 'Der Pünktliche', 'grail', 'monster', 'Strom', 172313314)
 on conflict (id) do update set set_id = excluded.set_id, no = excluded.no, name = excluded.name, tier = excluded.tier,
   kind = excluded.kind, element = excluded.element, value_base_cents = excluded.value_base_cents;
 insert into game.product_defs (id, set_id, kind, name, price_base_cents, slots, contents) values

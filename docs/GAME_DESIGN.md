@@ -191,9 +191,9 @@ Döner, Der Pünktliche). Brief and card lists: `docs/sets/empiremon.md`; decisi
   orders, Pack Battles or NPC classifieds, and the admin cannot take a set out of print. Players can still trade,
   sell and list the cards and sealed boosters they own.
 - **Booster:** 5 cards (4 Commons + the hit slot) for twice the price of a normal booster. The hit slot is a Common
-  unless it rolls an Ultra (1:10.000) or a Grail (1:50.000): 10 to 14 times rarer than in the licensed games. No God
-  Pack, no Doppel-Hit, no Pech-Schutz; Pack-Glück counts.
-- **Values:** Commons are worth cents; an Ultra about 600.000 €, a Grail about 4 Mio. € (Basis-€). The booster is
+  unless it rolls an Ultra (1:4.000) or a Grail (1:20.000) since 0.0.8 (were 1:10.000 and 1:50.000): 4 to 6 times
+  rarer than in the licensed games. No God Pack, no Doppel-Hit, no Pech-Schutz; Pack-Glück counts.
+- **Values:** Commons are worth cents; an Ultra about 240.000 €, a Grail about 1,7 Mio. € (Basis-€). The booster is
   still calibrated to 72 % of its price on average: a pure lottery.
 - **Card text** is written at runtime in a real font (decision 065); only artwork and frame are pixel art.
 

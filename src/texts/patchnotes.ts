@@ -1,6 +1,14 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.8',
+    title: 'Kiosk und Empiremon',
+    items: [
+      'Empiremon ist etwas weniger gemein: Ultra 1 in 4.000 Boostern (war 1 in 10.000), Grail 1 in 20.000 (war 1 in 50.000). Dafür sind sie entsprechend weniger wert, eine Ultra rund 240.000 €, eine Grail rund 1,7 Millionen. Im Schnitt bleibt jeder Booster gleich viel wert.',
+      'Der Kiosk ist aufgeräumt: Die Booster stehen nach Spiel sortiert als kleine Kacheln, mit Knöpfen für ein einzelnes Spiel. Dein Lieblingsspiel steht oben, dann deine anderen Spiele, Empiremon und was dir noch an Lizenzen fehlt. Ankauf, Lager und Snacks sind darunter gerutscht.',
+    ],
+  },
+  {
     version: '0.0.7',
     title: 'Sammlung, Packs und Slabs',
     items: [
