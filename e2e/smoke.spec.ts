@@ -33,7 +33,7 @@ test('first account registers, sees the shell, signs out and back in', async ({ 
   await page.screenshot({ path: shot('home'), animations: 'disabled' })
 
   // Locked and not-yet-built features are visible, not hidden.
-  await expect(page.getByTitle('Firma: Ab Level 30')).toBeVisible()
+  await expect(page.getByTitle('Firma: Ab Level 20')).toBeVisible()
   await page.getByRole('link', { name: /^Toplisten/ }).click() // NEU until its tour is done
   await finishTour(page, 'Toplisten')
   await expect(page.getByText(/^Platz \d+$/)).toBeVisible()

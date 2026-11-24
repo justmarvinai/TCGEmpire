@@ -48,8 +48,8 @@ an **incremental business sim** with idle elements, a living card market and a l
 | Phase | Levels | You are… | Main activities | New systems |
 |-------|--------|----------|-----------------|-------------|
 | **Schulhof** | 1–9 | a kid with Pfandflaschen | Minijobs, first packs, sell to the Kartenladen, quests | Packs, Sammlung, Minijobs, Geldbunker, Kleinanzeigen, Upgrades |
-| **Flohmarkt** | 10–29 | a hobby trader | Cardmarket trading, restock runs, grading, pack battles, first flat | Cardmarket, Schichten, Grading, Pack Battles, Sealed, Wohnen, Auktionen |
-| **Gewerbe** | 30–64 | a business owner | Run the grading company, wholesale, streaming, dirty tricks | Firma, Großhandel, Schattenwirtschaft, Streaming, Bares für Rares |
+| **Flohmarkt** | 10–29 | a hobby trader | Cardmarket trading, restock runs, grading, pack battles, first flat, founding the company | Cardmarket, Schichten, Grading, Pack Battles, Sealed, Wohnen, Auktionen, Firma (from level 20 since 0.0.10) |
+| **Gewerbe** | 30–64 | a business owner | Run the grading company, wholesale, streaming, dirty tricks | Großhandel, Schattenwirtschaft, Streaming, Bares für Rares |
 | **Mogul** | 65–99 | a tycoon | Company expansion, luxury, megaprojects, museum auctions | Megaprojekte, Museum, Luxus, Franchise |
 | **Exit** | 100 → Prestige | a legend | Sell the empire, restart stronger, chase master sets | Prestige, Empire-Perks |
 
@@ -368,7 +368,8 @@ its own quality values.
 
 ## 9. The company (Firma)
 
-Unlock: level 30, after the bureaucracy quest chain **"Gewerbeanmeldung"** (Passierschein A38 included).
+Unlock: level 20 (owner request in 0.0.10; it was 30), after the bureaucracy quest chain **"Gewerbeanmeldung"**
+(Passierschein A38 included). Founding costs 25.000 € Basis, so money, not the level, decides when most players start.
 In 0.0.1 the company is a **grading company**; the system is built so further business units (Kartenladen,
 Auktionshaus, Automaten) can be added later.
 
@@ -781,7 +782,7 @@ At level 100 you can sell your empire.
 |----|--------|----|--------|
 | 1 | Kinderzimmer, Pfandflaschen, Kiosk, Pack-Opening (×1/×5/×10, Sofort aufdecken), Sammlung, Mini-Quests, Stammtisch, Toplisten, Profil | 25 | eBay-Auktionen |
 | 2 | Tagesquests, Stempelkarte | 28 | 4. TCG-Lizenz, Bares für Rares |
-| 3 | Geldbunker | 30 | **Firma** |
+| 3 | Geldbunker | 30 | — (the Firma moved to level 20 in 0.0.10) |
 | 4 | Kleinanzeigen | 35 | Schattenwirtschaft (attacks, shady deals), Abwehr upgrades |
 | 5 | Upgrades, Skillbaum | 40 | Großhandel (displays and cases at wholesale price) |
 | 7 | Schichten (idle jobs) | 45 | Streaming |
@@ -789,11 +790,12 @@ At level 100 you can sell your empire.
 | 13 | Grading, Wochenquests | 55 | Luxus |
 | 16 | Pack Battles | 60 | Höhle der Löwen (investors) |
 | 18 | Lager, displays, Sonntags-Flohmarkt | 65 | Megaprojekte, Museum auctions |
-| 20 | Wohnen (move out), 3. TCG-Lizenz | 70 / 80 / 90 | Company stages 5–7, top homes and luxury tiers |
+| 20 | Wohnen (move out), 3. TCG-Lizenz, **Firma** | 70 / 80 / 90 | Company stages 5–7, top homes and luxury tiers |
 | 22 | Box Breaks, Privatkredit | 100 | **Prestige (Exit)** |
 
 With the 2–3 week pace this means: everything up to Pack Battles within the first hour, Wohnen on day 1,
-the Firma on day 2, the dark side on day 2–3, the mogul features in week 2.
+the Firma's paperwork on day 2 (founding it takes 25.000 € Basis, which most players have on day 3–4), the dark side
+on day 2–3, the mogul features in week 2.
 
 Every level in between gives at least one smaller unlock (a new job or rank, store, home, decor line,
 upgrade tier) plus a level reward.

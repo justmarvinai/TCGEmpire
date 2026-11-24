@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createTestDb, type TestDb } from './harness.ts'
 import type { CompanyDoc } from '../../src/lib/schemas.ts'
+import { UNLOCKS } from '../../content/unlocks.ts'
 
 const rid = () => crypto.randomUUID()
 const LABEL = { bg: 'rot', fg: 'weiss', emblem: '183c7effff7e3c18' }
@@ -31,10 +32,10 @@ beforeEach(async () => {
 })
 
 describe('Gewerbeanmeldung and founding', () => {
-  it('needs level 30, the fee, the waiting time and the Passierschein before the company exists', async () => {
-    await t.sql(`update game.players set level = 29 where id = $1`, [id])
+  it('needs its unlock level (20 since 0.0.10), the fee, the waiting time and the Passierschein before the company exists', async () => {
+    await t.sql(`update game.players set level = $2 where id = $1`, [id, UNLOCKS.company - 1])
     await expect(act('company_found_step', { p_step: 'antrag' })).rejects.toThrow('locked')
-    await t.sql(`update game.players set level = 30 where id = $1`, [id])
+    await t.sql(`update game.players set level = $2 where id = $1`, [id, UNLOCKS.company])
     const before = await cash()
     const doc = await act('company_found_step', { p_step: 'antrag' })
     expect(doc.founding).toMatchObject({ step: 1 })
