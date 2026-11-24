@@ -158,7 +158,9 @@ function Mine({ d }: { d: Ads }) {
     setBusy(key)
     const res = await run(fn, args)
     setBusy(null)
-    if (res) toast('success', done)
+    // the NPC buyer could no longer pay: the offer is gone, the item stays
+    if (res && 'broke' in res && res.broke) toast('info', T.buyerBroke)
+    else if (res) toast('success', done)
   }
   return (
     <div className="grid gap-4 lg:grid-cols-[22rem_1fr]">

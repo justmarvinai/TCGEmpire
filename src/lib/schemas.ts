@@ -392,7 +392,7 @@ export const zAds = z.object({
   }),
 })
 export type Ads = z.infer<typeof zAds>
-const zAdsWrite = z.object({ ads: zAds, player: zPlayer })
+const zAdsWrite = z.object({ ads: zAds, player: zPlayer, broke: z.boolean().optional() })
 
 export const zHome = z.object({
   last_hit: z.object({ card_id: z.string(), tier: z.string(), value_cents: z.number(), pulled_at: z.string() }).nullable(),

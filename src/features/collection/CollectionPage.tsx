@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { useQueries, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Card, TiltCard } from '@/components/cards/Card.tsx'
 import { SlabOf, slabName } from '@/components/cards/Slab.tsx'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
@@ -13,7 +13,7 @@ import { Panel } from '@/components/ui/Panel.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { useAct, useCosmetics } from '@/lib/actions.ts'
+import { useAct, useBinders, useCosmetics } from '@/lib/actions.ts'
 import { SetGoals } from './Goals.tsx'
 import { cardById, HIT_TIERS, SETS, TIER_LABEL, TIER_TEXT, TIERS, tierRank, UNLOCKS, type Game, type Tier } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
@@ -36,14 +36,6 @@ const setIndex = new Map(SETS.map((s, i) => [s.id, i]))
 const setOfCardId = new Map(SETS.flatMap((s) => s.cards.map((c) => [c.id, s] as const)))
 const tierOf = (c: BinderCard) => cardById.get(c.card_id)?.tier ?? 'common'
 
-/** One binder query per set (the keys other pages refresh), merged into one collection. Stable, so it memoizes. */
-const mergeBinders = (rs: { data?: { cards: BinderCard[] }; isPending: boolean; error: Error | null; refetch: () => unknown }[]) => ({
-  cards: rs.flatMap((r) => r.data?.cards ?? []),
-  pending: rs.some((r) => r.isPending),
-  error: rs.find((r) => r.error)?.error ?? null,
-  refetch: () => rs.forEach((r) => void r.refetch()),
-})
-
 const ORDER: Record<SortKey, (a: BinderCard, b: BinderCard) => number> = {
   value: (a, b) => b.value_cents - a.value_cents,
   number: (a, b) =>
@@ -57,10 +49,7 @@ const ORDER: Record<SortKey, (a: BinderCard, b: BinderCard) => number> = {
 export function CollectionPage() {
   // sets not out yet stay hidden until the admin releases them
   const released = useReleasedSets()
-  const binder = useQueries({
-    queries: released.map((s) => ({ queryKey: ['binder', s.id], queryFn: () => rpc('binder_get', { p_set: s.id }) })),
-    combine: mergeBinders,
-  })
+  const binder = useBinders()
   const look = useCosmetics().data?.style
   const act = useAct()
   const [game, setGame] = useState<Game | 'all'>('all')

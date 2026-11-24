@@ -10,14 +10,14 @@ import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { duplicateStacks } from '@/features/collection/sellDupes.ts'
 import { useAct, useLicenses, useShop } from '@/lib/actions.ts'
-import { GAMES, gameOf, isHouseProduct, productById, SETS, type Game } from '@/lib/catalog.ts'
+import { GAMES, gameOf, isHouseProduct, productById, type Game } from '@/lib/catalog.ts'
 import type { Shop } from '@/lib/schemas.ts'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
 import { formatMoney, formatNumber } from '@/lib/format.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
 import { sfx } from '@/lib/sfx.ts'
 import { texts } from '@/texts/de.ts'
-import { useMe } from '@/lib/world.ts'
+import { useMe, useReleasedSets } from '@/lib/world.ts'
 import { LicensePanel } from './Licenses.tsx'
 import { Snacks } from './Snacks.tsx'
 import { Lager, Stores } from './Stores.tsx'
@@ -215,11 +215,12 @@ function KioskTile({ k, locked, busy, onBuy, tour }: { k: Offer; locked: boolean
 
 function SellDuplicates() {
   const act = useAct()
+  const released = useReleasedSets()
   const [busy, setBusy] = useState(false)
   const run = async () => {
     setBusy(true)
     try {
-      const stacks = (await Promise.all(SETS.map((s) => rpc('binder_get', { p_set: s.id })))).flatMap((b) => duplicateStacks(b.cards))
+      const stacks = (await Promise.all(released.map((s) => rpc('binder_get', { p_set: s.id })))).flatMap((b) => duplicateStacks(b.cards))
       if (stacks.length === 0) {
         toast('info', T.noDupes)
         return

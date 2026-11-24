@@ -1,12 +1,12 @@
 // Write actions and read queries. Every write carries a fresh request id, puts the returned player into
 // the HUD, refreshes the affected queries and asks for an immediate sync (level-ups, feed).
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import type { z } from 'zod'
 import { toast } from '@/components/ui/toast.tsx'
 import { errorText, newRequestId, rpc } from './rpc.ts'
-import type { Player, RPC_SCHEMAS, RpcName } from './schemas.ts'
-import { syncNow, useApplyPlayer } from './world.ts'
+import type { BinderCard, Player, RPC_SCHEMAS, RpcName } from './schemas.ts'
+import { syncNow, useApplyPlayer, useReleasedSets } from './world.ts'
 
 type Result<N extends RpcName> = z.infer<(typeof RPC_SCHEMAS)[N]>
 
@@ -32,8 +32,21 @@ export function useAct() {
 }
 
 export const useShop = () => useQuery({ queryKey: ['shop'], queryFn: () => rpc('shop_get') })
-export const useBinder = (set: string) =>
-  useQuery({ queryKey: ['binder', set], queryFn: () => rpc('binder_get', { p_set: set }) })
+/** One binder query per set (the keys actions refresh), merged into one collection. Stable, so it memoizes. */
+const mergeBinders = (rs: { data?: { cards: BinderCard[] }; isPending: boolean; error: Error | null; refetch: () => unknown }[]) => ({
+  cards: rs.flatMap((r) => r.data?.cards ?? []),
+  pending: rs.some((r) => r.isPending),
+  error: rs.find((r) => r.error)?.error ?? null,
+  refetch: () => rs.forEach((r) => void r.refetch()),
+})
+/** Every card of every released set with what the player owns of it. Pages share the per-set cache. */
+export function useBinders() {
+  const sets = useReleasedSets()
+  return useQueries({
+    queries: sets.map((s) => ({ queryKey: ['binder', s.id], queryFn: () => rpc('binder_get', { p_set: s.id }) })),
+    combine: mergeBinders,
+  })
+}
 export const useQuests = () => useQuery({ queryKey: ['quests'], queryFn: () => rpc('quests_get') })
 export const useBunker = () => useQuery({ queryKey: ['bunker'], queryFn: () => rpc('bunker_get') })
 export const useUpgrades = () => useQuery({ queryKey: ['upgrades'], queryFn: () => rpc('upgrades_get') })
