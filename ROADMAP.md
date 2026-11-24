@@ -223,6 +223,10 @@ Goal: it feels finished.
 | ☑ | `0.0.9` | Sets 2 and 3 of Pokémon, Yu-Gi-Oh!, One Piece and Riftbound (eight sets, 60–90 cards each), announced until the owner releases each one; unreleased sets stay out of the game; a themed goal per set (decisions 124–126) |
 | ☑ | `0.0.10` | The Firma opens at level 20 instead of 30 (decision 127) |
 
+**QA pass (24 Nov 2026, owner request; no version, changelog or patch notes: QA stays out of the in-game news).** Bugs
+fixed on server and client (decision 128), progression hiccups fixed and the pace re-measured with a corrected sim bot
+(decision 129). Left for the owner: the company late in the game (Q-32).
+
 ## After 0.0.1 (not planned in detail)
 
 More sets after the third (admin-released), further business units (Kartenladen, Automaten, Auktionshaus), drawn room

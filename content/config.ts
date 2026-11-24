@@ -19,7 +19,8 @@ export const config = {
   'ep.base': 25,
   'ep.factor': 8.5,
   'ep.exponent': 1.3,
-  'ep.growth': 1.035,
+  // QA pass: 1.035 → 1.04; the sim bot was too slow (wrong boosters, lost night shifts), so the real pace was ~1.4× the plan
+  'ep.growth': 1.04,
   // EP rewards grow a little slower than the EP needed: the late game slows down, the first levels do not
   'ep.reward_growth': 1.03,
   'ep.catchup_levels': 10,
@@ -134,6 +135,8 @@ export const config = {
   // Energy (minijobs only)
   'energy.max': 100,
   'energy.regen_seconds': 180,
+  // QA pass: kiosk snacks give at most this much energy a day ("satt"); unlimited Club-Mate was an endless minijob loop
+  'snack.daily_energy': 150,
 
   // Boosters
   // per booster's hit slot: Holo 1:5, Alternative 1:50, Ultra 1:1.000, Grail 1:3.500 since 0.0.4 (0.0.3: 1:24, 1:200, 1:2.000)
@@ -145,7 +148,8 @@ export const config = {
   'pack.double_hit_ppm': 25_000,
   'pack.pity_after': 12,
   'pack.pity_step_ppm': 30_000,
-  'pack.max_open': 10,
+  // QA pass: 10 → 50 (late in the game the daily pack EP took about 80 clicks); the kiosk sells 50 at once too
+  'pack.max_open': 50,
   // Hidden quality values (centering, corners, edges, surface) of hits: weights for 10, 9, 8, 7, 6, 5
   'quality.weights': [59, 27, 9, 3, 1, 1],
 

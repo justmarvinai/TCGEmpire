@@ -50,7 +50,7 @@ export const WEEKLY_QUESTS: readonly QuestTemplate[] = [
   { key: 'w_graded', event: 'graded', min: 4, max: 8, text: 'Lass diese Woche {n} Karten graden.', path: '/grading', minLevel: 13 },
   { key: 'w_battles', event: 'battle_played', min: 2, max: 4, text: 'Spiel diese Woche {n} Pack Battles.', path: '/battles', minLevel: 16 },
   { key: 'w_dark', event: 'attack_done', min: 1, max: 3, text: 'Mach diese Woche {n} [Ding|Dinger] in der Schattenwirtschaft. Ein Gerücht geht immer.', path: '/darkside', minLevel: 35 },
-  { key: 'w_stamps', event: 'stamp_claimed', min: 5, max: 6, text: 'Stempel diese Woche {n}× die Stempelkarte.', path: '/quests' },
+  { key: 'w_stamps', event: 'stamp_claimed', min: 3, max: 4, text: 'Stempel diese Woche {n}× die Stempelkarte.', path: '/quests' },
 ]
 
 export const QUESTS_BY_KIND = { mini: MINI_QUESTS, daily: DAILY_QUESTS, weekly: WEEKLY_QUESTS } as const

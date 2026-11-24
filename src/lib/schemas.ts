@@ -121,6 +121,8 @@ export const zShop = z.object({
   ),
   lager: z.object({ used: z.number(), cap: z.number(), unlock_level: z.number() }),
   sealed: z.array(z.object({ product_id: z.string(), qty: z.number() })),
+  /** energy kiosk snacks may still give today (snack.daily_energy) */
+  snack_energy_left: z.number(),
   snacks: z.array(z.object({ key: z.string(), price_cents: z.number().nullable(), pfandbons: z.number().nullable() })),
 })
 export type Shop = z.infer<typeof zShop>

@@ -375,6 +375,15 @@ function Summary({
   const all = result.packs.flatMap((p) => p.cards)
   const sorted = [...all].sort((a, b) => tierRank(b.tier) - tierRank(a.tier) || b.value_cents - a.value_cents)
   const hits = sorted.filter((c) => HIT_TIERS.has(c.tier))
+  // one tile per card with its count, so fifty packs stay readable
+  const tiles = new Map<string, { card: (typeof all)[number]; n: number; isNew: boolean }>()
+  for (const c of sorted) {
+    const tile = tiles.get(c.card_id)
+    if (tile) {
+      tile.n += 1
+      tile.isNew ||= !!c.new
+    } else tiles.set(c.card_id, { card: c, n: 1, isNew: !!c.new })
+  }
   const paid = result.price_cents * result.packs.length
   const ratio = paid > 0 ? result.total_value_cents / paid : 1
   const verdict = T.verdicts.find(([max]) => ratio < max)?.[1] ?? ''
@@ -442,10 +451,11 @@ function Summary({
             {T.allCards} <span className="text-fg-3">({all.length})</span>
           </h3>
           <div className="flex flex-wrap gap-2">
-            {sorted.map((c, i) => (
-              <div key={i} className="relative" title={`${cardName(c.card_id)} · ${formatMoney(c.value_cents)}`}>
+            {[...tiles.values()].map(({ card: c, n, isNew }) => (
+              <div key={c.card_id} className="relative" title={`${cardName(c.card_id)} · ${formatMoney(c.value_cents)}`}>
                 <Card id={c.card_id} scale={1} foil="sweep" />
-                {c.new && <NewBadge small />}
+                {isNew && <NewBadge small />}
+                {n > 1 && <span className="nums absolute right-0.5 bottom-0.5 rounded-md bg-ink/85 px-1 font-pixel text-xs">×{n}</span>}
               </div>
             ))}
           </div>

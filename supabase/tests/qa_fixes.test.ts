@@ -140,6 +140,64 @@ describe('QA fixes', () => {
     expect(await t.sql(`select 1 from game.quests where player_id = $1 and event = 'energy_pulled'`, [ygo])).toEqual([])
   })
 
+  it('kiosk snacks stop giving energy for the day once the player is satt', async () => {
+    const t = await createTestDb()
+    const me = await t.player('Vielfrass')
+    const id = await t.playerId(me)
+    await t.sql(`select private.money_add($1, 10000000, 'admin_grant')`, [id])
+    const mate = () => t.rpc(me, 'consumable_use', { p_request_id: rid(), p_key: 'mate' })
+    const drain = () => t.sql(`update game.players set energy = 0, energy_at = private.now() where id = $1`, [id])
+    await mate() // a full tank wastes the snack, and it does not count
+    expect((await t.rpc(me, 'shop_get')).snack_energy_left).toBe(150)
+    // snack.daily_energy = 150: seven Club-Mate give 140, the eighth may go over, the ninth is refused
+    for (let i = 0; i < 8; i++) {
+      await drain()
+      await mate()
+    }
+    expect((await t.rpc(me, 'shop_get')).snack_energy_left).toBe(0)
+    await drain()
+    const before = await cash(t, id)
+    await expect(mate()).rejects.toThrow('snack_full')
+    expect(await cash(t, id)).toBe(before) // nothing charged
+    await t.advance('1 day')
+    expect((await t.rpc(me, 'shop_get')).snack_energy_left).toBe(150)
+    await mate() // hungry again
+    await t.assertLedgerMatches()
+  })
+
+  it('new-card quests are only offered while ordinary cards are still missing', async () => {
+    const t = await createTestDb()
+    const id = await t.playerId(await t.player('Komplettist', 'geheim123', 'yugioh'))
+    const doable = async () => (await t.sql<{ d: boolean }>(`select private.quest_doable($1, 'card_new') as d`, [id]))[0]!.d
+    expect(await doable()).toBe(true)
+    // every common, uncommon and rare card the player can pull; only hits are left, which can take days
+    await t.sql(
+      `insert into game.collection (player_id, card_id, first_at)
+       select $1, c.id, private.now() from game.card_defs c join game.set_defs s on s.id = c.set_id
+       where c.tier in ('common', 'uncommon', 'rare') and s.phase in ('print', 'last_wave')
+       on conflict do nothing`,
+      [id],
+    )
+    expect(await doable()).toBe(false)
+    for (let i = 0; i < 10; i++) {
+      await t.sql(`delete from game.quests where player_id = $1 and claimed_at is null`, [id])
+      await t.sql(`select private.quests_fill($1)`, [id])
+    }
+    expect(await t.sql(`select 1 from game.quests where player_id = $1 and event = 'card_new'`, [id])).toEqual([])
+  })
+
+  it('fifty boosters are bought and opened in one go', async () => {
+    const t = await createTestDb()
+    const me = await t.player('Grossabnehmer')
+    const id = await t.playerId(me)
+    await t.sql(`select private.money_add($1, 100000000, 'admin_grant')`, [id])
+    await expect(t.rpc(me, 'store_buy', { p_request_id: rid(), p_product: 'booster-pkm-base', p_qty: 20 })).rejects.toThrow('invalid_request')
+    expect((await t.rpc(me, 'store_buy', { p_request_id: rid(), p_product: 'booster-pkm-base', p_qty: 50 })).bought).toBe(50)
+    const opened = await t.rpc(me, 'pack_open', { p_request_id: rid(), p_product: 'booster-pkm-base', p_qty: 50 })
+    expect(opened.packs).toHaveLength(50)
+    await t.assertLedgerMatches()
+  })
+
   it('Adventskalender doors give no cards of a set in Vorbestellung', async () => {
     const t = await createTestDb()
     await t.setConfig({ 'events.enabled': true })

@@ -158,7 +158,7 @@ RLS enabled on every table with no policies.
 | `players.best_pull_card`, `players.best_pull_cents`, `game.league` | alpha_07 · the most valuable card ever pulled (value then); Wochenwertung per week and player: start net worth, value moved to/from other players (`adjust_cents`), final growth and rank. |
 | `game.insurance` | alpha_07 · policies (versand, hausrat) with the day the premium was paid. |
 | `game.friend_acts` | alpha_08 · Aushelfen and Kaffee und Kuchen: actor, target, kind and German day (one per pair, kind and day). Since alpha_12 at most `help.max_received` Aushelfen per target and day (trigger). |
-| `game.daily_counts` | alpha_12 · per player, German day and key a running count: `packs` (packs opened, for the pack EP cap), `received` (value received as gifts and trade surpluses, for the receive cap). Kept 7 days. |
+| `game.daily_counts` | alpha_12 · per player, German day and key a running count: `packs` (packs opened, for the pack EP cap), `received` (value received as gifts and trade surpluses, for the receive cap), `snack_energy` (energy from kiosk snacks, for `snack.daily_energy`, QA pass). Kept 7 days. |
 | `game.transfers` | alpha_12 · one-way value between two players for the admin console: from, to, kind (gift, trade, market, loan, company), cents, time. Kept 30 days. |
 | `game.group_orders`, `game.group_order_shares` | alpha_08 · Sammelbestellung: a case of displays (product, wholesale unit price fixed at the start, state, expiry) and each player's shares and payment; a full case becomes one shipment per player. |
 | `players.rt_topic` | alpha_08 · random id of the player's private Realtime channel (`player:<rt_topic>`); triggers on notifications, feed, chat and battles send pokes (`private.rt_send`). |
@@ -200,8 +200,8 @@ RLS enabled on every table with no policies.
 |-----|------|-------|
 | `me_get`, `sync` | read | player doc incl. energy, sealed count, ready quests, net worth; `sync` also counts the players online (0.0.3, `online_count`); the server doc lists the `unreleased` set ids (0.0.9) |
 | `join`, `login`, `logout`, `account_email_set` | write | own login on anonymous sessions; login by e-mail or username |
-| `shop_get` | read | Kiosk offers, own sealed products |
-| `store_buy(qty 1/5/10)` | write | Kiosk price = list × markup × P; daily limit |
+| `shop_get` | read | Kiosk offers, own sealed products, `snack_energy_left` (QA pass) |
+| `store_buy(qty 1/5/10/50)` | write | Kiosk price = list × markup × P; daily limit |
 | `pack_open(qty 1..10)` | write | rolls and books everything; returns all packs |
 | `binder_get(set)` | read | all cards of a set with holdings and values |
 | `ankauf_sell(stacks, copies)` | write | 60 % of value |
@@ -213,7 +213,7 @@ RLS enabled on every table with no policies.
 | `bunker_get`, `bunker_collect` | read/write | idle money up to capacity; interest when at least 90 % full |
 | `upgrades_get`, `upgrade_buy` | read/write | now → next per upgrade; bunker upgrades pay the bunker out first |
 | `jobs_get`, `shift_start`, `shift_checkin`, `shift_claim` | read/write | shifts of 15 min–8 h, ranks from hours, check-ins every 30 min; early end pays the time worked |
-| `consumable_use` | write | snacks (money) and Pfandautomat items (Pfandbons) |
+| `consumable_use` | write | snacks (money) and Pfandautomat items (Pfandbons); kiosk snacks fail with `snack_full` once today's snack energy is used up |
 | `stats_get`, `title_set` | read/write | counters, achievements, titles |
 | `recap_get`, `recap_collect` | read/write | "Willkommen zurück": bunker and finished shift in one click |
 | `account_reset`, `account_delete` | write | Gefahrenzone; confirmed with the username; reset once per 24 h |
@@ -248,7 +248,7 @@ Naming: `<area>_<verb>` in schema `public`. Reads are `stable` and return one js
 | Area | Reads | Writes |
 |------|-------|--------|
 | Session | `sync`, `me_get`, `recap_get`, `account_get` (own e-mail), `limits_get` (price bands, pack EP today, another player's loan maximum, receive cap and helps left) | `join` (e-mail, username, password, invite code), `login` (e-mail or username), `logout`, `account_email_set`, `recap_collect`, `settings_set`, `account_reset`, `account_delete` |
-| Packs | `shop_get`, `opening_get` | `store_buy` (qty), `pack_open` (qty 1/5/10/36, returns every pack's content at once), `opening_finish`, `display_unbox` |
+| Packs | `shop_get`, `opening_get` | `store_buy` (qty), `pack_open` (qty 1 to `pack.max_open` = 50, returns every pack's content at once), `opening_finish`, `display_unbox` |
 | Collection | `binder_get`, `card_get`, `inventory_get` | `bulk_sell`, `vitrine_set`, `attic_move`, `bulk_recycle` |
 | Market | `market_overview`, `market_card`, `my_listings`, `ads_get`, `auctions_get`, `trade_get` | `listing_create/cancel/buy`, `order_create/cancel`, `ad_offer`, `ad_post`, `ad_answer`, `auction_create`, `auction_bid`, `trade_propose/update/confirm/cancel`, `ankauf_sell` |
 | Grading | `grading_get`, `pop_report_get` | `pregrade`, `grading_submit`, `grading_reveal`, `slab_crack` |

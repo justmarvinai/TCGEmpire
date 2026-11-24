@@ -193,7 +193,7 @@ function KioskTile({ k, locked, busy, onBuy, tour }: { k: Offer; locked: boolean
         {k.daily_limit !== null && <p className="text-xs text-fg-3">{T.today(k.bought_today, k.daily_limit)}</p>}
         {!locked && (
           <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-            {[1, 5, 10].map((n) => (
+            {[1, 5, 10, 50].map((n) => (
               <Button
                 key={n}
                 size="sm"

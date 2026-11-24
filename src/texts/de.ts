@@ -1363,7 +1363,9 @@ export const texts = {
 
   snacks: {
     title: 'Snacks',
-    tip: 'Snacks am Kiosk geben Energie für Minijobs. Der Döner gibt am meisten, macht aber fettige Finger.',
+    tip: 'Snacks am Kiosk geben Energie für Minijobs. Der Döner gibt am meisten, macht aber fettige Finger. Irgendwann ist jeder Magen voll: Dann geben Snacks bis Mitternacht keine Energie mehr.',
+    left: (n: number) => `Noch ${n} Energie bis satt`,
+    full: 'Pappsatt bis morgen',
     automat: 'Pfandautomat',
     automatTip: 'Hier löst du Pfandbons ein. Die gibt es für Quests und gute Minijob-Runden.',
     buy: 'Kaufen',
@@ -2608,6 +2610,7 @@ export const texts = {
     trade_invalid: 'Das passt nicht mehr: Jemand hat die Sachen nicht mehr oder das Geld reicht nicht.',
     quest_not_ready: 'Die Quest ist noch nicht fertig.',
     not_enough_energy: 'Keine Energie mehr. Iss was oder warte.',
+    snack_full: 'Du bist pappsatt. Noch ein Snack und der Kiosk ruft den Notarzt. Morgen wieder.',
     too_early: 'Zu schnell fertig. Schummeln ist Mamas Job.',
     not_ready: 'Noch nicht so weit. Geduld, das kennst du doch von DHL.',
     no_points: 'Nicht genug Skillpunkte. Steig erst ein paar Level auf.',

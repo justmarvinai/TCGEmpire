@@ -214,6 +214,7 @@ function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {
       <div className="flex flex-wrap gap-2">
         <Button size="sm" onClick={() => run(`select private.money_add($1, 100000, 'dev')`, [id])}>+1.000 €</Button>
         <Button size="sm" onClick={() => run(`select private.money_add($1, 10000000, 'dev')`, [id])}>+100.000 €</Button>
+        <Button size="sm" onClick={() => run(`update game.players set energy = 0, energy_at = private.now() where id = $1`, [id])}>Energie leer</Button>
         <Button size="sm" onClick={() => run(`select private.ep_grant($1, 50)`, [id])}>+EP</Button>
         <Button size="sm" onClick={() => run(`select private.ep_grant($1, 5000)`, [id])}>+viel EP</Button>
         <Button size="sm" onClick={() => run(`update game.players set level = 100, skill_points = skill_points + 99 where id = $1`, [id])}>Level 100</Button>

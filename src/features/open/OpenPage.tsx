@@ -19,7 +19,7 @@ import { hitRows, oneIn, PackArt, RateTiles } from './PackInfo.tsx'
 import { LiveBar, useStream } from '@/features/streaming/live.tsx'
 
 const T = texts.open
-const SIZES = [1, 5, 10] as const
+const SIZES = [1, 5, 10, 50] as const
 
 export function OpenPage() {
   const shop = useShop()

@@ -1269,7 +1269,7 @@ insert into game.quest_templates (key, event, min_target, max_target, kind, min_
   ('w_graded', 'graded', 4, 8, 'weekly', 13),
   ('w_battles', 'battle_played', 2, 4, 'weekly', 16),
   ('w_dark', 'attack_done', 1, 3, 'weekly', 35),
-  ('w_stamps', 'stamp_claimed', 5, 6, 'weekly', 1)
+  ('w_stamps', 'stamp_claimed', 3, 4, 'weekly', 1)
 on conflict (key) do update set event = excluded.event, min_target = excluded.min_target, max_target = excluded.max_target,
   kind = excluded.kind, min_level = excluded.min_level;
 insert into game.upgrade_defs (key, grp, max_level, cost_base_cents, growth, min_level, level_step, stat, op, per_level) values
