@@ -138,9 +138,9 @@ describe('levels', () => {
     const need = async (n: number) =>
       Number((await t.sql<{ v: number }>(`select private.ep_to_next($1) as v`, [n]))[0]!.v)
     expect(await need(1)).toBe(35)
-    expect(await need(10)).toBe(274)
-    expect(await need(50)).toBe(7815)
-    expect(await need(99)).toBe(101409)
+    expect(await need(10)).toBe(288)
+    expect(await need(50)).toBe(9944)
+    expect(await need(99)).toBe(163412)
   })
 
   it('levels up, grants skill points and notifies', async () => {

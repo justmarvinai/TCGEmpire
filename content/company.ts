@@ -226,7 +226,7 @@ export const CAMPAIGNS: readonly CampaignDef[] = [
   { key: 'flyer', name: 'Flyer im Kiosk', text: 'Copyshop, 500 Stück, Comic Sans. Der Kioskbesitzer legt sie neben die Lottoscheine.', costBaseCents: 500_00, boost: 0.2, hours: 24, minStage: 1 },
   { key: 'instagram', name: 'Instagram-Kampagne', text: 'Ein Reel mit Slab-Unboxing und trendigem Sound. Die Kommentare: nur Bots und Mutti.', costBaseCents: 2_500_00, boost: 0.4, hours: 24, minStage: 2 },
   { key: 'youtuber', name: 'YouTuber sponsern', text: '„Dieses Video wird gesponsert von …“ Er spricht deinen Namen falsch aus. Egal, 200.000 Aufrufe.', costBaseCents: 9_000_00, boost: 0.7, hours: 24, minStage: 2 },
-  { key: 'messe', name: 'Stand auf der Kartenmesse', text: 'Drei Tage Messehalle, Klapptisch, Bannerständer. Die Füße tun weh, die Kasse klingelt.', costBaseCents: 30_000_00, boost: 1.2, hours: 48, minStage: 3 },
+  { key: 'messe', name: 'Stand auf der Kartenmesse', text: 'Zwei Tage Messehalle, Klapptisch, Bannerständer. Die Füße tun weh, die Kasse klingelt.', costBaseCents: 30_000_00, boost: 1.2, hours: 48, minStage: 3 },
 ]
 
 /**

@@ -76,3 +76,11 @@ changes.
   owner's explicit go.
 - **Q-30 Playtest:** the group playtest needs the deployment (Q-2) first; `docs/PLAYTEST.md` is the one-page checklist
   for the group. Recommended: one week, everyone at least once a day, bugs to the owner with a screenshot.
+- **Q-32 Firma late in the game (QA pass, 24 Nov 2026):** from about level 60 the company earns small change next to an
+  overnight shift (about 5 % of the income at levels 90–100 in the simulation; ECONOMY §9 aims at 50–70 % from level 35),
+  because stages 4–7 cost 12 Mio. / 100 Mio. / 800 Mio. / 6 Mrd. Basis-€ (× Preisniveau, about 3,5 at level 90) from the
+  company account, and nothing new unlocks between level 66 and 99. **Recommended:** stages 4–7 for about 2 Mio. /
+  10 Mio. / 50 Mio. / 250 Mio. Basis-€, stages 5–7 only from level 70 / 80 / 90 as the unlock table in GAME_DESIGN says
+  (the server does not check that yet), measured first with a sim bot that grows its company. Alternatives: (b) leave it,
+  the late game is about the collection and the toplists; (c) only the level checks. Not urgent: players reach level 60
+  after about a week. Prestige stays as it is: a second run is not faster than the first, which Q-12 asks for.

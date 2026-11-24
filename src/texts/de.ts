@@ -56,7 +56,7 @@ export const texts = {
       upgrades: 'Upgrades',
       skills: 'Skillbaum',
       path: 'Level-Pfad',
-      prestige: 'Prestige',
+      prestige: 'Der Exit',
       housing: 'Wohnen',
       style: 'Cosmetics',
       insurance: 'Versicherungen',
@@ -80,7 +80,7 @@ export const texts = {
     cashTip:
       'Dein Bargeld. Alles im Spiel kostet oder bringt Geld. Liegen lassen lohnt nicht: Die Inflation frisst es langsam auf.',
     pfandbons: 'Pfandbons',
-    pfandbonsTip: 'Kleingeld der Gosse. Gibt es für Mini-Quests und Minijobs, einlösbar am Pfandautomaten.',
+    pfandbonsTip: 'Kleingeld der Gosse. Gibt es für Quests und gute Minijob-Runden, einlösbar am Pfandautomaten.',
     ruf: 'Ruf',
     rufTip: 'Dein Ruf, 0 bis 5 Sterne. Ehrliche Geschäfte heben ihn, Betrug und Skandale ruinieren ihn.',
     energy: 'Energie',
@@ -89,7 +89,7 @@ export const texts = {
     priceTip:
       'Alles, was das Spiel bepreist oder auszahlt, wird damit multipliziert. Steigt langsam mit dem Fortschritt aller. Dein Bargeld steigt nicht mit. Der Döner auch nicht billiger.',
     ep: 'EP',
-    epTip: 'Erfahrungspunkte. Gibt es für fast alles. Jedes Level schaltet etwas frei und bringt einen Skillpunkt.',
+    epTip: 'Erfahrungspunkte. Gibt es für fast alles. Viele Level schalten etwas frei, jedes bringt einen Skillpunkt.',
     maxLevel: 'Max. Level',
     notifications: 'Mitteilungen',
     noNotifications: 'Nichts Neues. Nicht mal Mutti schreibt.',
@@ -628,11 +628,11 @@ export const texts = {
     mysteryQty: 'Karten',
     mysterySell: 'Boxen packen',
     mysterySold: 'Verkauft. Das Sternchen steht ganz unten im Kleingedruckten.',
-    mysteryPending: (n: number) => `${n} Boxen noch ungeöffnet. Die Bewertungen kommen.`,
+    mysteryPending: (n: number) => `${n === 1 ? 'Eine Box' : `${n} Boxen`} noch ungeöffnet. Die Bewertungen kommen.`,
     bump: 'Gefälligkeit (+1 Note)',
     bumpTip: 'Eine Note besser für den Kunden. Jeder solche Slab ist eine Zeitbombe: Wird er geknackt oder fliegt es auf, gibt es einen Skandal.',
     bumped: 'Erledigt. Unter uns.',
-    bumpedCount: (n: number) => `${n} geschönte Slabs unterwegs`,
+    bumpedCount: (n: number) => (n === 1 ? '1 geschönter Slab unterwegs' : `${n} geschönte Slabs unterwegs`),
     scandal: (date: string) => `Skandal! Bis ${date} sind deine Slabs weniger wert.`,
     shadyDone: 'Erledigt.',
     // Awards
@@ -837,6 +837,7 @@ export const texts = {
     decline: 'Ablehnen',
     remove: 'Löschen',
     sold: 'Verkauft. Das Geld ist da. Hoffentlich bleibt es da.',
+    buyerBroke: 'Der Käufer ist plötzlich pleite. Angebot geplatzt, dein Zeug bleibt bei dir.',
     removed: 'Anzeige gelöscht. Die Ware liegt wieder bei dir.',
     declined: 'Abgelehnt.',
     styles: { attic: 'Dachbodenfund', normal: 'Privat', dreamer: 'Sammlerstück' },
@@ -924,7 +925,7 @@ export const texts = {
         : game === 'onepiece'
           ? `SENSATION! ${String(d.name)} zieht ${card}! Ein Arm weniger, ein Vermögen mehr.`
           : game === 'riftbound'
-            ? `1 ZU 700! ${String(d.name)} zieht ${card}! Faker hat angeblich angerufen.`
+            ? `1 ZU 3.500! ${String(d.name)} zieht ${card}! Faker hat angeblich angerufen.`
             : `SENSATION! ${String(d.name)} zieht ${card}! Die Nachbarn rufen die Polizei wegen Geschrei.`,
     pull_ultra: (d: Record<string, unknown>, card: string) =>
       `${String(d.name)} zieht ${card}. Neid ist auch eine Form von Anerkennung.`,
@@ -968,7 +969,7 @@ export const texts = {
       daily_quests: {
         name: 'Tagesquests',
         steps: [
-          'Jeden Tag fünf Aufgaben, um Mitternacht kommen neue. Wie Hausaufgaben, nur dass es Geld gibt.',
+          'Jeden Tag fünf Aufgaben, um Mitternacht kommen neue. Wie Hausaufgaben, nur dass es EP und Pfandbons gibt.',
           'Passt dir eine nicht, würfel sie neu. Einmal am Tag gratis. Wählerisch warst du ja schon immer.',
           'Schaffst du alle fünf, gibt es einen Bonus obendrauf. Ich glaub an dich. Ein bisschen.',
         ],
@@ -1064,7 +1065,7 @@ export const texts = {
         name: 'Bares für Rares',
         steps: [
           'Einmal am Tag darfst du ins Fernsehstudio: Bring einen Hit oder einen Slab mit, der Experte schätzt ihn.',
-          'Dann bieten die Händler. Einer bietet immer 80 €, egal was du bringst. Nimm ein Gebot an oder fahr mit der Karte wieder heim.',
+          'Dann bieten die Händler. Einer bietet immer seine 80 €, egal was du bringst (inflationsbereinigt, er ist ja nicht blöd). Nimm ein Gebot an oder fahr mit der Karte wieder heim.',
         ],
       },
       darkside: {
@@ -1208,7 +1209,7 @@ export const texts = {
       lager: {
         name: 'Lager und Displays',
         steps: [
-          'Jetzt gibt es Displays: 36 Booster in einer Box, günstiger als einzeln. Erst auspacken, dann aufreißen.',
+          'Jetzt gibt es Displays: 24 oder 36 Booster in einer Box, günstiger als einzeln. Erst auspacken, dann aufreißen.',
           'Jeder Booster und jedes Display braucht einen Platz im Lager. Ist es voll, verkaufen dir die Läden nichts mehr.',
         ],
       },
@@ -1304,7 +1305,7 @@ export const texts = {
         : `Paket verloren: ${String(d.qty)}× ${name}. Ohne Versicherung ist das Geld weg. Der Paketbote hat es „beim Nachbarn“ abgegeben.`,
     water_damage: (d: Record<string, unknown>, money: string) =>
       d.insured
-        ? `Wasserschaden im Keller: ${String(d.cards)} Karten aufgeweicht. Die Hausrat zahlt ${money}.`
+        ? `Wasserschaden im Keller: ${Number(d.cards) === 1 ? 'eine Karte' : `${String(d.cards)} Karten`} aufgeweicht. Die Hausrat zahlt ${money}.`
         : `Wasserschaden im Keller: ${String(d.cards)} Karten im Wert von ${money} sind Pappmaché. Hausrat hätte geholfen.`,
     insurance_ended: (name: string) => `${name} gekündigt: Für den Beitrag war kein Geld da.`,
     nebenkosten: (money: string) => `Nebenkosten: ${money} sind weg. Der Vermieter dankt.`,
@@ -1362,13 +1363,15 @@ export const texts = {
 
   snacks: {
     title: 'Snacks',
-    tip: 'Snacks am Kiosk geben Energie für Minijobs. Der Döner gibt am meisten, macht aber fettige Finger.',
+    tip: 'Snacks am Kiosk geben Energie für Minijobs. Der Döner gibt am meisten, macht aber fettige Finger. Irgendwann ist jeder Magen voll: Dann geben Snacks bis Mitternacht keine Energie mehr.',
+    left: (n: number) => `Noch ${n} Energie bis satt`,
+    full: 'Pappsatt bis morgen',
     automat: 'Pfandautomat',
-    automatTip: 'Hier löst du Pfandbons ein. Die gibt es für Mini-Quests und gute Minijob-Runden.',
+    automatTip: 'Hier löst du Pfandbons ein. Die gibt es für Quests und gute Minijob-Runden.',
     buy: 'Kaufen',
     redeem: 'Einlösen',
     used: (name: string) => `${name} – lecker.`,
-    bons: (n: number) => `${n} Pfandbons`,
+    bons: (n: number) => (n === 1 ? '1 Pfandbon' : `${n} Pfandbons`),
   },
 
   shop: {
@@ -1399,7 +1402,8 @@ export const texts = {
     bought: (n: number) => (n === 1 ? 'Booster gekauft.' : `${n} Booster gekauft.`),
     openNow: 'Jetzt öffnen',
     odds: 'Chancen pro Booster',
-    oddsTip: (s: string) => `Inhalt: 2 Energien, 5 Common, 3 Uncommon und ein Slot mit Rare oder besser. ${s}`,
+    oddsTip: (s: string) =>
+      `Jeder Booster hat einen Hit-Platz mit Rare oder besser, der Rest ist Common, Uncommon und je nach Spiel Rare, Energie oder Rune. Klick aufs Booster-Bild zeigt den genauen Inhalt. ${s}`,
     oddsHouseTip: (s: string) => `Inhalt: 4 Common und ein Hit-Platz, der fast immer auch ein Common ist. ${s} Sonst nichts. Kein God Pack, kein Doppel-Hit, kein Pech-Schutz.`,
     empiremon: 'Empiremon – nur hier',
     empiremonTip:
@@ -1411,7 +1415,7 @@ export const texts = {
     ankaufBody: 'Doppelte Common-, Uncommon- und Rare-Karten auf einen Schlag loswerden. Von jeder Karte bleibt eine.',
     sellDupes: 'Duplikate verkaufen',
     noDupes: 'Keine Duplikate. Du hast von allem genau eins. Oder nichts.',
-    sold: (n: number, money: string) => `${n} Karten verkauft für ${money}. „Gerne wieder.“`,
+    sold: (n: number, money: string) => `${n === 1 ? 'Eine Karte' : `${n} Karten`} verkauft für ${money}. „Gerne wieder.“`,
     empty: 'Der Kiosk hat heute nichts. Komm morgen wieder.',
   },
 
@@ -1437,7 +1441,7 @@ export const texts = {
     pullTitle: 'Pull-Raten',
     pullRest: 'der Rest',
     pullTip:
-      'Jeder Booster hat einen Hit-Platz, so oft landet dort welche Seltenheit. Der Rest ist Common, Uncommon und Energie. Pack-Glück aus dem Skillbaum macht Alternative, Ultra und Grail häufiger.',
+      'Jeder Booster hat einen Hit-Platz, so oft landet dort welche Seltenheit. Der Rest ist Common, Uncommon und je nach Spiel Rare, Energie oder Rune. Pack-Glück (Upgrade, Skills, Sammelziele, Events) macht Alternative, Ultra und Grail häufiger.',
     pullHouse: 'Empiremon',
     pullHouseNote: 'Ohne God Pack, Doppel-Hit und Pech-Schutz. Pack-Glück zählt auch hier.',
     pullExtras: (double: string, god: string, pity: number) =>
@@ -1489,7 +1493,7 @@ export const texts = {
     chatGame: {
       pokemon: {
         start: ['GLURAK WANN', 'wieder nur energie oder was'],
-        bulk: ['energie lmao', 'noch ein Rattfratz'],
+        bulk: ['energie lmao', 'noch ein Raupy'],
         grail: ['OPA WEINT', 'GLURAK!!!!'],
       },
       yugioh: {
@@ -1505,7 +1509,7 @@ export const texts = {
       riftbound: {
         start: ['AHRI WANN', 'noch eine rune wetten?', 'teemo nerft mich jetzt schon'],
         bulk: ['RUNE. wieder.', 'noch eine rune lol', 'poro süß aber wertlos'],
-        grail: ['FAKER IST IM CHAT', 'AHRIIIII', '1 IN 700 PACKS!!!'],
+        grail: ['FAKER IST IM CHAT', 'AHRIIIII', '1 IN 3500 PACKS!!!'],
       },
     } as Record<string, Partial<Record<'start' | 'bulk' | 'grail', readonly string[]>>>,
     chatNames: ['xX_Glurak_Xx', 'KartenKalle', 'PackRipper99', 'ScalperSven', 'Opa_Günther', 'Holo_Hanna', 'BulkBernd', 'LetzterPreisLars', 'Kevin2014', 'MamaGuckt'],
@@ -1552,7 +1556,7 @@ export const texts = {
     toGrading: 'Zum Grading',
     toCardmarket: 'Auf dem Cardmarket verkaufen',
     slabs: 'Deine Slabs',
-    sellOneTip: 'Verkauft ein Exemplar sofort an den Kartenladen (60 % des Werts).',
+    sellOneTip: 'Verkauft ein Exemplar sofort an den Kartenladen (60 % des Werts, mit Skills mehr).',
     close: 'Zurück',
     seen: 'Schon mal gezogen, aber verkauft.',
     never: 'Noch nie gezogen.',
@@ -1567,6 +1571,7 @@ export const texts = {
       energy_max: (v: number) => `+${v} max. Energie`,
       listing_slots: (v: number) => (v === 1 ? '+1 Cardmarket-Platz' : `+${v} Cardmarket-Plätze`),
       lager_units: (v: number) => `+${v} Lagerplätze`,
+      grading_slots: (v: number) => (v === 1 ? '+1 Einsende-Slot' : `+${v} Einsende-Slots`),
     } as Record<string, (v: number) => string>,
   },
 
@@ -1753,7 +1758,7 @@ export const texts = {
   bares: {
     title: 'Bares für Rares',
     subtitle: 'Experte, Händler, Tränen. Einmal am Tag.',
-    tip: 'Einmal am Tag bringst du einen Hit oder einen Slab ins Studio. Der Experte schätzt, drei Händler bieten, und einer bietet immer 80 €. Ein Deal zahlt sofort, ohne Gebühren. Ohne Deal behältst du die Karte, aber die Sendung ist für heute gelaufen.',
+    tip: 'Einmal am Tag bringst du einen Hit oder einen Slab ins Studio. Der Experte schätzt, drei Händler bieten, und einer bietet immer seine 80 € (inflationsbereinigt). Ein Deal zahlt sofort, ohne Gebühren. Ohne Deal behältst du die Karte, aber die Sendung ist für heute gelaufen.',
     locked: (n: number) => `Ins Fernsehen kommst du ab Level ${n}. Vorher castet dich keiner.`,
     pick: 'Was bringst du mit?',
     pickTip: 'Deine Hits und Slabs aus dem Inventar, die wertvollsten zuerst. Karten in der Vitrine, im Grading oder auf dem Markt bleiben, wo sie sind.',
@@ -1766,7 +1771,7 @@ export const texts = {
     estimateTip: 'Was der Experte meint, was die Karte wert ist. Er liegt mal drüber, mal drunter. Die Händler interessiert das wenig.',
     value: 'Marktwert',
     dealers: 'Händlerraum',
-    dealersTip: 'Drei Händler bieten, dazu der Mann, der immer 80 € bietet. Ein Deal und das Geld ist sofort da. Gebühren gibt es keine.',
+    dealersTip: 'Drei Händler bieten, dazu der Mann, der immer seine 80 € bietet (inflationsbereinigt). Ein Deal und das Geld ist sofort da. Gebühren gibt es keine.',
     deal: 'Deal!',
     noDeal: 'Kein Deal',
     dealDone: (name: string, money: string) => `Deal! ${name} zahlt ${money} bar auf die Hand.`,
@@ -1836,7 +1841,7 @@ export const texts = {
     inStock: (n: number) => `${n} im Lager`,
     prepare: (n: number, money: string) => `${n} präparieren (${money})`,
     preparedDone: (n: number, hits: number, money: string) =>
-      `${n} Booster präpariert. Rausgeholt: ${hits} Hits, Karten für ${money}. Jetzt nur noch einen Dummen finden.`,
+      `${n} Booster präpariert. Rausgeholt: ${hits === 1 ? 'ein Hit' : `${hits} Hits`}, Karten für ${money}. Jetzt nur noch einen Dummen finden.`,
     log: 'Akte',
     logTip: 'Alles, was du getan hast und was dir angetan wurde. Das Opfer erfährt immer, wer es war.',
     logEmpty: 'Noch eine weiße Weste. Wie langweilig.',
@@ -1878,14 +1883,14 @@ export const texts = {
 
   battles: {
     runningTip: 'Battles, die gerade laufen. Zuschauen ist gratis, Mitleid auch.',
-    doneTip: 'Die letzten fertigen Battles: wer gewonnen hat und was im Pott lag.',
+    doneTip: 'Die letzten fertigen Battles: wer gewonnen hat und was im Pot lag.',
     title: 'Pack Battles',
     subtitle: 'Gleicher Einsatz, gleiche Booster. Am Ende weint einer.',
     tip: 'Alle zahlen denselben Einsatz: den Marktwert der Booster. Der Server öffnet alle Packs auf einmal, ihr seht sie Runde für Runde gleichzeitig. Wer nach den Regeln des Modus gewinnt, bekommt die Karten. Leere Plätze füllen Bots; was ein Bot gewinnt, ist weg.',
     locked: (level: number) => `Pack Battles gibt es ab Level ${level}.`,
     modes: {
       klassisch: { name: 'Klassisch', text: 'Der höchste Gesamtwert nimmt alle Karten.' },
-      krepel: { name: 'Krepel-Battle', text: 'Der niedrigste Gesamtwert gewinnt. Pech ist hier ein Talent.' },
+      krepel: { name: 'Gurken-Battle', text: 'Der niedrigste Gesamtwert gewinnt. Pech ist hier ein Talent.' },
       top: { name: 'Top-Karte', text: 'Die beste Einzelkarte gewinnt alles.' },
       jackpot: { name: 'Jackpot', text: 'Ein Zufallsgewinner, die Chance wächst mit dem gezogenen Wert.' },
       team: { name: 'Team 2v2', text: 'Plätze 1 und 3 gegen 2 und 4. Die Summe zählt; jeder Gewinner kriegt die Karten eines Gegners.' },
@@ -1949,7 +1954,7 @@ export const texts = {
   },
 
   breaks: {
-    runningTip: 'Jeder Pack gehört dem, der den Platz gekauft hat. Alle schauen live zu; was rauskommt, landet sofort im Inventar des Käufers.',
+    runningTip: 'Jedes Pack gehört dem, der den Platz gekauft hat. Alle schauen live zu; was rauskommt, landet sofort im Inventar des Käufers.',
     title: 'Box Breaks',
     subtitle: 'Einer reißt auf, alle zittern mit.',
     tip: 'Ein Gastgeber legt ein Display auf den Tisch und verkauft die Packs einzeln nach Packnummer. Beim Start öffnet der Server alles, ihr seht Pack für Pack. Jeder bekommt die Karten seiner Packs, unverkaufte Packs bleiben beim Gastgeber.',
@@ -2271,7 +2276,7 @@ export const texts = {
       ['Brausepulver', 'suess'], ['Mäusespeck', 'suess'],
     ] as readonly (readonly [string, string])[],
     sortBins: ['Feuer', 'Wasser', 'Pflanze', 'Elektro', 'Psycho', 'Kampf', 'Farblos', 'Trainer'] as readonly string[],
-    parcels: (n: number) => `${n} Pakete`,
+    parcels: (n: number) => (n === 1 ? '1 Paket' : `${n} Pakete`),
     dropHint: 'Leertaste oder Klick, wenn der gelbe Strich im grünen Zustellfenster ist.',
     right: 'Richtig',
     wrong: 'Falsch',
@@ -2283,8 +2288,6 @@ export const texts = {
     pfand: 'Pfandflaschen sammeln',
     pfandBody:
       'Im Park liegen Flaschen. Klick sie weg, bevor es ein anderer tut. Glasscherben lieber liegen lassen.',
-    pfandTip:
-      '45 Sekunden. Kostet Energie, bringt Geld, EP und bei guten Runden einen Pfandbon. Einweg 5 €, Mehrweg 3 €, Bierflasche 1,60 €. Scherben kosten 2 € fürs Pflaster.',
     start: 'Los gehts',
     energyCost: (n: number) => `${n} Energie`,
     noEnergy: (time: string) => `Keine Energie. Wieder genug in ${time}.`,
@@ -2406,8 +2409,8 @@ export const texts = {
     bunker: 'Geldbunker',
     shiftDone: (job: string) => `Schicht bei ${job} ist fertig`,
     shiftRunning: (job: string, time: string) => `Schicht bei ${job} läuft noch ${time}`,
-    sealed: (n: number) => `${n} ungeöffnete Booster`,
-    quests: (n: number) => `${n} Quests zum Abholen`,
+    sealed: (n: number) => (n === 1 ? '1 ungeöffneter Booster' : `${n} ungeöffnete Booster`),
+    quests: (n: number) => (n === 1 ? '1 Quest zum Abholen' : `${n} Quests zum Abholen`),
     collect: 'Alles einsammeln',
     later: 'Später',
     collected: (money: string) => `${money} eingesammelt.`,
@@ -2565,6 +2568,9 @@ export const texts = {
     invalid_request: 'Ungültige Anfrage.',
     rate_limited: 'Langsam, Brauner. Zu viele Klicks.',
     insufficient_funds: 'Dafür reicht dein Geld nicht. Wie immer.',
+    not_enough_money: 'So viel Geld hast du nicht. Verleih nur, was du hast.',
+    account_busy: 'Erst laufende Sachen mit anderen klären: Kredit zurückzahlen, Pack Battles und Box Breaks beenden. Dann darfst du alles wegwerfen.',
+    tutorial_not_skippable: 'Mama ist noch nicht fertig mit dir. Erst die ersten Schritte, dann darfst du.',
     username_invalid: 'Der Name passt nicht: 3–16 Zeichen, nur Buchstaben, Zahlen, _ und -.',
     username_taken: 'Den Namen hat schon jemand. Sei kreativer.',
     email_invalid: 'Das ist keine E-Mail-Adresse. Da fehlt was, mindestens ein @ oder ein Punkt.',
@@ -2604,6 +2610,7 @@ export const texts = {
     trade_invalid: 'Das passt nicht mehr: Jemand hat die Sachen nicht mehr oder das Geld reicht nicht.',
     quest_not_ready: 'Die Quest ist noch nicht fertig.',
     not_enough_energy: 'Keine Energie mehr. Iss was oder warte.',
+    snack_full: 'Du bist pappsatt. Noch ein Snack und der Kiosk ruft den Notarzt. Morgen wieder.',
     too_early: 'Zu schnell fertig. Schummeln ist Mamas Job.',
     not_ready: 'Noch nicht so weit. Geduld, das kennst du doch von DHL.',
     no_points: 'Nicht genug Skillpunkte. Steig erst ein paar Level auf.',

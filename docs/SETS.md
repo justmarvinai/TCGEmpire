@@ -130,7 +130,7 @@ display keep their content. The skill "Display-Mapping" (Sammler branch) hints w
 | Riftbound Origins | 100 € | 2.100 € | 12.000 € |
 | Empiremon (each set, kiosk only) | 200 € | — | — |
 
-Boosters can be bought and opened 1, 5 or 10 at a time from level 1; a display can be opened in one go
+Boosters can be bought and opened 1, 5, 10 or 50 at a time from level 1; a display can be opened in one go
 with the display-mode upgrade.
 
 ## 6. Lifecycle

@@ -44,7 +44,7 @@ export const TUTORIAL: readonly TutorialStep[] = [
   {
     event: 'cards_sold',
     reward: { cents: 50_00 },
-    text: 'Dein Zimmer ist voll mit Energiekarten. Verkauf ein paar im Kartenladen. Die nehmen alles. Für fast nichts.',
+    text: 'Dein Zimmer ist voll mit Pappe. Verkauf ein paar Karten im Kartenladen. Die nehmen alles. Für fast nichts.',
     guide: [
       nav('/collection', 'Sammlung'),
       { target: 'binder-card', hint: 'Klick auf eine deiner Karten.' },
@@ -55,7 +55,7 @@ export const TUTORIAL: readonly TutorialStep[] = [
   {
     event: 'quest_claimed',
     reward: { booster: 1, cents: 100_00 },
-    text: 'Letzte Aufgabe von Mama: Hol dir eine Belohnung bei den Aufgaben ab. Danach bist du auf dich allein gestellt. Ruf mal an.',
+    text: 'Letzte Aufgabe von Mama: Hol dir eine Belohnung bei den Quests ab. Danach bist du auf dich allein gestellt. Ruf mal an.',
     guide: [nav('/quests', 'Quests'), { target: 'quest-claim', hint: 'Klick auf „Abholen“.' }],
   },
 ]

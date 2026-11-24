@@ -22,7 +22,7 @@ export const LEXIKON: readonly { term: string; text: string }[] = [
   { term: 'Grading', text: 'Eine Firma prüft deine Karte und gibt ihr eine Note von 1 bis 10. Dann kommt sie in Plastik.' },
   { term: 'Slab', text: 'Die versiegelte Plastikhülle mit der Note. Knacken geht, dann ist die Note weg.' },
   { term: 'Gem Mint', text: 'Die 10, die Bestnote. Perfekte Ecken, Kanten, Oberfläche und Zentrierung.' },
-  { term: 'Black Label', text: 'Vier glatte 10er in den Unterwertungen. Seltener als ein ehrlicher Händler.' },
+  { term: 'Black Label', text: 'Vier glatte 10er in den Unternoten. Seltener als ein ehrlicher Händler.' },
   { term: 'Pop Report', text: 'Wie viele Karten mit welcher Note es im Spiel gibt. Je weniger 10er, desto wertvoller deiner.' },
   { term: 'Zentrierung', text: 'Wie mittig das Bild auf der Karte sitzt. Ein schiefer Rand kostet Noten.' },
   { term: 'Vorprüfung', text: 'Du schaust dir die Karte vor dem Grading mit der Lupe an und schätzt, welche Note drin ist.' },

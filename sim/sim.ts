@@ -1,6 +1,7 @@
 // Balancing simulation: a bot plays the real server SQL (in-memory Postgres) with a fast-forwarded clock.
 // It plays like an active player for N minutes a day and is away for the rest of the day.
 import { createTestDb, type TestDb } from '../supabase/tests/harness.ts'
+import type { RpcName } from '../src/lib/schemas.ts'
 import { HOMES } from '../content/housing.ts'
 import { SKILL_COST, SKILLS } from '../content/skills.ts'
 import { DECISIONS, type DecisionEffect } from '../content/company.ts'
@@ -14,7 +15,8 @@ const house = (product: string) => SETS.some((s) => s.id === productById.get(pro
 const B = 'booster-pkm-base'
 /** the games in the order the bot buys licences, and their sets */
 const GAMES = ['pokemon', 'yugioh', 'onepiece', 'riftbound'] as const
-const SETS = ['pokemon-base', 'yugioh-lob', 'onepiece-op01', 'riftbound-origins']
+/** the first set of each game: the binders whose duplicates the bot sells */
+const BINDER_SETS = ['pokemon-base', 'yugioh-lob', 'onepiece-op01', 'riftbound-origins']
 const rid = () => crypto.randomUUID()
 const ASPECTS = ['centering', 'corners', 'edges', 'surface'] as const
 const BRANCH_ORDER = ['unternehmer', 'sammler', 'haendler', 'schlitzohr']
@@ -65,6 +67,8 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
   await t.sql(`update game.server set clock_offset = (timestamp '2026-11-23 08:00' at time zone 'Europe/Berlin') - now() where id`)
   // the world happens to the bot as well: daily, random, personal and calendar events (the tests switch them off)
   await t.sql(`update game.config_overrides set value = 'true', updated_at = now() where key = 'events.enabled'`)
+  // SIM_CFG='{"ep.growth":1.04}': try a balance value without touching content/ (balance work only)
+  if (process.env.SIM_CFG) await t.setConfig(JSON.parse(process.env.SIM_CFG))
   // SIM_EP=1: log every EP grant with the function that asked for it (balance work only)
   if (process.env.SIM_EP) {
     await t.sql(`create table game.sim_ep (source text, base numeric, level int)`)
@@ -137,7 +141,8 @@ export async function simulate(opts: { days: number; activeMinPerDay: number; se
     run.peakNetWorthCents = Math.max(run.peakNetWorthCents, worth)
     const prev = runs.at(-2)
     if (prev && run.prevPeakDay === undefined && worth >= prev.peakNetWorthCents) run.prevPeakDay = day - run.startDay + 1
-    // Before leaving: start a long shift, then the rest of the day passes.
+    // Before leaving: end the short shift (paid pro rata) and start a long one, then the rest of the day passes.
+    if ((await t.rpc(me, 'jobs_get')).shift) await quietly(t, me, 'shift_claim', {})
     const jobs = await t.rpc(me, 'jobs_get')
     if (!jobs.shift && (await level(t, me)) >= jobs.unlock_shifts) await quietly(t, me, 'shift_start', { p_job: bestShift(jobs, await level(t, me)), p_hours: 8 })
     await t.advance(`${24 * 3600 - spent} seconds`)
@@ -226,7 +231,7 @@ function bestShift(jobs: Awaited<ReturnType<TestDb['rpc']>> & { jobs: { key: str
 const failures = new Map<string, number>()
 /** Successful bot actions of the current day (SIM_TRACE prints them). */
 const doneToday = new Map<string, number>()
-async function quietly(t: TestDb, me: string, fn: Parameters<TestDb['rpc']>[1], args: Record<string, unknown>) {
+async function quietly<N extends RpcName>(t: TestDb, me: string, fn: N, args: Record<string, unknown>) {
   try {
     const res = await t.rpc(me, fn, { p_request_id: rid(), ...args })
     doneToday.set(fn, (doneToday.get(fn) ?? 0) + 1)
@@ -262,7 +267,8 @@ async function step(t: TestDb, me: string): Promise<number> {
     if (await quietly(t, me, 'shift_claim', {})) return 5
   }
   if (!jobs.shift && p.level >= jobs.unlock_shifts) {
-    if (await quietly(t, me, 'shift_start', { p_job: bestShift(jobs, p.level), p_hours: 4 })) return 5
+    // short shifts while playing, so the long one can start before the player leaves
+    if (await quietly(t, me, 'shift_start', { p_job: bestShift(jobs, p.level), p_hours: 1 })) return 5
   }
   const bunker = await t.rpc(me, 'bunker_get')
   const bunkerQuest = ['bunker', 'd_bunker', 'w_bunker'].some((k) => open.has(k))
@@ -354,7 +360,7 @@ async function step(t: TestDb, me: string): Promise<number> {
   // 6. spare money goes into boosters: the kiosk first, then the stores
   for (const k of shop.kiosk.filter((x) => x.product_id.startsWith('booster-') && !house(x.product_id) && (x.daily_limit === null || x.bought_today < x.daily_limit))) {
     const most = Math.min(k.daily_limit === null ? Infinity : k.daily_limit - k.bought_today, Math.floor(p.cash_cents / k.price_cents / 2))
-    const qty = [10, 5, 1].find((n) => n <= most) // the kiosk sells 1, 5 or 10 at a time
+    const qty = [50, 10, 5, 1].find((n) => n <= most) // the kiosk sells 1, 5, 10 or 50 at a time
     if (qty && (await quietly(t, me, 'store_buy', { p_product: k.product_id, p_qty: qty }))) return 5
   }
   for (const st of shop.stores.filter((x) => x.open)) {
@@ -385,13 +391,13 @@ async function openAll(t: TestDb, me: string) {
   for (const s of sealed) {
     let left = s.qty
     while (left > 0) {
-      const n = Math.min(10, left)
+      const n = Math.min(50, left)
       if (await quietly(t, me, 'pack_open', { p_product: s.product_id, p_qty: n })) opened += n
       left -= n
     }
   }
   // sell the duplicates of bulk cards, keep one of each
-  for (const set of SETS) {
+  for (const set of BINDER_SETS) {
     const binder = await t.rpc(me, 'binder_get', { p_set: set })
     const stacks = duplicateStacks(binder.cards) // the same rule as the button in the collection
     if (stacks.length) await quietly(t, me, 'ankauf_sell', { p_stacks: stacks, p_copies: [] })

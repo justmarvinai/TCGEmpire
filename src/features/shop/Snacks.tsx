@@ -19,6 +19,8 @@ export function Snacks({ shop, player, where }: { shop: Shop; player: Player; wh
   const act = useAct()
   const [busy, setBusy] = useState<string | null>(null)
   const items = CONSUMABLES.filter((c) => c.where === where)
+  // kiosk snacks stop giving energy once the player is satt for the day
+  const full = where === 'kiosk' && shop.snack_energy_left <= 0
   const use = async (key: string, name: string) => {
     setBusy(key)
     const res = await act('consumable_use', { p_key: key }, ['shop'])
@@ -32,12 +34,18 @@ export function Snacks({ shop, player, where }: { shop: Shop; player: Player; wh
     <Panel
       title={where === 'kiosk' ? T.title : T.automat}
       tip={where === 'kiosk' ? T.tip : T.automatTip}
-      action={where === 'pfandautomat' ? <span className="nums text-sm text-gain">{T.bons(player.pfandbons)}</span> : undefined}
+      action={
+        where === 'pfandautomat' ? (
+          <span className="nums text-sm text-gain">{T.bons(player.pfandbons)}</span>
+        ) : (
+          <span className={`nums text-sm ${full ? 'text-warn' : 'text-fg-3'}`}>{full ? T.full : T.left(shop.snack_energy_left)}</span>
+        )
+      }
     >
       <div className="flex flex-col gap-2">
         {items.map((c) => {
           const offer = shop.snacks.find((s) => s.key === c.key)
-          const affordable = where === 'kiosk' ? player.cash_cents >= (offer?.price_cents ?? Infinity) : player.pfandbons >= (c.pfandbons ?? Infinity)
+          const affordable = where === 'kiosk' ? player.cash_cents >= (offer?.price_cents ?? Infinity) && !(full && c.energy) : player.pfandbons >= (c.pfandbons ?? Infinity)
           return (
             <div key={c.key} className="flex items-center gap-3 rounded-xl bg-surface-2 p-3">
               <PixelIcon name={SNACK_ICON[c.key] ?? 'gift'} scale={2} className="text-accent" />

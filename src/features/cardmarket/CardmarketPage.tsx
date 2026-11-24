@@ -10,8 +10,8 @@ import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { useAct, useShop } from '@/lib/actions.ts'
-import { itemName, SETS } from '@/lib/catalog.ts'
+import { useAct, useBinders, useShop } from '@/lib/actions.ts'
+import { itemName } from '@/lib/catalog.ts'
 import { formatDuration, formatMoney, formatPercent } from '@/lib/format.ts'
 import { useNow } from '@/lib/pure.ts'
 import { errorText, rpc } from '@/lib/rpc.ts'
@@ -162,24 +162,24 @@ function MarketList({ items }: { items: Cardmarket['items'] }) {
 
 /** Everything the player owns that the Cardmarket trades, the most valuable first; "Anbieten" opens the item's sell form. */
 function SellList({ items }: { items: Cardmarket['items'] }) {
-  const binders = useQuery({ queryKey: ['binder', 'all-sets'], queryFn: () => Promise.all(SETS.map((s) => rpc('binder_get', { p_set: s.id }))) })
+  const binders = useBinders()
   const shop = useShop()
   const rows = useMemo(() => {
     const value = new Map(items.map((i) => [i.item_id, i.value_cents]))
     const owned = [
-      ...(binders.data ?? []).flatMap((b) => b.cards.map((c) => ({ id: c.card_id, qty: c.qty }))),
+      ...binders.cards.map((c) => ({ id: c.card_id, qty: c.qty })),
       ...(shop.data?.sealed ?? []).map((s) => ({ id: s.product_id, qty: s.qty })),
     ]
     return owned
       .filter((o) => o.qty > 0 && value.has(o.id))
       .map((o) => ({ ...o, value: value.get(o.id)! }))
       .sort((a, b) => b.value - a.value)
-  }, [items, binders.data, shop.data])
+  }, [items, binders.cards, shop.data])
   return (
     <Panel title={T.sellTitle} tip={T.sellTip}>
-      {binders.isPending || shop.isPending ? (
+      {binders.pending || shop.isPending ? (
         <Skeleton className="h-40 w-full" />
-      ) : binders.isError || shop.isError ? (
+      ) : binders.error || shop.isError ? (
         <ErrorState message={errorText(binders.error ?? shop.error)} onRetry={() => void (binders.refetch(), shop.refetch())} />
       ) : rows.length === 0 ? (
         <EmptyState icon="tag" title={T.sellNone} />

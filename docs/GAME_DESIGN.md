@@ -87,7 +87,7 @@ button. This is the idle game's main reward moment and gets full juice.
 | **Ruf** | Reputation, 0–1000, shown as ★ 0.0–5.0 with review count | Honest business, fast service, kept deals | Customer flow, slab brand premium, NPC offers. Shady actions and scandals reduce it. |
 | **Pfandbons** | Small side currency | Endless mini-quests, minijobs, recycling bulk cards | Pfandautomat shop: consumables, small boosts, simple cosmetics. Keeps mini-quest rewards out of the € economy. |
 | **Empire-Sterne** | Prestige currency | Prestiging (§20) | Permanent Empire-Perks. |
-| **Energie** | 0–100, regenerates | Time, Döner / Club-Mate / Kaffee | Limits minijob rounds only. Nothing else in the game costs energy. |
+| **Energie** | 0–100, regenerates | Time, Döner / Club-Mate / Kaffee | Limits minijob rounds only. Nothing else in the game costs energy. Kiosk snacks give at most 150 energy a day, then the player is satt until midnight (QA pass). |
 | **Follower** | Audience size | Streaming pack openings | Stream income, sponsor deals (§17). |
 
 Net worth (**Vermögen**) = cash + bunker content + market value of cards, slabs and sealed
@@ -212,7 +212,7 @@ Döner, Der Pünktliche). Brief and card lists: `docs/sets/empiremon.md`; decisi
 The server decides the pack's content the moment you confirm; the client only replays. Closing the tab
 loses nothing. Skip is always available.
 
-1. **Pick.** Pack floats in 3D tilt with foil sheen. **Buy and open 1, 5 or 10 at once — available from
+1. **Pick.** Pack floats in 3D tilt with foil sheen. **Buy and open 1, 5, 10 or 50 at once — available from
    level 1.**
 2. **Tear.** Drag across the top to rip the foil (or press Space / click). Crinkle sound, light burst.
 3. **Reveal.** Cards come as a stack. Click / Space / drag to flip through. Bulk goes fast.
@@ -644,7 +644,7 @@ round by round, with running totals, emotes and spectators.
 | Mode | Winner |
 |------|--------|
 | **Klassisch** | Highest total pull value takes **all** cards |
-| **Krepel-Battle** | *Lowest* total wins |
+| **Gurken-Battle** | *Lowest* total wins |
 | **Top-Karte** | Best single card wins |
 | **Jackpot** | Random winner, chance proportional to pull value |
 | **Team 2v2** | Combined totals |
@@ -710,7 +710,7 @@ trigger any event manually. Cadence (Q-18):
 
 | Kind | Examples |
 |------|----------|
-| **Market (good and bad)** | Hype-Welle (+30 % on one game), **Die Blase platzt** (−40 %, slow recovery), Reprint-Gerücht, "Influencer zieht Glurak im Stream", Turnier-Wochenende, Fälschungswelle auf Kleinanzeigen |
+| **Market (good and bad)** | Hype-Welle (+30 % on one game), **Die Blase platzt** (−40 %, slow recovery), Reprint-Gerücht, "Influencer zieht Glurak im Stream", Großes Turnier, Fälschungswelle auf Kleinanzeigen |
 | **Supply** | Überraschungs-Restock bei Kaufland, Lieferengpass, Zoll-Streik, Deutsche Bahn: "Verzögerungen im Betriebsablauf" (all shipping slower) |
 | **Grading** | PSA-Stau, PSA-Preiserhöhung, Grading-Skandal bei einem NPC-Grader |
 | **Personal luck** | Glückstag (+Pack-Glück), Opa schenkt einen alten Ordner, Steuerrückerstattung |

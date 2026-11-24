@@ -189,6 +189,10 @@ PGlite runs in WebAssembly, so the times are an upper bound for Supabase):
 
 - **Tick:** 150 ms on average, p95 220 ms, max 330 ms. The market system takes 134 ms of it (362 prices and their
   history rows every 5 minutes), every other system stays under 25 ms. One tick a minute leaves plenty of room.
+- **QA pass (24 Nov 2026), `sim/size.ts 1` with 0.0.9's catalog** (1.165 priced items, 474 of them with history while
+  the eight new sets are announced): tick 534 ms on average, p95 831 ms, max 1,1 s in PGlite; the market system is
+  505 ms of it (134 ms for 362 items before), so it grows linearly with the catalog. Fine for a system that runs every
+  5 minutes; if it ever matters, the market update is the place to optimise.
 - **Price history:** 120–160 bytes per row with its index. With the thinning it levels off at about 860 rows per item
   (≈ 45 MB for the four sets), then grows by one row per item and day (≈ 20 MB a year). Each new set adds about 25 %.
   **0.0.9:** with Empiremon (112 items) and the eight sets 2 and 3 (about 690 items) the catalog has about 1.170

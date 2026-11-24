@@ -82,12 +82,19 @@ function Messages({ messages }: { messages: Chat['messages'] }) {
   const offset = useWorld((w) => w.clockOffsetMs)
   const myName = useMe().data?.player?.username
   const last = messages.at(-1)?.id
+  const atBottom = useRef(true)
   useEffect(() => {
-    if (box.current) box.current.scrollTop = box.current.scrollHeight
+    // follow new messages, unless the reader scrolled up to read older ones
+    if (box.current && atBottom.current) box.current.scrollTop = box.current.scrollHeight
   }, [last])
   if (messages.length === 0) return <p className="flex-1 py-12 text-center text-sm text-fg-3">{T.empty}</p>
   return (
-    <ol ref={box} className="mb-4 flex max-h-[60vh] min-h-72 flex-col gap-2 overflow-y-auto pr-1" aria-live="polite">
+    <ol
+      ref={box}
+      onScroll={(e) => (atBottom.current = e.currentTarget.scrollHeight - e.currentTarget.scrollTop - e.currentTarget.clientHeight < 48)}
+      className="mb-4 flex max-h-[60vh] min-h-72 flex-col gap-2 overflow-y-auto pr-1"
+      aria-live="polite"
+    >
       {messages.map((m) => {
         const mention = !!myName && !m.me && m.body.toLowerCase().includes(`@${myName.toLowerCase()}`)
         return (

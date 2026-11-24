@@ -33,7 +33,7 @@ Owner target: **level 100 in about 2–3 weeks** for an active player.
 
 ```
 minutes_for_level(n) = 0.5 + 0.17 × n^1.3            (standard active play)
-ep_to_next(n)        = round( (25 + 8.5 × n^1.3) × 1.035^n )
+ep_to_next(n)        = round( (25 + 8.5 × n^1.3) × 1.04^n )        (1.035 until the QA pass of 24 Nov 2026)
 reward_scale(n)      = 1.03^n                        (all EP rewards are multiplied by this; since alpha_12 it grows
                                                       slower than ep_to_next, so the late game slows down step by step)
 ```
@@ -276,7 +276,7 @@ P2P trades, gifts and loans move money between players and are not sources.
 | Company | Founding 25.000 €, stages 150.000 € → 6 Mrd. €; wages, rent, power, material, equipment, research, marketing, late fees, fines |
 | Taxes | Kapitalertragsteuer 25 % on company payouts; Schenkungssteuer 20 % above the daily gift allowance; late fees |
 | Insurance, Nebenkosten | Versand 20 € per day; Hausrat 0,3 % of the bulk value per day (at least 5 €) |
-| Consumables | Döner 150 €, Club-Mate 50 €, Kaffee 35 € |
+| Consumables | Döner 150 €, Club-Mate 50 €, Kaffee 35 €; together at most 150 energy a day (`snack.daily_energy`, QA pass) |
 | Cosmetics and luxury | 1.000 € → 100 Mrd. € |
 | Megaprojekte | 20 Mrd. € → 2 Bio. € shared server goals (tracked in Basis-€) |
 | Museum auctions | Open-ended |
@@ -440,7 +440,7 @@ Mutti sends pocket money.
 
 | Formula | Definition |
 |---------|------------|
-| EP to next level | `round((25 + 8.5 × n^1.3) × 1.035^n)` |
+| EP to next level | `round((25 + 8.5 × n^1.3) × 1.04^n)` (QA pass; was 1.035) |
 | Reference income | `900 × 1.08^n` Basis-€/h |
 | Preisniveau | `min(250, 1.018^max(0, C_med − 20))`, daily, +10 % max per day |
 | Any game-set amount | `Basis-€ × P` |

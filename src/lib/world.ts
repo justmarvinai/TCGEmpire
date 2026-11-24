@@ -85,6 +85,7 @@ export function syncNow() {
 /** The one polling loop: every 15 s while the tab is visible, at once when it becomes visible or on demand. */
 export function useSync(enabled: boolean) {
   const setMe = useSetMe()
+  const client = useQueryClient()
 
   useEffect(() => {
     if (!enabled) return
@@ -108,8 +109,12 @@ export function useSync(enabled: boolean) {
         })
         if (stopped) return
         setMe({ player: res.player, server: res.server, away_s: res.away_s })
+        // build on the state as it is now: overlays may have closed level-ups, big pulls or the bell meanwhile
+        const cur = useWorld.getState()
+        const feedNew = res.feed.filter((f) => f.id > (cur.feed.at(-1)?.id ?? 0))
+        const notesNew = res.notifications.filter((n) => n.id > (cur.notifications.at(-1)?.id ?? 0))
         const firstLoad = w.feed.length === 0 && w.notifications.length === 0
-        const fresh = firstLoad ? [] : res.notifications
+        const fresh = firstLoad ? [] : notesNew
         const levelUps = fresh
           .filter((n) => n.kind === 'level_up')
           .map((n) => ({
@@ -117,18 +122,20 @@ export function useSync(enabled: boolean) {
             reward_cents: Number(n.data.reward_cents ?? 0),
             booster: Boolean(n.data.booster),
           }))
-        const bigPulls = firstLoad ? [] : res.feed.filter((f) => f.kind === 'pull_grail' || f.kind === 'pull_ultra')
+        const bigPulls = firstLoad ? [] : feedNew.filter((f) => f.kind === 'pull_grail' || f.kind === 'pull_ultra')
         if (fresh.some((n) => n.kind !== 'level_up')) sfx(noteSound(fresh.map((n) => n.kind)))
         useWorld.getState().apply({
           clockOffsetMs: new Date(res.server.time).getTime() - Date.now(),
-          feed: [...w.feed, ...res.feed].slice(-60),
-          notifications: [...w.notifications, ...res.notifications].slice(-60),
-          unread: firstLoad ? 0 : w.unread + fresh.length,
+          feed: [...cur.feed, ...feedNew].slice(-60),
+          notifications: [...cur.notifications, ...notesNew].slice(-60),
+          unread: firstLoad ? 0 : cur.unread + fresh.length,
           chatUnread: res.chat_unread,
           online: res.online,
-          levelUps: [...w.levelUps, ...levelUps],
-          bigPulls: [...w.bigPulls, ...bigPulls],
+          levelUps: [...cur.levelUps, ...levelUps],
+          bigPulls: [...cur.bigPulls, ...bigPulls],
         })
+        // a store restocked: the shop shows the new wave without a reload
+        if (!firstLoad && feedNew.some((f) => f.kind === 'restock')) void client.invalidateQueries({ queryKey: ['shop'] })
       } catch {
         // Stay quiet: the next round tries again; the HUD keeps the last known state.
       } finally {
@@ -150,7 +157,7 @@ export function useSync(enabled: boolean) {
       clearInterval(timer)
       document.removeEventListener('visibilitychange', run)
     }
-  }, [enabled, setMe])
+  }, [enabled, setMe, client])
 }
 
 // The loudest news decides the sound of a sync round: trouble first, then money, then progress.

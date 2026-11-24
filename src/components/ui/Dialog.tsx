@@ -35,7 +35,11 @@ export function Dialog({
               <Radix.Title className="text-xl leading-tight font-bold tracking-tight">{title}</Radix.Title>
               {description && <Radix.Description className="mt-1 text-sm text-fg-2">{description}</Radix.Description>}
             </div>
-            <Radix.Close aria-label={texts.common.close} className="text-fg-3 hover:text-fg">
+            {/* a finger-sized target (the icon alone is 16 px) */}
+            <Radix.Close
+              aria-label={texts.common.close}
+              className="-m-2 grid size-10 shrink-0 place-items-center rounded-lg text-fg-3 hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
+            >
               <PixelIcon name="close" />
             </Radix.Close>
           </div>

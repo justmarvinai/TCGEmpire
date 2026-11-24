@@ -40,6 +40,7 @@ export function QuestList({ quests, list, reroll, compact }: { quests: Quests; l
   const run = useQuestAction()
   const [busy, setBusy] = useState<string | null>(null)
   const go = async (key: string, fn: 'quest_claim' | 'quest_reroll', id: number) => {
+    if (busy) return // one at a time: answers arriving out of order would overwrite the list with the older one
     setBusy(key)
     const res = await run(fn, { p_quest: id })
     setBusy(null)
