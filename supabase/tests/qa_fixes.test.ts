@@ -126,6 +126,20 @@ describe('QA fixes', () => {
     expect(await t.sql(`select 1 from game.ads where id = $1`, [ad])).toHaveLength(1) // the ad stays up
   })
 
+  it('the energy mini quest is only offered to players who can pull energy cards', async () => {
+    const t = await createTestDb()
+    const ygo = await t.playerId(await t.player('Duellant', 'geheim123', 'yugioh'))
+    const pkm = await t.playerId(await t.player('Trainer', 'geheim123', 'pokemon'))
+    const doable = async (id: string) => (await t.sql<{ d: boolean }>(`select private.quest_doable($1, 'energy_pulled') as d`, [id]))[0]!.d
+    expect(await doable(ygo)).toBe(false)
+    expect(await doable(pkm)).toBe(true)
+    for (let i = 0; i < 15; i++) {
+      await t.sql(`delete from game.quests where player_id = $1 and kind = 'mini' and claimed_at is null`, [ygo])
+      await t.sql(`select private.quests_fill($1)`, [ygo])
+    }
+    expect(await t.sql(`select 1 from game.quests where player_id = $1 and event = 'energy_pulled'`, [ygo])).toEqual([])
+  })
+
   it('Adventskalender doors give no cards of a set in Vorbestellung', async () => {
     const t = await createTestDb()
     await t.setConfig({ 'events.enabled': true })

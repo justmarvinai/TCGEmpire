@@ -644,7 +644,7 @@ round by round, with running totals, emotes and spectators.
 | Mode | Winner |
 |------|--------|
 | **Klassisch** | Highest total pull value takes **all** cards |
-| **Krepel-Battle** | *Lowest* total wins |
+| **Gurken-Battle** | *Lowest* total wins |
 | **Top-Karte** | Best single card wins |
 | **Jackpot** | Random winner, chance proportional to pull value |
 | **Team 2v2** | Combined totals |
@@ -710,7 +710,7 @@ trigger any event manually. Cadence (Q-18):
 
 | Kind | Examples |
 |------|----------|
-| **Market (good and bad)** | Hype-Welle (+30 % on one game), **Die Blase platzt** (−40 %, slow recovery), Reprint-Gerücht, "Influencer zieht Glurak im Stream", Turnier-Wochenende, Fälschungswelle auf Kleinanzeigen |
+| **Market (good and bad)** | Hype-Welle (+30 % on one game), **Die Blase platzt** (−40 %, slow recovery), Reprint-Gerücht, "Influencer zieht Glurak im Stream", Großes Turnier, Fälschungswelle auf Kleinanzeigen |
 | **Supply** | Überraschungs-Restock bei Kaufland, Lieferengpass, Zoll-Streik, Deutsche Bahn: "Verzögerungen im Betriebsablauf" (all shipping slower) |
 | **Grading** | PSA-Stau, PSA-Preiserhöhung, Grading-Skandal bei einem NPC-Grader |
 | **Personal luck** | Glückstag (+Pack-Glück), Opa schenkt einen alten Ordner, Steuerrückerstattung |

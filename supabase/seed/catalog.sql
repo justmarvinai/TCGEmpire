@@ -1607,7 +1607,7 @@ insert into game.goal_defs (key, set_id, groups, stat, op, value, min_grade) val
   ('evoli', 'pokemon-jungle', '[["pkm-jungle-055","pkm-jungle-070"],["pkm-jungle-025","pkm-jungle-060","pkm-jungle-073"],["pkm-jungle-032","pkm-jungle-063","pkm-jungle-074"],["pkm-jungle-028","pkm-jungle-061","pkm-jungle-077"]]'::jsonb, 'energy_max', 'flat', 5, null),
   ('voegel', 'pokemon-fossil', '[["pkm-fossil-024","pkm-fossil-060","pkm-fossil-071"],["pkm-fossil-029","pkm-fossil-061","pkm-fossil-072"],["pkm-fossil-010","pkm-fossil-056","pkm-fossil-069"]]'::jsonb, 'pack_luck', 'flat', 3, null),
   ('torwaechter', 'yugioh-mrd', '[["ygo-mrd-025"],["ygo-mrd-026"],["ygo-mrd-027"],["ygo-mrd-079","ygo-mrd-087"]]'::jsonb, 'lager_units', 'flat', 4, null),
-  ('toon', 'yugioh-mrl', '[["ygo-mrl-055","ygo-mrl-066"],["ygo-mrl-067","ygo-mrl-074"],["ygo-mrl-070","ygo-mrl-077"],["ygo-mrl-073","ygo-mrl-080"]]'::jsonb, 'ep', 'pct', 3, null),
+  ('toon', 'yugioh-mrl', '[["ygo-mrl-055","ygo-mrl-066"],["ygo-mrl-067","ygo-mrl-074"],["ygo-mrl-070","ygo-mrl-077"],["ygo-mrl-073","ygo-mrl-080"],["ygo-mrl-017"]]'::jsonb, 'ep', 'pct', 3, null),
   ('admirale', 'onepiece-op02', '[["op02-056","op02-079"],["op02-064","op02-082"],["op02-069","op02-088"]]'::jsonb, 'grading_slots', 'flat', 1, null),
   ('charlotte', 'onepiece-op03', '[["op03-043","op03-064","op03-076","op03-083"],["op03-055","op03-069","op03-086","op03-088"],["op03-059"],["op03-060"],["op03-061"],["op03-062","op03-081"],["op03-063","op03-082"]]'::jsonb, 'listing_slots', 'flat', 1, null),
   ('ionia', 'riftbound-spiritforged', '[["rb-sfd-016","rb-sfd-018","rb-sfd-071","rb-sfd-080","rb-sfd-087"],["rb-sfd-041","rb-sfd-084"],["rb-sfd-085"]]'::jsonb, 'energy_max', 'flat', 5, null),
