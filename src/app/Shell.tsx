@@ -224,17 +224,18 @@ function TopBar({ me }: { me: SignedIn }) {
         </InfoTip>
         <InfoTip
           label={texts.hud.energy}
-          triggerClassName={clsx(pill, 'max-md:hidden')}
+          triggerClassName={pill}
           trigger={
             <>
               <span className={clsx(chip, 'bg-info')}>
                 <PixelIcon name="bolt" />
               </span>
+              {/* phones show the number only: the minijobs need it, the bar does not fit */}
               <span className="nums">
                 {p.energy}
-                <span className="font-medium text-fg-3">/{p.energy_max}</span>
+                <span className="font-medium text-fg-3 max-md:hidden">/{p.energy_max}</span>
               </span>
-              <span className="h-1.5 w-11 overflow-hidden rounded-full bg-surface-3">
+              <span className="h-1.5 w-11 overflow-hidden rounded-full bg-surface-3 max-md:hidden">
                 <i className="block h-full rounded-full bg-info" style={{ width: `${Math.round((100 * p.energy) / Math.max(1, p.energy_max))}%` }} />
               </span>
             </>

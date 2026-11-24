@@ -95,7 +95,7 @@ test('Mama’s guided tutorial: each step marks what to click and blocks the res
   await page.locator('[data-tour="nav:/collection"]').click()
   await expect(page.locator('[data-tour="binder-card"]').first()).toBeVisible() // one collection over all sets (0.0.7)
   await clickSpot(page)
-  const sold = page.getByText(/Karten verkauft für/)
+  const sold = page.getByText(/Karten? verkauft für/)
   await expect(sold.or(page.getByRole('dialog'))).toBeVisible()
   if (await page.getByRole('dialog').isVisible()) {
     await expect(mama).toContainText('Klick auf „Eine verkaufen“.')
@@ -128,7 +128,7 @@ test('Mama’s guided tutorial: each step marks what to click and blocks the res
   const bulk = stage.getByRole('button', { name: /Bulk verkaufen/ })
   if (await bulk.isEnabled()) {
     await bulk.click()
-    await expect(page.getByText(/Karten verkauft für/).first()).toBeVisible()
+    await expect(page.getByText(/Karten? verkauft für/).first()).toBeVisible()
   } else {
     await expect(bulk).toHaveText(/\(0\)/)
   }

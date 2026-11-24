@@ -99,7 +99,15 @@ function RecapSheet({ away, player }: { away: number; player: Player }) {
 export function FeatureTour({ player }: { player: Player }) {
   const { pathname } = useLocation()
   const seeTour = useSettings((s) => s.seeTour)
-  const feature = unseenFeatures(player, useSettings((s) => s.seenTours)).find((f) => f.path === pathname)
+  const seen = useSettings((s) => s.seenTours)
+  // Tours are remembered per device. An account older than a day without a single tour on this device is a returning
+  // player on a new device: the features below the current level were explained elsewhere.
+  const now = useNow()
+  const newDevice = player.tutorial_step < 0 && now - new Date(player.created_at).getTime() > 86_400_000 && !seen.some((k) => k.startsWith(`${player.id}:`))
+  useEffect(() => {
+    if (newDevice) FEATURES.filter((f) => f.level < player.level).forEach((f) => seeTour(`${player.id}:${f.key}`))
+  }, [newDevice, player.id, player.level, seeTour])
+  const feature = now === 0 || newDevice ? undefined : unseenFeatures(player, seen).find((f) => f.path === pathname)
   return feature ? <TourCoach key={feature.key} feature={feature.key} onDone={() => seeTour(`${player.id}:${feature.key}`)} /> : null
 }
 

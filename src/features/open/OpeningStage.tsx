@@ -37,6 +37,7 @@ export function OpeningStage({
   onClose,
   onAgain,
   canAgain,
+  opening = false,
   viewers,
 }: {
   result: PackOpen
@@ -44,6 +45,8 @@ export function OpeningStage({
   onClose: () => void
   onAgain: () => void
   canAgain: boolean
+  /** the next opening is on its way ("Nochmal" waits) */
+  opening?: boolean
   /** live stream audience, or null when not streaming */
   viewers: number | null
 }) {
@@ -149,9 +152,13 @@ export function OpeningStage({
     }
   }, [phase, shown, cards.length, tear, revealNext, nextPack])
 
+  const root = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
-      if (e.key === ' ' || e.key === 'Enter') {
+      // Space and Enter on one of the stage's own buttons press that button; anywhere else they tear and flip
+      const el = e.target instanceof Element ? e.target : null
+      const ownControl = !!el && !!root.current?.contains(el) && !!el.closest('button, a, input, select, textarea')
+      if ((e.key === ' ' || e.key === 'Enter') && !ownControl) {
         e.preventDefault()
         advance()
       } else if (e.key === 'Escape') {
@@ -168,8 +175,9 @@ export function OpeningStage({
   const packDone = phase === 'cards' && shown >= cards.length
 
   return (
-    <div className="fixed inset-0 z-50 grid grid-cols-[1fr_17rem] bg-ink/85 backdrop-blur-xl max-lg:grid-cols-1" role="dialog" aria-label={T.title}>
-      <div className="relative flex min-h-0 flex-col overflow-hidden">
+    <div ref={root} className="fixed inset-0 z-50 grid grid-cols-[1fr_17rem] bg-ink/85 backdrop-blur-xl max-lg:grid-cols-1" role="dialog" aria-label={T.title}>
+      {/* short screens (phones) scroll to the buttons below the card */}
+      <div className="relative flex min-h-0 flex-col overflow-x-hidden overflow-y-auto">
         <header className="flex items-center gap-3 px-6 pt-4">
           <p className="font-pixel text-xl">{productById.get(productId)?.name}</p>
           {multi && phase !== 'summary' && <span className="text-sm text-fg-3">{T.packOf(packIdx + 1, result.packs.length)}</span>}
@@ -186,7 +194,7 @@ export function OpeningStage({
         </header>
 
         {phase === 'summary' ? (
-          <Summary result={result} productId={productId} onClose={onClose} onAgain={onAgain} canAgain={canAgain} />
+          <Summary result={result} productId={productId} onClose={onClose} onAgain={onAgain} canAgain={canAgain} opening={opening} />
         ) : (
           <div className="relative flex flex-1 cursor-pointer flex-col items-center justify-center gap-6 select-none" onClick={advance}>
             {burst && <Burst key={burst.key} tier={burst.tier} hues={fxHues} />}
@@ -352,12 +360,14 @@ function Summary({
   onClose,
   onAgain,
   canAgain,
+  opening,
 }: {
   result: PackOpen
   productId: string
   onClose: () => void
   onAgain: () => void
   canAgain: boolean
+  opening: boolean
 }) {
   const act = useAct()
   const [sold, setSold] = useState(false)
@@ -442,7 +452,7 @@ function Summary({
         </section>
 
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button variant="primary" size="lg" onClick={onAgain} disabled={!canAgain}>
+          <Button variant="primary" size="lg" onClick={onAgain} disabled={!canAgain || opening} loading={opening}>
             {T.again}
           </Button>
           <span className="flex items-center gap-1">

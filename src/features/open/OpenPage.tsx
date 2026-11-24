@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { toast } from '@/components/ui/toast.tsx'
 import { sfx } from '@/lib/sfx.ts'
@@ -30,10 +30,15 @@ export function OpenPage() {
   const stream = useStream()
   const limits = useLimits()
 
+  // one opening at a time: a double click on "Nochmal" must not open (and hide) a second batch
+  const opening = useRef(false)
   const open = async (productId: string, qty: number) => {
+    if (opening.current) return
+    opening.current = true
     setBusy(`${productId}:${qty}`)
-    const result = await act('pack_open', { p_product: productId, p_qty: qty }, ['shop', 'binder', 'quests', 'stream', 'limits'])
+    const result = await act('pack_open', { p_product: productId, p_qty: qty }, ['shop', ['binder', productById.get(productId)?.set], 'quests', 'stream', 'limits'])
     setBusy(null)
+    opening.current = false
     if (result) setSession({ result, productId, qty })
     // the day's EP from packs is used up (decision 111): cards still come, EP from midnight
     if (result?.ep_capped) toast('info', T.epCapped(limits.data?.pack_ep_cap ?? 0))
@@ -129,6 +134,7 @@ export function OpenPage() {
           result={session.result}
           productId={session.productId}
           canAgain={left > 0}
+          opening={busy !== null}
           viewers={stream.data?.live ? stream.data.viewers : null}
           onClose={() => setSession(null)}
           onAgain={() => void open(session.productId, Math.min(session.qty, left))}

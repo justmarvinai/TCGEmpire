@@ -23,6 +23,6 @@ test('sell duplicates and a single card to the Kartenladen', async ({ page }) =>
 
   await page.getByRole('button', { name: /Bisasam/ }).click()
   await page.getByRole('dialog', { name: 'Bisasam' }).getByRole('button', { name: 'Eine verkaufen' }).click()
-  await expect(page.getByText(/^1 Karten verkauft für /)).toBeVisible()
+  await expect(page.getByText(/^Eine Karte verkauft für /)).toBeVisible()
   await expect(page.getByText('Ungültige Anfrage.')).toHaveCount(0)
 })

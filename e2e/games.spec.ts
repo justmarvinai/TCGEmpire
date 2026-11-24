@@ -46,6 +46,8 @@ test('four games: starter pick, Opa’s Yu-Gi-Oh! booster, licences and the bind
 
   // Sammlung: one collection, filtered to the game; the pulled cards and the Sammelziele of the set.
   await page.getByRole('link', { name: /^Sammlung/ }).click()
+  // the kiosk has the same "Spiel" filter and stays on screen while the Sammlung loads
+  await expect(page.getByLabel('Set', { exact: true })).toBeVisible()
   await page.getByRole('group', { name: 'Spiel' }).getByRole('button', { name: 'Yu-Gi-Oh!' }).click()
   await expect(page.getByText('Exodia, komplett')).toBeVisible()
   await expect(page.locator('[data-tier]').first()).toBeVisible() // card art from the set's atlas

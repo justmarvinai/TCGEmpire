@@ -41,7 +41,7 @@ function houseOddsText() {
 }
 
 export function ShopPage() {
-  const shop = useShop()
+  const shop = useShop(true)
   const act = useAct()
   const [busy, setBusy] = useState<string | null>(null)
   const [justBought, setJustBought] = useState(false)

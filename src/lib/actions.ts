@@ -4,6 +4,7 @@ import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import type { z } from 'zod'
 import { toast } from '@/components/ui/toast.tsx'
+import { setOfCard } from './catalog.ts'
 import { errorText, newRequestId, rpc } from './rpc.ts'
 import type { BinderCard, Player, RPC_SCHEMAS, RpcName } from './schemas.ts'
 import { syncNow, useApplyPlayer, useReleasedSets } from './world.ts'
@@ -14,12 +15,12 @@ export function useAct() {
   const client = useQueryClient()
   const applyPlayer = useApplyPlayer()
   return useCallback(
-    async <N extends RpcName>(fn: N, args: Record<string, unknown> = {}, refresh: string[] = []): Promise<Result<N> | undefined> => {
+    async <N extends RpcName>(fn: N, args: Record<string, unknown> = {}, refresh: (string | readonly unknown[])[] = []): Promise<Result<N> | undefined> => {
       try {
         const res = await rpc(fn, { p_request_id: newRequestId(), ...args })
         const player = (res as { player?: Player }).player
         if (player) applyPlayer(player)
-        for (const key of refresh) void client.invalidateQueries({ queryKey: [key] })
+        for (const key of refresh) void client.invalidateQueries({ queryKey: typeof key === 'string' ? [key] : key })
         syncNow()
         return res
       } catch (e) {
@@ -31,7 +32,20 @@ export function useAct() {
   )
 }
 
-export const useShop = () => useQuery({ queryKey: ['shop'], queryFn: () => rpc('shop_get') })
+/** `live` keeps the stores' stock current while they are on screen (other players buy, waves arrive). */
+export const useShop = (live = false) => useQuery({ queryKey: ['shop'], queryFn: () => rpc('shop_get'), refetchInterval: live ? 30_000 : false })
+/** Reloads the binders of the sets these cards belong to and waits for them: after a sale, before the next click. */
+export function useRefreshBinders() {
+  const client = useQueryClient()
+  return useCallback(
+    async (cardIds: readonly string[]) => {
+      const sets = [...new Set(cardIds.map(setOfCard))]
+      await Promise.all(sets.map((s) => client.refetchQueries({ queryKey: ['binder', s] })))
+    },
+    [client],
+  )
+}
+
 /** One binder query per set (the keys actions refresh), merged into one collection. Stable, so it memoizes. */
 const mergeBinders = (rs: { data?: { cards: BinderCard[] }; isPending: boolean; error: Error | null; refetch: () => unknown }[]) => ({
   cards: rs.flatMap((r) => r.data?.cards ?? []),

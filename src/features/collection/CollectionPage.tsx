@@ -13,7 +13,7 @@ import { Panel } from '@/components/ui/Panel.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { toast } from '@/components/ui/toast.tsx'
-import { useAct, useBinders, useCosmetics } from '@/lib/actions.ts'
+import { useAct, useBinders, useCosmetics, useRefreshBinders } from '@/lib/actions.ts'
 import { SetGoals } from './Goals.tsx'
 import { cardById, HIT_TIERS, SETS, TIER_LABEL, TIER_TEXT, TIERS, tierRank, UNLOCKS, type Game, type Tier } from '@/lib/catalog.ts'
 import { formatMoney } from '@/lib/format.ts'
@@ -52,6 +52,7 @@ export function CollectionPage() {
   const binder = useBinders()
   const look = useCosmetics().data?.style
   const act = useAct()
+  const refreshSets = useRefreshBinders()
   const [game, setGame] = useState<Game | 'all'>('all')
   const [setId, setSetId] = useState('all')
   const [owned, setOwned] = useState<Owned>('owned')
@@ -95,7 +96,8 @@ export function CollectionPage() {
 
   const sellDupes = async () => {
     setSelling(true)
-    const res = await act('ankauf_sell', { p_stacks: dupes, p_copies: [] }, ['binder'])
+    const res = await act('ankauf_sell', { p_stacks: dupes, p_copies: [] })
+    await refreshSets(dupes.map((d) => d.card_id))
     setSelling(false)
     if (res) {
       sfx('coin')
@@ -262,6 +264,7 @@ function Slot({ card, sleeve, onOpen }: { card: BinderCard; sleeve?: string; onO
 
 function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }) {
   const act = useAct()
+  const refreshSets = useRefreshBinders()
   const navigate = useNavigate()
   const level = useMe().data?.player?.level ?? 0
   const data = cardById.get(card.card_id)!
@@ -286,7 +289,8 @@ function CardDialog({ card, onClose }: { card: BinderCard; onClose: () => void }
     const args = hit
       ? { p_stacks: [], p_copies: all ? card.copies : card.copies.slice(-1) }
       : { p_stacks: [{ card_id: card.card_id, qty: n }], p_copies: [] }
-    const res = await act('ankauf_sell', args, ['binder'])
+    const res = await act('ankauf_sell', args)
+    await refreshSets([card.card_id])
     setBusy(false)
     if (res) {
       sfx('coin')

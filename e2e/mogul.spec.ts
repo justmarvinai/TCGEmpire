@@ -22,7 +22,7 @@ test('der exit: sell the empire, buy a perk, bring a card down from the attic', 
   await page.getByRole('button', { name: '+100.000 €' }).click()
   await page.getByRole('button', { name: 'Level 100' }).click()
 
-  await page.getByRole('link', { name: /^Prestige/ }).click()
+  await page.getByRole('link', { name: /^Der Exit/ }).click()
   await finishTour(page, 'Der Exit')
   await expect(page.getByText('Sterne für den Exit')).toBeVisible()
   await page.getByLabel('Zum Bestätigen „Tycoon“ eintippen').fill('Tycoon')
