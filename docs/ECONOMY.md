@@ -104,6 +104,19 @@ profit on the same day, level 58 → 60 and 3,4 → 2,9 Mio. € after eight day
 is reached on day 3 in 5 → 6 of 10 runs: no measurable change in pace. The pace test's "level 30 by day 3" was a coin
 flip at that pace, so it now checks the level after three days (≥ 28).
 
+**QA pass (24 Nov 2026).** The sim bot measured the game too slow: a local list hid the catalogue it checks for
+Empiremon, so it bought Empiremon instead of its licensed boosters (about 60 % of its kiosk buys on days 1–3, all from
+level 70), and its 4-hour shifts while playing kept the 8-hour night shift from starting. With both fixed, level 100
+came on about day 10 at the old curve, well under Q-6. `ep.growth` 1,035 → 1,04 (EP needed ×1,16 at level 30, ×1,27 at
+50, ×1,61 at 100). `SIM_TRACE=1 pnpm sim 16 150` with the fixed bot (it buys and opens 50 boosters at once since the
+QA pass): level 27 / 37 / 47 / 53 / 58 / 64 / 69 / 76 / 81 / 86 / 89 / 93 on days 1–12, about +3,5 a day from there,
+so level 100 on about day 14 (the run hit its time limit on day 12). That is the alpha_12 figure for a bot that wastes
+no second, which the owner's 2,5–3 weeks for real players was set against. The pace test still passes (47 after three
+days). Kiosk snacks add at most 150 energy a day (about ten minijob rounds); before, the Club-Mate loop gave about ten
+levels an hour at level 10 and three times the reference income. Not measured by the bot: 0.0.11's NPC collectors
+(selling at the Marktwert pays about 95 % in minutes instead of the Kartenladen's 60 %), which gives players who sell
+their pulls more money for boosters until the pack EP cap.
+
 **alpha_12 balance pass** (`SIM_EP=1 SIM_TRACE=1 pnpm sim 36 150 2`): the bot now plays like an active player who does
 every quest (decision 107), and the EP shares and the reward growth were set from it (decision 109). Level 30 on day 2,
 50 on day 5, 75 on day 9, **100 on day 14** (34 active hours). The bot wastes no second, so a real player at 2,5 hours
