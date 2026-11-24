@@ -47,13 +47,16 @@ describe('NPC traders', () => {
     expect(await budget('kalle')).toBe(95) // the price minus the 5 % fee
   })
 
-  it('Sabine buys cheap offers, ignores expensive ones and pays on arrival', async () => {
+  it('Sabine buys cheap offers (0.0.11: through the timed buyer), ignores expensive ones and pays on arrival', async () => {
     await t.sql(`update game.npcs set activity = 100 where id = 'sabine'`)
     await t.sql(`select private.stack_add($1, $2, 2)`, [id, C])
     const v = await value(C)
     await t.rpc(me, 'listing_create', { p_request_id: rid(), p_kind: 'card', p_item: C, p_copy: null, p_qty: 1, p_price: Math.max(1, Math.round(v * 0.5)) })
     await t.rpc(me, 'listing_create', { p_request_id: rid(), p_kind: 'card', p_item: C, p_copy: null, p_qty: 1, p_price: v * 2 })
     await npcTick()
+    expect(await num(`select count(*) as v from game.listings where seller_id = $1`, [id])).toBe(2) // she no longer snipes on her own
+    await t.advance('2 minutes')
+    await t.sql(`select private.tick_npc_buyers()`)
     expect(await num(`select count(*) as v from game.listings where seller_id = $1`, [id])).toBe(1) // the expensive one stays
     expect(await num(`select count(*) as v from game.buy_orders where npc_id = 'sabine'`)).toBe(3)
     expect(await budget('sabine')).toBeGreaterThanOrEqual(0)

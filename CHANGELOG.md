@@ -3,6 +3,19 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.11] — NPC-Käufer (24 Nov 2026)
+
+### Changed
+
+- **Your cards sell to NPC collectors, and the price decides how fast.** A card you list on the Cardmarket at up to its
+  Marktwert is bought within 1–2 minutes, up to +15 % within 10–20 minutes, up to +30 % within 12–24 hours. Dearer
+  than that, only players buy it. The sell form shows the wait for your price, and your listings count down to their
+  buyer. You get a message when the collector buys; the money comes when the parcel arrives, minus the 5 % fee.
+- **Kleinanzeigen:** at the same prices a collector offers your full asking price after the same waits. Take it or
+  wait for Kevin.
+- The Stammkunden skill now halves those waits; scalpers and investors still buy your sealed up to the Marktwert.
+- The Kartenladen's instant sale stays as it is.
+
 ## [0.0.10] — Firma ab Level 20 (24 Nov 2026)
 
 ### Changed

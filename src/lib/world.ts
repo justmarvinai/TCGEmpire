@@ -136,6 +136,9 @@ export function useSync(enabled: boolean) {
         })
         // a store restocked: the shop shows the new wave without a reload
         if (!firstLoad && feedNew.some((f) => f.kind === 'restock')) void client.invalidateQueries({ queryKey: ['shop'] })
+        // an NPC bought, a parcel paid out or an offer came in: the market pages show it without a reload
+        if (fresh.some((n) => n.kind === 'npc_bought' || n.kind === 'sale_paid' || n.kind === 'parcel_arrived')) void client.invalidateQueries({ queryKey: ['cardmarket'] })
+        if (fresh.some((n) => n.kind === 'ad_offer')) void client.invalidateQueries({ queryKey: ['ads'] })
       } catch {
         // Stay quiet: the next round tries again; the HUD keeps the last known state.
       } finally {
@@ -164,7 +167,7 @@ export function useSync(enabled: boolean) {
 const NOTE_SOUNDS: [SfxName, string[]][] = [
   ['alarm', ['attacked', 'resealed_caught', 'chargeback', 'company_scandal', 'company_audit', 'company_zoll', 'company_broke', 'loan_defaulted']],
   ['outbid', ['museum_outbid']],
-  ['sold', ['sale_paid', 'stream_sponsor', 'loan_repaid', 'gift_received']],
+  ['sold', ['sale_paid', 'npc_bought', 'stream_sponsor', 'loan_repaid', 'gift_received']],
   ['quest', ['achievement', 'goal_done', 'league_done', 'museum_won', 'weekly_chest', 'company_award']],
 ]
 function noteSound(kinds: string[]): SfxName {

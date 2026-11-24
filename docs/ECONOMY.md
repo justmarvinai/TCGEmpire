@@ -256,7 +256,7 @@ print it follows `set_factor` for sealed; a display also carries its guaranteed-
 | Wochenquest | 180 each + weekly chest: the only quest money | 5 per week |
 | Level reward | 8 + booster every 5 levels | Per level |
 | Stempelkarte | 10 → 120 over 7 days | Daily |
-| Selling to NPCs | Marktwert × 60 % (Ankauf) up to ~100 % (NPC collectors) | NPC budgets, pressure |
+| Selling to NPCs | Marktwert × 60 % at once (Ankauf); since 0.0.11 cards on the Cardmarket sell to the NPC collector at the asking price: up to 100 % after 1–2 min, 115 % after 10–20 min, 130 % after 12–24 h, minus the 5 % fee (`market.npc_buy_steps`) | Market slots, the wait; no NPC budget |
 | Company | §9 | Capacity, demand, Ruf |
 | Streaming | Viewers × pull excitement | While opening packs |
 | Achievements, events, league | Fixed tables | One-time or scheduled |

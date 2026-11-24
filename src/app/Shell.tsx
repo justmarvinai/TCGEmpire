@@ -357,6 +357,8 @@ function notificationText(n: FeedEntry) {
     return texts.notifications.achievement(n.data, ACHIEVEMENTS.find((a) => a.key === n.data.key)?.name ?? String(n.data.key))
   if (n.kind === 'parcel_arrived') return texts.notifications.parcel_arrived(n.data, itemName(String(n.data.item_id)))
   if (n.kind === 'sale_paid') return texts.notifications.sale_paid(n.data, itemName(String(n.data.item_id)), formatMoney(Number(n.data.cents)))
+  if (n.kind === 'npc_bought')
+    return texts.notifications.npc_bought(String(n.data.name), Number(n.data.qty), itemName(String(n.data.item_id)), formatMoney(Number(n.data.cents)))
   if (n.kind === 'ad_offer') return texts.notifications.ad_offer(String(n.data.name), itemName(String(n.data.item_id)), formatMoney(Number(n.data.cents)))
   if (n.kind === 'ad_expired') return texts.notifications.ad_expired(itemName(String(n.data.item_id)))
   if (n.kind === 'chargeback') return texts.notifications.chargeback(formatMoney(Number(n.data.cents)))

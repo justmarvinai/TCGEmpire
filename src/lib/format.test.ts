@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fillCount, formatAgo, formatPercent, formatDuration, formatShare, formatFactor, formatMoney, formatStars } from './format.ts'
+import { fillCount, formatAgo, formatPercent, formatDuration, formatShare, formatFactor, formatMoney, formatStars, formatWaitRange } from './format.ts'
 
 describe('format', () => {
   it('formats money on our price scale', () => {
@@ -26,6 +26,11 @@ describe('format', () => {
     expect(formatStars(500)).toBe('2,5')
     expect(formatDuration(45)).toBe('45 s')
     expect(formatDuration(7500)).toBe('2 h 05 min')
+    // the NPC buyer's waits (0.0.11), Stammkunden halves them
+    expect(formatWaitRange(60, 120)).toBe('1–2 min')
+    expect(formatWaitRange(30, 60)).toBe('30–60 s')
+    expect(formatWaitRange(600, 1200)).toBe('10–20 min')
+    expect(formatWaitRange(43_200, 86_400)).toBe('12–24 h')
     expect(formatDuration(100000)).toBe('1 T 3 h')
   })
   it('formats relative time', () => {

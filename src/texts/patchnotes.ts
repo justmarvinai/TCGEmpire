@@ -1,6 +1,16 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.11',
+    title: 'NPC-Käufer',
+    items: [
+      'Deine Karten auf dem Cardmarket kauft jetzt ein NPC-Sammler, und der Preis entscheidet, wie schnell: bis zum Marktwert in 1–2 Minuten, bis +15 % in 10–20 Minuten, bis +30 % in 12–24 Stunden. Teurer kauft nur noch ein Spieler, falls einer so blöd ist.',
+      'Beim Verkaufen siehst du, wie lange es bei deinem Preis dauert, und deine Angebote zählen bis zum Käufer runter. Wenn der Sammler zuschlägt, kriegst du Bescheid. Das Geld kommt, wenn das Paket ankommt, minus 5 % Gebühr.',
+      'In den Kleinanzeigen bietet dir bei denselben Preisen ein Sammler den vollen Preis, nach denselben Zeiten. Annehmen oder auf Kevin warten.',
+      'Der Skill „Stammkunden“ halbiert diese Wartezeiten. Der Kartenladen kauft weiter sofort, nur eben billig.',
+    ],
+  },
+  {
     version: '0.0.10',
     title: 'Firma ab Level 20',
     items: [

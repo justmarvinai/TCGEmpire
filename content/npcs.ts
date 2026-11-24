@@ -16,8 +16,8 @@ export interface NpcDef {
 }
 
 export const NPCS: readonly NpcDef[] = [
-  // Buys offers below the Marktwert and keeps a few fair buy orders open for cards she wants.
-  { id: 'sabine', name: 'Sammler-Sabine', archetype: 'collector', ruf: 900, budgetBaseCents: 3_000_00, activity: 40, params: { buyBelowPct: 95, buysPerTick: 2, orders: 3, orderPct: 80 } },
+  // Buys every player's card that is priced fairly (market.npc_buy_steps, 0.0.11) and keeps a few fair buy orders open.
+  { id: 'sabine', name: 'Sammler-Sabine', archetype: 'collector', ruf: 900, budgetBaseCents: 3_000_00, activity: 40, params: { orders: 3, orderPct: 80 } },
   // Always has singles in stock, a bit above the Marktwert; old offers disappear.
   { id: 'kalle', name: 'Kartenhändler Kalle', archetype: 'dealer', ruf: 700, budgetBaseCents: 0, activity: 50, params: { stock: 14, markupMinPct: 110, markupMaxPct: 135, maxAgeH: 48, hitChancePct: 12 } },
   // Buys bulk by the kilo: big buy orders for commons and uncommons, a little better than the Ankauf.

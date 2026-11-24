@@ -1615,7 +1615,7 @@ insert into game.goal_defs (key, set_id, groups, stat, op, value, min_grade) val
 on conflict (key) do update set set_id = excluded.set_id, groups = excluded.groups, stat = excluded.stat, op = excluded.op, value = excluded.value,
   min_grade = excluded.min_grade;
 insert into game.npcs (id, name, archetype, ruf, budget_base_cents, activity, params) values
-  ('sabine', 'Sammler-Sabine', 'collector', 900, 300000, 40, '{"buyBelowPct":95,"buysPerTick":2,"orders":3,"orderPct":80}'::jsonb),
+  ('sabine', 'Sammler-Sabine', 'collector', 900, 300000, 40, '{"orders":3,"orderPct":80}'::jsonb),
   ('kalle', 'Kartenhändler Kalle', 'dealer', 700, 0, 50, '{"stock":14,"markupMinPct":110,"markupMaxPct":135,"maxAgeH":48,"hitChancePct":12}'::jsonb),
   ('bernd', 'Bulk-Bernd', 'bulk', 600, 150000, 30, '{"orders":4,"orderPct":70,"qty":20}'::jsonb),
   ('sven', 'Scalper-Sven', 'scalper', 350, 500000, 40, '{"markupMinPct":120,"markupMaxPct":145,"buyBelowPct":92}'::jsonb),
