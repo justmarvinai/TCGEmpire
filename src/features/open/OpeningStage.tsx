@@ -303,7 +303,7 @@ function NewBadge({ small }: { small?: boolean }) {
 }
 
 /** Flash, rays and particles for a hit. Bigger tiers get more. */
-function Burst({ tier, hues }: { tier: Tier; hues?: readonly [number, number] }) {
+export function Burst({ tier, hues }: { tier: Tier; hues?: readonly [number, number] }) {
   const big = tierRank(tier) >= tierRank('ultra')
   const count = { holo: 14, alternative: 24, ultra: 40, grail: 70 }[tier as 'holo'] ?? 10
   const parts = useMemo(

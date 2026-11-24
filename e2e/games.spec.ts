@@ -36,10 +36,17 @@ test('four games: starter pick, Opa’s Yu-Gi-Oh! booster, licences and the bind
   await expect(page.getByRole('heading', { name: 'Händlerlizenzen' }).or(page.getByText('Händlerlizenzen').first())).toBeVisible()
   await expect(page.getByText('Lieblingsspiel')).toBeVisible()
   await expect(page.getByText('Lizenz fehlt').first()).toBeVisible()
+  // A pack shows what is in it and how often (0.0.7); the kiosk pack bobs, so the click does not wait for it to rest.
+  await page.getByRole('button', { name: 'Was ist in Yu-Gi-Oh! LOB Booster?' }).first().click({ force: true })
+  const info = page.getByRole('dialog', { name: 'Yu-Gi-Oh! LOB Booster' })
+  await expect(info.getByText('Chancen im Hit-Platz')).toBeVisible()
+  await expect(info.getByRole('heading', { name: /^Grail/ })).toBeVisible()
+  await page.screenshot({ path: shot('pack-info'), animations: 'disabled' })
+  await page.keyboard.press('Escape')
 
-  // Sammlung: one tab per game, the pulled cards and the Sammelziele of the set.
+  // Sammlung: one collection, filtered to the game; the pulled cards and the Sammelziele of the set.
   await page.getByRole('link', { name: /^Sammlung/ }).click()
-  await page.getByRole('tab', { name: /Yu-Gi-Oh!/ }).click()
+  await page.getByRole('group', { name: 'Spiel' }).getByRole('button', { name: 'Yu-Gi-Oh!' }).click()
   await expect(page.getByText('Exodia, komplett')).toBeVisible()
   await expect(page.locator('[data-tier]').first()).toBeVisible() // card art from the set's atlas
   await page.screenshot({ path: shot('ygo-binder'), animations: 'disabled' })

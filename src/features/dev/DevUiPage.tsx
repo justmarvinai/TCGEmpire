@@ -6,6 +6,9 @@ import { useCardAtlas, useSpriteAtlas } from '@/components/pixel/atlas.ts'
 import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
 import { Card, TiltCard } from '@/components/cards/Card.tsx'
 import { SlabOf } from '@/components/cards/Slab.tsx'
+import { GradeReveal } from '@/features/grading/GradeReveal.tsx'
+import { PackArt } from '@/features/open/PackInfo.tsx'
+import type { GradeResult, SlabLabel } from '@/lib/schemas.ts'
 import { Button } from '@/components/ui/Button.tsx'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { Field } from '@/components/ui/Field.tsx'
@@ -31,6 +34,7 @@ const COLORS = [
 ]
 
 export default function DevUiPage() {
+  const [reveal, setReveal] = useState<GradeResult[] | null>(null)
   const [dialog, setDialog] = useState(false)
   const [amount, setAmount] = useState(123456)
   const [backend, setBackend] = useState<Backend>()
@@ -161,11 +165,40 @@ export default function DevUiPage() {
           </div>
         </Panel>
 
+        <Panel title="Pack-Info und Grade-Reveal" className="lg:col-span-2" tip="Klick auf einen Booster zeigt Inhalt und Chancen. Die Knöpfe spielen das Aufdecken nach dem Grading mit Beispiel-Slabs ab.">
+          <div className="flex flex-wrap items-center gap-4">
+            <PackArt id="booster-pkm-base" scale={1} />
+            <PackArt id="booster-emp1" scale={1} />
+            {DEMO_REVEALS.map(([label, result]) => (
+              <Button key={label} onClick={() => setReveal([result])}>
+                {label}
+              </Button>
+            ))}
+          </div>
+          {reveal && <GradeReveal results={reveal} onClose={() => setReveal(null)} />}
+        </Panel>
+
         {backend?.devSql && <DevTools sql={backend.devSql} />}
       </div>
     </Page>
   )
 }
+
+const demo = (card: string, slab: SlabLabel, raw: number, value: number): GradeResult => ({
+  order_id: 0,
+  copy_id: card,
+  card_id: card,
+  slab,
+  fee_cents: 700_00,
+  raw_cents: raw,
+  value_cents: value,
+})
+/** Sample results for the grade reveal: a gem, a BGS with sub-grades and a flop. */
+const DEMO_REVEALS: [string, GradeResult][] = [
+  ['Reveal PSA 10', demo('pkm-base-090', { grader: 'psa', grade: 10, subgrades: null, black_label: false, cert_no: '40117352', pop: 1, pop_higher: 0 }, 47_167_00, 377_336_00)],
+  ['Reveal BGS 9,5', demo('emp1-019', { grader: 'bgs', grade: 9.5, subgrades: [10, 9.5, 9.5, 10], black_label: false, cert_no: '0000902841', pop: 1, pop_higher: 0 }, 428_000_000, 1_712_000_000)],
+  ['Reveal CGC 6', demo('pkm-base-028', { grader: 'cgc', grade: 6, subgrades: null, black_label: false, cert_no: '3038650127', pop: 3, pop_higher: 9 }, 12_00, 6_00)],
+]
 
 /** Local mode only: poke the in-browser server directly. */
 function DevTools({ sql }: { sql: NonNullable<Backend['devSql']> }) {

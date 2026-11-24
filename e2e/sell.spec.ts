@@ -16,7 +16,7 @@ test('sell duplicates and a single card to the Kartenladen', async ({ page }) =>
   await page.getByRole('button', { name: '+Duplikate' }).click() // three Pokémon commons, three of each
 
   await page.getByRole('link', { name: /^Sammlung/ }).click()
-  await page.getByRole('tab', { name: /Pokémon/ }).click()
+  await page.getByRole('group', { name: 'Spiel' }).getByRole('button', { name: 'Pokémon' }).click()
   await page.getByRole('button', { name: 'Duplikate verkaufen (6)' }).click()
   await expect(page.getByText(/^6 Karten verkauft für /)).toBeVisible()
   await expect(page.getByRole('button', { name: 'Duplikate verkaufen (0)' })).toBeDisabled()

@@ -8,6 +8,14 @@ import { pokemonBase } from './cards/pokemon-base/index.ts'
 import { riftboundOrigins } from './cards/riftbound-origins/index.ts'
 import type { CardDef, RenderedCard } from './cards/types.ts'
 import { yugiohLob } from './cards/yugioh-lob/index.ts'
+import { pokemonJungle } from './cards/pokemon-jungle/index.ts'
+import { pokemonFossil } from './cards/pokemon-fossil/index.ts'
+import { yugiohMrd } from './cards/yugioh-mrd/index.ts'
+import { yugiohMrl } from './cards/yugioh-mrl/index.ts'
+import { onepieceOp02 } from './cards/onepiece-op02/index.ts'
+import { onepieceOp03 } from './cards/onepiece-op03/index.ts'
+import { riftboundSpiritforged } from './cards/riftbound-spiritforged/index.ts'
+import { riftboundUnleashed } from './cards/riftbound-unleashed/index.ts'
 import * as Empiremon from './frames/empiremon.ts'
 import * as OnePiece from './frames/onepiece.ts'
 import { ART, CARD, layoutOf, renderPokemonCard } from './frames/pokemon.ts'
@@ -38,6 +46,40 @@ function empiremon(id: string, size: number, cards: readonly CardDef[]): CardSet
     render: (def) => Empiremon.renderCard(def, size),
   }
 }
+
+/** Sets 2 and 3 of a licensed game reuse the game's frame (decision 124). */
+const pokemon = (id: string, size: number, cards: readonly CardDef[]): CardSet => ({
+  id,
+  size,
+  cards,
+  cardSize: CARD,
+  artSize: (def) => ART[layoutOf(def)],
+  render: (def) => renderPokemonCard(def, size),
+})
+const yugioh = (id: string, size: number, cards: readonly CardDef[]): CardSet => ({
+  id,
+  size,
+  cards,
+  cardSize: YuGiOh.CARD,
+  artSize: (def) => YuGiOh.artArea(def),
+  render: (def) => YuGiOh.renderCard(def, size),
+})
+const onepiece = (id: string, size: number, cards: readonly CardDef[]): CardSet => ({
+  id,
+  size,
+  cards,
+  cardSize: OnePiece.CARD,
+  artSize: (def) => OnePiece.artArea(def),
+  render: (def) => OnePiece.renderCard(def, size),
+})
+const riftbound = (id: string, size: number, cards: readonly CardDef[]): CardSet => ({
+  id,
+  size,
+  cards,
+  cardSize: Riftbound.CARD,
+  artSize: (def) => Riftbound.artArea(def),
+  render: (def) => Riftbound.renderCard(def, size),
+})
 
 /** Every set that has art. The build, the contact sheets and the quality gates read this list. */
 export const SETS: readonly CardSet[] = [
@@ -78,4 +120,12 @@ export const SETS: readonly CardSet[] = [
   empiremon('empiremon-3', 15, empiremonAmt),
   empiremon('empiremon-4', 24, empiremonPfandland),
   empiremon('empiremon-5', 30, empiremonAbstellgleis),
+  pokemon('pokemon-jungle', 78, pokemonJungle),
+  pokemon('pokemon-fossil', 75, pokemonFossil),
+  yugioh('yugioh-mrd', 88, yugiohMrd),
+  yugioh('yugioh-mrl', 80, yugiohMrl),
+  onepiece('onepiece-op02', 90, onepieceOp02),
+  onepiece('onepiece-op03', 90, onepieceOp03),
+  riftbound('riftbound-spiritforged', 88, riftboundSpiritforged),
+  riftbound('riftbound-unleashed', 86, riftboundUnleashed),
 ]

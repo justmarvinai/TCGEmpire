@@ -1,6 +1,33 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.9',
+    title: 'Acht neue Sets',
+    items: [
+      'Acht neue Sets sind angekündigt, das zweite und dritte von jedem Spiel: Pokémon Dschungel und Fossil, Yu-Gi-Oh! Metal Raiders und Spell Ruler, One Piece OP-02 Paramount War und OP-03 Pillars of Strength, Riftbound Spiritforged und Unleashed. 75 bis 90 Karten pro Set, jedes mit ein oder zwei Grails, fünf oder sechs Ultras und mindestens zehn Alternativen. Die Grails und Ultras sind von Hand gepixelt.',
+      'Die Sets kommen nach und nach in den Handel, sobald der Chef sie freigibt. Dann stehen sie in den Läden und am Kiosk, tauchen in deiner Sammlung auf, und der Ticker sagt Bescheid. Vorher kriegt sie niemand, auch nicht der Typ von Kleinanzeigen.',
+      'Jedes neue Set hat ein eigenes Sammelziel, zum Beispiel „Die drei legendären Vögel“ oder „Familie Charlotte“. Mit kleinem Bonus, versteht sich.',
+    ],
+  },
+  {
+    version: '0.0.8',
+    title: 'Kiosk und Empiremon',
+    items: [
+      'Empiremon ist etwas weniger gemein: Ultra 1 in 4.000 Boostern (war 1 in 10.000), Grail 1 in 20.000 (war 1 in 50.000). Dafür sind sie entsprechend weniger wert, eine Ultra rund 240.000 €, eine Grail rund 1,7 Millionen. Im Schnitt bleibt jeder Booster gleich viel wert.',
+      'Der Kiosk ist aufgeräumt: Die Booster stehen nach Spiel sortiert als kleine Kacheln, mit Knöpfen für ein einzelnes Spiel. Dein Lieblingsspiel steht oben, dann deine anderen Spiele, Empiremon und was dir noch an Lizenzen fehlt. Ankauf, Lager und Snacks sind darunter gerutscht.',
+    ],
+  },
+  {
+    version: '0.0.7',
+    title: 'Sammlung, Packs und Slabs',
+    items: [
+      'Die Sammlung ist jetzt ein großer Ordner statt einem Reiter pro Set. Filtern nach Spiel, Set, Besessen oder Fehlend und Seltenheit, Karten suchen und sortieren nach Wert, Nummer, Name, Seltenheit oder Anzahl. Wird nie wieder unübersichtlich, versprochen. Fast.',
+      'Klick auf ein Booster-Bild zeigt, was drin ist: die Slots, die Chancen im Hit-Platz und jede Karte des Sets mit ihrer Chance pro Booster. Jetzt weißt du genau, wie unwahrscheinlich dein Glück ist.',
+      'Gegradete Karten kommen jetzt versiegelt zurück. Aufreißen, der Slab rutscht raus, die Note klebt unter einem Siegel, Trommelwirbel, Herzklopfen, bei BGS kommen die Unternoten einzeln, dann geht das Siegel ab. Bei einer 10 knallt es, bei einer 6 macht es nur „plopp“. Überspringen geht natürlich immer.',
+      'Slabs leben: Mit der Maus drüber heben sie sich, kippen zur Maus und das Licht spiegelt im Plastik.',
+    ],
+  },
+  {
     version: '0.0.6',
     title: 'Dritte Runde Feedback',
     items: [

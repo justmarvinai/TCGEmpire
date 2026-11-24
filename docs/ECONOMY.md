@@ -155,11 +155,14 @@ value, stays: `0.0.3` Ultra 1:200 and Grail 1:2.000 (×2,78; were 1:72 and 1:720
 was 1:24), Ultra 1:1.000 (×5) and Grail 1:3.500 (×1,75). The ranges before: Alternative 120–600 €, Ultra 500–1.600 €,
 Grail 6.000–10.000 €.
 
-**Empiremon** (house sets, 0.0.5) has its own ranges because its odds are its own (Ultra 1:10.000, Grail 1:50.000,
-otherwise a Common; `pack.house_hit_odds_ppm`): Common 0,05–2 €, Ultra 400.000–800.000 €, Grail 2,5–5 Mio. € before
-calibration (`HOUSE_TIER_VALUE` in `content/catalog.ts`). After calibration to the same 72 % a Common is worth
-0,04–0,15 €, an Ultra about 590.000–640.000 € and a Grail about 4,0–4,3 Mio. €: nearly the whole booster value sits in
-two tiers nobody pulls.
+**Empiremon** (house sets) has its own ranges because its odds are its own (since 0.0.8 Ultra 1:4.000, Grail
+1:20.000, otherwise a Common; 0.0.5 had 1:10.000 and 1:50.000; `pack.house_hit_odds_ppm`): Common 0,05–2 €, Ultra
+160.000–320.000 €, Grail 1–2 Mio. € before calibration (`HOUSE_TIER_VALUE` in `content/catalog.ts`). After
+calibration to the same 72 % a Common is worth 0,04–0,15 €, an Ultra about 236.000–255.000 € and a Grail about
+1,6–1,7 Mio. €: nearly the whole booster value sits in two tiers few people pull.
+
+**Sets 2 and 3 (0.0.9)** use the same tier ranges and odds as the first sets; after calibration their Grails are
+worth about 36.000–49.000 € and their Ultras about 15.000–20.000 € (Basis-€, in print).
 
 The same Glurak is worth a multiple as a PSA 10 (§5.3) and again a multiple once the set is out of print
 (§5.2) — that is where the big numbers come from.
@@ -224,6 +227,10 @@ slab_value = marktwert(card) × grade_factor(grade) × pop_factor × brand_facto
 | Yu-Gi-Oh! LOB (24) | 80 € | 1.700 € | 9.700 € |
 | One Piece OP-01 (24) | 100 € | 2.100 € | 12.000 € |
 | Riftbound Origins (24) | 100 € | 2.100 € | 12.000 € |
+| Pokémon Dschungel, Fossil (36, 0.0.9) | 100 € | 3.200 € | 18.200 € |
+| Yu-Gi-Oh! Metal Raiders, Spell Ruler (24, 0.0.9) | 80 € | 1.700 € | 9.700 € |
+| One Piece OP-02, OP-03 (24, 0.0.9) | 100 € | 2.100 € | 12.000 € |
+| Riftbound Spiritforged, Unleashed (24, 0.0.9) | 100 € | 2.100 € | 12.000 € |
 | Empiremon (each of the five sets, kiosk only) | 200 € | — | — |
 
 Sealed Marktwert in print = price × launch premium (1.0–1.6, decaying), never below 92 % of price. Out of

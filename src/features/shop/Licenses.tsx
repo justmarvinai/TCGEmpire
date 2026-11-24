@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { useState } from 'react'
 import { PixelIcon } from '@/components/pixel/PixelIcon.tsx'
-import { ProductArt } from '@/components/pixel/ProductArt.tsx'
+import { PackArt } from '@/features/open/PackInfo.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { Skeleton } from '@/components/ui/States.tsx'
@@ -52,7 +52,7 @@ export function LicensePanel({ level }: { level: number }) {
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {GAMES.map((g) => (
             <div key={g} className="flex flex-col items-center gap-3 rounded-xl bg-surface-2 p-4 text-center">
-              <ProductArt id={boosterOf(g)} scale={1} />
+              <PackArt id={boosterOf(g)} scale={1} />
               <p className="font-bold">{texts.games[g]}</p>
               <p className="flex-1 text-xs text-fg-2">{texts.gamePitch[g]}</p>
               <Button size="sm" variant="primary" loading={picking === g} disabled={picking !== null} onClick={() => void pick(g)}>

@@ -30,7 +30,10 @@ export interface CardData {
   kind: CardKind
   /** Pokémon type, Yu-Gi-Oh! attribute, One Piece colour or Riftbound domain. */
   element?: string
-  /** Yu-Gi-Oh! subtype for the frame colour: normal, effect, fusion (monsters), normal, equip, field (spells), normal, continuous (traps). */
+  /**
+   * Yu-Gi-Oh! subtype for the frame colour: normal, effect, fusion, ritual (monsters), normal, equip, field, quickplay, ritual
+   * (spells), normal, continuous, counter (traps).
+   */
   sub?: string
   /** Desirability 1-10: real-world popularity; sets the value inside the tier. */
   d: number
@@ -45,6 +48,11 @@ export interface SetData {
   size: number
   /** A house set (Empiremon): always in print, only at the kiosk, no licence, the house odds (pack.house_hit_odds_ppm). */
   house?: true
+  /**
+   * Phase of a new set when it is first seeded (default 'print'). Sets added after release start 'announced' and the
+   * owner releases them in the admin console (decision 124); the seed never changes the phase of an existing set.
+   */
+  launch?: 'announced'
   cards: readonly CardData[]
 }
 

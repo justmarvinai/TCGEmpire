@@ -15,12 +15,16 @@ import { Mask, Painter, colors, fromHsl, hex, mix, noise, rng } from '../toolkit
  * - unit        74×80  at (3, 3):  units Common to Rare; the bottom 17 px lie under the glass name bar
  * - showcase    74×100 at (3, 3):  Alternative units; name bar and text panel are glass over the art
  * - spell       74×56  at (3, 3):  spells and gear, text-forward (name band, type line, text box)
- * - legend      74×72  at (3, 3):  Legends: gold frame and crest plate (the Holo tier of this set)
+ * - legend      74×72  at (3, 3):  Legends: gold frame and crest plate (the Holo tier; Overnumbered
+ *                                   Legends are Alternative and get the textured gold frame)
  * - rune        74×100 at (3, 3):  basic runes, minimal frame, a small name plate floats at the bottom
  * - battlefield 80×52  at (0, 18): a landscape strip that runs through the side borders
- * - full        80×112 at (0, 0):  Ultra and Grail (all Legends in Origins): domain gems, number and tier
- *                                   float in the top 14 px; name, epithet and signature in the bottom 22 px
+ * - full        80×112 at (0, 0):  Ultra and Grail, Legends or units: domain gems, number and tier float
+ *                                   in the top 14 px; name, epithet and signature in the bottom 22 px (an
+ *                                   "(Ultimate)" card is not signed)
  * On the framed layouts the top left corner (cost badge, gems) and the top right corner (might) are covered.
+ * Epithets too long for one line: a Legend's wraps onto two lines in place of its type line; a unit's
+ * takes two pixels of the left margin.
  *
  * Printed values come from `def.print`: `energy` (cost badge), `might` (might shield; full art prints
  * neither), `tag` (type line after the kind, e.g. 'Champion', 'Signatur'), `domain2` (second domain gem,
@@ -224,8 +228,11 @@ function nameLines(
   const top = y + Math.floor((h - 14) / 2)
   if (n.tail !== '') {
     const hf = fit(n.head, w)
-    drawText(p, n.head, at, top + 7 - hf.cap, hf, head, o)
-    drawText(p, n.tail, at, top + 9, fit(n.tail, w, [MICRO, TIGHT]), tail, o)
+    const tf = fit(n.tail, w, [MICRO, TIGHT])
+    // an epithet too long even in the tight font ('Protector of Dreams') takes two pixels of the margin
+    const nudge = align === 'left' && measure(n.tail, tf) > w ? 2 : 0
+    drawText(p, n.head, at - nudge, top + 7 - hf.cap, hf, head, o)
+    drawText(p, n.tail, at - nudge, top + 9, tf, tail, o)
     return
   }
   const one = fit(n.head, w, [REGULAR, CONDENSED])
@@ -494,8 +501,16 @@ function drawLegend(job: Job): FrameResult {
   const n = splitName(def.name)
   const hf = fit(n.head, 70)
   drawText(p, n.head, 40, 82 + (7 - hf.cap), hf, GOLD[3], { align: 'center', shadow: INK })
-  if (n.tail !== '') drawText(p, n.tail, 40, 91, fit(n.tail, 70, [MICRO, TIGHT]), WHITE, { align: 'center', shadow: INK })
-  typeLine(p, def, 40, 97, 70, GOLD[2], 'center')
+  const tf = fit(n.tail, 70, [MICRO, TIGHT])
+  if (measure(n.tail, tf) <= 72) {
+    if (n.tail !== '') drawText(p, n.tail, 40, 91, tf, WHITE, { align: 'center', shadow: INK })
+    typeLine(p, def, 40, 97, 70, GOLD[2], 'center')
+  } else {
+    // an epithet too long for one line ('Fire Below the Mountain') takes two, in place of the type line
+    wrap(n.tail, MICRO, 70)
+      .slice(0, 2)
+      .forEach((line, i) => drawText(p, line, 40, 90 + i * 7, MICRO, WHITE, { align: 'center', shadow: INK }))
+  }
 
   const covered = costCorner(p, def, job.looks).or(mightCorner(p, def)).or(crest)
   collector(p, def, setSize, INK, INK)
@@ -599,9 +614,11 @@ function drawFull(job: Job): FrameResult {
   const headW = drawText(p, n.head, 7, 92 + (7 - hf.cap), hf, WHITE, { shadow: INK })
   const tailW =
     n.tail === '' ? 0 : drawText(p, n.tail, 7, 101, fit(n.tail, 66, [MICRO, TIGHT]), look.ramp[3], { shadow: INK })
-  // the signature goes beside the name, or beside the epithet when that row has more room
+  // the signature goes beside the name, or beside the epithet when that row has more room; an
+  // Ultimate (Baron Nashor) is not signed
   const [sx, sy] = headW <= tailW ? [11 + headW, 91] : [11 + tailW, 99]
-  const sig = 73 - sx >= 12 ? signature(n.head, sx, sy, Math.min(73 - sx, 34)) : new Mask(CARD.w, CARD.h)
+  const signed = 73 - sx >= 12 && !def.name.endsWith('(Ultimate)')
+  const sig = signed ? signature(n.head, sx, sy, Math.min(73 - sx, 34)) : new Mask(CARD.w, CARD.h)
   p.fill(sig.moved(1, 1).minus(sig).and(plate), GOLD[0])
   p.fill(sig, GOLD[4])
 

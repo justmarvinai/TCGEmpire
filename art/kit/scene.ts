@@ -456,6 +456,50 @@ const OTHER = {
       },
     },
   ],
+  // Schwarz: the Navy's fortress under a grey sky; a tower of justice under a big moon
+  Schwarz: [
+    {
+      sky: colors('5c6680', '8e98b0', 'c4ccda'),
+      ground: colors('7e8290', '5e6270'),
+      deco(p, st) {
+        fortress(p, st, colors('2e3240', '444a5c', '666e84'))
+        p.fill(p.m().rect(st.x(60), st.y(5), 1, st.y(7.4)), hex('2e3240'))
+        p.fill(p.m().rect(st.x(60) + 1, st.y(5), st.x(5), st.y(3)), hex('c4ccda'))
+        p.fill(p.m().disc(st.x(62.8), st.y(6.5), st.r(0.9)), hex('2e3240'))
+        for (const [x, y] of [[24, 6], [30, 9], [44, 4]] as const) p.stamp(['k.k', '.k.'], Math.round(st.x(x)), Math.round(st.y(y)), { k: hex('2e3240') })
+      },
+      floor: flagstones,
+    },
+    {
+      sky: colors('0e1020', '1c2038', '343a5a'),
+      ground: colors('2c2e3c', '1a1c26'),
+      deco(p, st) {
+        stars(p, rng(81), st.n(12), colors('d8dcf0'), { x: 2, y: 2, w: p.w - 4, h: st.y(22) })
+        disc(p, st.x(34), st.y(14), st.r(10), colors('9aa0b8', 'e8e8e0'))
+        justice(p, st, hex('0a0b12'), hex('f0d070'))
+      },
+    },
+  ],
+  // Gelb: a cake castle and lollipops under a golden sky; candy silhouettes at a pink dusk
+  Gelb: [
+    {
+      sky: colors('eab040', 'f6d070', 'fff0b8'),
+      ground: colors('dca060', 'b47838'),
+      deco(p, st) {
+        cake(p, st, 57, colors('d0607a', 'f08aa0', 'fff6ea'), hex('d82a3a'))
+        lollipops(p, st, [7, 17], [colors('f08aa0', 'fff6ea'), colors('d82a3a', 'fff6ea')], hex('fff6ea'))
+      },
+    },
+    {
+      sky: colors('4a2050', 'b04a78', 'f09a88'),
+      ground: colors('6a3a32', '4a2620'),
+      deco(p, st) {
+        sparks(p, rng(83), st.n(16), colors('f8e070', 'a0e8f8', 'f8a0d0'), { x: 2, y: 2, w: p.w - 4, h: st.g - 6 })
+        cake(p, st, 11, colors('2e1430', '2e1430', '5a2a4e'), hex('2e1430'))
+        lollipops(p, st, [52, 62], [colors('2e1430', '5a2a4e')], hex('2e1430'))
+      },
+    },
+  ],
   // Riftbound domains (Body reuses the Pokémon canyon and sunset scenes)
   Fury: [
     {
@@ -541,6 +585,70 @@ const OTHER = {
 /** Deck planks on the ground of a ship. */
 function planks(p: Painter, st: Stage): void {
   for (let y = st.g + 3; y < p.h; y += Math.max(3, Math.round(st.y(4)))) p.fill(p.m().rect(0, y, p.w, 1), hex('5a3418'))
+}
+
+/** Paving of a plaza: joints in rows, staggered. */
+function flagstones(p: Painter, st: Stage): void {
+  const step = Math.max(3, Math.round(st.y(4)))
+  for (let i = 0, y = st.g + 3; y < p.h; i++, y += step) {
+    p.fill(p.m().rect(0, y, p.w, 1), hex('444a5c'))
+    for (let x = (i % 2) * 7 + 4; x < p.w; x += 14) p.fill(p.m().rect(x, y + 1, 1, step - 1), hex('444a5c'))
+  }
+}
+
+/** The Navy's headquarters: a tiered tower on the left, a crenellated wall with a turret on the right. */
+function fortress(p: Painter, st: Stage, c: Ramp): void {
+  const m = p.m()
+    .rect(st.x(3), st.y(12), st.x(12), st.g - st.y(12))
+    .rect(st.x(5), st.y(7), st.x(8), st.y(5))
+    .poly(st.pts([4, 7.5, 9, 2, 14, 7.5]))
+    .rect(st.x(47), st.y(22), st.x(21), st.g - st.y(22))
+    .rect(st.x(56), st.y(14), st.x(8), st.g - st.y(14))
+  for (let x = 47; x < 68; x += 4) m.rect(st.x(x), st.y(20.4), st.x(2), st.y(1.8))
+  for (const x of [56, 59.5, 62.5]) m.rect(st.x(x), st.y(12.4), st.x(1.5), st.y(1.8))
+  p.fill(m, c[1] ?? 0)
+  p.edge(m, c[2] ?? 0, [-1, 0, 0, -1])
+  const slits = p.m()
+  for (const [x, y] of [[6, 14], [10, 14], [6, 20], [10, 20], [8, 9], [59, 17], [59, 23]] as const) slits.rect(st.x(x), st.y(y), Math.max(1, st.x(1.4)), st.y(3))
+  p.fill(slits, c[0] ?? 0)
+}
+
+/** A tower of justice: a tall keep with a pointed roof and lit windows, and a low hall on the left. */
+function justice(p: Painter, st: Stage, c: RGB, lit: RGB): void {
+  const m = p.m()
+    .rect(st.x(51), st.y(8), st.x(11), st.g - st.y(8))
+    .poly(st.pts([50, 8.5, 56.5, 1, 63, 8.5]))
+    .rect(st.x(1), st.y(22), st.x(13), st.g - st.y(22))
+    .poly(st.pts([0, 22.5, 7.5, 18, 15, 22.5]))
+  silhouette(p, m, c)
+  for (const [x, y] of [[53, 12], [58, 12], [53, 18], [58, 18], [55.5, 24], [4, 25], [10, 25]] as const) p.fill(p.m().rect(st.x(x), st.y(y), Math.max(1, st.x(1.2)), Math.max(1, st.y(1.6))), lit)
+}
+
+/** A tiered cake with icing on every tier and a cherry on top, centred on x. */
+function cake(p: Painter, st: Stage, x: number, c: Ramp, cherry: RGB): void {
+  const icing = p.m()
+  const body = p.m()
+  for (const [w, top, h] of [[22, 24, 9], [16, 17, 7], [10, 11, 6]] as const) {
+    body.rect(st.x(x - w / 2), st.y(top), st.x(w), st.y(h))
+    icing.rect(st.x(x - w / 2), st.y(top), st.x(w), Math.max(1, st.y(1.4)))
+    for (let i = 1; i < w; i += 3) icing.rect(st.x(x - w / 2 + i), st.y(top), 1, st.y(1.4 + ((i * 7) % 3) * 0.7))
+  }
+  p.fill(body, c[1] ?? 0)
+  p.edge(body, c[0] ?? 0, [1, 0])
+  p.fill(icing, c[2] ?? 0)
+  p.fill(p.m().disc(st.x(x), st.y(9), st.r(1.8)), cherry)
+}
+
+/** Lollipops on sticks: discs with a light ring. */
+function lollipops(p: Painter, st: Stage, xs: readonly number[], heads: readonly Ramp[], stick: RGB): void {
+  xs.forEach((x, i) => {
+    const top = 15 + (i % 2) * 5
+    const r = st.r(4.2 - (i % 2) * 0.8)
+    const head = heads[i % heads.length] ?? []
+    p.fill(p.m().rect(st.x(x) - 0.5, st.y(top), Math.max(1, st.x(1)), st.g - st.y(top)), stick)
+    p.fill(p.m().disc(st.x(x), st.y(top), r), head[0] ?? 0)
+    p.fill(p.m().disc(st.x(x), st.y(top), r * 0.62).minus(p.m().disc(st.x(x), st.y(top), r * 0.62 - 1)), head[1] ?? 0)
+  })
 }
 
 const LOOKS: Readonly<Record<string, readonly [Look, Look]>> = {

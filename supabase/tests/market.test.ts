@@ -23,7 +23,8 @@ beforeEach(async () => {
 })
 
 describe('market values', () => {
-  it('prices every card and sealed product and keeps each move inside the daily band', async () => {
+  // 60 market ticks over the whole catalog (about 1.200 items since 0.0.9) take a while in PGlite
+  it('prices every card and sealed product and keeps each move inside the daily band', { timeout: 120_000 }, async () => {
     await t.sql(`select private.tick_market()`)
     const n = (await t.sql<{ n: string }>(`select (select count(*) from game.card_defs) + (select count(*) from game.product_defs) as n`))[0]!.n
     expect(await prices()).toHaveLength(Number(n))

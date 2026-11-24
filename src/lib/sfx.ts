@@ -130,6 +130,20 @@ const PRESETS = {
     { f: G6, at: 0.3, d: 0.25, type: 'triangle', v: 0.25 },
     { f: D5, at: 0.24, d: 0.3, type: 'triangle', v: 0.2 },
   ],
+  // grade reveal (0.0.7): a heartbeat, a drum roll that speeds up and swells, the sticker peeling, the impact
+  heartbeat: [
+    { f: 72, to: 46, d: 0.13, type: 'sine', v: 0.7 },
+    { f: 66, to: 42, at: 0.19, d: 0.11, type: 'sine', v: 0.5 },
+  ],
+  drumroll: Array.from({ length: 34 }, (_, i): Tone => ({ f: 1100 - i * 12, to: 380, at: 2.4 * (1 - (1 - i / 34) ** 1.6), d: 0.06, type: 'noise', v: 0.1 + i * 0.009 })),
+  peel: [
+    { f: 4200, to: 1200, d: 0.28, type: 'noise', v: 0.32 },
+    { f: 2200, to: 700, at: 0.12, d: 0.22, type: 'noise', v: 0.22 },
+  ],
+  slam: [
+    { f: 130, to: 38, d: 0.4, type: 'sine', v: 0.8 },
+    { f: 2000, to: 300, d: 0.22, type: 'noise', v: 0.35 },
+  ],
 } satisfies Record<string, Tone[]>
 
 export type SfxName = keyof typeof PRESETS

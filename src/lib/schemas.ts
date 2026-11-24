@@ -34,6 +34,8 @@ export const zServer = z.object({
   version: z.string(),
   price_level: z.number(),
   has_invite_code: z.boolean(),
+  /** sets the admin has not released yet (Angekündigt, Vorbestellung): not in the game */
+  unreleased: z.array(z.string()),
 })
 
 export const zMe = z.object({ player: zPlayer.nullable(), server: zServer, away_s: z.number() })

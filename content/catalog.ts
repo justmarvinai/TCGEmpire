@@ -6,9 +6,58 @@ import { pokemonBase } from './sets/pokemon-base.ts'
 import { riftboundOrigins } from './sets/riftbound-origins.ts'
 import { yugiohLob } from './sets/yugioh-lob.ts'
 import { EMPIREMON } from './sets/empiremon.ts'
+import { pokemonJungle } from './sets/pokemon-jungle.ts'
+import { pokemonFossil } from './sets/pokemon-fossil.ts'
+import { yugiohMrd } from './sets/yugioh-mrd.ts'
+import { yugiohMrl } from './sets/yugioh-mrl.ts'
+import { onepieceOp02 } from './sets/onepiece-op02.ts'
+import { onepieceOp03 } from './sets/onepiece-op03.ts'
+import { riftboundSpiritforged } from './sets/riftbound-spiritforged.ts'
+import { riftboundUnleashed } from './sets/riftbound-unleashed.ts'
 import { config } from './config.ts'
 
-export const SETS: readonly SetData[] = [pokemonBase, yugiohLob, onepieceOp01, riftboundOrigins, ...EMPIREMON]
+/** Sets 2 and 3 of the licensed games (0.0.9) start announced; the owner releases them (decision 124). */
+export const SETS: readonly SetData[] = [
+  pokemonBase,
+  yugiohLob,
+  onepieceOp01,
+  riftboundOrigins,
+  ...EMPIREMON,
+  pokemonJungle,
+  pokemonFossil,
+  yugiohMrd,
+  yugiohMrl,
+  onepieceOp02,
+  onepieceOp03,
+  riftboundSpiritforged,
+  riftboundUnleashed,
+]
+
+/** A set's booster and display, shaped like the game's first set (docs/SETS.md §3 and §5; docs/sets/*.md). */
+function boosterAndDisplay(
+  code: string,
+  set: string,
+  name: string,
+  priceBaseCents: number,
+  slots: ProductData['slots'],
+  displayQty: number,
+  displayBaseCents: number,
+  wrappers: readonly string[],
+): ProductData[] {
+  return [
+    { id: `booster-${code}`, set, kind: 'booster', name: `${name} Booster`, priceBaseCents, slots, wrappers },
+    {
+      id: `display-${code}`,
+      set,
+      kind: 'display',
+      name: `${name} Display`,
+      priceBaseCents: displayBaseCents,
+      slots: [],
+      contains: { product: `booster-${code}`, qty: displayQty },
+      wrappers,
+    },
+  ]
+}
 
 export const PRODUCTS: readonly ProductData[] = [
   {
@@ -111,6 +160,57 @@ export const PRODUCTS: readonly ProductData[] = [
     contains: { product: 'booster-rb-ogn', qty: 24 },
     wrappers: ['booster-rb-ogn-ahri', 'booster-rb-ogn-jinx', 'booster-rb-ogn-kaisa'],
   },
+  // Sets 2 and 3 (0.0.9). Pokémon Dschungel and Fossil have no energies: 7 Common, 3 Uncommon and the hit slot.
+  ...boosterAndDisplay('pkm-jungle', 'pokemon-jungle', 'Dschungel', 100_00, [{ pool: 'common', n: 7 }, { pool: 'uncommon', n: 3 }, { pool: 'hit', n: 1 }], 36, 3_200_00, [
+    'booster-pkm-jungle-flamara',
+    'booster-pkm-jungle-sichlor',
+    'booster-pkm-jungle-knuddeluff',
+  ]),
+  ...boosterAndDisplay('pkm-fossil', 'pokemon-fossil', 'Fossil', 100_00, [{ pool: 'common', n: 7 }, { pool: 'uncommon', n: 3 }, { pool: 'hit', n: 1 }], 36, 3_200_00, [
+    'booster-pkm-fossil-aerodactyl',
+    'booster-pkm-fossil-lapras',
+    'booster-pkm-fossil-zapdos',
+  ]),
+  ...boosterAndDisplay('ygo-mrd', 'yugioh-mrd', 'Yu-Gi-Oh! MRD', 80_00, [{ pool: 'common', n: 5 }, { pool: 'uncommon', n: 3 }, { pool: 'hit', n: 1 }], 24, 1_700_00, [
+    'booster-ygo-mrd-black-skull',
+    'booster-ygo-mrd-summoned-skull',
+    'booster-ygo-mrd-gate-guardian',
+  ]),
+  ...boosterAndDisplay('ygo-mrl', 'yugioh-mrl', 'Yu-Gi-Oh! Spell Ruler', 80_00, [{ pool: 'common', n: 5 }, { pool: 'uncommon', n: 3 }, { pool: 'hit', n: 1 }], 24, 1_700_00, [
+    'booster-ygo-mrl-relinquished',
+    'booster-ygo-mrl-toon-blue-eyes',
+    'booster-ygo-mrl-toon-skull',
+  ]),
+  ...boosterAndDisplay('op02', 'onepiece-op02', 'One Piece OP-02', 100_00, [{ pool: 'common', n: 7 }, { pool: 'uncommon', n: 3 }, { pool: 'rare', n: 1 }, { pool: 'hit', n: 1 }], 24, 2_100_00, [
+    'booster-op02-ace',
+    'booster-op02-whitebeard',
+    'booster-op02-kuzan',
+  ]),
+  ...boosterAndDisplay('op03', 'onepiece-op03', 'One Piece OP-03', 100_00, [{ pool: 'common', n: 7 }, { pool: 'uncommon', n: 3 }, { pool: 'rare', n: 1 }, { pool: 'hit', n: 1 }], 24, 2_100_00, [
+    'booster-op03-sogeking',
+    'booster-op03-katakuri',
+    'booster-op03-nami',
+  ]),
+  ...boosterAndDisplay(
+    'rb-sfd',
+    'riftbound-spiritforged',
+    'Riftbound Spiritforged',
+    100_00,
+    [{ pool: 'energy', n: 1 }, { pool: 'common', n: 7 }, { pool: 'uncommon', n: 4 }, { pool: 'rare', n: 1 }, { pool: 'hit', n: 1 }],
+    24,
+    2_100_00,
+    ['booster-rb-sfd-irelia', 'booster-rb-sfd-yone', 'booster-rb-sfd-vayne'],
+  ),
+  ...boosterAndDisplay(
+    'rb-unl',
+    'riftbound-unleashed',
+    'Riftbound Unleashed',
+    100_00,
+    [{ pool: 'energy', n: 1 }, { pool: 'common', n: 7 }, { pool: 'uncommon', n: 4 }, { pool: 'rare', n: 1 }, { pool: 'hit', n: 1 }],
+    24,
+    2_100_00,
+    ['booster-rb-unl-baron', 'booster-rb-unl-vi', 'booster-rb-unl-leblanc'],
+  ),
   // Empiremon (0.0.5): one booster per set, only at the kiosk, no displays. 5 cards: 4 Commons and the hit slot, which
   // is a Common unless the house odds give an Ultra or a Grail. Twice the price of a normal booster.
   ...EMPIREMON.map(
@@ -148,8 +248,9 @@ export const TIER_VALUE: Record<Tier, [lo: number, hi: number]> = {
  */
 export const HOUSE_TIER_VALUE: Partial<Record<Tier, [lo: number, hi: number]>> = {
   common: [5, 200],
-  ultra: [40_000_000, 80_000_000],
-  grail: [250_000_000, 500_000_000],
+  // 0.0.8: 2.5 times as likely as in 0.0.5, so worth 2.5 times less (were 400.000-800.000 € and 2,5-5 Mio. €)
+  ultra: [16_000_000, 32_000_000],
+  grail: [100_000_000, 200_000_000],
 }
 
 /** Target: an average booster is worth this share of its list price. */

@@ -1,6 +1,6 @@
 import type { Attack, CardDef, PokemonType, RenderedCard, Tier } from '../cards/types.ts'
 import { paintArtwork } from '../cards/types.ts'
-import { MICRO, REGULAR, drawText, fit, fitLines, measure, wrap } from '../fonts.ts'
+import { CONDENSED, MICRO, REGULAR, drawText, fit, fitLines, measure, wrap, type Font } from '../fonts.ts'
 import type { RGB, Region } from '../toolkit/index.ts'
 import { Mask, Painter, colors, fromHsl, hex, mix, noise, pts } from '../toolkit/index.ts'
 
@@ -342,9 +342,12 @@ function drawFull(job: Job): FrameResult {
   const attack = def.attacks?.[0]
   if (attack) {
     const damage = attack.damage ?? ''
-    const af = fit(attack.name, 64 - (damage === '' ? 0 : measure(damage, REGULAR) + 3))
+    const room = (f: Font) => 64 - (damage === '' ? 0 : measure(damage, f) + 3)
+    // the damage shrinks before a long attack name would run into it ("Flammenwerfer 60")
+    const df = [REGULAR, CONDENSED, MICRO].find((f) => measure(attack.name, fit(attack.name, room(f))) <= room(f)) ?? MICRO
+    const af = fit(attack.name, room(df))
     drawText(p, attack.name, 8, 91 + 7 - af.cap, af, WHITE, { shadow: INK })
-    drawText(p, damage, 71, 91, REGULAR, GOLD[4], { align: 'right', shadow: INK })
+    drawText(p, damage, 71, 91 + 7 - df.cap, df, GOLD[4], { align: 'right', shadow: INK })
     attack.cost.forEach((t, i) => costDot(p, 38 + i * 6, 101, t))
   }
   drawText(p, cardNumber(def, setSize), 8, 101, MICRO, GOLD[3])

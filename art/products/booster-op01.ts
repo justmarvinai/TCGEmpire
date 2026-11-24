@@ -3,7 +3,7 @@ import { shanks } from '../cards/onepiece-op01/shanks.ts'
 import { zoroAlt } from '../cards/onepiece-op01/zoro.ts'
 import type { CardDef } from '../cards/types.ts'
 import { paintArtwork } from '../cards/types.ts'
-import { MICRO, REGULAR, drawText } from '../fonts.ts'
+import { MICRO, REGULAR, drawText, fit } from '../fonts.ts'
 import { artArea } from '../frames/onepiece.ts'
 import type { Mask, Painter, Pt, Ramp } from '../toolkit/index.ts'
 import { colors, hex, rays } from '../toolkit/index.ts'
@@ -11,11 +11,11 @@ import { crimp, pick, thick } from './booster-pokemon-base.ts'
 import type { ProductDef } from './index.ts'
 
 /**
- * Booster pack of One Piece OP-01 Romance Dawn, 84×132: a foil wrapper in the hero's colour with
- * crimped seals, our own chunky, arched "ONE PIECE" lettering (in the spirit of the game, not the
- * official logo), a parchment scroll with the set name, a gold doubloon "12 Karten" seal, and the
- * hero of an Ultra card rising out of the waves. The hero is cut out of its card artwork, so wrapper
- * and card always match.
+ * Booster pack of the One Piece game, 84×132, shared by every set (OP-01 Romance Dawn here, the
+ * later sets in their own folders): a foil wrapper in the hero's colour with crimped seals, our own
+ * chunky, arched "ONE PIECE" lettering (in the spirit of the game, not the official logo), a
+ * parchment scroll with the set name, a gold doubloon "12 Karten" seal, and the hero of a card rising
+ * out of the waves. The hero is cut out of its card artwork, so wrapper and card always match.
  */
 const W = 84
 const H = 132
@@ -34,8 +34,10 @@ const LETTER = colors('ffd25a', 'ffe9a0', 'fffbe8')
 const RED = colors('5c0a12', 'b81c22', 'ec4a30')
 const GOLD = colors('5a3a0c', '9a6a1c', 'd8a238', 'f6d26a', 'fff4c0')
 
-interface Look {
+export interface PackLook {
   id: string
+  /** Set name on the scroll; long names step down to a narrower font. */
+  title: string
   hero: CardDef
   /** Effects of the card artwork that belong to the hero, e.g. his phantom arms. */
   effects?: (art: Painter) => Mask
@@ -122,7 +124,7 @@ function seal(p: Painter, cx: number, cy: number): void {
   drawText(p, 'Karten', cx + 1, cy + 1, MICRO, INK, { align: 'center' })
 }
 
-function boosterPack(look: Look): ProductDef {
+export function boosterPack(look: PackLook): ProductDef {
   return {
     id: look.id,
     w: W,
@@ -179,7 +181,8 @@ function boosterPack(look: Look): ProductDef {
         p.fill(p.m().rect(x + 1, 30, 1, 13), PARCHMENT[2])
         p.fill(p.m().rect(x + 3, 30, 1, 13), ROLL_SHADE)
       }
-      drawText(p, 'Romance Dawn', 42, 33, REGULAR, BROWN, { align: 'center' })
+      const font = fit(look.title, 70)
+      drawText(p, look.title, 42, 33 + Math.round((REGULAR.cap - font.cap) / 2), font, BROWN, { align: 'center' })
 
       // the hero, then the sea in front of him
       art.subjectMask.each((x, y) => p.set(x + dx, y + dy, art.get(x, y)))
@@ -233,6 +236,7 @@ const FIRE = colors('8a1c10', 'd8401a', 'f88a24', 'ffd04a', 'fff6c8')
 /** Luffy wrapper: sunrise-red foil; the captain on the lion figurehead, the sun bursting behind him. */
 const boosterLuffy = boosterPack({
   id: 'booster-op01-luffy',
+  title: 'Romance Dawn',
   hero: luffyLeader,
   at: [2, 30],
   foil: colors('14060e', '2e0a16', '561020', '861a26', 'b42c26', 'de5a2a', 'f8963c', 'ffd878'),
@@ -242,6 +246,7 @@ const boosterLuffy = boosterPack({
 /** Zoro wrapper: dark jade foil, like the void of his card, so the phantom arms and blades shine out. */
 const boosterZoro = boosterPack({
   id: 'booster-op01-zoro',
+  title: 'Romance Dawn',
   hero: zoroAlt,
   effects: (art) => {
     const core = pick(art, AURA, [{ x: 0, y: 10, w: 80, h: 90 }])
@@ -258,6 +263,7 @@ const boosterZoro = boosterPack({
 /** Shanks wrapper: night-violet foil; the red-haired captain raises his cup beside the bonfire. */
 const boosterShanks = boosterPack({
   id: 'booster-op01-shanks',
+  title: 'Romance Dawn',
   hero: shanks,
   effects: (art) => pick(art, FIRE, [{ x: 0, y: 50, w: 36, h: 50 }]),
   at: [4, 30],

@@ -220,6 +220,44 @@
 /* ------------------------------------------------------------------------------------------------
    Cards: foil layers move with transform only; the foil atlas masks where a card shines.
    ------------------------------------------------------------------------------------------------ */
+/* Slabs: on hover the case lifts, tilts towards the pointer and a glare runs over the plastic (transform, opacity). */
+.slab {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
+  transition: transform 180ms ease-out;
+}
+.slab:hover {
+  --lift: -6px;
+}
+.slab-glare {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease-out;
+}
+.slab:hover .slab-glare {
+  opacity: 1;
+}
+.slab-glare > i {
+  position: absolute;
+  top: -25%;
+  bottom: -25%;
+  left: 0;
+  width: 55%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.05) 30%, rgb(255 255 255 / 0.3) 50%, rgb(255 255 255 / 0.05) 70%, transparent);
+  transform: translateX(var(--gx, -110%)) skewX(-12deg);
+  transition: transform 140ms linear;
+}
+[data-reduced-motion='true'] .slab {
+  transform: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .slab {
+    transform: none !important;
+  }
+}
+
 /* Runtime text of the newer sets (Empiremon): written over the frame's dark plates, always light. */
 .card-text {
   position: absolute;
@@ -380,6 +418,70 @@
   animation: rays-spin 14s linear infinite;
   pointer-events: none;
 }
+
+/* Grade reveal (0.0.7): the slab slides out of its torn return pack, the seal sticker peels, the grade slams in. */
+.gp-slab-hidden { transform: translateY(115%); }
+/* the slab shoots up out of the opening (higher than its rest), the pack falls away, the slab settles */
+@keyframes gp-rise {
+  0% { transform: translateY(115%); animation-timing-function: cubic-bezier(0.15, 0.85, 0.3, 1); }
+  55% { transform: translateY(-22%); animation-timing-function: ease-in-out; }
+  80% { transform: translateY(4%); }
+  100% { transform: translateY(0); }
+}
+.gp-slab-rise { animation: gp-rise 1300ms both; }
+@keyframes gp-drop {
+  0%, 45% { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(55%) rotate(3deg); opacity: 0; }
+}
+.gp-pack-drop { animation: gp-drop 1300ms ease-in forwards; }
+@keyframes gp-charge {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.gp-charge { animation: gp-charge 2600ms ease-in both; }
+.gp-sticker {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 3px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-ink);
+  background: linear-gradient(120deg, var(--color-tier-alternative), var(--color-tier-holo), var(--color-gold), var(--color-tier-grail));
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.45);
+  transform-origin: 90% 10%;
+}
+.gp-sticker::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.65) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: gp-glint 1.6s linear infinite;
+}
+@keyframes gp-glint {
+  to { transform: translateX(100%); }
+}
+@keyframes gp-peel {
+  0% { transform: rotate(0); }
+  35% { transform: translate(2px, -3px) rotate(-12deg); }
+  100% { transform: translate(70px, -150px) rotate(-70deg); opacity: 0; }
+}
+.gp-peel { animation: gp-peel 650ms cubic-bezier(0.5, 0, 0.75, 0) forwards; }
+@keyframes gp-slam {
+  0% { transform: scale(1.22); }
+  55% { transform: scale(0.95); }
+  78% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.gp-slam { animation: gp-slam 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes gp-thud {
+  0% { transform: translateY(-12px); }
+  60% { transform: translateY(5px); }
+  100% { transform: translateY(0); }
+}
+.gp-thud { animation: gp-thud 420ms ease-out both; }
 
 @keyframes heartbeat {
   0%, 100% { transform: scale(1); }

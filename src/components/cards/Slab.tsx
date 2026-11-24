@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import type { PointerEvent } from 'react'
 import { Card } from './Card.tsx'
 import { Emblem } from '@/components/pixel/Emblem.tsx'
 import { PixelProduct } from '@/components/pixel/PixelSprite.tsx'
@@ -66,7 +67,14 @@ export function Slab({
     )
   }
   return (
-    <div className={clsx('relative shrink-0', className)} style={{ width: SLAB.w * scale, height: SLAB.h * scale }} role="img" aria-label={`${title} ${grade}`}>
+    <div
+      className={clsx('slab relative shrink-0', className)}
+      style={{ width: SLAB.w * scale, height: SLAB.h * scale }}
+      role="img"
+      aria-label={`${title} ${grade}`}
+      onPointerMove={tilt}
+      onPointerLeave={untilt}
+    >
       <PixelProduct id={`slab-${variant}`} scale={scale} fallback={{ w: SLAB.w, h: SLAB.h }} className="absolute inset-0" />
       <div className="absolute" style={{ left: SLAB.card.x * scale, top: SLAB.card.y * scale }}>
         <Card id={cardId} scale={scale} foil="sweep" />
@@ -93,8 +101,30 @@ export function Slab({
       {zone('gradeWord', gradeWord, colors.accent, 800)}
       {zone('grade', grade, colors.ink, 800)}
       {brand && !company && zone('brand', brand, colors.onBand, 800)}
+      <span className="slab-glare" aria-hidden>
+        <i />
+      </span>
     </div>
   )
+}
+
+/** Hover: the case tilts towards the pointer and the glare follows it (CSS vars read by `.slab`). */
+function tilt(e: PointerEvent<HTMLDivElement>) {
+  if (e.pointerType !== 'mouse') return
+  const el = e.currentTarget
+  const r = el.getBoundingClientRect()
+  const x = (e.clientX - r.left) / r.width - 0.5
+  const y = (e.clientY - r.top) / r.height - 0.5
+  el.style.setProperty('--ry', `${x * 14}deg`)
+  el.style.setProperty('--rx', `${-y * 14}deg`)
+  el.style.setProperty('--gx', `${-40 + (x + 0.5) * 180}%`)
+}
+
+function untilt(e: PointerEvent<HTMLDivElement>) {
+  const el = e.currentTarget
+  el.style.setProperty('--ry', '0deg')
+  el.style.setProperty('--rx', '0deg')
+  el.style.setProperty('--gx', '-110%')
 }
 
 const T = texts.grading
@@ -134,19 +164,34 @@ function setLine(cardId: string) {
 
 /**
  * The slab of a graded copy, straight from the server's label. BGS prints the four sub-grades where the
- * others print set and number. `hidden` covers the grade (for the reveal).
+ * others print set and number. `hidden` covers the grade (for the reveal); `subs` of a hidden BGS slab shows the
+ * first sub-grades already.
  */
-export function SlabOf({ cardId, slab, scale = 2, hidden, className }: { cardId: string; slab: SlabLabel; scale?: number; hidden?: boolean; className?: string }) {
-  const subtitle =
-    slab.grader === 'bgs' && slab.subgrades
-      ? slab.subgrades.map((g, i) => `${T.subLetters[i]} ${labelGrade(g)}`).join(' · ')
-      : setLine(cardId)
+export function SlabOf({
+  cardId,
+  slab,
+  scale = 2,
+  hidden,
+  subs = 0,
+  className,
+}: {
+  cardId: string
+  slab: SlabLabel
+  scale?: number
+  hidden?: boolean
+  subs?: number
+  className?: string
+}) {
+  const subgrades = (shown: number) =>
+    (slab.subgrades ?? []).map((g, i) => `${T.subLetters[i]} ${i < shown ? labelGrade(g) : '?'}`).join(' · ')
+  const subtitle = slab.grader === 'bgs' && slab.subgrades ? subgrades(4) : setLine(cardId)
+  const hiddenSubtitle = slab.grader === 'bgs' && slab.subgrades && subs > 0 ? subgrades(subs) : setLine(cardId)
   return (
     <Slab
       variant={hidden ? (slab.grader === 'bgs' ? 'bgs' : slabStyleOf(slab)) : slabStyleOf(slab)}
       cardId={cardId}
       title={cardById.get(cardId)?.name ?? cardId}
-      subtitle={hidden ? setLine(cardId) : subtitle}
+      subtitle={hidden ? hiddenSubtitle : subtitle}
       grade={hidden ? '?' : labelGrade(slab.grade)}
       gradeWord={hidden ? '' : gradeWord(slab)}
       cert={slab.cert_no}

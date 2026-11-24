@@ -191,6 +191,11 @@ PGlite runs in WebAssembly, so the times are an upper bound for Supabase):
   history rows every 5 minutes), every other system stays under 25 ms. One tick a minute leaves plenty of room.
 - **Price history:** 120–160 bytes per row with its index. With the thinning it levels off at about 860 rows per item
   (≈ 45 MB for the four sets), then grows by one row per item and day (≈ 20 MB a year). Each new set adds about 25 %.
+  **0.0.9:** with Empiremon (112 items) and the eight sets 2 and 3 (about 690 items) the catalog has about 1.170
+  priced items, three times the four launch sets: ≈ 145 MB standing and ≈ 60 MB a year once every set is released.
+  Sets that are not out yet write no history, so the owner's releases decide when it grows. Estimate after a year at
+  10 active players with every set released: ≈ 145 + 60 + 40 (journal) + 20 (other) ≈ 265 MB, about half of the free
+  500 MB. If it ever gets tight, `market.history_fine_h` (48 h of 5-minute points) is the cheapest lever.
 - **Job runs:** about 4.150 rows a day, kept 7 days (≈ 3 MB). Without vacuum the `prices` table bloats quickly
   (60 MB in two days in PGlite); Supabase's autovacuum keeps it at a few MB.
 - **Per player** (`pnpm sim 20`, one bot playing 150 minutes a day, no retention jobs): the request journal is by far

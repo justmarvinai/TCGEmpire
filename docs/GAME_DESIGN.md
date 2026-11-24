@@ -114,6 +114,12 @@ German card names are used where an official German print exists (Pokémon, Yu-G
 
 Since `0.0.5` there is a fifth game, **Empiremon**, the game's own TCG with five small sets (§4.7).
 
+Since `0.0.9` each licensed game also has its **second and third set** (Pokémon Dschungel and Fossil, Yu-Gi-Oh! Metal
+Raiders and Spell Ruler, One Piece OP-02 and OP-03, Riftbound Spiritforged and Unleashed; 60–90 cards each, 1–2
+Grails, 5–6 Ultras, at least 10 Alternatives; `SETS.md` §1.1). They come in as **Angekündigt** and the owner releases
+each one in the admin console (§4.5). Until then a set is not in the game: no store, kiosk, NPC or classified offers
+it, and the collection and the minigames do not show it.
+
 ### 4.2 Rarity tiers
 
 The game uses its own seven tiers for every game and set:
@@ -161,6 +167,8 @@ Angekündigt → Vorbestellung → Im Druck (Restock-Wellen) → Letzte Welle �
 
 - No set enters or leaves a phase by itself. The admin (the owner, in the in-game admin console or together
   with Claude in a session) triggers every transition (Q-17). New sets are added by a code/content update.
+- **Angekündigt** and **Vorbestellung:** the set is not out yet. Nothing of it can be bought, found or traded; the
+  collection, the minigames, the market movers and the price history leave it out (0.0.9).
 - **Im Druck:** stores restock on a schedule. Supply keeps growing, singles drift down towards a floor.
 - **Out of Print:** stores sell out and never restock. From now on every opened pack shrinks the remaining
   sealed supply for good. Sealed and singles rise with scarcity and time (`ECONOMY.md` §4).
@@ -191,9 +199,9 @@ Döner, Der Pünktliche). Brief and card lists: `docs/sets/empiremon.md`; decisi
   orders, Pack Battles or NPC classifieds, and the admin cannot take a set out of print. Players can still trade,
   sell and list the cards and sealed boosters they own.
 - **Booster:** 5 cards (4 Commons + the hit slot) for twice the price of a normal booster. The hit slot is a Common
-  unless it rolls an Ultra (1:10.000) or a Grail (1:50.000): 10 to 14 times rarer than in the licensed games. No God
-  Pack, no Doppel-Hit, no Pech-Schutz; Pack-Glück counts.
-- **Values:** Commons are worth cents; an Ultra about 600.000 €, a Grail about 4 Mio. € (Basis-€). The booster is
+  unless it rolls an Ultra (1:4.000) or a Grail (1:20.000) since 0.0.8 (were 1:10.000 and 1:50.000): 4 to 6 times
+  rarer than in the licensed games. No God Pack, no Doppel-Hit, no Pech-Schutz; Pack-Glück counts.
+- **Values:** Commons are worth cents; an Ultra about 240.000 €, a Grail about 1,7 Mio. € (Basis-€). The booster is
   still calibrated to 72 % of its price on average: a pure lottery.
 - **Card text** is written at runtime in a real font (decision 065); only artwork and frame are pixel art.
 
@@ -234,8 +242,10 @@ Extras that make it a game:
 
 ## 6. Collection (Sammlung)
 
-- **Ordner (binder) per set**: every card in set order, missing cards greyed with their number, duplicates
-  as ×N, value under each card, filters (tier, owned/missing, graded), sort, bulk-select mode.
+- **One collection for every game and set** (0.0.7): filters for game, set, owned/missing and tier, a name search,
+  and sorting by value, number, name, rarity or count; missing cards greyed with their number, duplicates as ×N, value
+  under each card. Progress, value, "Duplikate verkaufen" and the Sammelziele follow the chosen game and set (with
+  several sets, the goals nearest to done).
 - **Card detail**: large tilt view with foil, price chart, Pop Report, your copies with quality hints,
   actions (sell, list, grade, put in Vitrine).
 - **Set goals** give permanent, capped account bonuses:
@@ -336,7 +346,10 @@ Unlock: level 13. Grading turns a raw card into a slab and is the main value mul
 | **CGC** | Cheap and fast. | fast | 0.85 |
 | **Player companies** | Your friends' (or your own) company. Fee, speed and brand depend on them. | varies | 0.40–1.10 by Ruf |
 
-3. **Ergebnis.** The slab comes back as a sealed parcel; you reveal the grade with a drum roll.
+3. **Ergebnis.** The slab comes back in a sealed return pack in the grader's colours (0.0.7): you tear it open,
+   the slab slides out with its grade under a seal sticker, drum roll and heartbeat build up (BGS sub-grades flip in
+   one by one), the sticker peels and the grade slams in: fireworks for 9 and up, a thud below 8. Skippable at any
+   time; "Sofort aufdecken" skips it all.
    A 10 multiplies the value (the fewer 10s exist, the more); a 9 is solid; grades below 7 are worth
    less than the raw card. Fee and waiting time are gone either way.
 4. **Afterwards.** Slabs can be sold, displayed, or **cracked** and re-submitted elsewhere (risky, costs
