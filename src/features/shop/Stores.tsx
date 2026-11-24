@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { useState } from 'react'
-import { ProductArt } from '@/components/pixel/ProductArt.tsx'
+import { PackArt } from '@/features/open/PackInfo.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { Progress } from '@/components/ui/Progress.tsx'
@@ -54,7 +54,7 @@ export function Stores({ shop, player, licensed }: { shop: Shop; player: Player;
                     const status = s.shared ? (o.total === null ? T.noDelivery : o.left === 0 ? T.soldOut : T.stock(o.left ?? 0, o.total)) : null
                     return (
                       <li key={o.product_id} className="flex items-center gap-4 rounded-xl bg-surface-2 p-3">
-                        <ProductArt id={o.product_id} scale={1} />
+                        <PackArt id={o.product_id} scale={1} />
                         <div className="min-w-0 flex-1">
                           <p className="font-semibold">{productById.get(o.product_id)?.name}</p>
                           <p className="nums text-lg font-bold text-gold">{formatMoney(o.price_cents)}</p>

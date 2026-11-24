@@ -1,6 +1,16 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.7',
+    title: 'Sammlung, Packs und Slabs',
+    items: [
+      'Die Sammlung ist jetzt ein großer Ordner statt einem Reiter pro Set. Filtern nach Spiel, Set, Besessen oder Fehlend und Seltenheit, Karten suchen und sortieren nach Wert, Nummer, Name, Seltenheit oder Anzahl. Wird nie wieder unübersichtlich, versprochen. Fast.',
+      'Klick auf ein Booster-Bild zeigt, was drin ist: die Slots, die Chancen im Hit-Platz und jede Karte des Sets mit ihrer Chance pro Booster. Jetzt weißt du genau, wie unwahrscheinlich dein Glück ist.',
+      'Gegradete Karten kommen jetzt versiegelt zurück. Aufreißen, der Slab rutscht raus, die Note klebt unter einem Siegel, Trommelwirbel, Herzklopfen, bei BGS kommen die Unternoten einzeln, dann geht das Siegel ab. Bei einer 10 knallt es, bei einer 6 macht es nur „plopp“. Überspringen geht natürlich immer.',
+      'Slabs leben: Mit der Maus drüber heben sie sich, kippen zur Maus und das Licht spiegelt im Plastik.',
+    ],
+  },
+  {
     version: '0.0.6',
     title: 'Dritte Runde Feedback',
     items: [

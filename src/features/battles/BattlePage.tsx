@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Card } from '@/components/cards/Card.tsx'
-import { ProductArt } from '@/components/pixel/ProductArt.tsx'
+import { PackArt } from '@/features/open/PackInfo.tsx'
 import { Avatar, PlayerName } from '@/components/ui/Avatar.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { NumberTicker } from '@/components/ui/NumberTicker.tsx'
@@ -84,7 +84,7 @@ function Board({ d, player }: { d: Battle; player: Player }) {
     <div className="flex flex-col gap-4">
       <Panel>
         <div className="flex flex-wrap items-center gap-4">
-          <ProductArt id={d.product_id} scale={1} />
+          <PackArt id={d.product_id} scale={1} />
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span className="text-lg font-bold">{T.modes[d.mode].name}</span>
             <span className="text-sm text-fg-2">{T.modes[d.mode].text}</span>

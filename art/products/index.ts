@@ -5,6 +5,7 @@ import { boosterBisaflor, boosterGlurak, boosterTurtok } from './booster-pokemon
 import { RB_OGN_BOOSTERS } from './booster-rb-ogn.ts'
 import { YGO_LOB_BOOSTERS } from './booster-ygo-lob.ts'
 import { cardBack } from './card-back.ts'
+import { GRADE_PACKS } from './gradepack.ts'
 import { SLAB_FRAMES } from './slab.ts'
 
 export interface ProductDef {
@@ -24,4 +25,5 @@ export const PRODUCTS: readonly ProductDef[] = [
   ...RB_OGN_BOOSTERS,
   ...EMPIREMON_BOOSTERS,
   ...SLAB_FRAMES,
+  ...GRADE_PACKS,
 ]

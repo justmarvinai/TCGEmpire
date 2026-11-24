@@ -234,8 +234,10 @@ Extras that make it a game:
 
 ## 6. Collection (Sammlung)
 
-- **Ordner (binder) per set**: every card in set order, missing cards greyed with their number, duplicates
-  as ×N, value under each card, filters (tier, owned/missing, graded), sort, bulk-select mode.
+- **One collection for every game and set** (0.0.7): filters for game, set, owned/missing and tier, a name search,
+  and sorting by value, number, name, rarity or count; missing cards greyed with their number, duplicates as ×N, value
+  under each card. Progress, value, "Duplikate verkaufen" and the Sammelziele follow the chosen game and set (with
+  several sets, the goals nearest to done).
 - **Card detail**: large tilt view with foil, price chart, Pop Report, your copies with quality hints,
   actions (sell, list, grade, put in Vitrine).
 - **Set goals** give permanent, capped account bonuses:
@@ -336,7 +338,10 @@ Unlock: level 13. Grading turns a raw card into a slab and is the main value mul
 | **CGC** | Cheap and fast. | fast | 0.85 |
 | **Player companies** | Your friends' (or your own) company. Fee, speed and brand depend on them. | varies | 0.40–1.10 by Ruf |
 
-3. **Ergebnis.** The slab comes back as a sealed parcel; you reveal the grade with a drum roll.
+3. **Ergebnis.** The slab comes back in a sealed return pack in the grader's colours (0.0.7): you tear it open,
+   the slab slides out with its grade under a seal sticker, drum roll and heartbeat build up (BGS sub-grades flip in
+   one by one), the sticker peels and the grade slams in: fireworks for 9 and up, a thud below 8. Skippable at any
+   time; "Sofort aufdecken" skips it all.
    A 10 multiplies the value (the fewer 10s exist, the more); a 9 is solid; grades below 7 are worth
    less than the raw card. Fee and waiting time are gone either way.
 4. **Afterwards.** Slabs can be sold, displayed, or **cracked** and re-submitted elsewhere (risky, costs

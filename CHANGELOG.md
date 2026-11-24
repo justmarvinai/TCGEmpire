@@ -3,6 +3,23 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.7] — Sammlung, Packs und Slabs (24 Nov 2026)
+
+### Added
+
+- **What's in the pack?** Click any booster or display picture (Kiosk, stores, Booster öffnen, licences, battles) to
+  see what it holds, the chances of its hit slot and every card of the set with its chance per booster.
+- **Grade reveal:** graded cards come back in a sealed pack from PSA, BGS, CGC or your company. Tear it open, the slab
+  slides out with the grade under a seal sticker, the drum roll builds up (BGS shows its sub-grades one by one), the
+  sticker peels off and the grade slams in: fireworks for a 9 or 10, a sad thud for the rest. Skippable any time.
+- **Slabs move:** hover a slab and it lifts, tilts towards the mouse and catches the light.
+
+### Changed
+
+- **One Sammlung instead of a tab per set:** all your cards in one place, with filters for game, set, owned or
+  missing and rarity, a name search, and sorting by value, number, name, rarity or count. Progress, value, selling
+  duplicates and the Sammelziele follow what you have filtered.
+
 ## [0.0.6] — Dritte Runde Feedback (23 Nov 2026)
 
 ### Changed

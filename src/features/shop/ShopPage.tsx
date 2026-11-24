@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { ProductArt } from '@/components/pixel/ProductArt.tsx'
+import { PackArt } from '@/features/open/PackInfo.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { InfoTip } from '@/components/ui/InfoTip.tsx'
 import { Page } from '@/components/ui/Page.tsx'
@@ -73,7 +73,7 @@ export function ShopPage() {
               const left = k.daily_limit === null ? Infinity : k.daily_limit - k.bought_today
               return (
                 <div key={k.product_id} className="flex flex-wrap items-center gap-6">
-                  <ProductArt id={k.product_id} scale={2} className="anim-bob" />
+                  <PackArt id={k.product_id} scale={2} className="anim-bob" />
                   <div className="flex min-w-56 flex-col gap-3">
                     <div>
                       <p className="text-2xl font-bold tracking-tight">{product?.name}</p>
@@ -118,7 +118,7 @@ export function ShopPage() {
                   .filter((k) => isHouseProduct(k.product_id))
                   .map((k) => (
                     <li key={k.product_id} className="flex items-center gap-3 rounded-xl bg-surface-2 p-3">
-                      <ProductArt id={k.product_id} scale={1} />
+                      <PackArt id={k.product_id} scale={1} />
                       <div className="flex min-w-0 flex-col gap-1.5">
                         <p className="flex items-center gap-1 font-bold leading-tight">
                           {productById.get(k.product_id)?.name} <InfoTip>{T.oddsHouseTip(houseOddsText())}</InfoTip>
@@ -150,7 +150,7 @@ export function ShopPage() {
                 .filter((k) => !licensed(k.product_id))
                 .map((k) => (
                   <li key={k.product_id} className="flex items-center gap-2 rounded-xl bg-surface-2 py-1.5 pr-3 pl-2 text-sm text-fg-3">
-                    <ProductArt id={k.product_id} scale={1} className="h-16 w-auto opacity-60 grayscale" />
+                    <PackArt id={k.product_id} scale={1} artClassName="h-16 w-auto opacity-60 grayscale" />
                     <span>
                       <b className="block text-fg-2">{productById.get(k.product_id)?.name}</b>
                       {texts.licenses.missing}

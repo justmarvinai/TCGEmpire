@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { ProductArt } from '@/components/pixel/ProductArt.tsx'
 import { toast } from '@/components/ui/toast.tsx'
 import { sfx } from '@/lib/sfx.ts'
 import { Button } from '@/components/ui/Button.tsx'
@@ -9,15 +8,14 @@ import { Page } from '@/components/ui/Page.tsx'
 import { Panel } from '@/components/ui/Panel.tsx'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States.tsx'
 import { useAct, useLimits, useShop } from '@/lib/actions.ts'
-import clsx from 'clsx'
-import { productById, TIER_LABEL, TIER_TEXT, type Tier } from '@/lib/catalog.ts'
-import { formatNumber, formatShare } from '@/lib/format.ts'
+import { productById, SETS } from '@/lib/catalog.ts'
 import { config } from '../../../content/config.ts'
 import { errorText } from '@/lib/rpc.ts'
 import type { PackOpen } from '@/lib/schemas.ts'
 import { useSettings } from '@/lib/settings.ts'
 import { texts } from '@/texts/de.ts'
 import { OpeningStage } from './OpeningStage.tsx'
+import { hitRows, oneIn, PackArt, RateTiles } from './PackInfo.tsx'
 import { LiveBar, useStream } from '@/features/streaming/live.tsx'
 
 const T = texts.open
@@ -90,7 +88,7 @@ export function OpenPage() {
               return (
                 <div key={s.product_id} className="flex items-center gap-5">
                   <div className="relative">
-                    <ProductArt id={s.product_id} scale={2} className="anim-bob" />
+                    <PackArt id={s.product_id} scale={2} className="anim-bob" />
                     <span className="nums absolute -top-2 -right-3 rounded-lg bg-grad px-2 font-pixel text-lg text-white">×{s.qty}</span>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -140,50 +138,16 @@ export function OpenPage() {
   )
 }
 
-const oneIn = (ppm: number) => `1 : ${formatNumber(Math.round(1_000_000 / ppm))}`
-
-/** One tile per tier: the base tier shows its share ("der Rest"), every other tier "1 : N". */
-function RateTiles({ rows, base }: { rows: [Tier, number][]; base: Tier }) {
-  return (
-    <ul className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-      {rows.map(([tier, ppm]) => (
-        <li key={tier} className="rounded-xl bg-surface-2 px-3 py-2">
-          <p className={clsx('text-sm font-semibold', TIER_TEXT[tier])}>{TIER_LABEL[tier]}</p>
-          {/* the base tier is what is left over: a share says more than "1 : 1" */}
-          <p className="nums text-lg font-bold">{tier === base ? formatShare(ppm / 1_000_000) : oneIn(ppm)}</p>
-          <p className="nums text-xs text-fg-3">{tier === base ? T.pullRest : formatShare(ppm / 1_000_000)}</p>
-        </li>
-      ))}
-    </ul>
-  )
-}
-
 /** The odds of a booster's hit slot, from the same config the server rolls with; Empiremon has its own. */
 function PullRates() {
-  const o = config['pack.hit_odds_ppm']
-  const h = config['pack.house_hit_odds_ppm']
+  const normal = hitRows(SETS.find((s) => !s.house)!)
+  const house = hitRows(SETS.find((s) => s.house)!)
   return (
     <Panel title={T.pullTitle} tip={T.pullTip} className="mt-4">
-      <RateTiles
-        base="rare"
-        rows={[
-          ['rare', 1_000_000 - o.holo - o.alternative - o.ultra - o.grail],
-          ['holo', o.holo],
-          ['alternative', o.alternative],
-          ['ultra', o.ultra],
-          ['grail', o.grail],
-        ]}
-      />
-      <p className="mt-3 text-xs text-fg-3">{T.pullExtras(oneIn(config['pack.double_hit_ppm']), oneIn(config['pack.god_pack_ppm']), config['pack.pity_after'])}</p>
+      <RateTiles base={normal.base} rows={normal.rows} />
+      <p className="mt-3 text-xs text-fg-3">{T.pullExtras(oneIn(config['pack.double_hit_ppm'] / 1_000_000), oneIn(config['pack.god_pack_ppm'] / 1_000_000), config['pack.pity_after'])}</p>
       <h3 className="mt-4 mb-2 text-sm font-bold">{T.pullHouse}</h3>
-      <RateTiles
-        base="common"
-        rows={[
-          ['common', 1_000_000 - h.ultra - h.grail],
-          ['ultra', h.ultra],
-          ['grail', h.grail],
-        ]}
-      />
+      <RateTiles base={house.base} rows={house.rows} />
       <p className="mt-3 text-xs text-fg-3">{T.pullHouseNote}</p>
     </Panel>
   )

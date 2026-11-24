@@ -93,7 +93,7 @@ test('Mama’s guided tutorial: each step marks what to click and blocks the res
   // 6: sell to the Kartenladen: Mama marks the duplicates if there are any, else a card and then its sell button.
   await expect(mama).toContainText('Klick links auf „Sammlung“.')
   await page.locator('[data-tour="nav:/collection"]').click()
-  await expect(page.getByText('/ 90', { exact: true })).toBeVisible()
+  await expect(page.locator('[data-tour="binder-card"]').first()).toBeVisible() // one collection over all sets (0.0.7)
   await clickSpot(page)
   const sold = page.getByText(/Karten verkauft für/)
   await expect(sold.or(page.getByRole('dialog'))).toBeVisible()

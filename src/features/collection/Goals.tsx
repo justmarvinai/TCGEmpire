@@ -10,12 +10,24 @@ import { texts } from '@/texts/de.ts'
 
 const T = texts.collection
 
-/** Sammelziele of one set: progress, the bonus, done or not. */
-export function SetGoals({ setId }: { setId: string }) {
+/** Most goals shown at once when several sets are chosen. */
+const NEXT = 6
+
+/**
+ * Sammelziele: all goals of one set; for several sets the ones nearest to done (the collection shows every set at once).
+ */
+export function SetGoals({ setIds }: { setIds: readonly string[] }) {
   const q = useQuery({ queryKey: ['goals'], queryFn: () => rpc('goals_get') })
-  const goals = (q.data?.goals ?? []).filter((g) => g.set_id === setId)
+  const mine = (q.data?.goals ?? []).filter((g) => setIds.includes(g.set_id))
+  const goals =
+    setIds.length === 1
+      ? mine
+      : mine
+          .filter((g) => g.done_at === null)
+          .sort((a, b) => b.have / Math.max(1, b.total) - a.have / Math.max(1, a.total))
+          .slice(0, NEXT)
   return (
-    <Panel title={T.goals} tip={T.goalsTip} className="mt-6">
+    <Panel title={setIds.length === 1 ? T.goals : T.goalsNext} tip={T.goalsTip} className="mt-6">
       {!q.data ? (
         <Skeleton className="h-24 w-full" />
       ) : (
