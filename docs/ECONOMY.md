@@ -97,6 +97,13 @@ level 55 → 43 after six days, net worth 1,22 → 0,78 Mio. €. Quests were 27
 money it buys fewer boosters and levels more slowly. That is already more than the "a little slower" the owner
 asked for, so the EP curve stays as it is (a 10 % steeper curve on top was tried: level 42 after six days).
 
+**0.0.10** (owner request: the Firma from level 20 instead of 30). Founding still costs 25.000 € Basis, and the sim
+bot founds once it has twice that, so it founds on day 4 either way (`pnpm sim 8`, level 30 → 20: first company
+profit on the same day, level 58 → 60 and 3,4 → 2,9 Mio. € after eight days, random spread). Over ten seeds each
+(`simulate`, 3 days, 150 minutes) the level after three days is 30,1 → 29,9 on average (28–33 in every run) and level 30
+is reached on day 3 in 5 → 6 of 10 runs: no measurable change in pace. The pace test's "level 30 by day 3" was a coin
+flip at that pace, so it now checks the level after three days (≥ 28).
+
 **alpha_12 balance pass** (`SIM_EP=1 SIM_TRACE=1 pnpm sim 36 150 2`): the bot now plays like an active player who does
 every quest (decision 107), and the EP shares and the reward growth were set from it (decision 109). Level 30 on day 2,
 50 on day 5, 75 on day 9, **100 on day 14** (34 active hours). The bot wastes no second, so a real player at 2,5 hours

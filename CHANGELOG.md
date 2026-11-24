@@ -3,6 +3,13 @@
 All notable changes to TCGEmpire. The first full release is `0.0.1` (23 Nov 2026); every update after it counts up
 by one: `0.0.2`, `0.0.3`, … Before it came the alphas `0.0.1-alpha_01` to `0.0.1-alpha_12`.
 
+## [0.0.10] — Firma ab Level 20 (24 Nov 2026)
+
+### Changed
+
+- **The Firma opens at level 20** instead of 30. The Gewerbeanmeldung and the founding cost stay the same, so start
+  saving.
+
 ## [0.0.9] — Acht neue Sets (24 Nov 2026)
 
 ### Added

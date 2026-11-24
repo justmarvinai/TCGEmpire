@@ -4,6 +4,7 @@ import { createTestDb, type TestDb } from '../supabase/tests/harness.ts'
 import { HOMES } from '../content/housing.ts'
 import { SKILL_COST, SKILLS } from '../content/skills.ts'
 import { DECISIONS, type DecisionEffect } from '../content/company.ts'
+import { UNLOCKS } from '../content/unlocks.ts'
 import { duplicateStacks } from '../src/features/collection/sellDupes.ts'
 import { productById, SETS } from '../content/catalog.ts'
 
@@ -268,8 +269,8 @@ async function step(t: TestDb, me: string): Promise<number> {
   if (bunker.unlocked && (bunker.content_cents ?? 0) > (bunkerQuest ? 0 : (bunker.rate_cents ?? 0) * (bunker.capacity_h ?? 0) * 0.5)) {
     if (await quietly(t, me, 'bunker_collect', {})) return 5
   }
-  // 2a. the company (level 30): founding, staff, tools, prices, stages, decisions, VIP, taxes, payouts
-  if (p.level >= 30) {
+  // 2a. the company (from its unlock level): founding, staff, tools, prices, stages, decisions, VIP, taxes, payouts
+  if (p.level >= UNLOCKS.company) {
     const spent = await companyStep(t, me, p)
     if (spent) return spent
   }

@@ -27,7 +27,7 @@ export const UNLOCKS = {
   breaks: 18,
   housing: 20,
   bares: 28,
-  company: 30,
+  company: 20,
   darkside: 35,
   wholesale: 40,
   streaming: 45,

@@ -1,6 +1,13 @@
 // In-game patch notes (German), written from CHANGELOG.md for each version. Newest first.
 export const PATCH_NOTES: readonly { version: string; title: string; items: readonly string[] }[] = [
   {
+    version: '0.0.10',
+    title: 'Firma ab Level 20',
+    items: [
+      'Die Firma gibt es jetzt schon ab Level 20 statt ab Level 30. Gewerbeanmeldung und Passierschein A38 bleiben, und die Gründung kostet so viel wie vorher. Also fang an zu sparen, Chef.',
+    ],
+  },
+  {
     version: '0.0.9',
     title: 'Acht neue Sets',
     items: [
