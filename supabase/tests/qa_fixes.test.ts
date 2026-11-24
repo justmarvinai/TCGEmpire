@@ -159,8 +159,11 @@ describe('QA fixes', () => {
     const before = await cash(t, id)
     await expect(mate()).rejects.toThrow('snack_full')
     expect(await cash(t, id)).toBe(before) // nothing charged
+    const snackQuest = async () => (await t.sql<{ d: boolean }>(`select private.quest_doable($1, 'snack_eaten') as d`, [id]))[0]!.d
+    expect(await snackQuest()).toBe(false) // no "Gönn dir heute n Snacks" for someone who is satt
     await t.advance('1 day')
     expect((await t.rpc(me, 'shop_get')).snack_energy_left).toBe(150)
+    expect(await snackQuest()).toBe(true)
     await mate() // hungry again
     await t.assertLedgerMatches()
   })

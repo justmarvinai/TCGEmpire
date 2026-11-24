@@ -1,6 +1,7 @@
 -- QA pass (24 Nov 2026), progression:
--- 1. Snacks bought at the kiosk give at most snack.daily_energy energy a day ("satt"). Unlimited Club-Mate made
---    minijobs an endless EP and money loop (about ten levels an hour at level 10); upgrades for energy stay worth it.
+-- 1. Snacks bought at the kiosk give at most snack.daily_energy energy a day ("satt"), counted as the energy they
+--    really add. Unlimited Club-Mate made minijobs an endless EP and money loop (about ten levels an hour at level 10);
+--    upgrades for energy stay worth it. The snack quest is not offered to a player who is satt.
 -- 2. New-card quests are only offered while at least ten common, uncommon or rare cards are still missing; quests that
 --    waited for one lucky Ultra or Grail sat unfinished for days. Stuck ones are replaced.
 -- 3. "Stempel diese Woche" asks 3-4 stamps (was 5-6): after weekly quests unlock mid-week, or after two missed days,
@@ -186,6 +187,7 @@ language sql stable set search_path = '' as $$
       join game.set_defs s on s.id = c.set_id and s.phase in ('print', 'last_wave')
       where c.kind = 'energy'
         and (s.house or exists (select 1 from game.licenses l where l.player_id = p_player and l.game = s.game)))
+    when 'snack_eaten' then private.daily_get(p_player, 'snack_energy') < private.cfg_num('snack.daily_energy')
     when 'upgrade_bought' then exists (
       select 1 from game.upgrade_defs d where private.upgrade_level(p_player, d.key) < d.max_level)
     else true
