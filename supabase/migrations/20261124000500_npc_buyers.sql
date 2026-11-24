@@ -109,7 +109,12 @@ begin
 end $$;
 insert into game.tick_systems (name, every_seconds) values ('npc_buyers', 60);
 
--- listings and ads that are already up get their buyer from now on
+-- Listings and ads that are already up get their buyer from now on. The deploy writes the seed after the migrations,
+-- so the steps are put in here first (the values of content/config.ts; the seed then sets them from content).
+insert into game.config (key, value)
+values ('market.npc_buy_steps',
+        '[{"max_pct": 100, "min_s": 60, "max_s": 120}, {"max_pct": 115, "min_s": 600, "max_s": 1200}, {"max_pct": 130, "min_s": 43200, "max_s": 86400}]')
+on conflict (key) do nothing;
 update game.listings l set npc_buy_at = private.now() + private.npc_buy_wait(l.seller_id, private.listing_value(l), l.price_cents)
 where l.seller_id is not null and l.item_kind in ('card', 'copy');
 update game.ads a set npc_offer_at = private.now() + private.npc_buy_wait(a.seller_id,

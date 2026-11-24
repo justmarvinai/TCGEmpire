@@ -10,15 +10,17 @@ import { RPC_SCHEMAS, type RpcName } from '../../src/lib/schemas.ts'
 const root = new URL('../', import.meta.url)
 const read = (path: string) => readFileSync(new URL(path, root), 'utf8')
 
-export async function createTestDb() {
+/** `holdBack`: migrations left out, to apply later with `migrate` (a deploy onto a database with live data). */
+export async function createTestDb(opts: { holdBack?: string[] } = {}) {
   const db = new PGlite({ extensions: { pgcrypto } })
   await db.exec(read('shim/supabase_shim.sql'))
   for (const file of readdirSync(new URL('migrations/', root)).sort()) {
-    await db.exec(read(`migrations/${file}`))
+    if (!opts.holdBack?.includes(file)) await db.exec(read(`migrations/${file}`))
   }
-  for (const file of readdirSync(new URL('seed/', root)).sort()) {
-    await db.exec(read(`seed/${file}`))
+  const seed = async () => {
+    for (const file of readdirSync(new URL('seed/', root)).sort()) await db.exec(read(`seed/${file}`))
   }
+  await seed()
   // Cheap password hashing keeps the tests fast.
   await db.exec(`insert into game.config_overrides (key, value, updated_at) values ('auth.bcrypt_cost', '4', now())`)
   // Random losses stay off unless a test switches them on (insurance.test.ts).
@@ -30,6 +32,11 @@ export async function createTestDb() {
   return {
     db,
     sql,
+    /** Applies a held-back migration and then the seed, in the order scripts/db-migrate.sh deploys them. */
+    async migrate(file: string) {
+      await db.exec(read(`migrations/${file}`))
+      await seed()
+    },
     /** A browser: an anonymous auth user that is not signed in as any player yet. */
     browser() {
       return randomUUID()
